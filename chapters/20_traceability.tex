@@ -1,0 +1,31 @@
+\chapter{Traceability und Änderungsmanagement}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie eine durchgängige Nachvollziehbarkeit von Anforderungen bis Tests aufbauen.
+\end{lernziele}
+
+\section{Was ist Traceability?}
+\gls{traceability} bedeutet Nachvollziehbarkeit. Sie zeigt, wie Artefakte zusammenhängen. Bei MBSE ist das einer der größten praktischen Vorteile.
+
+\section{Kette im Roboterprojekt}
+\begin{verbatim}
+REQ-002 Hindernisse erkennen
+-> PerceptionSystem
+-> ObstacleDetector
+-> obstacle_detector_node
+-> /scan
+-> TC-002 Hinderniserkennung
+\end{verbatim}
+
+\section{Nutzen}
+Wenn sich REQ-002 ändert, kann analysiert werden, welche Komponenten betroffen sind. Vielleicht muss der Lidar ausgetauscht werden. Vielleicht muss der Test angepasst werden. Vielleicht reicht eine Softwareänderung.
+
+\section{Impact Analysis}
+Impact Analysis bedeutet Auswirkungsanalyse. Sie beantwortet die Frage: Was ändert sich, wenn eine Anforderung, Komponente oder Schnittstelle geändert wird?
+
+\section{Typische Fehler}
+Traceability wird oft zu spät aufgebaut. Dann ist sie mühsam. Besser ist es, Beziehungen während der Modellierung schrittweise zu pflegen.
+
+\begin{uebungbox}
+Wählen Sie eine Anforderung aus und erstellen Sie eine vollständige Traceability-Kette bis zu einem Testfall.
+\end{uebungbox}

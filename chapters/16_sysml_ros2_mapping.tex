@@ -1,0 +1,35 @@
+\chapter{Von SysML zu ROS2}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie SysML-Elemente auf ROS2-Elemente abbilden.
+\end{lernziele}
+
+\section{Warum Mapping?}
+Das SysML-Modell beschreibt die Architektur. ROS2 ist die Umsetzung. Ohne Verbindung zwischen beiden entsteht eine Lücke. Das Mapping schließt diese Lücke.
+
+\section{Grundprinzip}
+Ein SysML-Block kann einem ROS2-Node entsprechen. Ein SysML-Port oder Datenfluss kann einem Topic entsprechen. Eine Funktion kann durch einen Node oder eine Gruppe von Nodes realisiert werden.
+
+\section{Beispieltabelle}
+\begin{longtable}{p{45mm}p{45mm}p{45mm}}
+\toprule
+SysML-Element & ROS2-Element & Bemerkung\\
+\midrule
+ObjectDetector & object\_detector\_node & Führt ML-Inferenz aus\\
+Camera & camera\_node & Liefert Bilddaten\\
+NavigationSystem & navigation\_node & Plant und überwacht Bewegung\\
+BatterySystem & battery\_monitor\_node & Überwacht Akkustatus\\
+MotionControl & motion\_control\_node & Setzt Geschwindigkeitsbefehle um\\
+\bottomrule
+\end{longtable}
+
+\section{Traceability}
+Das Mapping ist ein Teil der Traceability. Es zeigt, welche Implementierung eine Architekturkomponente realisiert.
+
+\begin{praxisbox}
+REQ-004 \enquote{Personen erkennen} wird durch den Block \texttt{ObjectDetector} erfüllt. Dieser Block wird durch den ROS2-Node \texttt{object\_detector\_node} implementiert.
+\end{praxisbox}
+
+\begin{uebungbox}
+Erstellen Sie eine Mapping-Tabelle für alle Hauptblöcke Ihres BDD.
+\end{uebungbox}

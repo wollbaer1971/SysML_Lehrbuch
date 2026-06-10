@@ -1,0 +1,32 @@
+\chapter{Systems Engineering verstehen}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie erklären, was ein System ist, warum Systems Engineering bei komplexen Produkten notwendig wird und warum ein autonomer Roboter mehr ist als eine Sammlung einzelner Bauteile.
+\end{lernziele}
+
+\section{Was ist ein System?}
+Ein System ist eine Menge von Elementen, die zusammenwirken, um einen Zweck zu erfüllen. Ein autonomer Indoor-Roboter besteht zum Beispiel aus Sensoren, Rechner, Software, Batterie, Motoren, Rädern, Gehäuse und Benutzerschnittstellen. Entscheidend ist nicht nur, dass diese Elemente existieren. Entscheidend ist, dass sie zusammen funktionieren.
+
+Ein einzelner Lidar-Sensor macht noch keinen autonomen Roboter. Erst wenn Sensordaten verarbeitet, in eine Karte eingebaut, mit einer Navigation verknüpft und in Motorbefehle übersetzt werden, entsteht ein Systemverhalten.
+
+\section{Warum Systems Engineering?}
+In einfachen Projekten reicht es oft aus, direkt mit der Umsetzung zu beginnen. Bei komplexeren technischen Systemen führt das schnell zu Problemen. Eine Änderung an einer Komponente kann viele andere Bereiche beeinflussen. Eine stärkere Kamera kann zum Beispiel mehr Rechenleistung benötigen, mehr Strom verbrauchen und andere Treiber voraussetzen.
+
+Systems Engineering hilft dabei, solche Abhängigkeiten sichtbar zu machen. Es zwingt nicht zu Bürokratie, sondern zu Klarheit: Was soll das System leisten? Welche Komponenten sind beteiligt? Welche Schnittstellen gibt es? Wie wird geprüft, ob das System funktioniert?
+
+\begin{praxisbox}
+Beim autonomen Indoor-Roboter reicht die Aussage \enquote{Der Roboter soll fahren} nicht aus. Wir müssen wissen, wo er fahren soll, wie schnell er fahren darf, welche Hindernisse erkannt werden müssen, welche Sensoren eingesetzt werden und was bei niedrigem Akkustand passiert.
+\end{praxisbox}
+
+\section{Systemgrenze}
+Eine wichtige Entscheidung ist die Systemgrenze. Sie legt fest, was zum betrachteten System gehört und was nur Teil der Umgebung ist. Beim Indoor-Roboter kann die Ladestation zum System gehören oder als externes System modelliert werden. Beide Entscheidungen sind möglich, aber sie müssen bewusst getroffen werden.
+
+\section{Stakeholder}
+Stakeholder sind Personen oder Organisationen, die Anforderungen an das System haben. Beim Roboter sind das zum Beispiel Nutzer, Betreiber, Wartungspersonal, Entwickler und möglicherweise Sicherheitsbeauftragte. Unterschiedliche Stakeholder haben unterschiedliche Interessen. Nutzer wollen einfache Bedienung. Wartungspersonal will Diagnosemöglichkeiten. Entwickler wollen klare Schnittstellen.
+
+\section{Typische Fehler am Anfang}
+Ein häufiger Fehler besteht darin, sofort Komponenten zu zeichnen. Das wirkt produktiv, überspringt aber die Frage, warum diese Komponenten überhaupt gebraucht werden. Ein anderer Fehler ist, Anforderungen zu allgemein zu formulieren. \enquote{Der Roboter soll zuverlässig sein} klingt gut, ist aber kaum testbar.
+
+\begin{uebungbox}
+Beschreiben Sie den autonomen Indoor-Roboter in fünf Sätzen. Markieren Sie anschließend, welche Wörter Funktionen, Komponenten, Stakeholder oder Randbedingungen beschreiben.
+\end{uebungbox}

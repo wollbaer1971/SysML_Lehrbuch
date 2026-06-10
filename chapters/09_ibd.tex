@@ -1,0 +1,29 @@
+\chapter{Internal Block Diagram}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie Datenflüsse und interne Verbindungen zwischen Komponenten im IBD darstellen.
+\end{lernziele}
+
+\section{Zweck des IBD}
+Das \gls{ibd} zeigt, wie Teile eines Blocks intern verbunden sind. Während das BDD sagt, welche Bausteine existieren, zeigt das IBD, wie sie zusammenarbeiten.
+
+\section{Beispiel Datenfluss}
+\begin{verbatim}
+Camera -> ObjectDetector -> NavigationSystem
+Lidar  -> SLAM           -> NavigationSystem
+NavigationSystem -> MotionControl -> Motors
+BatterySystem -> NavigationSystem
+\end{verbatim}
+
+\section{Ports}
+Ports beschreiben Ein- und Ausgänge von Blöcken. Ein Kamerablock kann einen Port \texttt{imageOut} haben. Der ObjectDetector kann einen Port \texttt{imageIn} und \texttt{objectsOut} haben.
+
+\section{Schnittstellen}
+Eine Verbindung ohne klare Schnittstelle ist wenig wert. Deshalb sollte dokumentiert werden, welche Daten übertragen werden. Beispiel: \texttt{sensor\_msgs/Image} für Kamerabilder in ROS2.
+
+\section{IBD und ROS2}
+Das IBD passt gut zur ROS2-Kommunikation. ROS2-Topics können als Datenflüsse modelliert werden. Ein Topic \texttt{/camera/image\_raw} verbindet \texttt{camera\_node} und \texttt{object\_detector\_node}.
+
+\begin{uebungbox}
+Erstellen Sie ein IBD für das \texttt{PerceptionSystem}. Modellieren Sie Kamera, Lidar, ObjectDetector und ObstacleDetector inklusive Datenflüssen.
+\end{uebungbox}

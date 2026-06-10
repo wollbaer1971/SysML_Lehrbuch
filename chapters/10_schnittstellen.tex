@@ -1,0 +1,38 @@
+\chapter{Schnittstellenmodellierung}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie Schnittstellen beschreiben und erkennen, warum klare Schnittstellen in Robotikprojekten entscheidend sind.
+\end{lernziele}
+
+\section{Warum Schnittstellen wichtig sind}
+Viele technische Probleme entstehen nicht in einzelnen Komponenten, sondern an ihren Schnittstellen. Eine Kamera liefert Bilder in einem Format, das der Erkennungsalgorithmus nicht erwartet. Ein Navigationsknoten erwartet Koordinaten in einem anderen Bezugssystem. Solche Fehler sind typisch.
+
+\section{Schnittstellenbeschreibung}
+Eine gute Schnittstellenbeschreibung enthält:
+\begin{itemize}
+\item Name der Schnittstelle
+\item Sender und Empfänger
+\item Datentyp
+\item Frequenz oder Ereignis
+\item Qualitätsanforderungen
+\item Fehlerfälle
+\end{itemize}
+
+\section{Beispiel}
+\begin{longtable}{p{35mm}p{35mm}p{35mm}p{35mm}}
+\toprule
+Schnittstelle & Sender & Empfänger & Datentyp\\
+\midrule
+Kamerabild & Camera & ObjectDetector & sensor\_msgs/Image\\
+Laserscan & Lidar & SLAM & sensor\_msgs/LaserScan\\
+Bewegungsbefehl & Navigation & MotionControl & geometry\_msgs/Twist\\
+Akkustatus & BatterySystem & Navigation & sensor\_msgs/BatteryState\\
+\bottomrule
+\end{longtable}
+
+\section{Koordinatensysteme}
+In Robotikprojekten sind Koordinatensysteme kritisch. ROS2 nutzt häufig Frames wie \texttt{map}, \texttt{odom}, \texttt{base\_link} und \texttt{camera\_link}. Diese sollten im Modell dokumentiert werden.
+
+\begin{uebungbox}
+Erstellen Sie eine Schnittstellentabelle für mindestens sechs Datenflüsse des Roboters. Ergänzen Sie jeweils Sender, Empfänger und Datentyp.
+\end{uebungbox}

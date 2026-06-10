@@ -1,0 +1,35 @@
+\chapter{Enterprise Architect einrichten}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie ein Enterprise-Architect-Projekt für das Roboterbeispiel strukturieren und wissen, welche Pakete für ein übersichtliches SysML-Modell sinnvoll sind.
+\end{lernziele}
+
+\section{Rolle des Werkzeugs}
+Enterprise Architect von Sparx Systems ist ein Modellierungswerkzeug. Es unterstützt SysML, UML und weitere Modellierungssprachen. Für Einsteiger ist wichtig: Das Werkzeug ist umfangreich. Man muss am Anfang nicht jede Funktion verstehen.
+
+\section{Projektstruktur}
+Legen Sie ein neues Projekt mit dem Namen \texttt{AutonomousIndoorRobot} an. Erstellen Sie folgende Pakete:
+
+\begin{itemize}
+\item \texttt{01\_Requirements}
+\item \texttt{02\_Structure}
+\item \texttt{03\_Behavior}
+\item \texttt{04\_Interfaces}
+\item \texttt{05\_Tests}
+\item \texttt{06\_ROS2\_Mapping}
+\end{itemize}
+
+Diese Struktur ist bewusst schlicht. Sie verhindert, dass das Modell schon am Anfang unübersichtlich wird.
+
+\section{Arbeitsweise}
+Erstellen Sie Modellelemente möglichst nur einmal und verwenden Sie diese in mehreren Diagrammen wieder. Ein Block \texttt{Camera} sollte nicht jedes Mal neu gezeichnet werden. Er sollte als vorhandenes Modellelement in weitere Diagramme gezogen werden.
+
+\section{Namenskonventionen}
+Verwenden Sie klare Namen. Anforderungen erhalten IDs wie \texttt{REQ-001}. Testfälle erhalten IDs wie \texttt{TC-001}. ROS2-Nodes werden im Stil \texttt{object\_detector\_node} benannt.
+
+\section{Dokumentation im Modell}
+Enterprise Architect erlaubt Beschreibungen direkt an Modellelementen. Nutzen Sie dieses Feld konsequent. Ein Diagramm ohne Beschreibung ist oft nur eine hübsche Zeichnung. Ein Modell mit klaren Beschreibungen bleibt auch Monate später verständlich.
+
+\begin{uebungbox}
+Legen Sie die empfohlene Paketstruktur an und erstellen Sie eine Startseite im Modell. Beschreiben Sie dort Ziel, Umfang und Systemgrenze des Roboterprojekts.
+\end{uebungbox}

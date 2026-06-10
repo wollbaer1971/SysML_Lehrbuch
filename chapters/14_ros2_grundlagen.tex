@@ -1,0 +1,33 @@
+\chapter{ROS2-Grundlagen}
+
+\begin{lernziele}
+Nach diesem Kapitel kennen Sie Nodes, Topics, Services und Actions und können diese Begriffe auf das Robotersystem anwenden.
+\end{lernziele}
+
+\section{Was ist ROS2?}
+\gls{ros2} ist ein Framework für Robotiksoftware. Es stellt Kommunikationsmechanismen, Werkzeuge und Konventionen bereit. ROS2 ist kein Betriebssystem im klassischen Sinn, sondern eine Middleware und Entwicklungsumgebung.
+
+\section{Nodes}
+Ein Node ist ein ausführbares Programm mit einer klaren Aufgabe. Beispiel: Ein \texttt{camera\_node} liest Kamerabilder und veröffentlicht sie.
+
+\section{Topics}
+Topics sind Nachrichtenkanäle. Ein Node veröffentlicht Nachrichten, andere Nodes abonnieren sie. Diese Publish-Subscribe-Kommunikation passt sehr gut zu Sensordaten.
+
+\section{Services}
+Services sind Anfrage-Antwort-Kommunikation. Sie eignen sich für kurze, gezielte Abfragen, zum Beispiel \enquote{Setze Parameter}.
+
+\section{Actions}
+Actions sind für länger laufende Aufgaben gedacht. Navigation zu einem Ziel ist ein typischer Action-Anwendungsfall, weil der Vorgang länger dauert und Feedback liefern kann.
+
+\section{Beispiel}
+\begin{verbatim}
+/camera/image_raw       Kamerabild
+/scan                   Laserscan
+/cmd_vel                Bewegungsbefehl
+/battery_state          Akkustatus
+/detected_objects       erkannte Objekte
+\end{verbatim}
+
+\begin{uebungbox}
+Ordnen Sie den Funktionen Kamera, Navigation, Batterieüberwachung und Objekterkennung passende ROS2-Nodes und Topics zu.
+\end{uebungbox}

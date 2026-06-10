@@ -1,0 +1,45 @@
+\chapter{Block Definition Diagram}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie die Hauptstruktur des Roboters als Block Definition Diagram modellieren.
+\end{lernziele}
+
+\section{Zweck des BDD}
+Das \gls{bdd} zeigt, aus welchen logischen oder physischen Bausteinen ein System besteht. Ein Block kann Hardware, Software, Mensch, Datenobjekt oder abstrakte Funktion darstellen.
+
+\section{Hauptstruktur des Roboters}
+\begin{verbatim}
+Robot
+|- NavigationSystem
+|- PerceptionSystem
+|- MotionControl
+|- BatterySystem
+|- CommunicationSystem
+|- UserInterface
+\end{verbatim}
+
+Diese Darstellung ist noch grob. Sie eignet sich aber hervorragend, um den Systemumfang zu verstehen.
+
+\section{Komposition}
+Eine Komposition beschreibt eine starke Teil-Ganzes-Beziehung. Wenn das \texttt{PerceptionSystem} Teil des Roboters ist, kann dies als Komposition modelliert werden.
+
+\section{Dekomposition}
+Das \texttt{PerceptionSystem} kann weiter zerlegt werden:
+\begin{verbatim}
+PerceptionSystem
+|- Camera
+|- Lidar
+|- ObjectDetector
+|- ObstacleDetector
+\end{verbatim}
+
+\section{Logische und physische Blöcke}
+Ein häufiger Anfängerfehler besteht darin, logische Funktionen und physische Bauteile unklar zu vermischen. \texttt{Camera} ist eher physisch. \texttt{ObjectDetector} ist eher logisch oder softwarebezogen. Beides darf im Modell vorkommen, sollte aber bewusst getrennt werden.
+
+\begin{hinweisbox}
+Ein BDD muss nicht sofort perfekt sein. Es entwickelt sich mit dem Verständnis des Systems.
+\end{hinweisbox}
+
+\begin{uebungbox}
+Erstellen Sie ein BDD mit dem Block \texttt{Robot} und mindestens fünf Subsystemen. Ergänzen Sie beim \texttt{PerceptionSystem} Kamera, Lidar und Objekterkennung.
+\end{uebungbox}

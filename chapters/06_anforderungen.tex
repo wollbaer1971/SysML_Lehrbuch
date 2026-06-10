@@ -1,0 +1,46 @@
+\chapter{Anforderungen modellieren}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie Anforderungen formulieren, nummerieren, strukturieren und mit SysML-Beziehungen verbinden.
+\end{lernziele}
+
+\section{Was ist eine gute Anforderung?}
+Eine gute Anforderung ist eindeutig, verständlich und testbar. \enquote{Der Roboter soll gut navigieren} ist keine gute Anforderung. Besser ist: \enquote{Der Roboter soll ein Ziel in einem bekannten Innenraum autonom anfahren können.}
+
+\section{Beispielanforderungen}
+\begin{longtable}{p{25mm}p{110mm}}
+\toprule
+ID & Anforderung\\
+\midrule
+REQ-001 & Der Roboter soll autonom in Innenräumen navigieren.\\
+REQ-002 & Der Roboter soll Hindernisse im Fahrbereich erkennen.\\
+REQ-003 & Der Roboter soll erkannte Hindernisse umfahren oder rechtzeitig stoppen.\\
+REQ-004 & Der Roboter soll Personen im Kamerabild erkennen.\\
+REQ-005 & Der Roboter soll seinen Akkustand überwachen.\\
+REQ-006 & Der Roboter soll bei niedrigem Akkustand zur Ladestation fahren.\\
+REQ-007 & Der Roboter soll seinen Betriebszustand melden.\\
+\bottomrule
+\end{longtable}
+
+\section{Funktionale und nicht-funktionale Anforderungen}
+Funktionale Anforderungen beschreiben, was das System tun soll. Nicht-funktionale Anforderungen beschreiben Eigenschaften wie Geschwindigkeit, Genauigkeit, Verfügbarkeit oder Sicherheit.
+
+\section{SysML-Beziehungen}
+Wichtige Beziehungen sind:
+\begin{itemize}
+\item \texttt{deriveReqt}: Eine Anforderung wird aus einer anderen abgeleitet.
+\item \texttt{satisfy}: Ein Modellelement erfüllt eine Anforderung.
+\item \texttt{verify}: Ein Testfall überprüft eine Anforderung.
+\item \texttt{trace}: Allgemeine Nachverfolgung.
+\end{itemize}
+
+\begin{praxisbox}
+REQ-002 wird durch das \texttt{PerceptionSystem} erfüllt. Der Testfall \texttt{TC-002 Hinderniserkennung} verifiziert diese Anforderung.
+\end{praxisbox}
+
+\section{Anforderungen in Enterprise Architect}
+Erstellen Sie im Paket \texttt{01\_Requirements} ein Requirement Diagram. Legen Sie die Anforderungen als SysML-Requirement-Elemente an. Tragen Sie ID und Text ein. Achten Sie darauf, dass die ID nicht nur im Namen, sondern auch als Eigenschaft gepflegt wird.
+
+\begin{uebungbox}
+Formulieren Sie fünf zusätzliche Anforderungen: zwei zur Sicherheit, eine zur Bedienung, eine zur Wartung und eine zur Leistung.
+\end{uebungbox}

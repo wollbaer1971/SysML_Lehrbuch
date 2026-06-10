@@ -1,0 +1,34 @@
+\chapter{Parametrische Modellierung}
+
+\begin{lernziele}
+Nach diesem Kapitel verstehen Sie, wie technische Zusammenhänge im Modell beschrieben werden können.
+\end{lernziele}
+
+\section{Zweck parametrischer Modelle}
+Parametrische Modelle beschreiben mathematische Beziehungen. Sie helfen, technische Entscheidungen zu prüfen. Beim Roboter sind Energieverbrauch, Reichweite und Geschwindigkeit wichtige Größen.
+
+\section{Einfaches Beispiel}
+\[
+t_{betrieb} = \frac{E_{akku}}{P_{gesamt}}
+\]
+
+Dabei ist \(E_{akku}\) die nutzbare Energie der Batterie und \(P_{gesamt}\) die durchschnittliche Leistungsaufnahme.
+
+\section{Leistungsaufnahme}
+Die Gesamtleistung kann grob abgeschätzt werden:
+\[
+P_{gesamt} = P_{rechner} + P_{sensoren} + P_{motoren}
+\]
+
+Diese Formel ist einfach, aber nützlich für frühe Architekturentscheidungen.
+
+\section{Parametric Diagram in SysML}
+In SysML werden solche Zusammenhänge mit Constraint Blocks modelliert. Ein Constraint Block beschreibt die Formel, Parameter werden mit Systemeigenschaften verbunden.
+
+\begin{hinweisbox}
+Parametrik ist für Einsteiger optional. Sie wird wichtig, wenn quantitative Aussagen getroffen werden sollen.
+\end{hinweisbox}
+
+\begin{uebungbox}
+Nehmen Sie eine Batteriekapazität von 100 Wh und eine Leistungsaufnahme von 25 W an. Berechnen Sie die theoretische Betriebszeit.
+\end{uebungbox}

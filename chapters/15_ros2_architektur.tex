@@ -1,0 +1,36 @@
+\chapter{Architektur von ROS2-Systemen}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie eine einfache ROS2-Architektur für den autonomen Roboter entwerfen.
+\end{lernziele}
+
+\section{Typische Node-Struktur}
+Eine sinnvolle erste Architektur besteht aus folgenden Nodes:
+\begin{itemize}
+\item \texttt{camera\_node}
+\item \texttt{lidar\_node}
+\item \texttt{slam\_node}
+\item \texttt{navigation\_node}
+\item \texttt{object\_detector\_node}
+\item \texttt{battery\_monitor\_node}
+\item \texttt{motion\_control\_node}
+\end{itemize}
+
+\section{Kommunikationsstruktur}
+\begin{verbatim}
+camera_node -> /camera/image_raw -> object_detector_node
+lidar_node  -> /scan             -> slam_node
+slam_node   -> /map              -> navigation_node
+navigation_node -> /cmd_vel      -> motion_control_node
+battery_monitor_node -> /battery_state -> navigation_node
+\end{verbatim}
+
+\section{Architekturentscheidungen}
+Eine wichtige Entscheidung ist die Granularität. Zu viele Nodes erhöhen Kommunikationsaufwand. Zu wenige Nodes machen das System unübersichtlich. Für den Einstieg gilt: Eine klar abgegrenzte Funktion darf ein eigener Node sein.
+
+\section{Fehlerfälle}
+Eine Architektur sollte nicht nur den Normalfall zeigen. Was passiert, wenn die Kamera ausfällt? Was passiert bei leerem Akku? Was passiert, wenn keine Karte verfügbar ist?
+
+\begin{uebungbox}
+Erstellen Sie eine ROS2-Architekturskizze mit mindestens sechs Nodes und acht Topics.
+\end{uebungbox}

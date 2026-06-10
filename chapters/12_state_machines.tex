@@ -1,0 +1,34 @@
+\chapter{Zustandsmodellierung mit State Machines}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie Betriebszustände und Zustandswechsel eines Roboters modellieren.
+\end{lernziele}
+
+\section{Zustände}
+Ein Zustand beschreibt eine Situation, in der sich das System über eine gewisse Zeit befindet. Beispiele für den Roboter sind \texttt{Idle}, \texttt{Mapping}, \texttt{Navigation}, \texttt{Charging} und \texttt{Error}.
+
+\section{Ereignisse}
+Ereignisse lösen Übergänge aus. Beispiele:
+\begin{itemize}
+\item \texttt{GoalReceived}
+\item \texttt{BatteryLow}
+\item \texttt{ObstacleDetected}
+\item \texttt{ChargingComplete}
+\item \texttt{ErrorDetected}
+\end{itemize}
+
+\section{Beispiel}
+\begin{verbatim}
+Idle --GoalReceived--> Navigation
+Navigation --BatteryLow--> ReturnToDock
+ReturnToDock --DockReached--> Charging
+Charging --ChargingComplete--> Idle
+Navigation --ErrorDetected--> Error
+\end{verbatim}
+
+\section{Warum State Machines nützlich sind}
+Zustandsdiagramme verhindern unklare Logik. Sie zeigen, welche Übergänge erlaubt sind. Darf der Roboter während eines Fehlers ein neues Ziel annehmen? Darf er während des Ladens navigieren? Solche Fragen werden sichtbar.
+
+\begin{uebungbox}
+Erstellen Sie eine State Machine für den Roboter mit mindestens fünf Zuständen und acht Übergängen.
+\end{uebungbox}

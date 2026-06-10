@@ -1,0 +1,34 @@
+\chapter{Verhaltensmodellierung mit Activity Diagrams}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie Abläufe des Roboters als Aktivitätsdiagramm beschreiben.
+\end{lernziele}
+
+\section{Was beschreibt ein Aktivitätsdiagramm?}
+Ein Aktivitätsdiagramm beschreibt einen Ablauf aus Aktionen, Entscheidungen und Verzweigungen. Es eignet sich gut für Prozesse wie \enquote{Navigationsziel anfahren}.
+
+\section{Beispielablauf Navigation}
+\begin{enumerate}
+\item System starten
+\item Sensoren initialisieren
+\item Karte laden
+\item Ziel empfangen
+\item Pfad planen
+\item Bewegung ausführen
+\item Hindernisse prüfen
+\item Ziel erreicht melden
+\end{enumerate}
+
+\section{Entscheidungen}
+Entscheidungsknoten modellieren Alternativen. Beispiel: Wenn ein Hindernis erkannt wird, plant der Roboter neu oder stoppt.
+
+\section{Parallelität}
+Ein Roboter führt oft mehrere Aktivitäten parallel aus. Während er fährt, überwacht er Sensoren und Batterie. Aktivitätsdiagramme können solche parallelen Abläufe darstellen, sollten am Anfang aber nicht überladen werden.
+
+\begin{praxisbox}
+Der Ablauf \enquote{Zur Ladestation fahren} enthält eine Entscheidung: Ist der Akkustand niedrig? Nur dann wird der Ladevorgang gestartet.
+\end{praxisbox}
+
+\begin{uebungbox}
+Modellieren Sie den Ablauf \enquote{Ziel anfahren}. Ergänzen Sie mindestens eine Entscheidung für Hinderniserkennung und eine für niedrigen Akkustand.
+\end{uebungbox}

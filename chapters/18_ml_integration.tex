@@ -1,0 +1,54 @@
+\chapter{Machine Learning in ROS2 integrieren}
+
+\begin{lernziele}
+Nach diesem Kapitel verstehen Sie, wie ein ML-Modell als ROS2-Node in eine Roboterarchitektur eingebunden wird.
+\end{lernziele}
+
+\section{Rolle von Machine Learning}
+Machine Learning wird in Robotik häufig für Wahrnehmung eingesetzt: Objekterkennung, Personenerkennung, Segmentierung oder Klassifikation. Im Beispielprojekt verwenden wir ML zur Personenerkennung.
+
+\section{Architektur}
+\begin{verbatim}
+Camera
+  -> /camera/image_raw
+  -> object_detector_node
+  -> /detected_objects
+  -> navigation_node oder user_interface_node
+\end{verbatim}
+
+\section{Inference-Node}
+Der ML-Node lädt ein trainiertes Modell, verarbeitet eingehende Sensordaten und veröffentlicht Ergebnisse. In Python kann das mit PyTorch, TensorFlow oder ONNX Runtime umgesetzt werden.
+
+\section{Pseudocode}
+\begin{lstlisting}[language=Python]
+class ObjectDetectorNode(Node):
+    def __init__(self):
+        super().__init__('object_detector_node')
+        self.model = load_model('model.pt')
+        self.subscription = self.create_subscription(
+            Image,
+            '/camera/image_raw',
+            self.image_callback,
+            10
+        )
+        self.publisher = self.create_publisher(
+            DetectionArray,
+            '/detected_objects',
+            10
+        )
+
+    def image_callback(self, msg):
+        image = convert_ros_image_to_tensor(msg)
+        detections = self.model(image)
+        self.publisher.publish(convert_to_ros_msg(detections))
+\end{lstlisting}
+
+\section{Praktische Probleme}
+Die eigentliche Schwierigkeit liegt oft nicht im Modell, sondern in der Datenkette: Bildformat, Auflösung, Latenz, GPU-Nutzung, Synchronisation und Ergebnisformat.
+
+\section{Optimierung}
+Für reale Roboter können ONNX, TensorRT oder OpenVINO sinnvoll sein. Ein großes PyTorch-Modell direkt auf einem kleinen Rechner kann zu langsam sein.
+
+\begin{uebungbox}
+Beschreiben Sie im SysML-Modell, welche Anforderung durch den ML-Node erfüllt wird und welches Topic die Ergebnisse veröffentlicht.
+\end{uebungbox}

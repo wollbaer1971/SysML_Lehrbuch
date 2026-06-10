@@ -1,0 +1,37 @@
+\chapter{Test und Verifikation}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie Anforderungen mit Testfällen verknüpfen und einfache Verifikationsszenarien beschreiben.
+\end{lernziele}
+
+\section{Verifikation und Validierung}
+Verifikation fragt: Wurde das System richtig gebaut? Validierung fragt: Wurde das richtige System gebaut? Beide Fragen sind wichtig.
+
+\section{Testfälle}
+\begin{longtable}{p{25mm}p{55mm}p{55mm}}
+\toprule
+ID & Testfall & Verifizierte Anforderung\\
+\midrule
+TC-001 & Autonome Navigation zu Zielpunkt & REQ-001\\
+TC-002 & Hindernis rechtzeitig erkennen & REQ-002\\
+TC-003 & Person im Kamerabild erkennen & REQ-004\\
+TC-004 & Niedrigen Akkustand melden & REQ-005\\
+TC-005 & Zur Ladestation fahren & REQ-006\\
+\bottomrule
+\end{longtable}
+
+\section{Testbeschreibung}
+Ein Testfall sollte Vorbedingungen, Ablauf, erwartetes Ergebnis und Bewertungskriterium enthalten.
+
+\section{Beispiel TC-002}
+\textbf{Vorbedingung:} Roboter fährt mit definierter Geschwindigkeit.\\
+\textbf{Ablauf:} Hindernis wird in den Fahrweg gestellt.\\
+\textbf{Erwartung:} Roboter erkennt Hindernis und stoppt vor Kollision.\\
+\textbf{Kriterium:} Mindestabstand 20 cm.
+
+\section{Tests im Modell}
+In SysML können Testfälle mit \texttt{verify}-Beziehungen an Anforderungen gehängt werden. Dadurch ist erkennbar, welche Anforderungen noch keine Tests haben.
+
+\begin{uebungbox}
+Erstellen Sie Testfälle für alle Anforderungen aus Kapitel 6. Markieren Sie Anforderungen ohne Test.
+\end{uebungbox}

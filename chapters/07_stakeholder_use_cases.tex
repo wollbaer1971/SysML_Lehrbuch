@@ -1,0 +1,41 @@
+\chapter{Stakeholder und Use Cases}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie Stakeholder identifizieren und aus typischen Nutzungsszenarien Anforderungen ableiten.
+\end{lernziele}
+
+\section{Stakeholder identifizieren}
+Stakeholder sind nicht nur Endnutzer. Auch Betreiber, Wartung, Entwicklung, Management und Sicherheitsverantwortliche haben Interessen. Ein Roboter, der technisch funktioniert, aber schlecht wartbar ist, kann im Betrieb trotzdem scheitern.
+
+\section{Stakeholder des Roboters}
+\begin{itemize}
+\item Nutzer: möchte Ziele einfach vorgeben.
+\item Betreiber: möchte zuverlässigen Betrieb.
+\item Wartungstechniker: benötigt Diagnoseinformationen.
+\item Entwickler: benötigt klare Schnittstellen.
+\item Sicherheitsverantwortlicher: achtet auf Risiken.
+\end{itemize}
+
+\section{Use Cases}
+Use Cases beschreiben, wie ein Akteur mit dem System interagiert. Sie sind keine detaillierten Algorithmen, sondern Nutzungsbeschreibungen.
+
+\section{Beispiel: Ziel anfahren}
+\textbf{Akteur:} Nutzer\\
+\textbf{Ziel:} Roboter fährt zu einem ausgewählten Zielpunkt.\\
+\textbf{Vorbedingung:} Roboter ist eingeschaltet und lokalisiert.\\
+\textbf{Ablauf:}
+\begin{enumerate}
+\item Nutzer wählt Ziel.
+\item Roboter prüft Verfügbarkeit der Karte.
+\item Roboter plant Pfad.
+\item Roboter fährt los.
+\item Roboter weicht Hindernissen aus.
+\item Roboter erreicht Ziel.
+\end{enumerate}
+
+\section{Use Cases und Anforderungen}
+Aus einem Use Case lassen sich Anforderungen ableiten. Wenn der Roboter Ziele anfahren soll, braucht er Navigation, Lokalisierung, Pfadplanung und Hindernisvermeidung.
+
+\begin{uebungbox}
+Schreiben Sie einen Use Case \enquote{Zur Ladestation zurückkehren}. Leiten Sie daraus mindestens drei Anforderungen ab.
+\end{uebungbox}

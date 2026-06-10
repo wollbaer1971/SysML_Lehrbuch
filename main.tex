@@ -1,0 +1,126 @@
+\documentclass[11pt,a4paper,oneside]{scrbook}
+
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{left=25mm,right=25mm,top=25mm,bottom=30mm}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{tcolorbox}
+\usepackage{amsmath}
+\usepackage{makeidx}
+\usepackage[acronym,toc]{glossaries}
+
+\makeindex
+\makeglossaries
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!50!black,
+    urlcolor=blue!50!black,
+    citecolor=blue!50!black,
+    pdftitle={SysML, Enterprise Architect und ROS2 für Einsteiger},
+    pdfauthor={ChatGPT}
+}
+
+\lstdefinestyle{code}{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    columns=fullflexible,
+    showstringspaces=false,
+    tabsize=2
+}
+\lstset{style=code}
+
+\newtcolorbox{lernziele}{
+    colback=blue!3!white,
+    colframe=blue!50!black,
+    title=Lernziele
+}
+\newtcolorbox{praxisbox}{
+    colback=green!3!white,
+    colframe=green!40!black,
+    title=Praxisbeispiel
+}
+\newtcolorbox{hinweisbox}{
+    colback=yellow!8!white,
+    colframe=yellow!50!black,
+    title=Hinweis
+}
+\newtcolorbox{uebungbox}{
+    colback=gray!5!white,
+    colframe=gray!60!black,
+    title=Übung
+}
+
+\input{glossary}
+
+\title{SysML, Enterprise Architect und ROS2 für Einsteiger\\
+\large Ein praxisnahes Lehrbuch am Beispiel eines autonomen Indoor-Roboters}
+\author{Lehrskript}
+\date{\today}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+\tableofcontents
+
+\chapter*{Vorwort}
+Dieses Lehrbuch richtet sich an Einsteiger ohne Vorkenntnisse in SysML, Enterprise Architect oder ROS2. 
+Das Ziel ist nicht, alle Spezialfälle der Modellierungstheorie abzudecken. Das Ziel ist, ein funktionierendes Verständnis aufzubauen: 
+Was ist ein Systemmodell? Wie beschreibt man Anforderungen? Wie entsteht daraus eine Architektur? Und wie lässt sich diese Architektur auf ein ROS2-Robotiksystem übertragen?
+
+Als durchgängiges Beispiel dient ein autonomer Indoor-Roboter. Der Roboter soll Hindernisse erkennen, Räume kartieren, Ziele anfahren, Personen erkennen und seinen Akkustand überwachen. 
+Das Beispiel ist klein genug für den Einstieg, aber realistisch genug, um die wichtigsten Ideen von Model-Based Systems Engineering sichtbar zu machen.
+
+\mainmatter
+
+\input{chapters/01_systems_engineering}
+\input{chapters/02_mbse}
+\input{chapters/03_sysml_grundlagen}
+\input{chapters/04_enterprise_architect}
+\input{chapters/05_praxisprojekt}
+\input{chapters/06_anforderungen}
+\input{chapters/07_stakeholder_use_cases}
+\input{chapters/08_bdd}
+\input{chapters/09_ibd}
+\input{chapters/10_schnittstellen}
+\input{chapters/11_activity_diagrams}
+\input{chapters/12_state_machines}
+\input{chapters/13_parametrik}
+\input{chapters/14_ros2_grundlagen}
+\input{chapters/15_ros2_architektur}
+\input{chapters/16_sysml_ros2_mapping}
+\input{chapters/17_ros2_python}
+\input{chapters/18_ml_integration}
+\input{chapters/19_tests_verifikation}
+\input{chapters/20_traceability}
+\input{chapters/21_abschlussprojekt}
+\input{chapters/22_ausblick}
+
+\backmatter
+\printglossary[type=\acronymtype,title=Abkürzungsverzeichnis]
+\printglossary[title=Glossar]
+\bibliographystyle{plain}
+\bibliography{references}
+\printindex
+
+\end{document}

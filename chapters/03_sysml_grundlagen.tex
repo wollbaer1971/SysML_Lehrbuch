@@ -1,0 +1,43 @@
+\chapter{SysML-Grundlagen}
+
+\begin{lernziele}
+Nach diesem Kapitel kennen Sie die wichtigsten SysML-Diagrammtypen und wissen, wofür sie eingesetzt werden.
+\end{lernziele}
+
+\section{Was ist SysML?}
+\gls{sysml} steht für Systems Modeling Language. Die Sprache wurde entwickelt, um technische Systeme modellieren zu können. Sie basiert auf UML, ist aber stärker auf Systeme aus Hardware, Software, Menschen, Prozessen und physikalischen Zusammenhängen ausgerichtet.
+
+\section{Diagrammtypen}
+Für den Einstieg sind sechs Diagrammtypen besonders wichtig.
+
+\subsection{Requirement Diagram}
+Das Requirement Diagram beschreibt Anforderungen und ihre Beziehungen. Es zeigt, welche Anforderungen voneinander abhängen und welche Elemente sie erfüllen oder verifizieren.
+
+\subsection{Block Definition Diagram}
+Das \gls{bdd} beschreibt die Systemstruktur auf einer eher abstrakten Ebene. Es zeigt Blöcke und ihre Beziehungen.
+
+\subsection{Internal Block Diagram}
+Das \gls{ibd} zeigt die innere Struktur eines Blocks. Es zeigt Teile, Ports und Verbindungen.
+
+\subsection{Activity Diagram}
+Aktivitätsdiagramme beschreiben Abläufe. Sie eignen sich für Prozesse, Algorithmen und Betriebsabläufe.
+
+\subsection{State Machine Diagram}
+Zustandsdiagramme beschreiben Zustände und Übergänge. Sie sind besonders nützlich für Systeme mit klaren Betriebsmodi.
+
+\subsection{Parametric Diagram}
+Parametrische Diagramme beschreiben mathematische Beziehungen, zum Beispiel Energieverbrauch oder Reichweite.
+
+\section{Nicht alles gleichzeitig lernen}
+Einsteiger sollten nicht versuchen, sofort jedes Diagramm perfekt zu beherrschen. Der sinnvolle Einstieg lautet: Anforderungen, BDD, IBD, Aktivitätsdiagramm und Zustandsdiagramm. Parametrik kann später folgen.
+
+\begin{praxisbox}
+Für den Indoor-Roboter beginnen wir mit Anforderungen und Struktur. Erst wenn klar ist, was der Roboter können soll und aus welchen Hauptsystemen er besteht, modellieren wir Verhalten und technische Details.
+\end{praxisbox}
+
+\section{Modell statt Bild}
+Ein SysML-Diagramm ist nur eine Sicht auf ein Modell. Das ist wichtig: Wenn ein Block in mehreren Diagrammen erscheint, ist es derselbe Block. Wird der Name geändert, sollte sich die Änderung überall widerspiegeln. Gute Modellierungswerkzeuge speichern also nicht nur Zeichnungen, sondern Modellinformationen.
+
+\begin{uebungbox}
+Ordnen Sie folgende Fragen einem Diagrammtyp zu: Was muss das System leisten? Aus welchen Teilen besteht es? Welche Daten fließen zwischen Komponenten? Welche Zustände kann der Roboter haben?
+\end{uebungbox}

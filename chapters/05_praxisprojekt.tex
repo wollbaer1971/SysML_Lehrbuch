@@ -1,0 +1,38 @@
+\chapter{Das Praxisprojekt: Autonomer Indoor-Roboter}
+
+\begin{lernziele}
+Nach diesem Kapitel kennen Sie das Beispielsystem, seine Hauptfunktionen und die wichtigsten Randbedingungen.
+\end{lernziele}
+
+\section{Ziel des Systems}
+Der autonome Indoor-Roboter soll sich in Innenräumen bewegen, Hindernisse erkennen, Personen erkennen, Ziele anfahren und bei niedrigem Akkustand zur Ladestation zurückkehren.
+
+\section{Warum dieses Beispiel?}
+Das Beispiel verbindet mehrere typische Bereiche moderner Systementwicklung: Sensorik, Aktorik, Software, Datenverarbeitung, Robotik, künstliche Intelligenz und Tests. Es ist komplex genug, damit SysML Sinn ergibt, aber nicht so groß, dass Einsteiger den Überblick verlieren.
+
+\section{Hauptfunktionen}
+\begin{itemize}
+\item Umgebung erfassen
+\item Karte erstellen oder laden
+\item Position bestimmen
+\item Navigationsziel empfangen
+\item Pfad planen
+\item Hindernissen ausweichen
+\item Personen erkennen
+\item Batterie überwachen
+\item Ladestation anfahren
+\end{itemize}
+
+\section{Systemkontext}
+Der Roboter interagiert mit Nutzern, Räumen, Hindernissen, Ladestation und Wartungspersonal. Diese externen Elemente gehören nicht alle zwingend zum System, beeinflussen aber Anforderungen und Schnittstellen.
+
+\section{Annahmen}
+Für dieses Lehrbuch nehmen wir an, dass der Roboter mit Kamera, Lidar, mobilem Rechner, Motorcontroller und Batterie ausgestattet ist. Als Softwarebasis verwenden wir ROS2. Für die Personenerkennung wird später ein ML-Modell eingebunden.
+
+\begin{hinweisbox}
+Das Projekt ist didaktisch vereinfacht. Ein echter sicherheitskritischer Roboter würde zusätzliche Sicherheitsanalysen, Normenbetrachtungen und Zulassungsprozesse benötigen.
+\end{hinweisbox}
+
+\begin{uebungbox}
+Zeichnen Sie eine einfache Kontextskizze: Roboter in der Mitte, außen Nutzer, Hindernis, Ladestation, Raum und Wartungstechniker.
+\end{uebungbox}
