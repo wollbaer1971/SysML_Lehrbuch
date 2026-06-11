@@ -1,34 +1,103 @@
 \chapter{Zustandsmodellierung mit State Machines}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie Betriebszustände und Zustandswechsel eines Roboters modellieren.
+Nach diesem Kapitel können Sie Betriebszustände und Zustandswechsel eines Roboters modellieren. Sie verstehen Zustände, Ereignisse, Übergänge, Start- und Endzustände sowie einfache Guard-Bedingungen und können eine State Machine für den autonomen Indoor-Roboter entwerfen.
 \end{lernziele}
 
+\section{Einleitung}
+Ein Roboter verhält sich nicht in jeder Situation gleich. Wenn er lädt, soll er nicht losfahren. Wenn er einen Fehler hat, soll er keine neuen Aufträge ausführen. Wenn der Akku niedrig ist, soll er zur Ladestation zurückkehren. Solche Fragen lassen sich mit State Machines sehr gut modellieren.
+
 \section{Zustände}
-Ein Zustand beschreibt eine Situation, in der sich das System über eine gewisse Zeit befindet. Beispiele für den Roboter sind \texttt{Idle}, \texttt{Mapping}, \texttt{Navigation}, \texttt{Charging} und \texttt{Error}.
+Ein Zustand beschreibt eine Situation, in der sich das System über eine gewisse Zeit befindet. Beispiele für den Roboter sind:
+
+\begin{itemize}
+    \item \texttt{Idle}
+    \item \texttt{Mapping}
+    \item \texttt{Navigating}
+    \item \texttt{AvoidingObstacle}
+    \item \texttt{ReturnToDock}
+    \item \texttt{Charging}
+    \item \texttt{Error}
+\end{itemize}
 
 \section{Ereignisse}
 Ereignisse lösen Übergänge aus. Beispiele:
+
 \begin{itemize}
-\item \texttt{GoalReceived}
-\item \texttt{BatteryLow}
-\item \texttt{ObstacleDetected}
-\item \texttt{ChargingComplete}
-\item \texttt{ErrorDetected}
+    \item \texttt{GoalReceived}
+    \item \texttt{BatteryLow}
+    \item \texttt{ObstacleDetected}
+    \item \texttt{DockReached}
+    \item \texttt{ChargingComplete}
+    \item \texttt{ErrorDetected}
 \end{itemize}
 
 \section{Beispiel}
 \begin{verbatim}
-Idle --GoalReceived--> Navigation
-Navigation --BatteryLow--> ReturnToDock
+Idle --GoalReceived--> Navigating
+Navigating --ObstacleDetected--> AvoidingObstacle
+AvoidingObstacle --PathFree--> Navigating
+Navigating --BatteryLow--> ReturnToDock
 ReturnToDock --DockReached--> Charging
 Charging --ChargingComplete--> Idle
-Navigation --ErrorDetected--> Error
+Navigating --ErrorDetected--> Error
+Error --Reset--> Idle
 \end{verbatim}
 
+\section{Guard-Bedingungen}
+Guards sind Bedingungen an Übergängen. Ein Übergang findet nur statt, wenn die Bedingung erfüllt ist. Beispiel: \texttt{GoalReceived [batteryOk]} führt zu \texttt{Navigating}. Wenn der Akku nicht ausreichend ist, führt das Ereignis vielleicht zu \texttt{ReturnToDock} oder zu einer Ablehnung des Auftrags.
+
 \section{Warum State Machines nützlich sind}
-Zustandsdiagramme verhindern unklare Logik. Sie zeigen, welche Übergänge erlaubt sind. Darf der Roboter während eines Fehlers ein neues Ziel annehmen? Darf er während des Ladens navigieren? Solche Fragen werden sichtbar.
+Zustandsdiagramme verhindern unklare Logik. Sie zeigen, welche Übergänge erlaubt sind. Darf der Roboter während eines Fehlers ein neues Ziel annehmen? Darf er während des Ladens navigieren? Was passiert, wenn während der Navigation der Akku niedrig wird?
+
+\begin{praxisbox}
+Ohne Zustandsmodell landet solche Logik oft verteilt im Code. Ein Node prüft den Akku, ein anderer prüft Ziele, ein dritter behandelt Fehler. Eine State Machine schafft eine gemeinsame Sicht auf erlaubte Betriebsmodi.
+\end{praxisbox}
+
+\section{State Machines und Tests}
+Aus Zustandsdiagrammen lassen sich Tests ableiten. Jeder wichtige Übergang kann geprüft werden: Ziel empfangen, Hindernis erkannt, Akku niedrig, Ladestation erreicht, Fehler erkannt, Reset durchgeführt.
+
+\section{Typische Fehler}
+\subsection{Zustände und Aktionen verwechseln}
+\texttt{Navigating} ist ein Zustand. \texttt{Pfad planen} ist eher eine Aktion. Zustände sollten eine gewisse Dauer haben.
+
+\subsection{Zu viele Zustände}
+Ein Diagramm mit zu vielen Zuständen wird schwer lesbar. Beginnen Sie mit den wichtigsten Betriebsmodi.
+
+\subsection{Fehlerzustand vergessen}
+Jedes reale System braucht eine Vorstellung davon, was bei Fehlern passiert.
+
+\section{Praxisbeispiel: Betriebsmodi des Roboters}
+Für den Indoor-Roboter ist eine State Machine auf Systemebene besonders hilfreich. Sie legt fest, welche Betriebsmodi grundsätzlich erlaubt sind. Ein einfaches Modell beginnt mit \texttt{Idle}. Von dort kann der Roboter bei einem Zielauftrag in \texttt{Navigating} wechseln. Erkennt er einen niedrigen Akkustand, wechselt er zu \texttt{ReturnToDock}. Bei erfolgreichem Andocken wechselt er zu \texttt{Charging}.
+
+Der Zustand \texttt{Error} sollte aus mehreren Zuständen erreichbar sein. Ein Fehler kann während der Navigation, beim Laden oder während der Initialisierung auftreten. Wichtig ist, dass der Rückweg aus dem Fehlerzustand bewusst modelliert wird. Darf ein Nutzer einfach Reset drücken? Muss Wartungspersonal eingreifen? Muss der Roboter vorher die Motoren deaktivieren?
+
+State Machines helfen außerdem bei der Bedienoberfläche. Wenn das System im Zustand \texttt{Charging} ist, sollte die Oberfläche keine normale Zielnavigation anbieten oder zumindest klar anzeigen, dass der Roboter gerade nicht verfügbar ist.
+
+\section{Zusammenfassung}
+State Machines beschreiben Betriebszustände und erlaubte Übergänge. Für den Indoor-Roboter sind sie besonders wichtig, um Navigation, Laden, Fehlerbehandlung und Sicherheitsreaktionen sauber zu modellieren.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Was ist ein Zustand?
+    \item Was ist ein Ereignis?
+    \item Was ist ein Übergang?
+    \item Was ist eine Guard-Bedingung?
+    \item Warum ist ein Fehlerzustand wichtig?
+    \item Welche Zustände sollte der Indoor-Roboter mindestens besitzen?
+    \item Wie können State Machines Tests unterstützen?
+\end{enumerate}
+
+\section{Übungen}
+\begin{uebungbox}
+\textbf{Übung 1: State Machine erstellen}\\
+Erstellen Sie eine State Machine für den Roboter mit mindestens sechs Zuständen und acht Übergängen.
+\end{uebungbox}
 
 \begin{uebungbox}
-Erstellen Sie eine State Machine für den Roboter mit mindestens fünf Zuständen und acht Übergängen.
+\textbf{Übung 2: Guards ergänzen}\\
+Ergänzen Sie Bedingungen für die Übergänge \texttt{GoalReceived}, \texttt{BatteryLow} und \texttt{ErrorDetected}.
 \end{uebungbox}
+
+\section{Literaturhinweise}
+State Machines sind ein etabliertes Mittel zur Verhaltensmodellierung. SysML-Literatur \cite{delligatti2014,friedenthal2014} zeigt, wie sie mit Anforderungen und Tests verbunden werden können.

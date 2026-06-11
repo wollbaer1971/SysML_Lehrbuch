@@ -1,46 +1,152 @@
 \chapter{Anforderungen modellieren}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie Anforderungen formulieren, nummerieren, strukturieren und mit SysML-Beziehungen verbinden.
+Nach diesem Kapitel können Sie Anforderungen verständlich, eindeutig und prüfbar formulieren. Sie können Anforderungen nummerieren, strukturieren, in funktionale und nicht-funktionale Anforderungen unterscheiden und mit SysML-Beziehungen verbinden. Außerdem verstehen Sie, wie Anforderungen im Roboterprojekt von Stakeholderbedürfnissen bis zu Testfällen nachverfolgt werden.
 \end{lernziele}
 
+\section{Einleitung}
+Anforderungen sind eine der wichtigsten Grundlagen eines Systemmodells. Sie beschreiben, was das System leisten muss und unter welchen Bedingungen es dies tun soll. Ohne gute Anforderungen ist unklar, welche Architektur sinnvoll ist und woran der Projekterfolg gemessen wird.
+
+Beim autonomen Indoor-Roboter klingen viele Wünsche zunächst einfach: Der Roboter soll sicher fahren, Hindernisse erkennen, Personen erkennen, lange genug fahren und leicht bedienbar sein. Für die Entwicklung reicht das nicht. Solche Wünsche müssen in Anforderungen übersetzt werden, die eindeutig und später überprüfbar sind.
+
 \section{Was ist eine gute Anforderung?}
-Eine gute Anforderung ist eindeutig, verständlich und testbar. \enquote{Der Roboter soll gut navigieren} ist keine gute Anforderung. Besser ist: \enquote{Der Roboter soll ein Ziel in einem bekannten Innenraum autonom anfahren können.}
+Eine gute Anforderung ist:
+
+\begin{itemize}
+    \item verständlich
+    \item eindeutig
+    \item notwendig
+    \item realistisch
+    \item prüfbar
+    \item möglichst lösungsneutral
+\end{itemize}
+
+\enquote{Der Roboter soll gut navigieren} ist keine gute Anforderung. Was bedeutet \enquote{gut}? Schnell? Genau? Sicher? Ohne Kollision? In unbekannten Räumen? Eine bessere Formulierung lautet:
+
+\begin{quote}
+Der Roboter muss in einem bekannten Innenraum ein ausgewähltes Ziel autonom anfahren und dabei statische Hindernisse im Fahrweg vermeiden.
+\end{quote}
+
+Auch diese Anforderung kann später noch präziser werden, aber sie ist deutlich verständlicher.
+
+\section{Vom Bedürfnis zur Anforderung}
+Stakeholder äußern häufig Bedürfnisse. Diese Bedürfnisse sind wichtig, aber noch keine technischen Anforderungen.
+
+\begin{center}
+\begin{tabular}{p{0.38\textwidth}p{0.50\textwidth}}
+\toprule
+\textbf{Bedürfnis} & \textbf{Mögliche Anforderung} \\
+\midrule
+Der Roboter soll niemanden gefährden. & Der Roboter muss bei einem Hindernis im Abstand von 0,5 m seine Geschwindigkeit reduzieren und bei 0,2 m stoppen. \\
+Der Roboter soll einfach bedienbar sein. & Ein Transportauftrag muss mit höchstens drei Eingaben gestartet werden können. \\
+Der Roboter soll nicht liegen bleiben. & Der Roboter muss bei niedrigem Akkustand automatisch zur Ladestation zurückkehren. \\
+Wartung soll einfach sein. & Der Roboter muss Sensorstatus, Akkustatus und Fehlermeldungen anzeigen. \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \section{Beispielanforderungen}
 \begin{longtable}{p{25mm}p{110mm}}
 \toprule
 ID & Anforderung\\
 \midrule
-REQ-001 & Der Roboter soll autonom in Innenräumen navigieren.\\
-REQ-002 & Der Roboter soll Hindernisse im Fahrbereich erkennen.\\
-REQ-003 & Der Roboter soll erkannte Hindernisse umfahren oder rechtzeitig stoppen.\\
-REQ-004 & Der Roboter soll Personen im Kamerabild erkennen.\\
-REQ-005 & Der Roboter soll seinen Akkustand überwachen.\\
-REQ-006 & Der Roboter soll bei niedrigem Akkustand zur Ladestation fahren.\\
-REQ-007 & Der Roboter soll seinen Betriebszustand melden.\\
+REQ-001 & Der Roboter muss autonom in einem bekannten Innenraumbereich navigieren können.\\
+REQ-002 & Der Roboter muss Hindernisse im Fahrbereich erkennen.\\
+REQ-003 & Der Roboter muss erkannte Hindernisse umfahren oder rechtzeitig stoppen.\\
+REQ-004 & Der Roboter muss Personen im Kamerabild erkennen können.\\
+REQ-005 & Der Roboter muss seinen Akkustand überwachen.\\
+REQ-006 & Der Roboter muss bei niedrigem Akkustand selbstständig zur Ladestation fahren.\\
+REQ-007 & Der Roboter muss seinen Betriebszustand melden.\\
+REQ-008 & Der Roboter muss einen sicheren Zustand einnehmen, wenn ein kritischer Sensor ausfällt.\\
+REQ-009 & Der Roboter muss Transportaufträge über eine einfache Benutzerschnittstelle entgegennehmen.\\
+REQ-010 & Der Roboter muss relevante Fehler für Wartungspersonal nachvollziehbar protokollieren.\\
 \bottomrule
 \end{longtable}
 
 \section{Funktionale und nicht-funktionale Anforderungen}
-Funktionale Anforderungen beschreiben, was das System tun soll. Nicht-funktionale Anforderungen beschreiben Eigenschaften wie Geschwindigkeit, Genauigkeit, Verfügbarkeit oder Sicherheit.
+Funktionale Anforderungen beschreiben, was das System tun soll. Beispiele sind Navigation, Hinderniserkennung, Akkustandsüberwachung oder Statusmeldung.
+
+Nicht-funktionale Anforderungen beschreiben Eigenschaften des Systems. Beispiele sind Geschwindigkeit, Genauigkeit, Verfügbarkeit, Sicherheit, Wartbarkeit, Datenschutz oder Energieverbrauch.
+
+Beide Arten sind wichtig. Ein Roboter, der alle Funktionen besitzt, aber zu langsam, unsicher oder unwartbar ist, erfüllt das Projektziel nicht.
+
+\section{Anforderungen strukturieren}
+In größeren Projekten werden Anforderungen hierarchisch strukturiert. Eine oberste Anforderung kann in mehrere konkrete Anforderungen zerlegt werden.
+
+Beispiel:
+
+\begin{itemize}
+    \item REQ-SAFE-001: Der Roboter muss sicher in der Nähe von Menschen betrieben werden.
+    \item REQ-SAFE-002: Der Roboter muss Hindernisse im Fahrweg erkennen.
+    \item REQ-SAFE-003: Der Roboter muss bei Gefahr stoppen.
+    \item REQ-SAFE-004: Der Roboter muss bei Sensorausfall einen sicheren Zustand einnehmen.
+\end{itemize}
+
+Die allgemeine Sicherheitsanforderung wird dadurch handhabbarer.
 
 \section{SysML-Beziehungen}
-Wichtige Beziehungen sind:
+Wichtige Beziehungen in SysML sind:
+
 \begin{itemize}
-\item \texttt{deriveReqt}: Eine Anforderung wird aus einer anderen abgeleitet.
-\item \texttt{satisfy}: Ein Modellelement erfüllt eine Anforderung.
-\item \texttt{verify}: Ein Testfall überprüft eine Anforderung.
-\item \texttt{trace}: Allgemeine Nachverfolgung.
+    \item \texttt{deriveReqt}: Eine Anforderung wird aus einer anderen abgeleitet.
+    \item \texttt{satisfy}: Ein Modellelement erfüllt eine Anforderung.
+    \item \texttt{verify}: Ein Testfall überprüft eine Anforderung.
+    \item \texttt{trace}: Eine allgemeine Nachverfolgungsbeziehung.
+    \item \texttt{refine}: Ein Element beschreibt eine Anforderung genauer.
 \end{itemize}
 
 \begin{praxisbox}
-REQ-002 wird durch das \texttt{PerceptionSystem} erfüllt. Der Testfall \texttt{TC-002 Hinderniserkennung} verifiziert diese Anforderung.
+REQ-002 \enquote{Hindernisse erkennen} wird durch das \texttt{PerceptionSystem} erfüllt. Der Testfall \texttt{TC-002 Hinderniserkennung} verifiziert diese Anforderung. Eine \texttt{trace}-Beziehung kann zusätzlich zeigen, dass der ROS2-Node \texttt{obstacle\_detector\_node} zur Umsetzung gehört.
 \end{praxisbox}
 
 \section{Anforderungen in Enterprise Architect}
-Erstellen Sie im Paket \texttt{01\_Requirements} ein Requirement Diagram. Legen Sie die Anforderungen als SysML-Requirement-Elemente an. Tragen Sie ID und Text ein. Achten Sie darauf, dass die ID nicht nur im Namen, sondern auch als Eigenschaft gepflegt wird.
+Erstellen Sie im Paket \texttt{02\_Requirements} ein Requirement Diagram. Legen Sie Anforderungen als SysML-Requirement-Elemente an. Tragen Sie ID und Text ein. Achten Sie darauf, dass die ID nicht nur im Namen, sondern auch als Eigenschaft gepflegt wird.
 
+Nutzen Sie Beschreibungsfelder, um Annahmen, Begründungen oder offene Fragen zu dokumentieren. Wenn eine Anforderung noch unklar ist, markieren Sie sie bewusst, statt sie stillschweigend als fertig zu behandeln.
+
+\section{Typische Fehler}
+\subsection{Zu allgemeine Anforderungen}
+\enquote{Der Roboter soll zuverlässig sein} ist nicht prüfbar. Besser sind konkrete Kriterien.
+
+\subsection{Lösungen als Anforderungen}
+\enquote{Der Roboter muss Sensor X verwenden} ist häufig bereits eine Designentscheidung. Besser ist eine lösungsneutrale Fähigkeit, sofern kein konkreter Sensor vorgeschrieben ist.
+
+\subsection{Keine Akzeptanzkriterien}
+Eine Anforderung sollte erkennen lassen, wie sie später geprüft wird. Sonst entstehen Diskussionen am Projektende.
+
+\subsection{Keine Pflege}
+Anforderungen ändern sich. Wichtig ist, Änderungen nachvollziehbar zu halten und betroffene Modellelemente zu prüfen.
+
+\section{Zusammenfassung}
+Anforderungen verbinden Stakeholderbedürfnisse mit Architektur und Tests. Gute Anforderungen sind verständlich, eindeutig und prüfbar. In SysML werden Anforderungen nicht nur gesammelt, sondern über Beziehungen mit Funktionen, Blöcken, Schnittstellen und Testfällen verbunden.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Was macht eine gute Anforderung aus?
+    \item Warum ist \enquote{Der Roboter soll gut navigieren} problematisch?
+    \item Was ist der Unterschied zwischen funktionalen und nicht-funktionalen Anforderungen?
+    \item Wozu dient \texttt{deriveReqt}?
+    \item Wozu dient \texttt{satisfy}?
+    \item Wozu dient \texttt{verify}?
+    \item Warum sollten Anforderungen möglichst lösungsneutral sein?
+    \item Welche Anforderung könnte aus dem Bedürfnis \enquote{Wartung soll einfach sein} entstehen?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: Anforderungen formulieren}\\
 Formulieren Sie fünf zusätzliche Anforderungen: zwei zur Sicherheit, eine zur Bedienung, eine zur Wartung und eine zur Leistung.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Anforderungen verbessern}\\
+Verbessern Sie die Aussagen \enquote{Der Roboter soll schnell sein}, \enquote{Der Roboter soll zuverlässig sein} und \enquote{Die Bedienung soll intuitiv sein}, sodass daraus prüfbare Anforderungen werden.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 3: Beziehungen anlegen}\\
+Wählen Sie drei Anforderungen aus der Tabelle. Ordnen Sie jeder Anforderung einen Block und einen Testfall zu.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Anforderungsmodellierung ist ein zentraler Bestandteil von SysML und MBSE. Für den Einstieg eignen sich Delligatti \cite{delligatti2014} sowie Friedenthal, Moore und Steiner \cite{friedenthal2014}. Für reale Projekte sollte zusätzlich Literatur zum Requirements Engineering genutzt werden.

@@ -1,40 +1,497 @@
 \chapter{Einführung in Model-Based Systems Engineering}
 
 \begin{lernziele}
-Nach diesem Kapitel verstehen Sie den Unterschied zwischen dokumentenzentrierter Entwicklung und modellbasierter Entwicklung. Sie können erklären, warum ein zentrales Modell bei komplexen Projekten nützlich ist.
+Nach diesem Kapitel verstehen Sie den Unterschied zwischen dokumentenzentrierter Entwicklung und modellbasierter Entwicklung. Sie können erklären, was \gls{mbse} bedeutet, welche Informationen in einem Systemmodell abgelegt werden und warum ein zentrales Modell bei komplexen Projekten nützlich ist. Sie können den Nutzen von MBSE am Beispiel eines autonomen Indoor-Roboters beschreiben, typische Missverständnisse erkennen und erste Modellinhalte für ein eigenes Roboterprojekt strukturieren.
 \end{lernziele}
 
+\section{Einleitung}
+Im vorherigen Kapitel ging es um Systems Engineering als Denkweise: ein technisches System wird nicht nur als Sammlung einzelner Teile betrachtet, sondern als Zusammenspiel von Anforderungen, Funktionen, Komponenten, Schnittstellen, Verhalten, Tests und Einsatzumgebung. Dieses Denken ist bereits hilfreich, auch wenn man nur mit Texten, Tabellen und Skizzen arbeitet.
+
+In realen Projekten entsteht jedoch schnell ein praktisches Problem. Informationen liegen an vielen Orten. Anforderungen stehen in einem Word-Dokument oder in einer Excel-Tabelle. Architekturentscheidungen werden in PowerPoint gezeichnet. Schnittstellen werden in E-Mails diskutiert. Testfälle liegen in einem Testmanagement-Werkzeug. Software wird in Git entwickelt. Aufgaben stehen in Jira oder einem ähnlichen Werkzeug. Protokolle aus Besprechungen liegen irgendwo im Projektordner.
+
+Solange das Projekt klein ist, kann das funktionieren. Sobald aber mehrere Personen beteiligt sind und sich Anforderungen ändern, wird es schwierig. Welche Version ist aktuell? Welche Komponente erfüllt welche Anforderung? Welche Tests prüfen die Hinderniserkennung? Welche ROS2-Node nutzt welche Sensordaten? Welche Dokumente müssen angepasst werden, wenn der Roboter eine neue Kamera erhält?
+
+\gls{mbse} setzt genau hier an. Model-Based Systems Engineering bedeutet, dass ein Modell zum zentralen Träger der wichtigsten Systeminformationen wird. Das Modell ersetzt nicht alles. Es ersetzt nicht den Code, nicht jede Berechnung und nicht jedes Gespräch. Aber es verbindet die entscheidenden Informationen so, dass Zusammenhänge nachvollziehbar bleiben.
+
+\begin{praxisbox}
+Beim Indoor-Roboter könnte eine Anforderung lauten: \enquote{Der Roboter muss Hindernisse rechtzeitig erkennen und sicher stoppen.} Im MBSE-Modell kann diese Anforderung mit einer Funktion \enquote{Hindernis erkennen}, mit einem Lidar-Sensor, mit einer Sicherheitslogik, mit einer ROS2-Node und mit einem Testfall verbunden werden. Dadurch sieht das Team später, welche Teile betroffen sind, wenn die Anforderung geändert wird.
+\end{praxisbox}
+
 \section{Dokumentenzentrierte Entwicklung}
-In vielen Projekten liegen Informationen verstreut vor: Anforderungen in Excel, Architektur in PowerPoint, Schnittstellen in Word, Aufgaben in Jira und Code in Git. Das funktioniert eine Zeit lang, wird aber unübersichtlich. Sobald Änderungen auftreten, ist unklar, welche Dokumente angepasst werden müssen.
+Dokumentenzentrierte Entwicklung bedeutet, dass Projektinformationen hauptsächlich in einzelnen Dokumenten gespeichert werden. Das können Textdokumente, Tabellen, Präsentationen, Diagrammbilder, E-Mails oder Tickets sein. Diese Arbeitsweise ist weit verbreitet, weil sie leicht beginnt. Fast jeder kann ein Dokument schreiben, eine Tabelle ausfüllen oder ein Diagramm zeichnen.
 
-\section{Modellbasierte Entwicklung}
-\gls{mbse} verwendet ein Modell als zentrale Informationsquelle. Dieses Modell enthält Anforderungen, Struktur, Verhalten, Schnittstellen und Tests. Das Modell ersetzt nicht den Code und nicht jede technische Spezifikation. Es verbindet aber die wichtigsten Informationen.
+Der Anfang ist bequem. Ein Team erstellt eine Anforderungsliste in Excel. Die Architektur wird in PowerPoint skizziert. Ein Entwickler beschreibt eine Schnittstelle in einem Markdown-Dokument. Eine Testerin legt Testfälle in einer Tabelle an. Für ein sehr kleines Projekt reicht das oft aus.
 
-\section{Vorteile von MBSE}
-Die wichtigsten Vorteile sind Nachvollziehbarkeit, Konsistenz und bessere Kommunikation. Ein Entwickler sieht, welche Anforderung eine Komponente erfüllt. Ein Tester sieht, welcher Test zu welcher Anforderung gehört. Ein Projektleiter erkennt, welche Teile von einer Änderung betroffen sind.
+Mit wachsender Komplexität entstehen aber typische Probleme:
+
+\begin{itemize}
+    \item Informationen werden mehrfach abgelegt.
+    \item Unterschiedliche Dokumente widersprechen sich.
+    \item Änderungen werden nicht überall nachgeführt.
+    \item Diagramme sehen aktuell aus, enthalten aber veraltete Inhalte.
+    \item Beziehungen zwischen Anforderungen, Architektur und Tests sind nur schwer erkennbar.
+    \item Neue Teammitglieder brauchen lange, um den Projektstand zu verstehen.
+    \item Entscheidungen sind später kaum noch nachvollziehbar.
+\end{itemize}
+
+\subsection{Beispiel: Eine geänderte Kamera}
+Angenommen, der Indoor-Roboter erhält statt einer einfachen Kamera eine Tiefenkamera. In einer dokumentenzentrierten Umgebung kann diese Änderung viele Dokumente betreffen:
+
+\begin{itemize}
+    \item die Stückliste
+    \item das Architekturdiagramm
+    \item die Beschreibung der Sensorik
+    \item die Schnittstellenspezifikation
+    \item die Stromverbrauchsabschätzung
+    \item die Softwarebeschreibung der Bildverarbeitung
+    \item die Datenschutzbewertung
+    \item die Testfälle zur Personenerkennung
+\end{itemize}
+
+Wenn nur eines dieser Dokumente vergessen wird, entsteht ein Widerspruch. Vielleicht zeigt die Architektur noch die alte Kamera, während die Schnittstellenspezifikation bereits die neue Kamera beschreibt. Vielleicht testet das Testteam noch mit alten Bildformaten. Vielleicht merkt niemand, dass die neue Kamera mehr Strom verbraucht und die Akkulaufzeit sinkt.
+
+\subsection{Der stille Aufwand der Synchronisation}
+In dokumentenzentrierten Projekten besteht ein großer Teil der Arbeit aus Synchronisation. Menschen müssen Dokumente vergleichen, Änderungen weitergeben, Tabellen aktualisieren und nachfragen, welche Information gilt. Dieser Aufwand ist oft unsichtbar, aber er kostet Zeit und erzeugt Fehler.
+
+Ein typischer Satz in solchen Projekten lautet: \enquote{Wo steht denn die aktuelle Version?} Ein anderer lautet: \enquote{Das hatten wir doch geändert.} Beides sind Warnzeichen. Sie zeigen, dass das Projektwissen nicht zuverlässig organisiert ist.
+
+\section{Was bedeutet modellbasierte Entwicklung?}
+Modellbasierte Entwicklung bedeutet, dass wichtige Informationen über das System in einem Modell abgelegt werden. Ein Modell ist dabei mehr als eine Zeichnung. Es besteht aus Modellelementen und Beziehungen zwischen diesen Elementen.
+
+Ein Modellelement kann zum Beispiel sein:
+
+\begin{itemize}
+    \item eine Anforderung
+    \item ein Stakeholder
+    \item eine Funktion
+    \item ein Block oder Teilsystem
+    \item eine Schnittstelle
+    \item ein Datenfluss
+    \item ein Zustand
+    \item ein Testfall
+    \item eine ROS2-Node als spätere Implementierungseinheit
+\end{itemize}
+
+Die Beziehungen sind mindestens genauso wichtig wie die Elemente. Eine Anforderung kann durch eine Funktion erfüllt werden. Eine Funktion kann durch eine Komponente realisiert werden. Eine Komponente kann eine Schnittstelle besitzen. Ein Testfall kann eine Anforderung verifizieren. Eine ROS2-Node kann Teil einer Softwarearchitektur sein und Daten über ein Topic austauschen.
+
+\subsection{Modell statt Bild}
+Für Einsteiger ist dieser Punkt besonders wichtig: Ein Diagramm ist nicht automatisch ein Modell. Ein Diagramm kann nur ein Bild sein. Wenn man in PowerPoint Kästen und Pfeile zeichnet, sieht das vielleicht wie ein Architekturmodell aus. Die Kästen wissen aber nichts voneinander. Wenn derselbe Block in drei Diagrammen vorkommt, sind das in PowerPoint drei getrennte grafische Objekte.
+
+In einem echten Modellierungswerkzeug ist ein Diagramm dagegen eine Sicht auf Modellelemente. Der Block \enquote{Navigation} existiert im Modell. Er kann in mehreren Diagrammen erscheinen. Wenn sein Name geändert wird, sollte die Änderung überall sichtbar werden. Wenn eine Anforderung mit diesem Block verknüpft ist, kann das Werkzeug diese Beziehung anzeigen.
 
 \begin{hinweisbox}
-MBSE bedeutet nicht, dass jedes Detail modelliert werden muss. Ein gutes Modell ist so detailliert wie nötig und so einfach wie möglich.
+Ein MBSE-Modell ist nicht gut, weil es hübsche Diagramme enthält. Es ist gut, wenn es wichtige Fragen beantwortet: Was muss das System leisten? Welche Teile erfüllen welche Anforderungen? Welche Schnittstellen gibt es? Was passiert bei einer Änderung? Wie wird die Erfüllung nachgewiesen?
 \end{hinweisbox}
 
-\section{MBSE im Roboterprojekt}
-Für unseren Roboter modellieren wir Anforderungen, Systemstruktur, Datenflüsse, Verhalten, ROS2-Komponenten und Tests. Damit entsteht eine Kette von der Idee bis zur Umsetzung.
+\subsection{Das Modell als gemeinsame Informationsbasis}
+Das Ziel eines MBSE-Modells ist eine gemeinsame Informationsbasis. Alle Beteiligten sollen nicht in getrennten Dokumentwelten arbeiten, sondern auf eine konsistente Systembeschreibung zugreifen können. Das bedeutet nicht, dass jeder jedes Detail sehen muss. Ein Projektleiter interessiert sich vielleicht für Anforderungen, Risiken und Meilensteine. Eine Softwareentwicklerin interessiert sich für Schnittstellen, Datenflüsse und ROS2-Nodes. Eine Testerin interessiert sich für Anforderungen und Testfälle. Das Modell kann für verschiedene Rollen verschiedene Sichten anbieten.
+
+\section{Was gehört in ein MBSE-Modell?}
+Ein MBSE-Modell kann sehr groß werden. Für den Einstieg ist es deshalb wichtig, sich auf zentrale Inhalte zu konzentrieren. Beim autonomen Indoor-Roboter betrachten wir zunächst acht Bereiche.
+
+\subsection{Stakeholder und Bedürfnisse}
+Das Modell kann Stakeholder und ihre Bedürfnisse enthalten. Beispiele sind Nutzer, Wartungspersonal, Sicherheitsbeauftragte, Datenschutzverantwortliche und Betreiber. Diese Stakeholder haben Erwartungen, aus denen Anforderungen abgeleitet werden.
+
+Für den Roboter könnte das so aussehen:
+
+\begin{itemize}
+    \item Nutzer wünschen einfache Bedienung.
+    \item Wartungspersonal wünscht verständliche Diagnoseinformationen.
+    \item Sicherheitsbeauftragte wünschen kontrolliertes Verhalten in Personennähe.
+    \item Datenschutzverantwortliche wünschen lokale Verarbeitung von Kameradaten.
+\end{itemize}
+
+\subsection{Anforderungen}
+Anforderungen beschreiben, was das System leisten muss. Im Modell werden sie nicht nur als Text gesammelt, sondern mit anderen Elementen verbunden. Eine Anforderung zur Hinderniserkennung kann mit einer Funktion, einer Sensorikkomponente, einem Testfall und später mit einer Softwareeinheit verknüpft werden.
+
+\subsection{Funktionen}
+Funktionen beschreiben, was das System tut. Sie liegen zwischen Anforderungen und Lösung. Beispiele für den Roboter sind:
+
+\begin{itemize}
+    \item Umgebung erfassen
+    \item Hindernisse erkennen
+    \item Route planen
+    \item Bewegung ausführen
+    \item Akkustand überwachen
+    \item Ladestation anfahren
+    \item Status melden
+\end{itemize}
+
+\subsection{Struktur}
+Die Struktur beschreibt, aus welchen Hauptteilen das System besteht. In SysML werden dafür später Blöcke verwendet. Für den Einstieg kann man an Teilsysteme denken:
+
+\begin{itemize}
+    \item Fahrwerk
+    \item Energieversorgung
+    \item Sensorik
+    \item Recheneinheit
+    \item Navigationssoftware
+    \item Personenerkennung
+    \item Bedienoberfläche
+    \item Ladestation oder Ladeschnittstelle
+\end{itemize}
+
+\subsection{Schnittstellen}
+Schnittstellen beschreiben, wie Elemente miteinander verbunden sind. Sie sind entscheidend, weil viele Integrationsprobleme an Schnittstellen entstehen. Beim Roboter gibt es elektrische, mechanische, softwaretechnische und menschliche Schnittstellen.
+
+Beispiele:
+
+\begin{itemize}
+    \item Kamera liefert Bilddaten an die Objekterkennung.
+    \item Lidar liefert Abstandsdaten an die Navigation.
+    \item Batteriemanagement liefert Ladezustand an die Missionsplanung.
+    \item Bedienoberfläche sendet Zielaufträge an das System.
+    \item Roboter und Ladestation tauschen Energie und eventuell Statusinformationen aus.
+\end{itemize}
+
+\subsection{Verhalten}
+Verhalten beschreibt Abläufe, Entscheidungen und Zustände. Ein Roboter hat typische Betriebszustände wie \enquote{Bereit}, \enquote{Fährt zum Ziel}, \enquote{Wartet}, \enquote{Kehrt zur Ladestation zurück}, \enquote{Lädt} oder \enquote{Fehler}. Abläufe können beschreiben, wie ein Transportauftrag abgearbeitet wird.
+
+\subsection{Tests und Nachweise}
+Ein Modell sollte zeigen, wie Anforderungen überprüft werden. Eine Sicherheitsanforderung benötigt passende Tests. Eine Navigationsanforderung braucht Testszenarien. Eine Datenschutzanforderung braucht vielleicht eine Inspektion der Softwarearchitektur und eine Prüfung der Datenspeicherung.
+
+\subsection{Entscheidungen und Annahmen}
+Nicht jede wichtige Information ist eine Anforderung. Viele Projektinformationen sind Annahmen oder Entscheidungen. Beispiel: \enquote{Der Roboter wird nur in Innenräumen mit ebenem Boden eingesetzt.} Oder: \enquote{Kamerabilder werden lokal verarbeitet und nicht dauerhaft gespeichert.} Solche Informationen sollten sichtbar bleiben, weil spätere Änderungen große Auswirkungen haben können.
+
+\section{Von Dokumenten zu Modellbeziehungen}
+Der wichtigste Unterschied zwischen klassischer Dokumentation und MBSE liegt in den Beziehungen. Ein Dokument kann eine Anforderung beschreiben. Ein Modell kann zusätzlich zeigen, womit diese Anforderung zusammenhängt.
 
 \begin{center}
 \begin{tikzpicture}[node distance=1.6cm]
-\node (req) [draw, rounded corners] {Anforderung};
-\node (arch) [draw, rounded corners, right of=req, xshift=2.4cm] {Architektur};
-\node (impl) [draw, rounded corners, right of=arch, xshift=2.4cm] {ROS2-Node};
-\node (test) [draw, rounded corners, right of=impl, xshift=2.4cm] {Test};
-\draw[->] (req) -- (arch);
-\draw[->] (arch) -- (impl);
-\draw[->] (impl) -- (test);
+\node (stakeholder) [draw, rounded corners] {Stakeholder};
+\node (req) [draw, rounded corners, right of=stakeholder, xshift=2.7cm] {Anforderung};
+\node (func) [draw, rounded corners, right of=req, xshift=2.7cm] {Funktion};
+\node (arch) [draw, rounded corners, below of=func, yshift=-0.4cm] {Systemelement};
+\node (test) [draw, rounded corners, left of=arch, xshift=-2.7cm] {Testfall};
+\draw[->] (stakeholder) -- node[above] {\small Bedarf} (req);
+\draw[->] (req) -- node[above] {\small wird erfüllt durch} (func);
+\draw[->] (func) -- node[right] {\small realisiert durch} (arch);
+\draw[->] (test) -- node[below] {\small verifiziert} (req);
 \end{tikzpicture}
 \end{center}
 
-\section{Grenzen von MBSE}
-MBSE löst keine schlechten technischen Entscheidungen. Ein Modell kann falsch, veraltet oder unnötig kompliziert sein. Der Nutzen entsteht nur, wenn das Modell gepflegt wird und echte Entscheidungen unterstützt.
+Dieses einfache Bild zeigt bereits den Kern von MBSE. Es geht nicht darum, viele Diagramme zu produzieren. Es geht darum, Systeminformationen so zu verknüpfen, dass Fragen beantwortbar werden.
+
+\subsection{Traceability}
+Traceability bedeutet Nachvollziehbarkeit. Man kann von einer Information zu verwandten Informationen springen. Von einer Anforderung gelangt man zu Funktionen, Komponenten und Tests. Von einer Komponente erkennt man, welche Anforderungen sie erfüllt. Von einem Test sieht man, welche Anforderung er prüft.
+
+Beim Indoor-Roboter ist Traceability besonders hilfreich. Wenn die Sicherheitsanforderung verschärft wird, möchte das Team wissen:
+
+\begin{itemize}
+    \item Welche Funktionen sind betroffen?
+    \item Welche Sensoren und Softwarekomponenten sind beteiligt?
+    \item Welche Schnittstellen müssen angepasst werden?
+    \item Welche Tests müssen erweitert werden?
+    \item Welche Risiken entstehen für Kosten, Zeitplan und Akkulaufzeit?
+\end{itemize}
+
+Ohne Modell muss man diese Zusammenhänge mühsam aus Dokumenten zusammensuchen. Mit einem gepflegten Modell werden sie zumindest teilweise direkt sichtbar.
+
+\section{MBSE im Roboterprojekt}
+Für unser Lehrbuchprojekt modellieren wir den autonomen Indoor-Roboter schrittweise. Das Modell wächst mit dem Verständnis. Am Anfang muss es noch nicht vollständig sein. Es soll die wichtigsten Zusammenhänge sichtbar machen.
+
+\subsection{Erste Modellstruktur}
+Eine einfache Startstruktur für das Modell könnte so aussehen:
+
+\begin{itemize}
+    \item Paket \enquote{Stakeholder und Kontext}
+    \item Paket \enquote{Anforderungen}
+    \item Paket \enquote{Funktionen}
+    \item Paket \enquote{Systemstruktur}
+    \item Paket \enquote{Schnittstellen}
+    \item Paket \enquote{Verhalten}
+    \item Paket \enquote{ROS2-Architektur}
+    \item Paket \enquote{Tests und Verifikation}
+\end{itemize}
+
+Ein Paket ist hier zunächst nur ein Ordnungsbereich. Es hilft, das Modell übersichtlich zu halten. Später werden wir in Enterprise Architect sehen, wie solche Pakete konkret angelegt werden können.
+
+\subsection{Beispielkette: Hinderniserkennung}
+Betrachten wir eine typische Modellkette:
+
+\begin{enumerate}
+    \item Stakeholderbedarf: Personen im Gebäude sollen nicht gefährdet werden.
+    \item Anforderung: Der Roboter muss Hindernisse im Fahrweg erkennen und rechtzeitig stoppen.
+    \item Funktion: Hindernis erkennen.
+    \item Funktion: Bewegung sicher begrenzen.
+    \item Systemelement: Lidar-Sensor.
+    \item Systemelement: Sicherheitslogik.
+    \item ROS2-Element: Topic für Sensordaten.
+    \item ROS2-Element: Node zur Hindernisauswertung.
+    \item Testfall: Stoppverhalten bei Hindernis in definiertem Abstand prüfen.
+\end{enumerate}
+
+Diese Kette zeigt, wie MBSE die Brücke von einem menschlichen Bedürfnis bis zu einem technischen Test schlägt. Genau diese Brücke ist in komplexen Projekten wertvoll.
+
+\subsection{Beispielkette: Batteriemanagement}
+Eine zweite Kette betrifft den Akku:
+
+\begin{enumerate}
+    \item Stakeholderbedarf: Der Roboter soll nicht mitten im Flur stehen bleiben.
+    \item Anforderung: Der Roboter muss bei niedrigem Akkustand selbstständig zur Ladestation zurückkehren.
+    \item Funktion: Akkustand überwachen.
+    \item Funktion: Rückkehr zur Ladestation planen.
+    \item Systemelement: Batterie.
+    \item Systemelement: Batteriemanagement.
+    \item Systemelement: Navigation.
+    \item ROS2-Element: Battery-State-Nachricht.
+    \item Testfall: Rückkehr zur Ladestation bei unterschrittenem Schwellwert prüfen.
+\end{enumerate}
+
+Auch hier sieht man: Die Anforderung betrifft nicht nur eine einzelne Komponente. Sie verbindet Energieversorgung, Software, Navigation, Ladeinfrastruktur und Test.
+
+\section{Nutzen von MBSE}
+MBSE ist kein Selbstzweck. Der Nutzen entsteht nur, wenn das Modell echte Projektfragen beantwortet. Die wichtigsten Vorteile sind Nachvollziehbarkeit, Konsistenz, Kommunikation, Änderungsanalyse und bessere Vorbereitung der Umsetzung.
+
+\subsection{Nachvollziehbarkeit}
+Nachvollziehbarkeit bedeutet, dass Entscheidungen und Zusammenhänge erkennbar bleiben. Wenn jemand fragt, warum der Roboter einen Lidar-Sensor besitzt, sollte das Modell nicht nur \enquote{weil wir das so entschieden haben} zeigen, sondern den Zusammenhang mit Anforderungen und Funktionen.
+
+\subsection{Konsistenz}
+Ein Modell kann helfen, Widersprüche zu vermeiden. Wenn ein Systemelement umbenannt wird, erscheint es in allen Sichten mit demselben Namen. Wenn eine Anforderung keinen Testfall besitzt, kann das auffallen. Wenn eine Funktion keiner Komponente zugeordnet ist, entsteht eine offene Frage.
+
+\subsection{Kommunikation}
+Diagramme und strukturierte Modelle helfen Teams, über dasselbe System zu sprechen. Gerade bei einem Roboterprojekt ist das wichtig, weil unterschiedliche Fachgebiete beteiligt sind. Eine gemeinsame Modellstruktur kann Missverständnisse reduzieren.
+
+\subsection{Änderungsanalyse}
+Änderungen sind normal. MBSE hilft zu verstehen, welche Folgen eine Änderung hat. Wenn die maximale Geschwindigkeit erhöht wird, betrifft das nicht nur die Motoren. Es betrifft auch Bremsweg, Hinderniserkennung, Sicherheitslogik, Akkulaufzeit, Tests und eventuell Zulassungsfragen.
+
+\subsection{Brücke zur Umsetzung}
+In diesem Lehrbuch ist besonders wichtig: Das Modell soll später zur ROS2-Architektur passen. Wir wollen nicht modellieren und anschließend alles neu erfinden. Wir wollen verstehen, wie Anforderungen, Funktionen und Systemelemente auf Nodes, Topics, Services, Parameter und Tests abgebildet werden können.
+
+\begin{praxisbox}
+Eine SysML-Funktion \enquote{Person erkennen} kann später auf eine ROS2-Node \texttt{object_detector_node} abgebildet werden. Die Schnittstelle dieser Funktion kann zu Topics für Kamerabilder und erkannte Objekte führen. Dadurch entsteht eine nachvollziehbare Verbindung zwischen Systemmodell und Softwarestruktur.
+\end{praxisbox}
+
+\section{Grenzen und Missverständnisse}
+MBSE hilft, Komplexität zu beherrschen. Es löst aber nicht automatisch alle Probleme. Ein Modell kann falsch, veraltet oder unnötig kompliziert sein. Dann erzeugt es mehr Aufwand als Nutzen.
+
+\subsection{Missverständnis 1: MBSE bedeutet, alles zu modellieren}
+Ein gutes Modell enthält nicht jedes Detail. Es enthält die Details, die für Verständnis, Entscheidungen, Schnittstellen, Risiken und Nachweise wichtig sind. Ein Modell, das jeden kleinen Softwareparameter abbildet, kann unübersichtlich werden. Ein Modell, das nur drei hübsche Bilder enthält, ist zu oberflächlich.
+
+\subsection{Missverständnis 2: Das Modell ersetzt Kommunikation}
+Ein Modell unterstützt Kommunikation, ersetzt sie aber nicht. Menschen müssen weiterhin Fragen stellen, Entscheidungen treffen und Annahmen klären. Das Modell dokumentiert und verknüpft die Ergebnisse.
+
+\subsection{Missverständnis 3: Das Werkzeug macht das Engineering}
+Enterprise Architect oder ein anderes Modellierungswerkzeug kann Beziehungen speichern, Diagramme erzeugen und Konsistenzprüfungen unterstützen. Es entscheidet aber nicht, welche Anforderungen sinnvoll sind oder welche Architektur gut ist. Das bleibt Ingenieursarbeit.
+
+\subsection{Missverständnis 4: MBSE ist nur für große Konzerne}
+MBSE wird oft mit großen Luftfahrt-, Automobil- oder Raumfahrtprojekten verbunden. Die Grundidee ist aber auch für kleine Projekte nützlich. Gerade ein Lernprojekt profitiert davon, weil Zusammenhänge sichtbar werden. Man muss nur den Umfang passend wählen.
+
+\begin{hinweisbox}
+Für dieses Lehrbuch gilt: Wir modellieren so viel, dass die Zusammenhänge zwischen SysML, Enterprise Architect und ROS2 verständlich werden. Wir modellieren nicht jedes denkbare Detail des Roboters.
+\end{hinweisbox}
+
+\section{Ein pragmatischer Einstieg in MBSE}
+Einsteiger sollten MBSE nicht mit dem Anspruch beginnen, sofort ein perfektes Modell zu erstellen. Besser ist ein schrittweiser Einstieg.
+
+\subsection{Schritt 1: Zweck und Kontext beschreiben}
+Zuerst wird beschrieben, wofür das System gebaut wird und in welcher Umgebung es arbeitet. Beim Roboter: Innenräume, definierter Gebäudebereich, Menschen im Umfeld, Ladestation, Bedienoberfläche und mögliche Netzwerkverbindung.
+
+\subsection{Schritt 2: Anforderungen sammeln}
+Danach werden wichtige Anforderungen gesammelt. Sie müssen am Anfang noch nicht perfekt sein. Wichtig ist, sie sichtbar zu machen und später zu verbessern. Gute Anforderungen sind verständlich, eindeutig und prüfbar.
+
+\subsection{Schritt 3: Funktionen ableiten}
+Aus Anforderungen werden Funktionen abgeleitet. Wenn der Roboter automatisch zur Ladestation zurückkehren soll, braucht er Funktionen wie \enquote{Akkustand überwachen}, \enquote{Ladestation lokalisieren} und \enquote{Rückkehr planen}.
+
+\subsection{Schritt 4: Struktur entwerfen}
+Dann wird überlegt, welche Systemelemente die Funktionen realisieren. Hier entstehen erste Blöcke, Teilsysteme oder Komponenten. Beim Roboter sind das zum Beispiel Sensorik, Navigation, Energieversorgung und Bedienung.
+
+\subsection{Schritt 5: Schnittstellen beschreiben}
+Schnittstellen sollten früh beschrieben werden. Wer liefert welche Daten? Wer benötigt welche Information? Welche Signale, Nachrichten oder Energieflüsse gibt es?
+
+\subsection{Schritt 6: Tests zuordnen}
+Zu wichtigen Anforderungen werden Tests oder andere Nachweise zugeordnet. Dadurch bleibt klar, wie das Team später prüfen will, ob das System funktioniert.
+
+\section{Qualitätsmerkmale eines guten Modells}
+Ein MBSE-Modell ist nicht automatisch gut, nur weil es groß ist. Gute Modelle besitzen einige praktische Eigenschaften.
+
+\subsection{Verständlichkeit}
+Ein neues Teammitglied sollte sich im Modell orientieren können. Namen sollten sprechend sein. Diagramme sollten nicht überladen sein. Die Struktur sollte nachvollziehbar sein.
+
+\subsection{Konsistenz}
+Begriffe sollten einheitlich verwendet werden. Wenn eine Komponente einmal \enquote{Battery Monitor}, einmal \enquote{Akkumodul} und einmal \enquote{Power Node} heißt, entstehen Missverständnisse. Für ein deutsches Lehrbuch können deutsche Begriffe im Systemmodell sinnvoll sein, während spätere ROS2-Paketnamen technisch englisch bleiben.
+
+\subsection{Angemessene Tiefe}
+Das Modell sollte nicht zu grob und nicht zu detailliert sein. Eine gute Frage lautet: \enquote{Hilft dieses Detail bei einer Entscheidung, Schnittstelle, Umsetzung oder Prüfung?} Wenn nicht, gehört es vielleicht nicht ins Einsteigermodell.
+
+\subsection{Pflegefähigkeit}
+Ein Modell muss gepflegt werden können. Wenn jede kleine Änderung viel manuelle Nacharbeit erfordert, wird das Modell schnell veraltet. Deshalb ist eine einfache, klare Modellstruktur wichtig.
+
+\subsection{Nachweisbarkeit}
+Wichtige Anforderungen sollten mit Nachweisen verbunden sein. Nicht jede Anforderung braucht sofort einen vollständig ausgearbeiteten Test, aber es sollte erkennbar sein, wie die Erfüllung später geprüft wird.
+
+\section{Sichten und Rollen im Modell}
+Ein Systemmodell enthält viele Informationen. Trotzdem soll nicht jede Person ständig alles sehen müssen. Deshalb arbeitet MBSE mit Sichten. Eine Sicht zeigt einen bestimmten Ausschnitt des Modells für eine bestimmte Fragestellung oder Rolle.
+
+Das ist vergleichbar mit einer Gebäudekarte. Eine Architektin betrachtet Grundrisse, ein Elektriker betrachtet Stromleitungen, die Feuerwehr betrachtet Fluchtwege und eine Besucherin betrachtet den Lageplan. Alle Sichten beziehen sich auf dasselbe Gebäude, zeigen aber unterschiedliche Informationen.
+
+\subsection{Sicht der Projektleitung}
+Die Projektleitung interessiert sich vor allem für Fortschritt, Risiken, offene Entscheidungen und Auswirkungen von Änderungen. Im MBSE-Modell könnten dafür folgende Fragen beantwortet werden:
+
+\begin{itemize}
+    \item Welche Anforderungen sind noch ungeklärt?
+    \item Welche Anforderungen haben noch keinen Nachweis?
+    \item Welche Teilsysteme sind besonders stark von Änderungen betroffen?
+    \item Welche Schnittstellen sind noch nicht beschrieben?
+    \item Welche Risiken betreffen Sicherheit, Kosten oder Termine?
+\end{itemize}
+
+Für die Projektleitung ist das Modell also kein technisches Bilderbuch, sondern ein Werkzeug zur Steuerung. Es zeigt, wo Unsicherheit liegt.
+
+\subsection{Sicht der Systemarchitektur}
+Die Systemarchitektur betrachtet die großen Bausteine und ihre Beziehungen. Beim Roboter geht es zum Beispiel um die Aufteilung in Sensorik, Lokalisierung, Navigation, Antrieb, Energieversorgung, Bedienung und Sicherheitsfunktionen. Diese Sicht beantwortet Fragen wie:
+
+\begin{itemize}
+    \item Welche Hauptsysteme gibt es?
+    \item Welche Daten und Signale fließen zwischen ihnen?
+    \item Wo liegen kritische Schnittstellen?
+    \item Welche Funktionen sind welchem Teilsystem zugeordnet?
+    \item Welche Komponenten sind für sicherheitsrelevantes Verhalten verantwortlich?
+\end{itemize}
+
+\subsection{Sicht der Softwareentwicklung}
+Die Softwareentwicklung interessiert sich für Datenflüsse, Zustände, Abläufe, Verantwortlichkeiten und technische Schnittstellen. In unserem Projekt wird diese Sicht später besonders wichtig, weil wir SysML mit ROS2 verbinden wollen.
+
+Eine Softwareentwicklerin möchte wissen:
+
+\begin{itemize}
+    \item Welche ROS2-Nodes werden benötigt?
+    \item Welche Topics transportieren Sensordaten, Statusinformationen oder Steuerbefehle?
+    \item Welche Services oder Actions passen zu Aufträgen und Navigation?
+    \item Welche Parameter müssen konfigurierbar sein?
+    \item Welche Fehlerzustände muss die Software erkennen?
+\end{itemize}
+
+Das MBSE-Modell liefert dafür noch keinen fertigen Code. Es liefert aber eine strukturierte Grundlage, damit die Softwarearchitektur nicht zufällig entsteht.
+
+\subsection{Sicht des Testteams}
+Das Testteam möchte wissen, was geprüft werden muss und wie Tests mit Anforderungen zusammenhängen. Besonders wichtig ist die Frage, ob jede zentrale Anforderung einen Nachweis besitzt.
+
+Beim Indoor-Roboter könnten Testsichten zeigen:
+
+\begin{itemize}
+    \item Anforderungen an Hinderniserkennung und passende Testszenarien
+    \item Anforderungen an Akkulaufzeit und Messverfahren
+    \item Zustände des Roboters und Tests für Zustandsübergänge
+    \item Schnittstellen zwischen ROS2-Nodes und Integrationstests
+    \item Fehlersituationen und erwartete sichere Reaktionen
+\end{itemize}
+
+Diese Sicht verhindert, dass Tests erst am Ende erfunden werden. Gute Tests entstehen parallel zum Systemverständnis.
+
+\section{Vom MBSE-Modell zur ROS2-Architektur}
+Ein zentrales Ziel dieses Lehrbuchs ist die Verbindung von SysML, Enterprise Architect und ROS2. Deshalb ist es wichtig, früh zu verstehen, wie ein Systemmodell zur späteren Softwarestruktur führen kann.
+
+Der Übergang erfolgt nicht automatisch. Ein SysML-Block wird nicht durch Zauberei zu einer ROS2-Node. Aber das Modell kann systematisch vorbereiten, welche Softwareeinheiten sinnvoll sind und wie sie miteinander kommunizieren.
+
+\subsection{Funktionen als Ausgangspunkt}
+Am Anfang stehen Funktionen. Funktionen beschreiben, was das System tun muss. Für den Roboter sind das zum Beispiel \enquote{Umgebung erfassen}, \enquote{Position bestimmen}, \enquote{Route planen}, \enquote{Hindernisse vermeiden}, \enquote{Personen erkennen} und \enquote{Akkustand überwachen}.
+
+Diese Funktionen können später auf Softwarebausteine abgebildet werden. Nicht jede Funktion wird automatisch eine eigene Node. Manchmal werden mehrere Funktionen in einer Node zusammengefasst. Manchmal wird eine Funktion auf mehrere Nodes verteilt. Die Modellierung hilft aber, diese Entscheidung bewusst zu treffen.
+
+\subsection{Datenflüsse als Vorbereitung auf Topics}
+ROS2-Systeme kommunizieren häufig über Topics. Ein Topic transportiert Nachrichten von einem Sender zu einem oder mehreren Empfängern. Im MBSE-Modell können Datenflüsse vorbereitet werden, bevor konkrete Topic-Namen festgelegt werden.
+
+Beispiele:
+
+\begin{itemize}
+    \item Kamera liefert Bilddaten an Personenerkennung.
+    \item Lidar liefert Abstandsdaten an Hindernisauswertung.
+    \item Lokalisierung liefert aktuelle Pose an Navigation.
+    \item Navigation liefert Geschwindigkeitsvorgaben an Antriebssteuerung.
+    \item Batteriemanagement liefert Ladezustand an Missionsplanung.
+\end{itemize}
+
+Später können daraus ROS2-Topics wie \texttt{/camera/image}, \texttt{/scan}, \texttt{/robot\_pose}, \texttt{/cmd\_vel} oder \texttt{/battery\_state} entstehen. Die genauen Namen sind technische Entscheidungen. Die fachliche Kommunikationsstruktur kann aber schon im Modell sichtbar werden.
+
+\subsection{Zustände als Grundlage für Steuerlogik}
+Ein autonomer Roboter besitzt Betriebszustände. Beispiele sind \enquote{Bereit}, \enquote{Auftrag aktiv}, \enquote{Navigiert}, \enquote{Hindernis erkannt}, \enquote{Kehrt zurück}, \enquote{Lädt} und \enquote{Fehler}. Diese Zustände können in SysML modelliert werden und helfen später bei der Softwareentwicklung.
+
+Ohne Zustandsmodell entsteht Steuerlogik oft verteilt im Code. Dann weiß nach einiger Zeit niemand mehr genau, wann der Roboter fahren darf, wann er stoppen muss oder wie er aus einem Fehlerzustand zurückkehrt. Ein Zustandsmodell schafft eine gemeinsame Grundlage.
+
+\subsection{Tests als Verbindung zwischen Modell und Code}
+Tests bilden eine wichtige Brücke zwischen Modell und Umsetzung. Wenn eine Anforderung im Modell mit einem Testfall verbunden ist, kann der spätere Code gezielt gegen diese Erwartung geprüft werden.
+
+Beispiel:
+
+\begin{enumerate}
+    \item Anforderung: Der Roboter muss bei niedrigem Akkustand zur Ladestation zurückkehren.
+    \item Modellfunktion: Rückkehr zur Ladestation auslösen.
+    \item ROS2-Node: \texttt{battery\_monitor\_node} meldet niedrigen Ladezustand.
+    \item ROS2-Node: \texttt{navigation\_node} erhält Ziel \enquote{Ladestation}.
+    \item Test: Simulierter Akkustand unterschreitet Schwellwert, anschließend wird ein Rückkehrziel gesetzt.
+\end{enumerate}
+
+So wird aus einer fachlichen Erwartung eine überprüfbare technische Umsetzung.
+
+\section{Typische Fehler beim Einstieg in MBSE}
+Auch MBSE kann falsch eingesetzt werden. Gerade am Anfang helfen einige Warnsignale.
+
+\subsection{Fehler 1: Diagramme ohne Modellinhalt}
+Das Team zeichnet schöne Diagramme, aber die Elemente sind nicht sauber benannt, nicht wiederverwendet und nicht verknüpft. Dann entsteht nur eine hübschere Form dokumentenzentrierter Entwicklung.
+
+\subsection{Fehler 2: Zu viele Details zu früh}
+Einsteiger versuchen manchmal, sofort jedes Kabel, jede Softwareklasse und jeden Parameter zu modellieren. Dadurch wird das Modell groß, bevor die Grundstruktur verstanden ist. Besser ist es, mit Anforderungen, Hauptfunktionen, Hauptsystemen und kritischen Schnittstellen zu beginnen.
+
+\subsection{Fehler 3: Keine Modellpflege}
+Ein Modell ist nur nützlich, wenn es gepflegt wird. Wenn Architekturentscheidungen im Code geändert werden, aber nie ins Modell zurückfließen, verliert das Modell seinen Wert. Deshalb muss im Projekt geklärt sein, welche Modellteile verbindlich gepflegt werden.
+
+\subsection{Fehler 4: Unklare Modellierungsregeln}
+Wenn jedes Teammitglied anders modelliert, entsteht Unordnung. Schon einfache Regeln helfen: einheitliche Namen, klare Paketstruktur, definierte Beziehungstypen und begrenzte Diagrammgrößen.
+
+\subsection{Fehler 5: Modell und Implementierung werden getrennte Welten}
+Das Modell darf nicht neben der Entwicklung herlaufen wie eine Pflichtübung. Es muss Fragen beantworten, die im Projekt wirklich vorkommen. In unserem Lehrbuch ist deshalb die Verbindung zur ROS2-Architektur wichtig. Das Modell soll nicht nur erklären, sondern die Umsetzung vorbereiten.
+
+\section{Zusammenfassung}
+\gls{mbse} überträgt die Gedanken des Systems Engineering in eine modellbasierte Arbeitsweise. Statt Projektwissen über viele lose Dokumente zu verteilen, werden wichtige Informationen in einem Systemmodell strukturiert und miteinander verknüpft. Das Modell enthält Anforderungen, Funktionen, Struktur, Schnittstellen, Verhalten, Tests, Annahmen und Entscheidungen.
+
+Der wichtigste Punkt ist nicht das Zeichnen von Diagrammen, sondern das Herstellen von Beziehungen. Eine Anforderung steht nicht isoliert im Raum. Sie hängt mit Stakeholdern, Funktionen, Systemelementen, Schnittstellen und Tests zusammen. Genau diese Nachvollziehbarkeit macht MBSE wertvoll.
+
+Für den autonomen Indoor-Roboter bedeutet das: Wir können vom Bedarf eines Nutzers über Anforderungen und Funktionen bis zur späteren ROS2-Architektur denken. Das Modell wird zur Brücke zwischen Problemverständnis, SysML-Modellierung, Enterprise-Architect-Arbeit und technischer Umsetzung.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Was bedeutet Model-Based Systems Engineering?
+    \item Worin unterscheidet sich ein Modell von einem einfachen Diagrammbild?
+    \item Warum wird dokumentenzentrierte Entwicklung bei komplexeren Projekten problematisch?
+    \item Welche Informationen können in einem MBSE-Modell enthalten sein?
+    \item Was versteht man unter Traceability?
+    \item Warum ist Traceability für Anforderungen und Tests wichtig?
+    \item Nennen Sie drei typische Modellbeziehungen im Roboterprojekt.
+    \item Warum ersetzt MBSE nicht den Quellcode?
+    \item Warum ersetzt MBSE nicht die Kommunikation im Team?
+    \item Welche Vorteile bietet MBSE bei Änderungen?
+    \item Was wäre ein Beispiel für eine zu detaillierte Modellierung?
+    \item Welche Pakete würden Sie für ein erstes Modell des Indoor-Roboters anlegen?
+\end{enumerate}
+
+\section{Übungen}
+\begin{uebungbox}
+\textbf{Übung 1: Dokumentenchaos erkennen}\\
+Erstellen Sie eine Liste mit fünf Dokumenten oder Informationsquellen, die in einem klassischen Roboterprojekt entstehen könnten. Beschreiben Sie für jede Quelle, welches Risiko entsteht, wenn sie nicht aktuell gehalten wird.
+\end{uebungbox}
 
 \begin{uebungbox}
-Erstellen Sie eine Tabelle mit drei Spalten: Information, klassischer Speicherort und Speicherort im MBSE-Modell. Tragen Sie Anforderungen, Schnittstellen, Tests und ROS2-Nodes ein.
+\textbf{Übung 2: Modellkette erstellen}\\
+Erstellen Sie eine einfache Kette aus Stakeholderbedarf, Anforderung, Funktion, Systemelement und Testfall für die automatische Rückkehr zur Ladestation.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 3: Anforderungen verknüpfen}\\
+Wählen Sie drei Anforderungen für den Indoor-Roboter. Ordnen Sie jeder Anforderung mindestens eine Funktion, ein mögliches Systemelement und einen Testfall zu.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 4: Modellumfang begrenzen}\\
+Notieren Sie zehn mögliche Informationen über den Roboter. Entscheiden Sie für jede Information, ob sie in ein Einsteiger-MBSE-Modell gehört oder zunächst außerhalb bleiben kann. Begründen Sie Ihre Entscheidung kurz.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 5: Änderungsanalyse}\\
+Angenommen, der Roboter soll nicht mehr 0,8 m/s, sondern 1,2 m/s fahren dürfen. Beschreiben Sie, welche Anforderungen, Funktionen, Komponenten, Schnittstellen und Tests davon betroffen sein könnten.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Für den Einstieg in MBSE sind praxisnahe SysML-Einführungen besonders hilfreich, weil sie Modellierung nicht abstrakt behandeln, sondern an Anforderungen, Architektur und Verhalten erklären. Empfehlenswert sind insbesondere die in diesem Projekt bereits geführten Werke zu SysML, zum Beispiel Delligatti \cite{delligatti2014} sowie Friedenthal, Moore und Steiner \cite{friedenthal2014}.
+
+Darüber hinaus lohnt sich weiterführende Literatur zu Systems Engineering, Anforderungsmanagement, Verifikation und Validierung sowie modellbasierter Entwicklung cyber-physischer Systeme. Für die spätere technische Umsetzung ist außerdem die ROS2-Dokumentation \cite{ros2docs} wichtig, weil sie zeigt, wie Softwarearchitekturen mit Nodes, Topics, Services, Actions und Parametern konkret aufgebaut werden.

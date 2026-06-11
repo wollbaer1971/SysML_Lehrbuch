@@ -1,19 +1,25 @@
 \chapter{Architektur von ROS2-Systemen}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie eine einfache ROS2-Architektur für den autonomen Roboter entwerfen.
+Nach diesem Kapitel können Sie eine einfache ROS2-Architektur für den autonomen Roboter entwerfen. Sie verstehen Node-Granularität, Kommunikationsstruktur, Fehlerfälle, Parameter und Lifecycle-Überlegungen.
 \end{lernziele}
+
+\section{Einleitung}
+Eine ROS2-Architektur beschreibt, aus welchen Nodes ein System besteht und wie diese Nodes miteinander kommunizieren. Sie ist die technische Entsprechung vieler SysML-Struktur- und Schnittstellenentscheidungen.
 
 \section{Typische Node-Struktur}
 Eine sinnvolle erste Architektur besteht aus folgenden Nodes:
+
 \begin{itemize}
-\item \texttt{camera\_node}
-\item \texttt{lidar\_node}
-\item \texttt{slam\_node}
-\item \texttt{navigation\_node}
-\item \texttt{object\_detector\_node}
-\item \texttt{battery\_monitor\_node}
-\item \texttt{motion\_control\_node}
+    \item \texttt{camera\_node}
+    \item \texttt{lidar\_node}
+    \item \texttt{slam\_node}
+    \item \texttt{navigation\_node}
+    \item \texttt{object\_detector\_node}
+    \item \texttt{battery\_monitor\_node}
+    \item \texttt{motion\_control\_node}
+    \item \texttt{user\_interface\_node}
+    \item \texttt{robot\_state\_node}
 \end{itemize}
 
 \section{Kommunikationsstruktur}
@@ -23,14 +29,76 @@ lidar_node  -> /scan             -> slam_node
 slam_node   -> /map              -> navigation_node
 navigation_node -> /cmd_vel      -> motion_control_node
 battery_monitor_node -> /battery_state -> navigation_node
+object_detector_node -> /detected_objects -> navigation_node
+robot_state_node -> /robot/status -> user_interface_node
 \end{verbatim}
 
-\section{Architekturentscheidungen}
+\section{Granularität}
 Eine wichtige Entscheidung ist die Granularität. Zu viele Nodes erhöhen Kommunikationsaufwand. Zu wenige Nodes machen das System unübersichtlich. Für den Einstieg gilt: Eine klar abgegrenzte Funktion darf ein eigener Node sein.
+
+\section{Architekturentscheidungen}
+Wichtige Entscheidungen sind:
+
+\begin{itemize}
+    \item Welche Funktionen werden eigene Nodes?
+    \item Welche Daten werden als Topics veröffentlicht?
+    \item Welche Vorgänge werden als Actions modelliert?
+    \item Welche Parameter müssen konfigurierbar sein?
+    \item Welche Nodes sind sicherheitsrelevant?
+    \item Welche Fehler müssen zentral gemeldet werden?
+\end{itemize}
 
 \section{Fehlerfälle}
 Eine Architektur sollte nicht nur den Normalfall zeigen. Was passiert, wenn die Kamera ausfällt? Was passiert bei leerem Akku? Was passiert, wenn keine Karte verfügbar ist?
 
+\begin{praxisbox}
+Wenn \texttt{camera\_node} keine Bilder liefert, darf die Personenerkennung nicht einfach alte Ergebnisse weiterverwenden. Der \texttt{object\_detector\_node} sollte fehlende Daten erkennen und einen entsprechenden Status melden.
+\end{praxisbox}
+
+\section{Parameter}
+Typische Parameter sind maximale Geschwindigkeit, Akkuschwellwert, Topic-Namen, Erkennungsgrenzen oder Timeout-Werte. Parameter sollten im Modell mit Annahmen und Anforderungen zusammenpassen.
+
+\section{Lifecycle Nodes}
+ROS2 unterstützt Lifecycle Nodes, die definierte Zustände wie unconfigured, inactive, active und finalized besitzen können. Für Einsteiger ist das optional, aber für robuste Systeme nützlich. Sensor-Nodes können zum Beispiel erst konfiguriert und dann aktiviert werden.
+
+\section{Architekturreview}
+Bevor Code geschrieben wird, sollte die ROS2-Architektur kurz geprüft werden. Ein Review kann anhand einfacher Fragen erfolgen:
+
+\begin{itemize}
+    \item Hat jeder Node eine klare Verantwortung?
+    \item Gibt es Topics mit eindeutigem Sender und Empfänger?
+    \item Sind sicherheitsrelevante Datenflüsse erkennbar?
+    \item Sind Fehlerfälle beschrieben?
+    \item Sind Parameter für veränderliche Werte vorgesehen?
+    \item Gibt es eine Verbindung zu Anforderungen und Tests?
+\end{itemize}
+
+Für den Indoor-Roboter ist besonders wichtig, dass Navigation, Hinderniserkennung und Bewegungssteuerung nicht unkontrolliert gekoppelt sind. Ein falscher Bewegungsbefehl kann direkt physische Folgen haben. Deshalb sollte der Datenfluss zu \texttt{/cmd\_vel} klar nachvollziehbar sein.
+
+\section{Zusammenfassung}
+Eine gute ROS2-Architektur hat klare Verantwortlichkeiten, verständliche Kommunikation und definierte Fehlerreaktionen. Sie sollte aus dem SysML-Modell ableitbar sein und später durch Tests überprüft werden.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Was beschreibt eine ROS2-Architektur?
+    \item Warum ist Node-Granularität wichtig?
+    \item Welche Nodes benötigt der Indoor-Roboter mindestens?
+    \item Welche Topics sind für Navigation wichtig?
+    \item Warum müssen Fehlerfälle in der Architektur betrachtet werden?
+    \item Was sind Parameter?
+    \item Was sind Lifecycle Nodes?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: Architektur skizzieren}\\
 Erstellen Sie eine ROS2-Architekturskizze mit mindestens sechs Nodes und acht Topics.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Fehlerfall analysieren}\\
+Beschreiben Sie, welche Nodes betroffen sind, wenn der Lidar ausfällt. Welche Statusmeldung sollte erzeugt werden?
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Die ROS2-Dokumentation \cite{ros2docs} beschreibt Kommunikationsmechanismen, Lifecycle Nodes, Launch-Dateien und Tools. Für Architekturentscheidungen ist zusätzlich das SysML-Modell aus den vorherigen Kapiteln hilfreich.

@@ -1,11 +1,18 @@
 \chapter{Test und Verifikation}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie Anforderungen mit Testfällen verknüpfen und einfache Verifikationsszenarien beschreiben.
+Nach diesem Kapitel können Sie Anforderungen mit Testfällen verknüpfen und einfache Verifikationsszenarien beschreiben. Sie verstehen den Unterschied zwischen Verifikation und Validierung und können Testfälle für Navigation, Hinderniserkennung, Personenerkennung, Batteriemanagement und Ladestation formulieren.
 \end{lernziele}
 
+\section{Einleitung}
+Ein Systemmodell ist nur dann wirklich nützlich, wenn es bis zum Nachweis führt. Anforderungen sollen nicht nur schön formuliert werden. Am Ende muss geprüft werden, ob das System sie erfüllt. Genau darum geht es in diesem Kapitel.
+
 \section{Verifikation und Validierung}
-Verifikation fragt: Wurde das System richtig gebaut? Validierung fragt: Wurde das richtige System gebaut? Beide Fragen sind wichtig.
+Verifikation fragt: Wurde das System richtig gebaut? Das bedeutet: Erfüllt das System die spezifizierten Anforderungen?
+
+Validierung fragt: Wurde das richtige System gebaut? Das bedeutet: Löst das System tatsächlich das Problem der Stakeholder?
+
+Beide Fragen sind wichtig. Ein Roboter kann alle spezifizierten Anforderungen erfüllen und trotzdem für Nutzer unpraktisch sein. Umgekehrt kann ein Prototyp nützlich wirken, aber wichtige Anforderungen nicht nachweisbar erfüllen.
 
 \section{Testfälle}
 \begin{longtable}{p{25mm}p{55mm}p{55mm}}
@@ -14,14 +21,29 @@ ID & Testfall & Verifizierte Anforderung\\
 \midrule
 TC-001 & Autonome Navigation zu Zielpunkt & REQ-001\\
 TC-002 & Hindernis rechtzeitig erkennen & REQ-002\\
-TC-003 & Person im Kamerabild erkennen & REQ-004\\
-TC-004 & Niedrigen Akkustand melden & REQ-005\\
-TC-005 & Zur Ladestation fahren & REQ-006\\
+TC-003 & Hindernis sicher behandeln & REQ-003\\
+TC-004 & Person im Kamerabild erkennen & REQ-004\\
+TC-005 & Niedrigen Akkustand melden & REQ-005\\
+TC-006 & Zur Ladestation fahren & REQ-006\\
+TC-007 & Betriebszustand melden & REQ-007\\
+TC-008 & Sensorausfall sicher behandeln & REQ-008\\
 \bottomrule
 \end{longtable}
 
 \section{Testbeschreibung}
-Ein Testfall sollte Vorbedingungen, Ablauf, erwartetes Ergebnis und Bewertungskriterium enthalten.
+Ein Testfall sollte enthalten:
+
+\begin{itemize}
+    \item ID
+    \item Ziel
+    \item verifizierte Anforderung
+    \item Vorbedingungen
+    \item Testaufbau
+    \item Ablauf
+    \item erwartetes Ergebnis
+    \item Bewertungskriterium
+    \item benötigte Messdaten
+\end{itemize}
 
 \section{Beispiel TC-002}
 \textbf{Vorbedingung:} Roboter fährt mit definierter Geschwindigkeit.\\
@@ -29,9 +51,74 @@ Ein Testfall sollte Vorbedingungen, Ablauf, erwartetes Ergebnis und Bewertungskr
 \textbf{Erwartung:} Roboter erkennt Hindernis und stoppt vor Kollision.\\
 \textbf{Kriterium:} Mindestabstand 20 cm.
 
+\section{Testarten}
+\subsection{Unit-Tests}
+Unit-Tests prüfen kleine Softwareeinheiten. Ein Batteriemonitor kann zum Beispiel getestet werden, indem simulierte Spannungswerte eingegeben und erwartete Akkustände geprüft werden.
+
+\subsection{Integrationstests}
+Integrationstests prüfen das Zusammenspiel mehrerer Komponenten. Beispiel: \texttt{battery\_monitor\_node} meldet niedrigen Akkustand, \texttt{navigation\_node} plant Rückkehr zur Ladestation.
+
+\subsection{Systemtests}
+Systemtests prüfen das Verhalten des gesamten Roboters in definierten Szenarien.
+
+\subsection{Simulationstests}
+Simulationstests erlauben viele Tests ohne echte Hardware. Sie ersetzen reale Tests nicht vollständig, sind aber für frühe Entwicklung sehr wertvoll.
+
 \section{Tests im Modell}
 In SysML können Testfälle mit \texttt{verify}-Beziehungen an Anforderungen gehängt werden. Dadurch ist erkennbar, welche Anforderungen noch keine Tests haben.
 
+\begin{praxisbox}
+Wenn REQ-006 eine Rückkehr zur Ladestation fordert, sollte ein Testfall prüfen, ob der Roboter bei unterschrittenem Akkuschwellwert tatsächlich ein Rückkehrziel setzt und keinen neuen normalen Transportauftrag startet.
+\end{praxisbox}
+
+\section{Typische Fehler}
+\subsection{Tests zu spät planen}
+Wenn Tests erst am Ende entstehen, sind Anforderungen oft unprüfbar.
+
+\subsection{Nur den Normalfall testen}
+Fehlerfälle wie Sensorausfall, blockierter Weg und niedriger Akku sind besonders wichtig.
+
+\subsection{Keine klaren Kriterien}
+\enquote{Roboter stoppt rechtzeitig} muss in ein messbares Kriterium übersetzt werden.
+
+\section{Testplanung über den Projektverlauf}
+Tests sollten nicht erst am Ende des Projekts entstehen. Bereits beim Formulieren einer Anforderung sollte gefragt werden: Wie wird diese Anforderung später geprüft? Dadurch erkennt man früh, ob eine Anforderung zu unklar ist.
+
+Für das Roboterprojekt kann die Testplanung schrittweise wachsen:
+
+\begin{itemize}
+    \item Anforderungen erhalten erste Akzeptanzkriterien.
+    \item Wichtige Funktionen erhalten Testideen.
+    \item Schnittstellen erhalten Integrationstests.
+    \item ROS2-Nodes erhalten Unit- oder Komponententests.
+    \item Szenarien wie Zielnavigation werden als Systemtests beschrieben.
+\end{itemize}
+
+Ein gutes Testmodell macht auch Lücken sichtbar. Wenn eine Anforderung keinen Testfall besitzt, ist das nicht automatisch falsch, aber es ist eine offene Frage. Vielleicht wird sie durch Analyse, Review oder Inspektion nachgewiesen. Auch das sollte dokumentiert werden.
+
+\section{Zusammenfassung}
+Tests und Verifikation schließen den Kreis von Anforderungen zur Umsetzung. Ein gutes Modell zeigt nicht nur, was gebaut werden soll, sondern auch, wie die Erfüllung geprüft wird.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Was ist Verifikation?
+    \item Was ist Validierung?
+    \item Welche Informationen enthält ein guter Testfall?
+    \item Wozu dient die SysML-Beziehung \texttt{verify}?
+    \item Was ist der Unterschied zwischen Unit-Test und Systemtest?
+    \item Warum sind Fehlerfälle wichtig?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: Testfälle erstellen}\\
 Erstellen Sie Testfälle für alle Anforderungen aus Kapitel 6. Markieren Sie Anforderungen ohne Test.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Testfall detaillieren}\\
+Beschreiben Sie TC-006 \enquote{Zur Ladestation fahren} mit Vorbedingungen, Ablauf, Erwartung und Bewertungskriterium.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Verifikation und Validierung sind zentrale Themen im Systems Engineering. SysML-Literatur \cite{friedenthal2014} zeigt, wie Testfälle mit Anforderungen verbunden werden können.

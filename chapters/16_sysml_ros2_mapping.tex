@@ -1,35 +1,112 @@
 \chapter{Von SysML zu ROS2}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie SysML-Elemente auf ROS2-Elemente abbilden.
+Nach diesem Kapitel können Sie SysML-Elemente auf ROS2-Elemente abbilden. Sie verstehen, warum Mapping für Traceability wichtig ist und wie Anforderungen, Blöcke, Ports, Datenflüsse und Tests mit Nodes, Topics, Services, Actions und Testcode verbunden werden können.
 \end{lernziele}
 
-\section{Warum Mapping?}
-Das SysML-Modell beschreibt die Architektur. ROS2 ist die Umsetzung. Ohne Verbindung zwischen beiden entsteht eine Lücke. Das Mapping schließt diese Lücke.
+\section{Einleitung}
+Das SysML-Modell beschreibt die Architektur. ROS2 ist die Umsetzung. Ohne Verbindung zwischen beiden entsteht eine Lücke. Das Mapping schließt diese Lücke. Es zeigt, wie Modellentscheidungen in Softwareelemente übersetzt werden.
 
 \section{Grundprinzip}
-Ein SysML-Block kann einem ROS2-Node entsprechen. Ein SysML-Port oder Datenfluss kann einem Topic entsprechen. Eine Funktion kann durch einen Node oder eine Gruppe von Nodes realisiert werden.
+Ein SysML-Block kann einem ROS2-Node entsprechen. Ein SysML-Port oder Datenfluss kann einem Topic entsprechen. Eine Funktion kann durch einen Node oder eine Gruppe von Nodes realisiert werden. Ein Use Case kann eine Action verwenden. Ein Testfall im Modell kann einem automatisierten Test entsprechen.
 
 \section{Beispieltabelle}
 \begin{longtable}{p{45mm}p{45mm}p{45mm}}
 \toprule
 SysML-Element & ROS2-Element & Bemerkung\\
 \midrule
-ObjectDetector & object\_detector\_node & Führt ML-Inferenz aus\\
-Camera & camera\_node & Liefert Bilddaten\\
-NavigationSystem & navigation\_node & Plant und überwacht Bewegung\\
-BatterySystem & battery\_monitor\_node & Überwacht Akkustatus\\
-MotionControl & motion\_control\_node & Setzt Geschwindigkeitsbefehle um\\
+ObjectDetector & \texttt{object\_detector\_node} & Führt ML-Inferenz aus\\
+Camera & \texttt{camera\_node} & Liefert Bilddaten\\
+NavigationSystem & \texttt{navigation\_node} & Plant und überwacht Bewegung\\
+BatterySystem & \texttt{battery\_monitor\_node} & Überwacht Akkustatus\\
+MotionControl & \texttt{motion\_control\_node} & Setzt Geschwindigkeitsbefehle um\\
+UserInterface & \texttt{user\_interface\_node} & Nimmt Aufträge entgegen\\
 \bottomrule
 \end{longtable}
+
+\section{Mapping von Schnittstellen}
+Ports und Datenflüsse werden auf Topics, Services oder Actions abgebildet:
+
+\begin{itemize}
+    \item Bilddaten: \texttt{/camera/image\_raw}
+    \item Laserscan: \texttt{/scan}
+    \item Bewegungsbefehl: \texttt{/cmd\_vel}
+    \item Akkustatus: \texttt{/battery\_state}
+    \item Zielnavigation: Action \texttt{NavigateToPose}
+\end{itemize}
 
 \section{Traceability}
 Das Mapping ist ein Teil der Traceability. Es zeigt, welche Implementierung eine Architekturkomponente realisiert.
 
 \begin{praxisbox}
-REQ-004 \enquote{Personen erkennen} wird durch den Block \texttt{ObjectDetector} erfüllt. Dieser Block wird durch den ROS2-Node \texttt{object\_detector\_node} implementiert.
+REQ-004 \enquote{Personen erkennen} wird durch den Block \texttt{ObjectDetector} erfüllt. Dieser Block wird durch den ROS2-Node \texttt{object\_detector\_node} implementiert. Die Ergebnisse werden über \texttt{/detected\_objects} veröffentlicht und durch einen Testfall zur Personenerkennung geprüft.
 \end{praxisbox}
 
+\section{Von Anforderungen bis Code}
+Eine vollständige Kette kann so aussehen:
+
+\begin{verbatim}
+REQ-006 Zur Ladestation zurückkehren
+-> Funktion: Akkustand überwachen
+-> Block: BatterySystem
+-> Node: battery_monitor_node
+-> Topic: /battery_state
+-> Node: navigation_node
+-> Action: NavigateToDock
+-> Test: TC-006 Rückkehr bei niedrigem Akkustand
+\end{verbatim}
+
+\section{Typische Fehler}
+\subsection{Eins-zu-eins-Zwang}
+Nicht jeder Block muss genau ein Node werden. Mapping ist eine bewusste Architekturentscheidung.
+
+\subsection{Mapping nicht pflegen}
+Wenn sich die ROS2-Architektur ändert, muss das Mapping aktualisiert werden. Sonst verliert die Traceability ihren Wert.
+
+\subsection{Schnittstellen nur grob abbilden}
+Ein Mapping ohne Topic-Namen, Nachrichtentypen oder Verantwortlichkeiten ist zu ungenau.
+
+\section{Mapping als lebendes Artefakt}
+Das Mapping ist kein einmaliges Abschlussdokument. Es wächst mit dem Projekt. Am Anfang reicht eine grobe Tabelle: Block zu Node, Datenfluss zu Topic. Später kommen Nachrichtentypen, Parameter, Launch-Dateien und Tests hinzu.
+
+Eine gute Mapping-Tabelle kann zusätzliche Spalten enthalten:
+
+\begin{itemize}
+    \item SysML-Block
+    \item Funktion
+    \item ROS2-Node
+    \item Topic, Service oder Action
+    \item Nachrichtentyp
+    \item zugehörige Anforderung
+    \item Testfall
+    \item Status der Umsetzung
+\end{itemize}
+
+Damit wird das Mapping zu einem Arbeitsmittel. Es hilft bei Reviews, bei der Codeplanung und beim Erkennen von Lücken. Wenn ein wichtiger Block keinen Node und keinen Test besitzt, ist das ein Signal für weitere Klärung.
+
+\section{Zusammenfassung}
+Das SysML-ROS2-Mapping verbindet Modell und Umsetzung. Es hilft, Anforderungen bis zur Software nachzuverfolgen und Änderungen gezielt zu analysieren. Für dieses Lehrbuch ist es die zentrale Brücke zwischen MBSE und praktischer Robotiksoftware.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Warum ist Mapping zwischen SysML und ROS2 wichtig?
+    \item Welche SysML-Elemente können auf ROS2-Nodes abgebildet werden?
+    \item Welche SysML-Elemente passen zu Topics?
+    \item Warum muss Mapping gepflegt werden?
+    \item Warum ist ein Eins-zu-eins-Mapping nicht immer sinnvoll?
+    \item Erklären Sie eine Traceability-Kette für Batteriemanagement.
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: Mapping-Tabelle}\\
 Erstellen Sie eine Mapping-Tabelle für alle Hauptblöcke Ihres BDD.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Vollständige Kette}\\
+Erstellen Sie eine Kette von einer Anforderung über Block, Node, Topic und Testfall für die Hinderniserkennung.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Das Mapping verbindet SysML-Grundlagen \cite{delligatti2014,friedenthal2014} mit ROS2-Kommunikation \cite{ros2docs}. In realen Projekten wird diese Verbindung oft projektspezifisch definiert.

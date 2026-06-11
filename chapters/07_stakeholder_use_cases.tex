@@ -1,41 +1,127 @@
 \chapter{Stakeholder und Use Cases}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie Stakeholder identifizieren und aus typischen Nutzungsszenarien Anforderungen ableiten.
+Nach diesem Kapitel können Sie Stakeholder identifizieren, ihre Bedürfnisse beschreiben und daraus Use Cases sowie erste Anforderungen ableiten. Sie verstehen, warum Use Cases keine Algorithmen sind, sondern Nutzungsszenarien, die helfen, Systemgrenzen, Akteure und Erwartungen sichtbar zu machen.
 \end{lernziele}
 
+\section{Einleitung}
+Technische Projekte beginnen nicht mit Komponenten, sondern mit Menschen und Interessen. Ein Roboter wird nicht gebaut, weil es Kamera, Lidar und ROS2 gibt, sondern weil bestimmte Personen ein Problem lösen möchten. Stakeholderanalyse und Use Cases helfen, dieses Problem verständlich zu beschreiben.
+
 \section{Stakeholder identifizieren}
-Stakeholder sind nicht nur Endnutzer. Auch Betreiber, Wartung, Entwicklung, Management und Sicherheitsverantwortliche haben Interessen. Ein Roboter, der technisch funktioniert, aber schlecht wartbar ist, kann im Betrieb trotzdem scheitern.
+Stakeholder sind nicht nur Endnutzer. Auch Betreiber, Wartung, Entwicklung, Management, Datenschutz und Sicherheitsverantwortliche haben Interessen. Ein Roboter, der technisch funktioniert, aber schlecht wartbar ist oder Datenschutzprobleme erzeugt, kann im Betrieb trotzdem scheitern.
 
 \section{Stakeholder des Roboters}
-\begin{itemize}
-\item Nutzer: möchte Ziele einfach vorgeben.
-\item Betreiber: möchte zuverlässigen Betrieb.
-\item Wartungstechniker: benötigt Diagnoseinformationen.
-\item Entwickler: benötigt klare Schnittstellen.
-\item Sicherheitsverantwortlicher: achtet auf Risiken.
-\end{itemize}
+\begin{longtable}{p{35mm}p{55mm}p{55mm}}
+\toprule
+Stakeholder & Interesse & Mögliche Anforderung\\
+\midrule
+Nutzer & Ziel einfach vorgeben & Auftrag mit höchstens drei Eingaben starten\\
+Betreiber & Zuverlässiger Betrieb & Betriebszustand jederzeit anzeigen\\
+Wartung & Fehler schnell finden & Diagnoseinformationen bereitstellen\\
+Sicherheitsverantwortliche & Personen schützen & Bei Hindernis sicher stoppen\\
+Datenschutz & Bilddaten schützen & Kameradaten lokal verarbeiten\\
+Entwicklung & Klare Architektur & Schnittstellen dokumentieren\\
+Management & Kosten kontrollieren & Komponenten begründet auswählen\\
+\bottomrule
+\end{longtable}
 
 \section{Use Cases}
-Use Cases beschreiben, wie ein Akteur mit dem System interagiert. Sie sind keine detaillierten Algorithmen, sondern Nutzungsbeschreibungen.
+Use Cases beschreiben, wie ein Akteur mit dem System interagiert. Sie sind keine detaillierten Algorithmen. Sie beschreiben Ziele, Vorbedingungen, einen typischen Ablauf, Alternativen und Ergebnisse.
+
+Ein guter Use Case beantwortet:
+
+\begin{itemize}
+    \item Wer nutzt das System?
+    \item Welches Ziel verfolgt der Akteur?
+    \item Welche Vorbedingungen gelten?
+    \item Was passiert im Normalfall?
+    \item Welche Ausnahmen können auftreten?
+    \item Welches Ergebnis wird erwartet?
+\end{itemize}
 
 \section{Beispiel: Ziel anfahren}
 \textbf{Akteur:} Nutzer\\
 \textbf{Ziel:} Roboter fährt zu einem ausgewählten Zielpunkt.\\
-\textbf{Vorbedingung:} Roboter ist eingeschaltet und lokalisiert.\\
+\textbf{Vorbedingung:} Roboter ist eingeschaltet, lokalisiert und besitzt ausreichend Akkuladung.\\
 \textbf{Ablauf:}
 \begin{enumerate}
-\item Nutzer wählt Ziel.
-\item Roboter prüft Verfügbarkeit der Karte.
-\item Roboter plant Pfad.
-\item Roboter fährt los.
-\item Roboter weicht Hindernissen aus.
-\item Roboter erreicht Ziel.
+    \item Nutzer wählt Ziel.
+    \item Roboter prüft Verfügbarkeit der Karte.
+    \item Roboter prüft Akkustand.
+    \item Roboter plant Pfad.
+    \item Roboter fährt los.
+    \item Roboter weicht Hindernissen aus oder stoppt sicher.
+    \item Roboter erreicht Ziel.
+    \item Roboter meldet Abschluss.
 \end{enumerate}
+\textbf{Alternativen:} Ziel nicht erreichbar, Akkustand zu niedrig, Hindernis blockiert Pfad.\\
+\textbf{Ergebnis:} Auftrag ist abgeschlossen oder nachvollziehbar abgebrochen.
 
 \section{Use Cases und Anforderungen}
-Aus einem Use Case lassen sich Anforderungen ableiten. Wenn der Roboter Ziele anfahren soll, braucht er Navigation, Lokalisierung, Pfadplanung und Hindernisvermeidung.
+Aus einem Use Case lassen sich Anforderungen ableiten. Der Use Case \enquote{Ziel anfahren} führt zum Beispiel zu Anforderungen an Zielauswahl, Kartennutzung, Lokalisierung, Pfadplanung, Hinderniserkennung, Statusmeldung und Fehlerbehandlung.
 
+\begin{praxisbox}
+Wenn im Use Case steht, dass der Roboter den Akkustand vor der Fahrt prüft, entsteht daraus eine Anforderung an das Batteriemanagement. Gleichzeitig entsteht ein Testfall: Wird ein Auftrag bei zu niedrigem Akkustand abgelehnt oder in eine Rückkehr zur Ladestation umgewandelt?
+\end{praxisbox}
+
+\section{Use Cases in SysML}
+SysML kann Use-Case-Diagramme nutzen, um Akteure und Systemfunktionen grob darzustellen. Für Einsteiger ist der Text oft wichtiger als das Diagramm. Das Diagramm zeigt die Übersicht, die Use-Case-Beschreibung liefert die Details.
+
+\section{Typische Fehler}
+\subsection{Use Cases mit Funktionen verwechseln}
+\enquote{Pfad planen} ist eher eine Funktion. \enquote{Ziel anfahren} ist ein Use Case, weil ein Akteur ein Ziel verfolgt.
+
+\subsection{Nur den Normalfall beschreiben}
+Gerade Alternativen sind wertvoll. Was passiert bei leerem Akku, fehlender Karte oder blockiertem Flur?
+
+\subsection{Stakeholder vergessen}
+Wenn nur der Endnutzer betrachtet wird, fehlen Wartung, Betrieb, Sicherheit und Datenschutz.
+
+\section{Praxisleitfaden für das Roboterprojekt}
+Für das Roboterprojekt empfiehlt sich ein einfacher Arbeitsablauf. Beginnen Sie nicht mit dem Use-Case-Diagramm, sondern mit einer Liste echter Nutzungssituationen. Fragen Sie: Wer steht vor dem Roboter? Wer sieht nur die Betriebsdaten? Wer ist betroffen, obwohl er den Roboter nie bewusst bedient?
+
+Danach gruppieren Sie die Situationen. Typische Gruppen sind Bedienung, Betrieb, Wartung, Sicherheit und Datenschutz. Für jede Gruppe wird mindestens ein Use Case beschrieben. Ein gutes Einsteigermodell könnte folgende Use Cases enthalten:
+
+\begin{itemize}
+    \item Transportauftrag starten
+    \item Ziel autonom anfahren
+    \item Hindernis behandeln
+    \item Zur Ladestation zurückkehren
+    \item Fehler diagnostizieren
+    \item Roboter außer Betrieb nehmen
+\end{itemize}
+
+Aus jedem Use Case entstehen Anforderungen. Der Use Case \enquote{Fehler diagnostizieren} führt zum Beispiel zu Anforderungen an Statusmeldungen, Logdaten und Wartungszugriff. Der Use Case \enquote{Roboter außer Betrieb nehmen} führt zu Anforderungen an sichere Abschaltung und klare Bedienrückmeldung.
+
+\section{Zusammenfassung}
+Stakeholder und Use Cases helfen, das System aus Nutzungssicht zu verstehen. Sie bilden eine Brücke zwischen Bedürfnissen und Anforderungen. Für den Roboter sind Use Cases wie \enquote{Ziel anfahren}, \enquote{Zur Ladestation zurückkehren}, \enquote{Hindernis behandeln} und \enquote{Wartung durchführen} besonders wichtig.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Was ist ein Stakeholder?
+    \item Warum sind Wartung und Datenschutz Stakeholder?
+    \item Was beschreibt ein Use Case?
+    \item Warum ist ein Use Case kein Algorithmus?
+    \item Welche Vorbedingungen hat der Use Case \enquote{Ziel anfahren}?
+    \item Wie können aus Use Cases Anforderungen entstehen?
+    \item Warum sollten Alternativabläufe beschrieben werden?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: Use Case schreiben}\\
 Schreiben Sie einen Use Case \enquote{Zur Ladestation zurückkehren}. Leiten Sie daraus mindestens drei Anforderungen ab.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Stakeholder erweitern}\\
+Ergänzen Sie die Stakeholdertabelle um drei weitere Stakeholder und beschreiben Sie deren Interessen.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 3: Ausnahmefälle}\\
+Ergänzen Sie zum Use Case \enquote{Ziel anfahren} drei Ausnahmefälle und jeweils eine erwartete Systemreaktion.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Use Cases und Stakeholderanalyse sind Grundlagen des Requirements Engineering und werden in MBSE durch SysML-Beziehungen mit Anforderungen, Struktur und Tests verbunden. Vertiefend helfen praxisnahe SysML-Einführungen \cite{delligatti2014,friedenthal2014}.

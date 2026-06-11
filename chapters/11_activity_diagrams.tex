@@ -1,34 +1,109 @@
 \chapter{Verhaltensmodellierung mit Activity Diagrams}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie Abläufe des Roboters als Aktivitätsdiagramm beschreiben.
+Nach diesem Kapitel können Sie Abläufe des Roboters als Aktivitätsdiagramm beschreiben. Sie verstehen Aktionen, Kontrollflüsse, Entscheidungen, Parallelität und Objektflüsse und können typische Roboterprozesse wie Zielnavigation, Hindernisbehandlung und Rückkehr zur Ladestation modellieren.
 \end{lernziele}
 
+\section{Einleitung}
+Strukturdiagramme zeigen, woraus ein System besteht. Für ein funktionierendes System reicht das nicht. Wir müssen auch beschreiben, was im Betrieb passiert. Ein autonomer Roboter ist ein gutes Beispiel: Er nimmt Aufträge entgegen, plant Wege, fährt, reagiert auf Hindernisse, überwacht seine Batterie und meldet Zustände.
+
+Activity Diagrams beschreiben solche Abläufe. Sie eignen sich besonders für Prozesse, Workflows und Algorithmen auf einer verständlichen Ebene.
+
 \section{Was beschreibt ein Aktivitätsdiagramm?}
-Ein Aktivitätsdiagramm beschreibt einen Ablauf aus Aktionen, Entscheidungen und Verzweigungen. Es eignet sich gut für Prozesse wie \enquote{Navigationsziel anfahren}.
+Ein Aktivitätsdiagramm beschreibt einen Ablauf aus Aktionen, Entscheidungen und Verzweigungen. Es zeigt, welche Schritte nacheinander oder parallel ausgeführt werden.
+
+Typische Elemente sind:
+
+\begin{itemize}
+    \item Aktionen
+    \item Kontrollflüsse
+    \item Entscheidungsknoten
+    \item Zusammenführungsknoten
+    \item Start- und Endknoten
+    \item parallele Aufspaltung und Synchronisation
+    \item Objektflüsse
+\end{itemize}
 
 \section{Beispielablauf Navigation}
 \begin{enumerate}
-\item System starten
-\item Sensoren initialisieren
-\item Karte laden
-\item Ziel empfangen
-\item Pfad planen
-\item Bewegung ausführen
-\item Hindernisse prüfen
-\item Ziel erreicht melden
+    \item System starten
+    \item Sensoren initialisieren
+    \item Karte laden
+    \item Ziel empfangen
+    \item Akkustand prüfen
+    \item Pfad planen
+    \item Bewegung ausführen
+    \item Hindernisse prüfen
+    \item Ziel erreicht melden
 \end{enumerate}
 
+Dieser Ablauf kann als Aktivitätsdiagramm modelliert werden. Entscheidungen entstehen zum Beispiel bei niedrigem Akkustand oder blockiertem Pfad.
+
 \section{Entscheidungen}
-Entscheidungsknoten modellieren Alternativen. Beispiel: Wenn ein Hindernis erkannt wird, plant der Roboter neu oder stoppt.
+Entscheidungsknoten modellieren Alternativen. Beispiel: Wenn ein Hindernis erkannt wird, plant der Roboter neu oder stoppt. Entscheidungen sollten klare Bedingungen haben, etwa \texttt{[Hindernis erkannt]} und \texttt{[Fahrweg frei]}.
 
 \section{Parallelität}
-Ein Roboter führt oft mehrere Aktivitäten parallel aus. Während er fährt, überwacht er Sensoren und Batterie. Aktivitätsdiagramme können solche parallelen Abläufe darstellen, sollten am Anfang aber nicht überladen werden.
+Ein Roboter führt oft mehrere Aktivitäten parallel aus. Während er fährt, überwacht er Sensoren, Batterie und Kommunikation. Aktivitätsdiagramme können solche parallelen Abläufe darstellen. Für Einsteiger ist es aber wichtig, Diagramme nicht zu überladen.
 
 \begin{praxisbox}
-Der Ablauf \enquote{Zur Ladestation fahren} enthält eine Entscheidung: Ist der Akkustand niedrig? Nur dann wird der Ladevorgang gestartet.
+Der Ablauf \enquote{Zur Ladestation fahren} enthält mehrere Entscheidungen: Ist der Akkustand niedrig? Ist die Ladestation erreichbar? Ist der Andockvorgang erfolgreich? Wenn nicht, muss der Roboter einen Fehler melden oder erneut versuchen.
 \end{praxisbox}
 
+\section{Aktivitäten und Anforderungen}
+Aktivitätsdiagramme können Anforderungen verfeinern. Eine Anforderung \enquote{Der Roboter muss ein Ziel autonom anfahren} wird durch einen Ablauf konkretisiert. Daraus ergeben sich weitere Anforderungen, Schnittstellen und Tests.
+
+\section{Typische Fehler}
+\subsection{Zu viel Implementierungsdetail}
+Ein Aktivitätsdiagramm ist kein Ersatz für Programmcode. Es soll den Ablauf verständlich machen, nicht jede Codezeile modellieren.
+
+\subsection{Unklare Bedingungen}
+Entscheidungen brauchen Bedingungen. Ein Knoten ohne verständliche Bedingung hilft wenig.
+
+\subsection{Fehlerfälle vergessen}
+Gute Aktivitätsdiagramme betrachten nicht nur den Normalfall. Gerade bei Robotern sind Abbrüche, Blockaden und Sensorausfälle wichtig.
+
+\section{Praxisbeispiel: Rückkehr zur Ladestation}
+Der Ablauf \enquote{Zur Ladestation zurückkehren} eignet sich besonders gut für ein Aktivitätsdiagramm. Er beginnt nicht erst mit der Fahrt zur Ladestation, sondern mit einer Entscheidung: Ist der Akkustand unterhalb eines Schwellwerts? Wenn ja, muss das System prüfen, ob gerade ein kritischer Auftrag läuft. Danach wird ein Ziel \enquote{Ladestation} gesetzt, ein Pfad geplant und der Andockvorgang gestartet.
+
+Ein möglicher Ablauf:
+
+\begin{enumerate}
+    \item Akkustand überwachen.
+    \item Niedrigen Akkustand erkennen.
+    \item Nutzer informieren.
+    \item Aktuellen Auftrag bewerten.
+    \item Rückkehrziel setzen.
+    \item Pfad zur Ladestation planen.
+    \item Zur Ladestation fahren.
+    \item Andocken.
+    \item Ladevorgang starten.
+\end{enumerate}
+
+Wichtig sind die Alternativen. Wenn die Ladestation blockiert ist, muss der Roboter warten, einen alternativen Platz anfahren oder einen Fehler melden. Wenn der Akku kritisch niedrig ist, darf er keine langen Ausweichmanöver mehr versuchen.
+
+\section{Zusammenfassung}
+Activity Diagrams beschreiben Abläufe und Entscheidungen. Im Roboterprojekt helfen sie, Use Cases wie Zielnavigation, Rückkehr zur Ladestation und Hindernisbehandlung in nachvollziehbare Prozesse zu übersetzen. Sie bilden eine Brücke zwischen Anforderungen und späterer Softwarelogik.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Wozu dient ein Aktivitätsdiagramm?
+    \item Was ist eine Aktion?
+    \item Wozu dienen Entscheidungsknoten?
+    \item Warum ist Parallelität bei Robotern relevant?
+    \item Warum sollte ein Aktivitätsdiagramm nicht zu detailliert sein?
+    \item Wie kann ein Aktivitätsdiagramm Anforderungen verfeinern?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: Ziel anfahren}\\
 Modellieren Sie den Ablauf \enquote{Ziel anfahren}. Ergänzen Sie mindestens eine Entscheidung für Hinderniserkennung und eine für niedrigen Akkustand.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Fehlerfall ergänzen}\\
+Erweitern Sie den Ablauf um den Fall, dass keine Karte verfügbar ist. Beschreiben Sie die erwartete Systemreaktion.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Aktivitätsdiagramme werden in SysML und UML ähnlich verwendet. Für praxisnahe Beispiele eignen sich SysML-Einführungen \cite{delligatti2014,friedenthal2014}.

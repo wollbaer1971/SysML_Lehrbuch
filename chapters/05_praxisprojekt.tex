@@ -1,38 +1,161 @@
 \chapter{Das Praxisprojekt: Autonomer Indoor-Roboter}
 
 \begin{lernziele}
-Nach diesem Kapitel kennen Sie das Beispielsystem, seine Hauptfunktionen und die wichtigsten Randbedingungen.
+Nach diesem Kapitel kennen Sie das durchgängige Beispielsystem dieses Buches. Sie können Ziel, Systemkontext, Hauptfunktionen, Annahmen und Randbedingungen des autonomen Indoor-Roboters beschreiben. Außerdem verstehen Sie, warum dieses Beispiel gut geeignet ist, um SysML, Enterprise Architect, ROS2 und Machine Learning gemeinsam zu lernen.
 \end{lernziele}
 
+\section{Einleitung}
+Dieses Lehrbuch verwendet ein durchgängiges Praxisbeispiel: einen autonomen Indoor-Roboter. An diesem Beispiel lernen Sie, wie Systems Engineering, MBSE, SysML, Enterprise Architect und ROS2 zusammenhängen. Das Beispiel ist bewusst realistisch, aber didaktisch begrenzt.
+
+Der Roboter soll sich in Innenräumen bewegen, Ziele anfahren, Hindernisse erkennen, Personen erkennen, seinen Akkustand überwachen und bei niedrigem Akkustand automatisch zur Ladestation zurückkehren. Damit verbindet das Projekt typische Themen moderner Robotik: Sensorik, Aktorik, Navigation, Softwarearchitektur, KI, Schnittstellen, Tests und Systemmodellierung.
+
 \section{Ziel des Systems}
-Der autonome Indoor-Roboter soll sich in Innenräumen bewegen, Hindernisse erkennen, Personen erkennen, Ziele anfahren und bei niedrigem Akkustand zur Ladestation zurückkehren.
+Das Zielsystem kann in einem Satz beschrieben werden:
+
+\begin{quote}
+Der autonome Indoor-Roboter transportiert kleine Gegenstände innerhalb eines definierten Gebäudebereichs selbstständig, sicher und nachvollziehbar zu ausgewählten Zielpunkten.
+\end{quote}
+
+Dieser Satz enthält mehrere wichtige Begriffe. \enquote{Autonom} bedeutet hier nicht grenzenlose Selbstständigkeit. Der Roboter arbeitet innerhalb eines bekannten oder kartierten Innenbereichs. \enquote{Sicher} bedeutet, dass Personen und Gegenstände nicht gefährdet werden sollen. \enquote{Nachvollziehbar} bedeutet, dass Zustände, Fehler und Entscheidungen im Modell und später im System beobachtbar bleiben.
 
 \section{Warum dieses Beispiel?}
-Das Beispiel verbindet mehrere typische Bereiche moderner Systementwicklung: Sensorik, Aktorik, Software, Datenverarbeitung, Robotik, künstliche Intelligenz und Tests. Es ist komplex genug, damit SysML Sinn ergibt, aber nicht so groß, dass Einsteiger den Überblick verlieren.
+Das Beispiel ist für den Einstieg besonders geeignet, weil es mehrere Disziplinen verbindet, ohne sofort zu groß zu werden.
 
-\section{Hauptfunktionen}
 \begin{itemize}
-\item Umgebung erfassen
-\item Karte erstellen oder laden
-\item Position bestimmen
-\item Navigationsziel empfangen
-\item Pfad planen
-\item Hindernissen ausweichen
-\item Personen erkennen
-\item Batterie überwachen
-\item Ladestation anfahren
+    \item Es enthält Hardware: Sensoren, Antrieb, Batterie, Gehäuse.
+    \item Es enthält Software: ROS2-Nodes, Topics, Services und Actions.
+    \item Es enthält Verhalten: Navigation, Rückkehr zur Ladestation, Fehlerbehandlung.
+    \item Es enthält Schnittstellen: Datenflüsse, Energiefluss, Bedienung.
+    \item Es enthält KI: Personenerkennung mit einem ML-Modell.
+    \item Es enthält Tests: Anforderungen müssen nachgewiesen werden.
 \end{itemize}
 
-\section{Systemkontext}
-Der Roboter interagiert mit Nutzern, Räumen, Hindernissen, Ladestation und Wartungspersonal. Diese externen Elemente gehören nicht alle zwingend zum System, beeinflussen aber Anforderungen und Schnittstellen.
+Gleichzeitig bleibt der Umfang überschaubar. Wir modellieren keinen kompletten industriellen Lieferroboter mit Zulassung, Produktvarianten und Serienfertigung. Wir modellieren ein Lernsystem, an dem die wichtigsten Konzepte sichtbar werden.
 
-\section{Annahmen}
-Für dieses Lehrbuch nehmen wir an, dass der Roboter mit Kamera, Lidar, mobilem Rechner, Motorcontroller und Batterie ausgestattet ist. Als Softwarebasis verwenden wir ROS2. Für die Personenerkennung wird später ein ML-Modell eingebunden.
+\section{Systemkontext}
+Der Roboter interagiert mit seiner Umgebung. Zum Kontext gehören:
+
+\begin{itemize}
+    \item Nutzer, die Transportaufträge starten
+    \item Personen im Gebäude
+    \item Räume, Flure, Türen und Hindernisse
+    \item eine Ladestation
+    \item Wartungspersonal
+    \item eventuell ein WLAN oder Gebäudenetzwerk
+    \item ein Bediengerät oder eine Benutzeroberfläche
+\end{itemize}
+
+Nicht alle diese Elemente gehören automatisch zum System. Die Systemgrenze muss bewusst festgelegt werden. Für das Lehrbuch betrachten wir den Roboter als Hauptsystem. Die Ladestation kann je nach Kapitel als externes System oder als Teil der Gesamtarchitektur betrachtet werden, weil gerade diese Entscheidung ein gutes Beispiel für Schnittstellen ist.
+
+\section{Hauptfunktionen}
+Die wichtigsten Funktionen des Roboters sind:
+
+\begin{itemize}
+    \item Transportauftrag entgegennehmen
+    \item Karte erstellen oder laden
+    \item eigene Position bestimmen
+    \item Navigationsziel empfangen
+    \item Pfad planen
+    \item Bewegung ausführen
+    \item Hindernisse erkennen und vermeiden
+    \item Personen erkennen und berücksichtigen
+    \item Batterie überwachen
+    \item Ladestation anfahren
+    \item Betriebszustand melden
+    \item Fehler erkennen und sicher reagieren
+\end{itemize}
+
+Diese Liste ist noch keine technische Architektur. Sie beschreibt zunächst, was das System leisten muss. Erst später entscheiden wir, welche Blöcke, ROS2-Nodes und Schnittstellen diese Funktionen realisieren.
+
+\section{Annahmen für das Lehrbuch}
+Damit das Beispiel beherrschbar bleibt, treffen wir einige Annahmen:
+
+\begin{itemize}
+    \item Der Roboter fährt ausschließlich in Innenräumen.
+    \item Der Boden ist im Wesentlichen eben.
+    \item Der Roboter bewegt sich mit niedriger Geschwindigkeit.
+    \item Die Umgebung kann kartiert werden.
+    \item Der Roboter besitzt Kamera, Lidar, mobilen Rechner, Motorcontroller und Batterie.
+    \item Als Softwarebasis verwenden wir ROS2.
+    \item Für Personenerkennung wird später ein ML-Modell eingesetzt.
+    \item Sicherheitsbetrachtungen werden didaktisch behandelt, aber nicht normgerecht vollständig ausgearbeitet.
+\end{itemize}
 
 \begin{hinweisbox}
-Das Projekt ist didaktisch vereinfacht. Ein echter sicherheitskritischer Roboter würde zusätzliche Sicherheitsanalysen, Normenbetrachtungen und Zulassungsprozesse benötigen.
+Das Projekt ist didaktisch vereinfacht. Ein echter Roboter, der in öffentlichen oder sicherheitskritischen Bereichen eingesetzt wird, benötigt deutlich umfangreichere Risikoanalysen, Sicherheitskonzepte, Normenbetrachtungen und Zulassungsprozesse.
 \end{hinweisbox}
 
+\section{Erste Systemstruktur}
+Eine erste grobe Struktur könnte aus folgenden Teilsystemen bestehen:
+
+\begin{itemize}
+    \item \texttt{PerceptionSystem}: Kamera, Lidar, Objekterkennung, Hinderniserkennung
+    \item \texttt{NavigationSystem}: Lokalisierung, Karte, Pfadplanung
+    \item \texttt{MotionControl}: Umsetzung von Bewegungsbefehlen
+    \item \texttt{BatterySystem}: Akku, Ladezustand, Energiemanagement
+    \item \texttt{UserInterface}: Auftragseingabe und Statusanzeige
+    \item \texttt{CommunicationSystem}: interne und externe Kommunikation
+    \item \texttt{SafetyLogic}: sichere Reaktion auf kritische Situationen
+\end{itemize}
+
+Diese Struktur wird in den folgenden Kapiteln schrittweise verfeinert.
+
+\section{Erste Szenarien}
+\subsection{Szenario 1: Ziel anfahren}
+Ein Nutzer wählt ein Ziel aus. Der Roboter prüft, ob eine Karte verfügbar ist, plant einen Pfad und fährt los. Während der Fahrt verarbeitet er Sensorinformationen, erkennt Hindernisse und passt seine Bewegung an. Am Ziel meldet er den erfolgreichen Abschluss.
+
+\subsection{Szenario 2: Hindernis im Fahrweg}
+Während der Navigation erkennt der Roboter ein Hindernis. Er bewertet, ob Ausweichen möglich ist. Falls ja, plant er lokal eine neue Bewegung. Falls nicht, stoppt er und meldet eine Blockade.
+
+\subsection{Szenario 3: Niedriger Akkustand}
+Der Batteriemonitor erkennt einen niedrigen Ladezustand. Der Roboter beendet keine riskante neue Mission mehr, informiert den Nutzer und plant die Rückkehr zur Ladestation.
+
+\subsection{Szenario 4: Personenerkennung}
+Die Kamera liefert Bilder an einen ML-basierten Erkennungs-Node. Erkennt das System eine Person im Fahrbereich, reduziert der Roboter seine Geschwindigkeit oder wählt einen anderen Pfad.
+
+\section{Was wir im Buch daraus machen}
+Das Praxisprojekt dient als roter Faden:
+
+\begin{itemize}
+    \item Kapitel 6 formuliert Anforderungen.
+    \item Kapitel 7 betrachtet Stakeholder und Use Cases.
+    \item Kapitel 8 und 9 modellieren Struktur und interne Verbindungen.
+    \item Kapitel 10 beschreibt Schnittstellen.
+    \item Kapitel 11 und 12 modellieren Verhalten.
+    \item Kapitel 14 bis 18 übertragen das Modell in ROS2 und ML.
+    \item Kapitel 19 und 20 verbinden Anforderungen, Tests und Traceability.
+\end{itemize}
+
+\section{Zusammenfassung}
+Der autonome Indoor-Roboter ist klein genug für den Einstieg und realistisch genug, um Systems Engineering sinnvoll zu machen. Er verbindet Anforderungen, Struktur, Verhalten, Schnittstellen, ROS2-Architektur, KI und Tests. Die in diesem Kapitel beschriebenen Annahmen und Funktionen bilden die Grundlage für alle folgenden Modellierungsschritte.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Was ist das Ziel des autonomen Indoor-Roboters?
+    \item Warum eignet sich dieses Beispiel für ein SysML-Lehrbuch?
+    \item Welche externen Elemente gehören zum Systemkontext?
+    \item Nennen Sie fünf Hauptfunktionen des Roboters.
+    \item Welche Annahmen werden für das Lehrbuch getroffen?
+    \item Warum ist die Ladestation ein interessantes Beispiel für Systemgrenzen?
+    \item Welche Rolle spielt ROS2 im Praxisprojekt?
+    \item Welche Rolle spielt Machine Learning im Praxisprojekt?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
-Zeichnen Sie eine einfache Kontextskizze: Roboter in der Mitte, außen Nutzer, Hindernis, Ladestation, Raum und Wartungstechniker.
+\textbf{Übung 1: Kontextskizze}\\
+Zeichnen Sie eine einfache Kontextskizze: Roboter in der Mitte, außen Nutzer, Hindernis, Ladestation, Raum, Wartungspersonal und Netzwerk.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Funktionsliste erweitern}\\
+Ergänzen Sie die Hauptfunktionsliste um fünf weitere Funktionen, die für einen realen Indoor-Roboter nützlich wären.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 3: Annahmen prüfen}\\
+Wählen Sie drei Annahmen aus diesem Kapitel. Beschreiben Sie jeweils, was sich am System ändern würde, wenn die Annahme nicht mehr gilt.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Für das Praxisprojekt sind neben SysML-Grundlagen \cite{delligatti2014,friedenthal2014} besonders ROS2-Grundlagen \cite{ros2docs} relevant. Für reale Robotikprojekte sollten zusätzlich Sicherheitsnormen, Datenschutzanforderungen und domänenspezifische Robotikstandards betrachtet werden.

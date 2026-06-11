@@ -1,8 +1,11 @@
 \chapter{ROS2-Implementierung mit Python}
 
 \begin{lernziele}
-Nach diesem Kapitel verstehen Sie den Aufbau eines einfachen ROS2-Python-Nodes.
+Nach diesem Kapitel verstehen Sie den Aufbau eines einfachen ROS2-Python-Nodes. Sie können Publisher, Subscriber, Timer und grundlegende Package-Strukturen einordnen und wissen, wie ein einfacher Node aus dem Modell abgeleitet werden kann.
 \end{lernziele}
+
+\section{Einleitung}
+Nachdem die Architektur modelliert wurde, folgt die Umsetzung. In diesem Kapitel betrachten wir Python mit \texttt{rclpy}. Python eignet sich gut für den Einstieg, weil der Code vergleichsweise leicht lesbar ist.
 
 \section{Package erstellen}
 Ein Python-Package wird typischerweise mit folgendem Befehl erstellt:
@@ -10,6 +13,8 @@ Ein Python-Package wird typischerweise mit folgendem Befehl erstellt:
 \begin{lstlisting}[language=bash]
 ros2 pkg create robot_basic_nodes --build-type ament_python --dependencies rclpy std_msgs sensor_msgs geometry_msgs
 \end{lstlisting}
+
+Ein Package bündelt Code, Konfiguration und Startinformationen. Für größere Systeme werden mehrere Packages sinnvoll.
 
 \section{Ein einfacher Node}
 \begin{lstlisting}[language=Python]
@@ -36,8 +41,14 @@ def main():
     rclpy.shutdown()
 \end{lstlisting}
 
+\section{Publisher}
+Ein Publisher veröffentlicht Nachrichten auf einem Topic. Im Beispiel sendet der Node regelmäßig einen Status auf \texttt{/robot/status}. Ein Batteriemonitor würde ähnlich regelmäßig \texttt{/battery\_state} veröffentlichen.
+
 \section{Subscriber}
-Ein Subscriber empfängt Nachrichten von einem Topic. Der ObjectDetector würde zum Beispiel \texttt{/camera/image\_raw} abonnieren.
+Ein Subscriber empfängt Nachrichten von einem Topic. Der ObjectDetector würde zum Beispiel \texttt{/camera/image\_raw} abonnieren. Eine Callback-Funktion verarbeitet eingehende Nachrichten.
+
+\section{Timer}
+Timer lösen Funktionen regelmäßig aus. Sie eignen sich für Statusmeldungen, simulierte Sensordaten oder periodische Prüfungen.
 
 \section{Build und Start}
 \begin{lstlisting}[language=bash]
@@ -46,10 +57,53 @@ source install/setup.bash
 ros2 run robot_basic_nodes status_node
 \end{lstlisting}
 
+\section{Vom Modell zum Node}
+Ein SysML-Block \texttt{BatterySystem} kann zur Entscheidung führen, einen \texttt{battery\_monitor\_node} zu implementieren. Die Schnittstelle \enquote{Akkustatus} wird zum Topic \texttt{/battery\_state}. Der Testfall prüft später, ob der Node plausible Werte veröffentlicht.
+
 \begin{hinweisbox}
-Der Code ist bewusst minimal. In realen Projekten kommen Fehlerbehandlung, Parameter, Logging und Launch-Dateien hinzu.
+Der Code ist bewusst minimal. In realen Projekten kommen Fehlerbehandlung, Parameter, Logging, Launch-Dateien, Tests und saubere Package-Strukturen hinzu.
 \end{hinweisbox}
 
+\section{Typische Fehler}
+\subsection{Keine klare Verantwortung}
+Ein Node sollte eine verständliche Aufgabe haben.
+
+\subsection{Topic-Namen hart verteilen}
+Topic-Namen sollten konsistent sein und bei Bedarf über Parameter konfigurierbar werden.
+
+\subsection{Keine Fehlerbehandlung}
+Auch einfache Nodes sollten ungültige Daten und Ausnahmen nicht ignorieren.
+
+\section{Vom Minimalbeispiel zum Projektcode}
+Das gezeigte Beispiel ist absichtlich klein. In einem echten Projekt sollte ein Node mehr können: Parameter lesen, Logging nutzen, ungültige Daten erkennen und sauber herunterfahren. Für den \texttt{battery\_monitor\_node} könnten Parameter definieren, ab welchem Prozentwert eine Warnung veröffentlicht wird.
+
+Ein sinnvoller nächster Schritt ist ein simulierter Batterieknoten. Er veröffentlicht regelmäßig einen Akkustand, der langsam sinkt. Ein zweiter Node kann diesen Wert abonnieren und bei niedrigem Stand eine Warnung ausgeben. Damit entsteht ein kleines, testbares ROS2-System, das direkt zu Anforderungen und Modellbeziehungen passt.
+
+Wichtig ist die Rückbindung an das Modell. Der Code sollte nicht isoliert entstehen. Jede Node sollte im Modell einen Zweck haben, einer Funktion zugeordnet sein und über definierte Topics kommunizieren.
+
+\section{Zusammenfassung}
+ROS2-Python-Nodes setzen Teile der modellierten Architektur um. Publisher, Subscriber und Timer bilden die Grundbausteine. Für den Einstieg genügt ein kleiner Node, solange seine Rolle im Modell klar ist.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Was ist ein ROS2-Package?
+    \item Was macht ein Publisher?
+    \item Was macht ein Subscriber?
+    \item Wozu dient ein Timer?
+    \item Warum sollte ein Node eine klare Verantwortung besitzen?
+    \item Wie kann ein SysML-Block zu einem ROS2-Node führen?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
-Implementieren Sie einen \texttt{battery\_monitor\_node}, der regelmäßig einen simulierten Akkustand veröffentlicht.
+\textbf{Übung 1: Battery Monitor}\\
+Implementieren Sie konzeptionell einen \texttt{battery\_monitor\_node}, der regelmäßig einen simulierten Akkustand veröffentlicht.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Modellbezug}\\
+Beschreiben Sie, welche Anforderung, welcher Block, welches Topic und welcher Testfall zu Ihrem \texttt{battery\_monitor\_node} gehören.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Für praktische ROS2-Implementierung ist die offizielle Dokumentation \cite{ros2docs} zentral. Das Kapitel bleibt bewusst ein Einstieg und bereitet das spätere vollständige ROS2-Projekt vor.
