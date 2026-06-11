@@ -1,34 +1,102 @@
 \chapter{Parametrische Modellierung}
 
 \begin{lernziele}
-Nach diesem Kapitel verstehen Sie, wie technische Zusammenhänge im Modell beschrieben werden können.
+Nach diesem Kapitel verstehen Sie, wie technische Zusammenhänge im Modell beschrieben werden können. Sie können einfache Formeln zu Akkulaufzeit, Leistungsaufnahme und Bremsweg verwenden und erklären, wie SysML Constraint Blocks für quantitative Aussagen genutzt werden.
 \end{lernziele}
 
-\section{Zweck parametrischer Modelle}
-Parametrische Modelle beschreiben mathematische Beziehungen. Sie helfen, technische Entscheidungen zu prüfen. Beim Roboter sind Energieverbrauch, Reichweite und Geschwindigkeit wichtige Größen.
+\section{Einleitung}
+Bisher haben wir Anforderungen, Struktur, Schnittstellen und Verhalten betrachtet. Viele technische Entscheidungen benötigen zusätzlich Zahlen. Wie lange fährt der Roboter mit einer Akkuladung? Wie viel Leistung benötigen Rechner, Sensoren und Motoren? Wie groß muss der Sicherheitsabstand bei einer bestimmten Geschwindigkeit sein?
 
-\section{Einfaches Beispiel}
+Parametrische Modellierung hilft, solche Zusammenhänge sichtbar zu machen.
+
+\section{Zweck parametrischer Modelle}
+Parametrische Modelle beschreiben mathematische Beziehungen. Sie helfen, technische Entscheidungen früh zu prüfen. Beim Roboter sind Energieverbrauch, Reichweite, Geschwindigkeit, Nutzlast und Bremsweg wichtige Größen.
+
+\section{Einfaches Beispiel: Betriebszeit}
 \[
 t_{betrieb} = \frac{E_{akku}}{P_{gesamt}}
 \]
 
 Dabei ist \(E_{akku}\) die nutzbare Energie der Batterie und \(P_{gesamt}\) die durchschnittliche Leistungsaufnahme.
 
-\section{Leistungsaufnahme}
-Die Gesamtleistung kann grob abgeschätzt werden:
+Wenn die Batterie 100 Wh nutzbare Energie besitzt und das System im Mittel 25 W aufnimmt, ergibt sich:
+
 \[
-P_{gesamt} = P_{rechner} + P_{sensoren} + P_{motoren}
+t_{betrieb} = \frac{100 Wh}{25 W} = 4 h
 \]
 
-Diese Formel ist einfach, aber nützlich für frühe Architekturentscheidungen.
+\section{Leistungsaufnahme}
+Die Gesamtleistung kann grob abgeschätzt werden:
+
+\[
+P_{gesamt} = P_{rechner} + P_{sensoren} + P_{motoren} + P_{sonstiges}
+\]
+
+Diese Formel ist einfach, aber nützlich für frühe Architekturentscheidungen. Wenn ein stärkerer Rechner 15 W mehr benötigt, sinkt die Betriebszeit. Das kann Anforderungen an Batteriegröße, Gewicht und Ladezeit beeinflussen.
+
+\section{Bremsweg}
+Auch Sicherheitsfragen lassen sich grob parametrisch betrachten. Ein vereinfachter Bremsweg kann mit folgender Beziehung abgeschätzt werden:
+
+\[
+s = \frac{v^2}{2a}
+\]
+
+Dabei ist \(v\) die Geschwindigkeit und \(a\) die Bremsverzögerung. Die Formel ist vereinfacht, zeigt aber einen wichtigen Zusammenhang: Wenn die Geschwindigkeit steigt, wächst der Bremsweg quadratisch.
+
+\begin{praxisbox}
+Wenn der Roboter schneller fahren soll, reicht es nicht, nur die Motorsteuerung anzupassen. Auch Hinderniserkennung, Reaktionszeit, Bremsweg, Sicherheitsabstand und Tests müssen betrachtet werden.
+\end{praxisbox}
 
 \section{Parametric Diagram in SysML}
-In SysML werden solche Zusammenhänge mit Constraint Blocks modelliert. Ein Constraint Block beschreibt die Formel, Parameter werden mit Systemeigenschaften verbunden.
+In SysML werden solche Zusammenhänge mit Constraint Blocks modelliert. Ein Constraint Block beschreibt eine Formel. Parameter werden mit Eigenschaften von Systemelementen verbunden.
 
-\begin{hinweisbox}
-Parametrik ist für Einsteiger optional. Sie wird wichtig, wenn quantitative Aussagen getroffen werden sollen.
-\end{hinweisbox}
+Beispiel:
 
+\begin{itemize}
+    \item Constraint Block: \texttt{OperatingTimeConstraint}
+    \item Formel: \(t = E / P\)
+    \item Parameter: \(t\), \(E\), \(P\)
+    \item Verbindung: \(E\) mit Batteriekapazität, \(P\) mit Leistungsaufnahme
+\end{itemize}
+
+\section{Grenzen einfacher Modelle}
+Parametrische Modelle sind nur so gut wie ihre Annahmen. Ein Roboter verbraucht beim Anfahren mehr Energie als im Stillstand. Teppichboden, Nutzlast und Fahrprofil beeinflussen die Laufzeit. Ein einfaches Modell ist trotzdem nützlich, weil es früh Größenordnungen sichtbar macht.
+
+\section{Parametrik als Entscheidungswerkzeug}
+Parametrik ist besonders wertvoll, wenn mehrere Entwurfsvarianten verglichen werden. Nehmen wir an, das Team betrachtet zwei Rechner. Rechner A benötigt 10 W und schafft einfache Personenerkennung. Rechner B benötigt 25 W und erkennt Personen zuverlässiger. Die Entscheidung betrifft nicht nur ML-Qualität, sondern auch Akkulaufzeit, Wärme, Kosten und Gewicht.
+
+Ein parametrisches Modell kann solche Auswirkungen sichtbar machen. Wenn die restliche Leistungsaufnahme 20 W beträgt, ergibt sich mit Rechner A eine Gesamtleistung von 30 W. Mit Rechner B steigt sie auf 45 W. Bei 100 Wh nutzbarer Energie sinkt die theoretische Betriebszeit von etwa 3,3 h auf etwa 2,2 h.
+
+Das Modell trifft die Entscheidung nicht automatisch. Es zeigt aber, welche Fragen diskutiert werden müssen: Ist die bessere Erkennung die kürzere Laufzeit wert? Kann ein größerer Akku eingebaut werden? Wird das System zu schwer? Reicht ein optimiertes Modell auf Rechner A?
+
+\section{Zusammenfassung}
+Parametrische Modellierung ergänzt qualitative Modelle um quantitative Zusammenhänge. Für den Indoor-Roboter sind Akkulaufzeit, Leistungsaufnahme und Bremsweg gute Einstiegsthemen. Parametrik hilft, Trade-offs zwischen Leistung, Gewicht, Sicherheit und Kosten zu verstehen.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Wozu dient parametrische Modellierung?
+    \item Welche Größen beeinflussen die Betriebszeit?
+    \item Warum steigt der Bremsweg stark mit der Geschwindigkeit?
+    \item Was ist ein Constraint Block?
+    \item Warum sind Annahmen in parametrischen Modellen wichtig?
+    \item Welche Trade-offs kann Parametrik sichtbar machen?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: Betriebszeit berechnen}\\
 Nehmen Sie eine Batteriekapazität von 100 Wh und eine Leistungsaufnahme von 25 W an. Berechnen Sie die theoretische Betriebszeit.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Leistungsänderung}\\
+Der Rechner benötigt statt 10 W nun 20 W. Die übrige Leistungsaufnahme beträgt 20 W. Berechnen Sie die neue Betriebszeit bei 100 Wh.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 3: Bremsweg vergleichen}\\
+Vergleichen Sie den Bremsweg für 0,5 m/s und 1,0 m/s bei gleicher Bremsverzögerung. Beschreiben Sie, was das für Sicherheitsanforderungen bedeutet.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Parametrische Diagramme werden in SysML-Literatur als Mittel für technische Analysen beschrieben \cite{friedenthal2014}. Für reale Robotikprojekte sollten zusätzlich Fachquellen zu Batterietechnik, Antriebstechnik und Sicherheit herangezogen werden.

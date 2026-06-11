@@ -1,38 +1,112 @@
 \chapter{Schnittstellenmodellierung}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie Schnittstellen beschreiben und erkennen, warum klare Schnittstellen in Robotikprojekten entscheidend sind.
+Nach diesem Kapitel können Sie Schnittstellen systematisch beschreiben und erkennen, warum klare Schnittstellen in Robotikprojekten entscheidend sind. Sie können Datenflüsse, Sender, Empfänger, Datentypen, Frequenzen, Qualitätsanforderungen und Fehlerfälle dokumentieren.
 \end{lernziele}
 
+\section{Einleitung}
+Viele technische Probleme entstehen nicht in einzelnen Komponenten, sondern an ihren Schnittstellen. Eine Kamera liefert Bilder in einem Format, das der Erkennungsalgorithmus nicht erwartet. Ein Navigationsknoten erwartet Koordinaten in einem anderen Bezugssystem. Ein Batteriemodul meldet Werte langsamer als die Missionsplanung annimmt. Solche Fehler sind typisch.
+
 \section{Warum Schnittstellen wichtig sind}
-Viele technische Probleme entstehen nicht in einzelnen Komponenten, sondern an ihren Schnittstellen. Eine Kamera liefert Bilder in einem Format, das der Erkennungsalgorithmus nicht erwartet. Ein Navigationsknoten erwartet Koordinaten in einem anderen Bezugssystem. Solche Fehler sind typisch.
+Schnittstellen sind die Stellen, an denen Systemteile zusammenarbeiten. Je komplexer ein System wird, desto wichtiger werden klare Schnittstellen. Beim Indoor-Roboter betreffen Schnittstellen Sensorik, Software, Energie, Mechanik, Bedienung und Umgebung.
+
+Eine unklare Schnittstelle führt zu Fragen wie:
+
+\begin{itemize}
+    \item Wer sendet welche Daten?
+    \item In welchem Format liegen die Daten vor?
+    \item Wie oft werden die Daten gesendet?
+    \item Was passiert bei fehlenden oder fehlerhaften Daten?
+    \item Welche Einheit und welches Koordinatensystem gelten?
+\end{itemize}
 
 \section{Schnittstellenbeschreibung}
 Eine gute Schnittstellenbeschreibung enthält:
+
 \begin{itemize}
-\item Name der Schnittstelle
-\item Sender und Empfänger
-\item Datentyp
-\item Frequenz oder Ereignis
-\item Qualitätsanforderungen
-\item Fehlerfälle
+    \item Name der Schnittstelle
+    \item Sender und Empfänger
+    \item Datentyp
+    \item Richtung
+    \item Frequenz oder Ereignis
+    \item Einheit und Koordinatensystem
+    \item Qualitätsanforderungen
+    \item Fehlerfälle
+    \item Bezug zu Anforderungen
 \end{itemize}
 
-\section{Beispiel}
-\begin{longtable}{p{35mm}p{35mm}p{35mm}p{35mm}}
+\section{Beispieltabelle}
+\begin{longtable}{p{30mm}p{30mm}p{30mm}p{45mm}}
 \toprule
 Schnittstelle & Sender & Empfänger & Datentyp\\
 \midrule
-Kamerabild & Camera & ObjectDetector & sensor\_msgs/Image\\
-Laserscan & Lidar & SLAM & sensor\_msgs/LaserScan\\
-Bewegungsbefehl & Navigation & MotionControl & geometry\_msgs/Twist\\
-Akkustatus & BatterySystem & Navigation & sensor\_msgs/BatteryState\\
+Kamerabild & Camera & ObjectDetector & \texttt{sensor\_msgs/Image}\\
+Laserscan & Lidar & SLAM & \texttt{sensor\_msgs/LaserScan}\\
+Bewegungsbefehl & Navigation & MotionControl & \texttt{geometry\_msgs/Twist}\\
+Akkustatus & BatterySystem & Navigation & \texttt{sensor\_msgs/BatteryState}\\
+Objektliste & ObjectDetector & Navigation & Detection-Liste\\
+Roboterstatus & Robot & UserInterface & Statusnachricht\\
 \bottomrule
 \end{longtable}
 
 \section{Koordinatensysteme}
-In Robotikprojekten sind Koordinatensysteme kritisch. ROS2 nutzt häufig Frames wie \texttt{map}, \texttt{odom}, \texttt{base\_link} und \texttt{camera\_link}. Diese sollten im Modell dokumentiert werden.
+In Robotikprojekten sind Koordinatensysteme kritisch. ROS2 nutzt häufig Frames wie \texttt{map}, \texttt{odom}, \texttt{base\_link} und \texttt{camera\_link}. Diese Frames sollten im Modell dokumentiert werden.
+
+Ein klassischer Fehler ist, dass Daten im falschen Frame interpretiert werden. Ein Hindernis wird relativ zur Kamera erkannt, die Navigation erwartet aber Positionen relativ zur Karte. Ohne klare Transformationen entstehen falsche Bewegungsentscheidungen.
+
+\section{Frequenzen und Timing}
+Sensordaten kommen nicht alle gleich schnell. Eine Kamera liefert vielleicht 30 Bilder pro Sekunde, ein Lidar 10 Scans pro Sekunde, der Akkustatus nur einmal pro Sekunde. Das Modell sollte solche Annahmen sichtbar machen, wenn sie für Architektur oder Tests wichtig sind.
+
+\section{Fehlerfälle}
+Schnittstellen sollten nicht nur den Normalfall beschreiben. Was passiert, wenn keine Kamerabilder ankommen? Was passiert, wenn der Laserscan veraltet ist? Was passiert, wenn der Akkustatus ungültig ist?
+
+\begin{praxisbox}
+Wenn der \texttt{battery\_monitor\_node} keine gültigen Daten mehr liefert, darf die Navigation nicht einfach weiterfahren, als wäre alles in Ordnung. Eine mögliche Anforderung lautet: Bei fehlendem Batteriestatus länger als fünf Sekunden muss der Roboter einen sicheren Zustand einnehmen oder eine Warnung ausgeben.
+\end{praxisbox}
+
+\section{Schnittstellen in SysML}
+In SysML werden Schnittstellen häufig über Ports, Item Flows, Interface Blocks oder Konnektoren dargestellt. Für den Einstieg reicht es, Ports und Datenflüsse sauber zu benennen und in Tabellen zu dokumentieren. Später kann die Modellierung formaler werden.
+
+\section{Schnittstellen als Vertrag}
+Eine Schnittstelle ist ein Vertrag zwischen Sender und Empfänger. Dieser Vertrag muss nicht juristisch gemeint sein, sondern technisch: Der Sender verspricht, bestimmte Daten in einer bestimmten Form bereitzustellen. Der Empfänger darf sich darauf verlassen, solange die Schnittstelle gültig ist.
+
+Beim Topic \texttt{/cmd\_vel} erwartet die Bewegungssteuerung zum Beispiel Geschwindigkeitsbefehle. Wenn die Navigation plötzlich andere Einheiten verwendet oder Werte außerhalb erlaubter Grenzen sendet, kann das System gefährlich reagieren. Deshalb sollte eine Schnittstellenbeschreibung auch Grenzen enthalten: maximale Geschwindigkeit, erlaubte Wertebereiche und Verhalten bei ungültigen Nachrichten.
+
+Für den Roboter lohnt sich eine kleine Schnittstellen-Checkliste:
+
+\begin{itemize}
+    \item Ist die Richtung eindeutig?
+    \item Ist der Datentyp bekannt?
+    \item Sind Einheit und Frame dokumentiert?
+    \item Gibt es einen Timeout?
+    \item Ist bekannt, was bei ungültigen Daten passiert?
+    \item Gibt es einen Test für die Schnittstelle?
+\end{itemize}
+
+\section{Zusammenfassung}
+Schnittstellen sind entscheidend für die Integration. Eine gute Schnittstellenbeschreibung enthält Sender, Empfänger, Datentyp, Frequenz, Einheiten, Koordinatensysteme und Fehlerfälle. Im Roboterprojekt bilden Schnittstellen die Brücke zwischen SysML-Modell und ROS2-Kommunikation.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Warum entstehen viele Fehler an Schnittstellen?
+    \item Welche Informationen gehören in eine Schnittstellenbeschreibung?
+    \item Warum sind Koordinatensysteme in Robotik wichtig?
+    \item Was bedeutet \texttt{base\_link}?
+    \item Warum sollten Frequenzen dokumentiert werden?
+    \item Welche Fehlerfälle kann die Kameraschnittstelle haben?
+    \item Wie hängen IBD und Schnittstellenmodellierung zusammen?
+\end{enumerate}
+
+\section{Übungen}
+\begin{uebungbox}
+\textbf{Übung 1: Schnittstellentabelle}\\
+Erstellen Sie eine Schnittstellentabelle für mindestens sechs Datenflüsse des Roboters. Ergänzen Sie jeweils Sender, Empfänger, Datentyp, Frequenz und Fehlerfall.
+\end{uebungbox}
 
 \begin{uebungbox}
-Erstellen Sie eine Schnittstellentabelle für mindestens sechs Datenflüsse des Roboters. Ergänzen Sie jeweils Sender, Empfänger und Datentyp.
+\textbf{Übung 2: Koordinatensysteme}\\
+Beschreiben Sie, wofür die Frames \texttt{map}, \texttt{odom}, \texttt{base\_link} und \texttt{camera\_link} im Roboterprojekt stehen könnten.
 \end{uebungbox}
+
+\section{Literaturhinweise}
+Schnittstellenmodellierung ist ein zentrales Thema in SysML \cite{friedenthal2014}. Für ROS2-Datentypen und Kommunikationsmuster ist die ROS2-Dokumentation \cite{ros2docs} die wichtigste praktische Quelle.

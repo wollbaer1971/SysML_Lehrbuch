@@ -1,30 +1,46 @@
 \chapter{Block Definition Diagram}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie die Hauptstruktur des Roboters als Block Definition Diagram modellieren.
+Nach diesem Kapitel können Sie die Hauptstruktur des Roboters als Block Definition Diagram modellieren. Sie verstehen Blöcke, Teil-Ganzes-Beziehungen, Dekomposition und den Unterschied zwischen logischen, physischen und softwarebezogenen Blöcken.
 \end{lernziele}
 
+\section{Einleitung}
+Das \gls{bdd} ist eines der wichtigsten SysML-Diagramme für den Einstieg. Es zeigt, aus welchen Bausteinen ein System besteht und wie diese Bausteine strukturell zusammenhängen. Beim autonomen Indoor-Roboter hilft das BDD, Ordnung in Sensorik, Navigation, Antrieb, Energieversorgung, Bedienung und Software zu bringen.
+
 \section{Zweck des BDD}
-Das \gls{bdd} zeigt, aus welchen logischen oder physischen Bausteinen ein System besteht. Ein Block kann Hardware, Software, Mensch, Datenobjekt oder abstrakte Funktion darstellen.
+Ein Block kann Hardware, Software, Mensch, Datenobjekt oder abstrakte Funktion darstellen. Im BDD wird sichtbar, welche Blöcke existieren und welche Beziehungen zwischen ihnen bestehen.
+
+Typische Fragen:
+
+\begin{itemize}
+    \item Aus welchen Hauptteilen besteht das System?
+    \item Welche Teilsysteme gehören zum Roboter?
+    \item Welche Blöcke sind spezialisiert oder zusammengesetzt?
+    \item Welche Struktur ist logisch, welche physisch?
+\end{itemize}
 
 \section{Hauptstruktur des Roboters}
 \begin{verbatim}
 Robot
-|- NavigationSystem
 |- PerceptionSystem
+|- NavigationSystem
 |- MotionControl
 |- BatterySystem
-|- CommunicationSystem
 |- UserInterface
+|- CommunicationSystem
+|- SafetyLogic
 \end{verbatim}
 
-Diese Darstellung ist noch grob. Sie eignet sich aber hervorragend, um den Systemumfang zu verstehen.
+Diese Darstellung ist noch grob. Sie eignet sich aber hervorragend, um den Systemumfang zu verstehen. Im BDD würden diese Elemente als Blöcke modelliert und über Komposition mit \texttt{Robot} verbunden.
 
 \section{Komposition}
-Eine Komposition beschreibt eine starke Teil-Ganzes-Beziehung. Wenn das \texttt{PerceptionSystem} Teil des Roboters ist, kann dies als Komposition modelliert werden.
+Eine Komposition beschreibt eine starke Teil-Ganzes-Beziehung. Wenn das \texttt{PerceptionSystem} Teil des Roboters ist, kann dies als Komposition modelliert werden. Das bedeutet: In dieser Systembetrachtung gehört das Wahrnehmungssystem zum Roboter.
+
+Komposition ist besonders nützlich, um die Systemgrenze sichtbar zu machen. Gehört die Ladestation zum System oder ist sie extern? Beide Varianten können modelliert werden, aber die Entscheidung muss bewusst sein.
 
 \section{Dekomposition}
-Das \texttt{PerceptionSystem} kann weiter zerlegt werden:
+Dekomposition bedeutet, einen Block in kleinere Teile zu zerlegen. Das \texttt{PerceptionSystem} kann zum Beispiel weiter zerlegt werden:
+
 \begin{verbatim}
 PerceptionSystem
 |- Camera
@@ -33,13 +49,84 @@ PerceptionSystem
 |- ObstacleDetector
 \end{verbatim}
 
+Das \texttt{NavigationSystem} könnte enthalten:
+
+\begin{verbatim}
+NavigationSystem
+|- Localization
+|- Mapping
+|- PathPlanner
+|- PathFollower
+\end{verbatim}
+
 \section{Logische und physische Blöcke}
-Ein häufiger Anfängerfehler besteht darin, logische Funktionen und physische Bauteile unklar zu vermischen. \texttt{Camera} ist eher physisch. \texttt{ObjectDetector} ist eher logisch oder softwarebezogen. Beides darf im Modell vorkommen, sollte aber bewusst getrennt werden.
+Ein häufiger Anfängerfehler besteht darin, logische Funktionen und physische Bauteile unklar zu vermischen. \texttt{Camera} ist eher physisch. \texttt{ObjectDetector} ist eher softwarebezogen. \texttt{Hindernis erkennen} ist eher eine Funktion.
 
-\begin{hinweisbox}
-Ein BDD muss nicht sofort perfekt sein. Es entwickelt sich mit dem Verständnis des Systems.
-\end{hinweisbox}
+Alle drei Sichtweisen dürfen im Modell vorkommen. Sie sollten aber bewusst getrennt oder klar benannt werden. Eine einfache Regel lautet:
 
+\begin{itemize}
+    \item Physische Blöcke beschreiben greifbare Teile.
+    \item Logische Blöcke beschreiben Verantwortlichkeiten oder Teilsysteme.
+    \item Softwareblöcke beschreiben spätere Implementierungseinheiten.
+\end{itemize}
+
+\section{BDD und Anforderungen}
+Blöcke stehen nicht isoliert im Modell. Sie erfüllen Anforderungen. Der Block \texttt{BatterySystem} kann Anforderungen zur Akkustandsüberwachung erfüllen. Das \texttt{PerceptionSystem} erfüllt Anforderungen zur Hindernis- und Personenerkennung.
+
+\begin{praxisbox}
+REQ-006 \enquote{Der Roboter muss bei niedrigem Akkustand zur Ladestation fahren} wird nicht durch einen einzelnen Block erfüllt. Beteiligt sind \texttt{BatterySystem}, \texttt{NavigationSystem}, \texttt{MotionControl} und möglicherweise \texttt{UserInterface}. Das BDD hilft, diese beteiligten Systemteile sichtbar zu machen.
+\end{praxisbox}
+
+\section{Typische Fehler}
+\subsection{Zu tiefe Dekomposition}
+Ein BDD muss nicht jedes Kabel und jede Schraube enthalten. Modellieren Sie so tief, wie es für Verständnis, Schnittstellen und Entscheidungen nötig ist.
+
+\subsection{Unklare Blocknamen}
+\texttt{System1} oder \texttt{ModuleA} sind schlechte Namen. Namen sollten die Verantwortung des Blocks ausdrücken.
+
+\subsection{Funktionen als Hardware modellieren}
+\texttt{ObstacleDetector} kann eine Softwarekomponente sein, aber \enquote{Hindernis erkennen} ist zunächst eine Funktion. Klare Benennung verhindert Verwirrung.
+
+\section{Modellierungsstrategie für Einsteiger}
+Ein gutes BDD entsteht schrittweise. Beginnen Sie mit einem einzigen Block \texttt{Robot}. Darunter modellieren Sie fünf bis sieben Hauptsysteme. Mehr sollte die erste Ebene nicht enthalten, sonst verliert das Diagramm seine Übersicht.
+
+Danach wählen Sie ein Teilsystem aus und zerlegen es weiter. Für den Einstieg eignet sich das \texttt{PerceptionSystem}, weil es Hardware, Software und Datenverarbeitung verbindet. Modellieren Sie Kamera und Lidar als Sensoren, \texttt{ObjectDetector} und \texttt{ObstacleDetector} als softwarebezogene Blöcke und dokumentieren Sie kurz, warum diese Trennung sinnvoll ist.
+
+Für das \texttt{BatterySystem} reicht zunächst eine einfachere Dekomposition:
+
+\begin{verbatim}
+BatterySystem
+|- Battery
+|- BatteryMonitor
+|- ChargingInterface
+\end{verbatim}
+
+Damit wird sichtbar, dass Akkuzelle, Überwachung und Ladeschnittstelle unterschiedliche Verantwortlichkeiten haben. Diese Unterscheidung hilft später beim Mapping auf ROS2 und beim Testen.
+
+\section{Zusammenfassung}
+Das BDD beschreibt die strukturelle Sicht auf das System. Es zeigt Hauptblöcke, Teil-Ganzes-Beziehungen und Dekomposition. Für den Indoor-Roboter ist es der Einstieg in die Architektur: Wahrnehmung, Navigation, Antrieb, Energieversorgung, Bedienung und Sicherheit werden als Systemteile sichtbar.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Wozu dient ein BDD?
+    \item Was ist ein Block?
+    \item Was beschreibt eine Komposition?
+    \item Was bedeutet Dekomposition?
+    \item Warum sollte man logische und physische Blöcke unterscheiden?
+    \item Welche Hauptblöcke besitzt der Indoor-Roboter?
+    \item Wie hängt ein BDD mit Anforderungen zusammen?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: BDD erstellen}\\
 Erstellen Sie ein BDD mit dem Block \texttt{Robot} und mindestens fünf Subsystemen. Ergänzen Sie beim \texttt{PerceptionSystem} Kamera, Lidar und Objekterkennung.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Blöcke klassifizieren}\\
+Ordnen Sie folgende Begriffe als physisch, logisch, softwarebezogen oder funktional ein: Kamera, NavigationSystem, object\_detector\_node, Hindernis erkennen, Batterie, PathPlanner.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+BDD-Grundlagen werden ausführlich in SysML-Einführungen behandelt \cite{delligatti2014,friedenthal2014}. Für dieses Lehrbuch ist besonders wichtig, BDDs nicht isoliert, sondern mit Anforderungen und IBDs zusammen zu betrachten.

@@ -1,27 +1,112 @@
 \chapter{Ausblick}
 
 \begin{lernziele}
-Nach diesem Kapitel kennen Sie sinnvolle nächste Schritte zur Vertiefung.
+Nach diesem Kapitel kennen Sie sinnvolle nächste Schritte zur Vertiefung. Sie können einordnen, welche Themen nach diesem Einsteigerbuch folgen: vertiefte SysML-Modellierung, SysML v2, ROS2-Praxis, Simulation, Safety Engineering, Machine Learning und berufliche Anwendung.
 \end{lernziele}
 
+\section{Einleitung}
+Dieses Buch bietet einen Einstieg. Es zeigt, wie SysML, Enterprise Architect und ROS2 am Beispiel eines autonomen Indoor-Roboters zusammenspielen. Nach dem Einstieg gibt es viele Wege zur Vertiefung. Dieses Kapitel ordnet die wichtigsten nächsten Schritte ein.
+
 \section{SysML vertiefen}
-Nach dem Einstieg lohnt es sich, SysML genauer zu lernen. Besonders relevant sind saubere Modellorganisation, Wiederverwendung von Modellelementen, Variantenmodellierung und Schnittstellenkonzepte.
+Nach dem Einstieg lohnt es sich, SysML genauer zu lernen. Besonders relevant sind:
+
+\begin{itemize}
+    \item saubere Modellorganisation
+    \item Wiederverwendung von Modellelementen
+    \item Variantenmodellierung
+    \item Schnittstellenkonzepte
+    \item formale Anforderungen
+    \item Parametrik und technische Analysen
+    \item Modellreview und Modellqualität
+\end{itemize}
 
 \section{SysML v2}
 SysML v2 modernisiert die Sprache und bringt eine präzisere textuelle und grafische Modellierung. Für Einsteiger ist SysML v1.x weiterhin verbreitet, aber SysML v2 wird langfristig wichtiger.
 
+Wichtige Themen für später sind:
+
+\begin{itemize}
+    \item textuelle Modellierung
+    \item präzisere Semantik
+    \item bessere Werkzeugunterstützung
+    \item Migration bestehender Modelle
+    \item Verbindung zu modernen MBSE-Methoden
+\end{itemize}
+
 \section{ROS2 vertiefen}
-Für Robotik sind Navigation2, TF2, Lifecycle Nodes, Launch-Dateien, Parameter und Simulation wichtige nächste Themen.
+Für Robotik sind folgende ROS2-Themen wichtige nächste Schritte:
+
+\begin{itemize}
+    \item Navigation2
+    \item TF2
+    \item Lifecycle Nodes
+    \item Launch-Dateien
+    \item Parameter
+    \item rosbag
+    \item Simulation
+    \item Tests mit launch testing
+\end{itemize}
 
 \section{Simulation}
-Gazebo oder andere Simulatoren ermöglichen Tests ohne echte Hardware. Das ist besonders wertvoll, wenn Algorithmen schnell ausprobiert werden sollen.
+Gazebo oder andere Simulatoren ermöglichen Tests ohne echte Hardware. Das ist besonders wertvoll, wenn Algorithmen schnell ausprobiert werden sollen. Simulation kann helfen, Navigation, Sensorik, Hindernisse und Fehlerfälle früh zu prüfen.
 
 \section{Safety Engineering}
-Sobald Roboter mit Menschen in realen Umgebungen interagieren, werden Sicherheitsfragen wichtig. Dann reichen einfache Funktionsmodelle nicht mehr aus. Risikoanalysen und Normen müssen berücksichtigt werden.
+Sobald Roboter mit Menschen in realen Umgebungen interagieren, werden Sicherheitsfragen wichtig. Dann reichen einfache Funktionsmodelle nicht mehr aus. Risikoanalysen, Sicherheitsanforderungen, FMEA, Gefährdungsanalysen und Normen müssen berücksichtigt werden.
+
+\section{Machine Learning vertiefen}
+ML-Integration endet nicht beim Laden eines Modells. Wichtige Vertiefungen sind:
+
+\begin{itemize}
+    \item Trainingsdaten
+    \item Validierungsdatensätze
+    \item Fehlklassifikationen
+    \item Laufzeitoptimierung
+    \item Edge-AI-Hardware
+    \item Monitoring im Betrieb
+    \item Umgang mit Unsicherheit
+\end{itemize}
 
 \section{Berufliche Relevanz}
-Die Kombination aus Systems Engineering, SysML, ROS2 und KI ist in Robotik, Automotive, Industrieautomation und Forschung relevant. Wer diese Verbindung versteht, kann zwischen Architektur, Software und Tests vermitteln.
+Die Kombination aus Systems Engineering, SysML, ROS2 und KI ist in Robotik, Automotive, Industrieautomation und Forschung relevant. Wer diese Verbindung versteht, kann zwischen Architektur, Software und Tests vermitteln. Genau diese Schnittstellenkompetenz ist in vielen Projekten wertvoll.
 
+\section{Mögliche nächste Projekte}
+\begin{itemize}
+    \item Enterprise-Architect-Workshop mit vollständigem Modellaufbau
+    \item kleines ROS2-Workspace mit simulierten Nodes
+    \item Navigation2-Demo in Simulation
+    \item Object-Detection-Node mit Beispielmodell
+    \item SysML-v2-Vergleichskapitel
+    \item vollständige Traceability von Anforderungen bis Testcode
+\end{itemize}
+
+\section{Vom Lernprojekt zum echten Projekt}
+Der wichtigste Übergang nach diesem Buch ist der Schritt von einem didaktischen Modell zu einem echten Projekt. In einem echten Projekt werden Anforderungen widersprüchlicher, Schnittstellen technischer und Tests aufwendiger. Außerdem kommen organisatorische Themen hinzu: Versionierung, Reviews, Verantwortlichkeiten, Änderungsmanagement und Abnahme.
+
+Das Lernprojekt liefert dafür eine Grundlage. Wer verstanden hat, wie eine Anforderung zur Architektur und weiter zu ROS2-Nodes und Tests führt, kann dieses Denken auf größere Systeme übertragen. Der Maßstab wächst, aber das Prinzip bleibt gleich: Problem verstehen, Modell aufbauen, Schnittstellen klären, Umsetzung ableiten und Nachweise planen.
+
+\section{Zusammenfassung}
+Der Einstieg ist geschafft, wenn Sie Anforderungen, Struktur, Verhalten, Schnittstellen, ROS2-Architektur und Tests zusammen denken können. Der nächste Schritt besteht darin, diese Konzepte in Werkzeugen und Code zu üben. MBSE wird erst durch Anwendung lebendig.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Welche SysML-Themen eignen sich zur Vertiefung?
+    \item Warum wird SysML v2 wichtig?
+    \item Welche ROS2-Themen sollten nach dem Einstieg gelernt werden?
+    \item Warum ist Simulation für Robotik wertvoll?
+    \item Warum ist Safety Engineering bei Robotern wichtig?
+    \item Welche berufliche Rolle kann die Verbindung aus SysML und ROS2 stärken?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: Persönlicher Lernplan}\\
 Definieren Sie Ihren persönlichen nächsten Lernschritt: SysML vertiefen, ROS2 implementieren, Simulation aufbauen oder ML-Integration ausprobieren.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Projektidee}\\
+Beschreiben Sie ein eigenes kleines Robotik- oder Automatisierungsprojekt, auf das Sie die Methoden dieses Buches übertragen könnten.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Zur Vertiefung eignen sich die SysML-Literatur \cite{delligatti2014,friedenthal2014}, die Enterprise-Architect-Dokumentation \cite{sparxea} und die ROS2-Dokumentation \cite{ros2docs}. Für SysML v2 sollten aktuelle Spezifikationen und Werkzeugdokumentationen herangezogen werden.

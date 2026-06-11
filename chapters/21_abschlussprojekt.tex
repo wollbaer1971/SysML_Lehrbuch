@@ -1,35 +1,114 @@
 \chapter{Abschlussprojekt}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie ein kleines, aber vollständiges MBSE-Projekt für einen ROS2-Roboter strukturieren.
+Nach diesem Kapitel können Sie ein kleines, aber vollständiges MBSE-Projekt für einen ROS2-Roboter strukturieren. Sie können Anforderungen, Struktur, Verhalten, Schnittstellen, ROS2-Mapping, Tests und Traceability zu einem zusammenhängenden Modell verbinden.
 \end{lernziele}
+
+\section{Einleitung}
+Das Abschlussprojekt bündelt die bisherigen Kapitel. Sie erstellen ein vollständiges Modell des autonomen Indoor-Roboters. Es muss nicht industriell perfekt sein. Es soll aber zeigen, dass Anforderungen, Architektur und Tests zusammenhängen.
 
 \section{Aufgabe}
 Erstellen Sie ein vollständiges Modell des autonomen Indoor-Roboters. Das Modell soll Anforderungen, Struktur, Verhalten, Schnittstellen, ROS2-Mapping und Tests enthalten.
 
 \section{Abzugebenes Modell}
 Das Modell sollte folgende Inhalte enthalten:
+
 \begin{itemize}
-\item Kontextbeschreibung
-\item Stakeholderliste
-\item Mindestens zehn Anforderungen
-\item Requirement Diagram
-\item BDD mit Hauptsystemen
-\item IBD für Perception oder Navigation
-\item Aktivitätsdiagramm für Zielnavigation
-\item Zustandsdiagramm für Betriebsmodi
-\item Schnittstellentabelle
-\item ROS2-Mapping-Tabelle
-\item Mindestens fünf Testfälle
-\item Traceability-Matrix
+    \item Kontextbeschreibung
+    \item Stakeholderliste
+    \item Mindestens zehn Anforderungen
+    \item Requirement Diagram
+    \item BDD mit Hauptsystemen
+    \item IBD für Perception oder Navigation
+    \item Aktivitätsdiagramm für Zielnavigation
+    \item Zustandsdiagramm für Betriebsmodi
+    \item Schnittstellentabelle
+    \item ROS2-Mapping-Tabelle
+    \item Mindestens fünf Testfälle
+    \item Traceability-Matrix
 \end{itemize}
+
+\section{Empfohlene Vorgehensweise}
+\begin{enumerate}
+    \item Systemziel und Systemgrenze formulieren.
+    \item Stakeholder und Bedürfnisse sammeln.
+    \item Anforderungen formulieren und nummerieren.
+    \item Hauptstruktur im BDD modellieren.
+    \item Ein wichtiges Teilsystem im IBD darstellen.
+    \item Verhalten mit Aktivitäts- und Zustandsdiagramm beschreiben.
+    \item Schnittstellen tabellarisch dokumentieren.
+    \item SysML-Elemente auf ROS2-Elemente abbilden.
+    \item Testfälle erstellen und mit Anforderungen verknüpfen.
+    \item Traceability-Matrix prüfen.
+\end{enumerate}
 
 \section{Bewertungskriterien}
 Ein gutes Modell ist verständlich, konsistent und nachvollziehbar. Es muss nicht maximal detailliert sein. Es muss zeigen, dass die Architektur aus Anforderungen abgeleitet wurde.
 
-\section{Erweiterung}
-Wer weitergehen möchte, kann eine einfache ROS2-Simulation ergänzen. Möglich sind ein simulierter Batterieknoten, ein Statusknoten und ein Dummy-Object-Detector.
+Wichtige Kriterien:
 
+\begin{itemize}
+    \item klare Systemgrenze
+    \item verständliche Anforderungen
+    \item konsistente Namen
+    \item sinnvolle Struktur
+    \item beschriebene Schnittstellen
+    \item nachvollziehbares ROS2-Mapping
+    \item Testfälle mit \texttt{verify}-Beziehungen
+    \item keine isolierten, unbegründeten Diagramme
+\end{itemize}
+
+\section{Erweiterung}
+Wer weitergehen möchte, kann eine einfache ROS2-Simulation ergänzen. Möglich sind ein simulierter Batterieknoten, ein Statusknoten und ein Dummy-Object-Detector. Wichtig ist, dass die Umsetzung auf das Modell zurückgeführt wird.
+
+\section{Typische Projektfallen}
+\subsection{Zu viel Detail}
+Ein Abschlussmodell muss nicht jedes Detail enthalten. Fokus ist der durchgängige Zusammenhang.
+
+\subsection{Keine Traceability}
+Wenn Anforderungen, Blöcke und Tests nicht verbunden sind, bleibt das Projekt eine Sammlung einzelner Diagramme.
+
+\subsection{Unklare Abgabe}
+Dokumentieren Sie, welche Diagramme und Tabellen Teil der Abgabe sind. Eine Startseite im Modell hilft.
+
+\section{Empfohlene Abschlussdokumentation}
+Neben dem Modell sollte eine kurze Abschlussdokumentation entstehen. Sie muss nicht lang sein, sollte aber den Leser durch das Modell führen. Eine sinnvolle Struktur ist:
+
+\begin{itemize}
+    \item Ziel und Umfang des Systems
+    \item wichtigste Stakeholder
+    \item wichtigste Anforderungen
+    \item Architekturüberblick
+    \item zentrale Schnittstellen
+    \item ROS2-Mapping
+    \item Test- und Verifikationskonzept
+    \item offene Annahmen und Grenzen
+\end{itemize}
+
+Diese Dokumentation ist keine Wiederholung aller Diagramme. Sie erklärt, wie die Diagramme zusammenhängen. Damit wird aus dem Modell ein nachvollziehbares Projektergebnis.
+
+\section{Zusammenfassung}
+Das Abschlussprojekt zeigt, ob die Grundidee des Buches verstanden wurde: vom Problem über Anforderungen und SysML-Modellierung bis zur ROS2-nahen Architektur und Verifikation. Der autonome Indoor-Roboter dient dabei als durchgängiges, praxisnahes Beispiel.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Welche Inhalte muss das Abschlussmodell enthalten?
+    \item Warum ist eine Traceability-Matrix wichtig?
+    \item Was unterscheidet ein gutes Modell von einer Diagrammsammlung?
+    \item Welche Bewertungskriterien sind besonders wichtig?
+    \item Wie kann eine ROS2-Erweiterung sinnvoll angebunden werden?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: Traceability-Matrix}\\
 Erstellen Sie eine Traceability-Matrix mit den Spalten Anforderung, SysML-Block, ROS2-Node und Testfall.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Modellreview}\\
+Prüfen Sie Ihr Modell: Gibt es Anforderungen ohne Test? Blöcke ohne Zweck? Schnittstellen ohne Datentyp? Notieren Sie mindestens fünf Verbesserungen.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Für das Abschlussprojekt sollten die vorherigen Kapitel sowie die SysML- und ROS2-Quellen \cite{delligatti2014,friedenthal2014,ros2docs} erneut herangezogen werden.

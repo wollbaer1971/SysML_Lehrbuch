@@ -1,25 +1,35 @@
 \chapter{ROS2-Grundlagen}
 
 \begin{lernziele}
-Nach diesem Kapitel kennen Sie Nodes, Topics, Services und Actions und können diese Begriffe auf das Robotersystem anwenden.
+Nach diesem Kapitel kennen Sie die wichtigsten Grundbegriffe von ROS2: Nodes, Topics, Messages, Services, Actions, Parameter und Launch-Dateien. Sie können diese Begriffe auf den autonomen Indoor-Roboter anwenden und verstehen, warum ROS2 gut zu einer modellbasiert vorbereiteten Architektur passt.
 \end{lernziele}
+
+\section{Einleitung}
+Bis hierher haben wir den Roboter vor allem aus Systems-Engineering- und SysML-Sicht betrachtet. Nun wechseln wir näher zur Umsetzung. ROS2 ist die Softwareplattform, mit der wir die Roboterfunktionen später in ausführbare Komponenten übersetzen können.
 
 \section{Was ist ROS2?}
 \gls{ros2} ist ein Framework für Robotiksoftware. Es stellt Kommunikationsmechanismen, Werkzeuge und Konventionen bereit. ROS2 ist kein Betriebssystem im klassischen Sinn, sondern eine Middleware und Entwicklungsumgebung.
 
+ROS2 hilft dabei, ein Robotiksystem aus mehreren Programmen aufzubauen, die miteinander Nachrichten austauschen. Das passt sehr gut zu unserem SysML-Modell: Blöcke, Schnittstellen und Datenflüsse können später auf Nodes, Topics, Services und Actions abgebildet werden.
+
 \section{Nodes}
-Ein Node ist ein ausführbares Programm mit einer klaren Aufgabe. Beispiel: Ein \texttt{camera\_node} liest Kamerabilder und veröffentlicht sie.
+Ein Node ist ein ausführbares Programm mit einer klaren Aufgabe. Beispiele:
+
+\begin{itemize}
+    \item \texttt{camera\_node}: liest Kamerabilder
+    \item \texttt{lidar\_node}: liest Laserscans
+    \item \texttt{object\_detector\_node}: erkennt Objekte oder Personen
+    \item \texttt{navigation\_node}: plant Bewegung
+    \item \texttt{battery\_monitor\_node}: überwacht den Akkustand
+\end{itemize}
+
+Ein guter Node hat eine klare Verantwortung. Zu große Nodes werden unübersichtlich. Zu viele kleine Nodes erhöhen Kommunikationsaufwand und Komplexität.
 
 \section{Topics}
 Topics sind Nachrichtenkanäle. Ein Node veröffentlicht Nachrichten, andere Nodes abonnieren sie. Diese Publish-Subscribe-Kommunikation passt sehr gut zu Sensordaten.
 
-\section{Services}
-Services sind Anfrage-Antwort-Kommunikation. Sie eignen sich für kurze, gezielte Abfragen, zum Beispiel \enquote{Setze Parameter}.
+Beispiele:
 
-\section{Actions}
-Actions sind für länger laufende Aufgaben gedacht. Navigation zu einem Ziel ist ein typischer Action-Anwendungsfall, weil der Vorgang länger dauert und Feedback liefern kann.
-
-\section{Beispiel}
 \begin{verbatim}
 /camera/image_raw       Kamerabild
 /scan                   Laserscan
@@ -28,6 +38,76 @@ Actions sind für länger laufende Aufgaben gedacht. Navigation zu einem Ziel is
 /detected_objects       erkannte Objekte
 \end{verbatim}
 
+\section{Messages}
+Messages definieren die Struktur der Daten, die über Topics, Services oder Actions übertragen werden. ROS2 bringt viele Standardnachrichten mit, etwa \texttt{sensor\_msgs/Image}, \texttt{sensor\_msgs/LaserScan}, \texttt{geometry\_msgs/Twist} oder \texttt{sensor\_msgs/BatteryState}.
+
+\section{Services}
+Services sind Anfrage-Antwort-Kommunikation. Sie eignen sich für kurze, gezielte Abfragen oder Befehle, bei denen eine direkte Antwort erwartet wird. Beispiel: Eine Benutzerschnittstelle fragt einen Node, ob eine Karte verfügbar ist.
+
+\section{Actions}
+Actions sind für länger laufende Aufgaben gedacht. Navigation zu einem Ziel ist ein typischer Action-Anwendungsfall, weil der Vorgang länger dauert, Feedback liefern kann und abgebrochen werden muss.
+
+\begin{praxisbox}
+\enquote{Fahre zu Raum 205} ist kein kurzer Service-Aufruf. Die Fahrt kann dauern, zwischendurch Feedback liefern und fehlschlagen. Deshalb passt eine ROS2-Action besser als ein einfacher Service.
+\end{praxisbox}
+
+\section{Parameter}
+Parameter erlauben Konfiguration. Ein Node kann Parameter wie maximale Geschwindigkeit, Akkuschwellwert oder Kamerafrequenz besitzen. Parameter sollten zu Modellannahmen und Anforderungen passen.
+
+\section{Launch-Dateien}
+Launch-Dateien starten mehrere Nodes gemeinsam mit passenden Parametern. Für den Roboter könnte eine Launch-Datei Kamera, Lidar, Navigation, Batteriemonitor und Objekterkennung starten.
+
+\section{Zusammenhang mit SysML}
+SysML beschreibt die Architektur auf Modellebene. ROS2 setzt sie technisch um. Ein SysML-Block kann zu einem Node werden. Ein IBD-Datenfluss kann zu einem Topic werden. Ein Use Case \enquote{Ziel anfahren} kann später eine Action nutzen.
+
+\section{Typische Fehler}
+\subsection{Nodes nach Zufall schneiden}
+Nodes sollten klare Verantwortlichkeiten haben. Ein Node für alles ist schwer wartbar, ein Node pro Kleinigkeit ist übertrieben.
+
+\subsection{Topics schlecht benennen}
+Topic-Namen sollten verständlich und konsistent sein.
+
+\subsection{Services für lange Vorgänge verwenden}
+Lange Vorgänge mit Feedback passen besser zu Actions.
+
+\section{ROS2-Werkzeuge für Einsteiger}
+ROS2 bringt Kommandozeilenwerkzeuge mit, die beim Verstehen und Testen helfen. Für Einsteiger sind sie besonders wertvoll, weil sie sichtbar machen, was im laufenden System passiert.
+
+\begin{itemize}
+    \item \texttt{ros2 node list}: zeigt laufende Nodes.
+    \item \texttt{ros2 topic list}: zeigt verfügbare Topics.
+    \item \texttt{ros2 topic echo}: zeigt Nachrichten auf einem Topic.
+    \item \texttt{ros2 topic hz}: misst die Veröffentlichungsfrequenz.
+    \item \texttt{ros2 service list}: zeigt Services.
+    \item \texttt{ros2 action list}: zeigt Actions.
+\end{itemize}
+
+Diese Werkzeuge passen gut zur Modellprüfung. Wenn im SysML-Modell ein Topic \texttt{/battery\_state} vorgesehen ist, sollte es im laufenden ROS2-System auffindbar sein. Wenn ein Node \texttt{object\_detector\_node} modelliert wurde, sollte er später auch als laufender Node erscheinen.
+
+\section{Zusammenfassung}
+ROS2 stellt die grundlegenden Kommunikations- und Strukturmechanismen für die Roboterimplementierung bereit. Nodes übernehmen Aufgaben, Topics transportieren Nachrichten, Services beantworten kurze Anfragen, Actions steuern längere Vorgänge. Diese Konzepte lassen sich gut aus einem SysML-Modell ableiten.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Was ist ROS2?
+    \item Was ist ein Node?
+    \item Was ist ein Topic?
+    \item Wann verwendet man einen Service?
+    \item Wann verwendet man eine Action?
+    \item Welche ROS2-Nachricht passt zu einem Kamerabild?
+    \item Warum passen SysML-Datenflüsse gut zu ROS2-Topics?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: Nodes und Topics}\\
 Ordnen Sie den Funktionen Kamera, Navigation, Batterieüberwachung und Objekterkennung passende ROS2-Nodes und Topics zu.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Service oder Action}\\
+Entscheiden Sie für folgende Vorgänge, ob Topic, Service oder Action besser passt: Akkustatus melden, Ziel anfahren, Karte speichern, Kamerabild übertragen.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Für ROS2 ist die offizielle Dokumentation die wichtigste Quelle \cite{ros2docs}. Für dieses Buch genügt zunächst ein Grundverständnis der Kommunikationskonzepte.

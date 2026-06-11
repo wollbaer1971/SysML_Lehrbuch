@@ -1,11 +1,22 @@
 \chapter{Internal Block Diagram}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie Datenflüsse und interne Verbindungen zwischen Komponenten im IBD darstellen.
+Nach diesem Kapitel können Sie interne Verbindungen zwischen Komponenten im \gls{ibd} darstellen. Sie verstehen Teile, Ports, Konnektoren und Datenflüsse und können diese Konzepte auf ROS2-nahe Kommunikation im Roboterprojekt übertragen.
 \end{lernziele}
 
+\section{Einleitung}
+Das BDD zeigt, welche Bausteine existieren. Das \gls{ibd} zeigt, wie Teile eines Blocks intern verbunden sind. Damit ist das IBD der nächste Schritt von der Struktur zur Zusammenarbeit.
+
 \section{Zweck des IBD}
-Das \gls{ibd} zeigt, wie Teile eines Blocks intern verbunden sind. Während das BDD sagt, welche Bausteine existieren, zeigt das IBD, wie sie zusammenarbeiten.
+Ein IBD beantwortet Fragen wie:
+
+\begin{itemize}
+    \item Welche Teile arbeiten innerhalb eines Blocks zusammen?
+    \item Welche Daten oder Signale fließen zwischen ihnen?
+    \item Welche Ports besitzen die Teile?
+    \item Welche Schnittstellen müssen beschrieben werden?
+    \item Wo entstehen Integrationsrisiken?
+\end{itemize}
 
 \section{Beispiel Datenfluss}
 \begin{verbatim}
@@ -15,15 +26,92 @@ NavigationSystem -> MotionControl -> Motors
 BatterySystem -> NavigationSystem
 \end{verbatim}
 
-\section{Ports}
-Ports beschreiben Ein- und Ausgänge von Blöcken. Ein Kamerablock kann einen Port \texttt{imageOut} haben. Der ObjectDetector kann einen Port \texttt{imageIn} und \texttt{objectsOut} haben.
+Diese Textdarstellung kann in SysML als IBD mit Parts, Ports und Konnektoren modelliert werden.
 
-\section{Schnittstellen}
-Eine Verbindung ohne klare Schnittstelle ist wenig wert. Deshalb sollte dokumentiert werden, welche Daten übertragen werden. Beispiel: \texttt{sensor\_msgs/Image} für Kamerabilder in ROS2.
+\section{Parts}
+Parts sind konkrete Verwendungen von Blöcken innerhalb eines übergeordneten Blocks. Der Block \texttt{Camera} beschreibt den Typ. Ein Part \texttt{frontCamera:Camera} beschreibt eine konkrete Kamera im Roboter.
+
+Diese Unterscheidung wirkt am Anfang technisch, ist aber wichtig. Ein Block ist eine Art Bausteinbeschreibung. Ein Part zeigt, dass dieser Baustein an einer bestimmten Stelle im System verwendet wird.
+
+\section{Ports}
+Ports beschreiben Ein- und Ausgänge von Blöcken. Ein Kamerablock kann einen Port \texttt{imageOut} haben. Der \texttt{ObjectDetector} kann Ports \texttt{imageIn} und \texttt{objectsOut} haben.
+
+Ports sollten sprechende Namen besitzen. Außerdem sollte dokumentiert werden, welche Daten über sie fließen.
+
+\section{Konnektoren und Schnittstellen}
+Konnektoren verbinden Ports. Eine Verbindung ohne klare Schnittstelle ist wenig wert. Deshalb sollte dokumentiert werden, welche Daten übertragen werden. Beispiel: \texttt{sensor\_msgs/Image} für Kamerabilder in ROS2.
 
 \section{IBD und ROS2}
-Das IBD passt gut zur ROS2-Kommunikation. ROS2-Topics können als Datenflüsse modelliert werden. Ein Topic \texttt{/camera/image\_raw} verbindet \texttt{camera\_node} und \texttt{object\_detector\_node}.
+Das IBD passt gut zur ROS2-Kommunikation. ROS2-Topics können als Datenflüsse modelliert werden. Ein Topic \texttt{/camera/image\_raw} verbindet \texttt{camera\_node} und \texttt{object\_detector\_node}. Ein Topic \texttt{/cmd\_vel} verbindet Navigation und Bewegungssteuerung.
 
+\begin{praxisbox}
+Ein IBD für das \texttt{PerceptionSystem} kann zeigen, dass die Kamera Bilddaten an den \texttt{ObjectDetector} liefert, während der Lidar Laserscandaten an den \texttt{ObstacleDetector} liefert. Beide Ergebnisse gehen an die Navigation. Daraus lassen sich später ROS2-Topics ableiten.
+\end{praxisbox}
+
+\section{IBD für das PerceptionSystem}
+Ein mögliches internes Modell:
+
+\begin{verbatim}
+perception:PerceptionSystem
+|- camera:Camera
+|- lidar:Lidar
+|- objectDetector:ObjectDetector
+|- obstacleDetector:ObstacleDetector
+
+camera.imageOut -> objectDetector.imageIn
+lidar.scanOut -> obstacleDetector.scanIn
+objectDetector.objectsOut -> navigation.objectsIn
+obstacleDetector.obstaclesOut -> navigation.obstaclesIn
+\end{verbatim}
+
+\section{Typische Fehler}
+\subsection{Nur Kästen verbinden}
+Ein IBD sollte nicht nur Kästen mit Linien zeigen. Es sollte klar sein, was über eine Verbindung fließt.
+
+\subsection{Ports vergessen}
+Ports machen Schnittstellen sichtbar. Ohne Ports bleiben Verbindungen ungenau.
+
+\subsection{Zu viele Details in einem Diagramm}
+Ein IBD sollte eine klare Frage beantworten. Für große Systeme sind mehrere kleinere IBDs besser als ein überladenes Gesamtbild.
+
+\section{Praxisbeispiel: Navigation als Zusammenspiel}
+Ein IBD für die Navigation kann zeigen, dass Lokalisierung, Karte, Pfadplanung und Bewegungssteuerung zusammenarbeiten. Die Lokalisierung liefert die aktuelle Pose. Die Karte liefert Hindernisinformationen und Raumstruktur. Die Pfadplanung berechnet einen Weg. Der PathFollower erzeugt Bewegungsbefehle.
+
+\begin{verbatim}
+localization.poseOut -> pathPlanner.poseIn
+mapProvider.mapOut -> pathPlanner.mapIn
+pathPlanner.pathOut -> pathFollower.pathIn
+pathFollower.cmdVelOut -> motionControl.cmdVelIn
+\end{verbatim}
+
+Dieses IBD ist für Einsteiger wertvoll, weil es zeigt: Navigation ist nicht ein einzelner magischer Block. Sie entsteht aus mehreren zusammenarbeitenden Teilen. Gleichzeitig werden Schnittstellen sichtbar, die später in ROS2 umgesetzt werden können.
+
+Ein gutes IBD sollte außerdem Annahmen dokumentieren. Wird die Karte vorher geladen oder während der Fahrt aktualisiert? Arbeitet die Lokalisierung relativ zu \texttt{map} oder \texttt{odom}? Solche Fragen gehören mindestens als Notiz zum Diagramm.
+
+\section{Zusammenfassung}
+Das IBD zeigt die interne Zusammenarbeit von Teilen innerhalb eines Blocks. Es ist besonders nützlich für Schnittstellen und Datenflüsse. Im Roboterprojekt bildet es eine Brücke von SysML-Struktur zu ROS2-Kommunikation.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Was ist der Unterschied zwischen BDD und IBD?
+    \item Was ist ein Part?
+    \item Wozu dienen Ports?
+    \item Was zeigt ein Konnektor?
+    \item Warum ist das IBD für ROS2 hilfreich?
+    \item Welches Topic könnte zwischen Kamera und ObjectDetector liegen?
+    \item Warum sollte ein IBD nicht überladen werden?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: IBD PerceptionSystem}\\
 Erstellen Sie ein IBD für das \texttt{PerceptionSystem}. Modellieren Sie Kamera, Lidar, ObjectDetector und ObstacleDetector inklusive Datenflüssen.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Ports benennen}\\
+Definieren Sie für \texttt{BatterySystem}, \texttt{NavigationSystem} und \texttt{MotionControl} jeweils mindestens zwei Ports.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+IBDs werden in SysML-Literatur als zentrale Schnittstellensicht behandelt \cite{delligatti2014,friedenthal2014}. Für die spätere Umsetzung lohnt sich parallel ein Blick auf ROS2-Kommunikationskonzepte \cite{ros2docs}.

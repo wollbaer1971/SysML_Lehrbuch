@@ -1,11 +1,14 @@
 \chapter{Machine Learning in ROS2 integrieren}
 
 \begin{lernziele}
-Nach diesem Kapitel verstehen Sie, wie ein ML-Modell als ROS2-Node in eine Roboterarchitektur eingebunden wird.
+Nach diesem Kapitel verstehen Sie, wie ein ML-Modell als ROS2-Node in eine Roboterarchitektur eingebunden wird. Sie können Datenfluss, Inferenz, Ergebnisnachrichten, Latenz, Modellqualität und typische Integrationsprobleme beschreiben.
 \end{lernziele}
 
-\section{Rolle von Machine Learning}
+\section{Einleitung}
 Machine Learning wird in Robotik häufig für Wahrnehmung eingesetzt: Objekterkennung, Personenerkennung, Segmentierung oder Klassifikation. Im Beispielprojekt verwenden wir ML zur Personenerkennung.
+
+\section{Rolle von Machine Learning}
+Klassische Software arbeitet mit expliziten Regeln. ML-Modelle lernen Muster aus Daten. Für Personenerkennung ist das nützlich, weil Personen in Bildern sehr unterschiedlich aussehen können. Gleichzeitig bringt ML neue Herausforderungen: Trainingsdaten, Fehlklassifikationen, Latenz und schwer erklärbares Verhalten.
 
 \section{Architektur}
 \begin{verbatim}
@@ -15,6 +18,8 @@ Camera
   -> /detected_objects
   -> navigation_node oder user_interface_node
 \end{verbatim}
+
+Der ML-Node ist Teil der Wahrnehmungsarchitektur. Er sollte klar von Navigation und Sicherheitslogik getrennt werden. Die Navigation bekommt Ergebnisse, aber sie sollte nicht blind jedem Ergebnis vertrauen.
 
 \section{Inference-Node}
 Der ML-Node lädt ein trainiertes Modell, verarbeitet eingehende Sensordaten und veröffentlicht Ergebnisse. In Python kann das mit PyTorch, TensorFlow oder ONNX Runtime umgesetzt werden.
@@ -43,12 +48,80 @@ class ObjectDetectorNode(Node):
         self.publisher.publish(convert_to_ros_msg(detections))
 \end{lstlisting}
 
-\section{Praktische Probleme}
-Die eigentliche Schwierigkeit liegt oft nicht im Modell, sondern in der Datenkette: Bildformat, Auflösung, Latenz, GPU-Nutzung, Synchronisation und Ergebnisformat.
+\section{Datenkette}
+Die eigentliche Schwierigkeit liegt oft nicht im Modell, sondern in der Datenkette:
+
+\begin{itemize}
+    \item Bildformat
+    \item Auflösung
+    \item Farbraum
+    \item Kamerakalibrierung
+    \item Latenz
+    \item GPU-Nutzung
+    \item Synchronisation
+    \item Ergebnisformat
+\end{itemize}
+
+\section{Qualität und Sicherheit}
+ML-Ergebnisse sind nicht perfekt. Ein Modell kann Personen übersehen oder Gegenstände fälschlich als Personen erkennen. Deshalb sollten Anforderungen und Tests realistisch formuliert werden. Für sicherheitskritische Funktionen sollte ML nicht ohne weitere Sicherheitsmechanismen verwendet werden.
+
+\begin{praxisbox}
+Wenn der ML-Node eine Person erkennt, kann die Navigation vorsichtiger fahren. Wenn der ML-Node keine Person erkennt, bedeutet das aber nicht automatisch, dass der Bereich sicher ist. Lidar-basierte Hinderniserkennung bleibt weiterhin wichtig.
+\end{praxisbox}
 
 \section{Optimierung}
-Für reale Roboter können ONNX, TensorRT oder OpenVINO sinnvoll sein. Ein großes PyTorch-Modell direkt auf einem kleinen Rechner kann zu langsam sein.
+Für reale Roboter können ONNX, TensorRT oder OpenVINO sinnvoll sein. Ein großes PyTorch-Modell direkt auf einem kleinen Rechner kann zu langsam sein. Optimierung betrifft nicht nur Geschwindigkeit, sondern auch Speicherverbrauch, Temperatur und Energie.
 
+\section{Modellierung in SysML}
+Im SysML-Modell sollte sichtbar sein:
+
+\begin{itemize}
+    \item welche Anforderung der ML-Node unterstützt
+    \item welche Daten er benötigt
+    \item welches Ergebnis er liefert
+    \item welche Latenz akzeptabel ist
+    \item welcher Test die Erkennung prüft
+    \item welche Fehlerfälle berücksichtigt werden
+\end{itemize}
+
+\section{Teststrategie für ML-Funktionen}
+ML-Funktionen müssen anders getestet werden als klassische Regeln. Ein einzelner Test mit einem Bild reicht nicht aus. Sinnvoll ist ein kleiner Testdatensatz mit unterschiedlichen Lichtverhältnissen, Perspektiven und Situationen. Für den Einstieg kann dieser Datensatz klein sein, aber er sollte bewusst zusammengestellt werden.
+
+Mögliche Testfragen:
+
+\begin{itemize}
+    \item Erkennt das Modell Personen bei normaler Beleuchtung?
+    \item Wie verhält es sich bei Gegenlicht?
+    \item Gibt es viele falsche Erkennungen?
+    \item Wie lange dauert die Inferenz pro Bild?
+    \item Was passiert, wenn keine Kamera-Nachricht ankommt?
+\end{itemize}
+
+Im SysML-Modell kann ein Testfall \texttt{TC-004 Personenerkennung} auf mehrere konkrete Testdatensätze verweisen. Damit bleibt sichtbar, dass die Anforderung nicht nur durch Code, sondern durch Daten und Bewertungskriterien geprüft wird.
+
+\section{Zusammenfassung}
+ML kann die Wahrnehmung des Roboters verbessern, bringt aber neue Integrations- und Qualitätsfragen. Ein ML-Node sollte sauber in die ROS2-Architektur eingebunden, im SysML-Modell nachvollziehbar beschrieben und durch Tests überprüft werden.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Wofür wird ML im Roboterprojekt eingesetzt?
+    \item Welche Daten benötigt der ObjectDetector?
+    \item Welches Topic könnte Erkennungsergebnisse veröffentlichen?
+    \item Warum ist Latenz wichtig?
+    \item Warum sollte ML nicht blind als Sicherheitsfunktion betrachtet werden?
+    \item Welche Optimierungswege gibt es für ML-Inferenz?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: Modellbezug}\\
 Beschreiben Sie im SysML-Modell, welche Anforderung durch den ML-Node erfüllt wird und welches Topic die Ergebnisse veröffentlicht.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Fehlerfälle}\\
+Nennen Sie drei mögliche Fehlerfälle bei der Personenerkennung und beschreiben Sie eine sinnvolle Systemreaktion.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Für ROS2-Integration ist die ROS2-Dokumentation \cite{ros2docs} wichtig. Für ML-Modelle sollten zusätzlich Quellen zu PyTorch, YOLO, ONNX und Embedded-AI-Optimierung genutzt werden.

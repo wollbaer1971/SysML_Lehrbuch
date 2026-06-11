@@ -1,11 +1,22 @@
 \chapter{Traceability und Änderungsmanagement}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie eine durchgängige Nachvollziehbarkeit von Anforderungen bis Tests aufbauen.
+Nach diesem Kapitel können Sie eine durchgängige Nachvollziehbarkeit von Anforderungen bis Tests aufbauen. Sie verstehen Traceability-Ketten, Impact Analysis und den Nutzen systematischer Änderungsbewertung im Roboterprojekt.
 \end{lernziele}
 
+\section{Einleitung}
+\gls{traceability} bedeutet Nachvollziehbarkeit. Sie zeigt, wie Artefakte zusammenhängen. Bei MBSE ist das einer der größten praktischen Vorteile: Anforderungen, Funktionen, Blöcke, Schnittstellen, ROS2-Nodes und Tests bleiben verbunden.
+
 \section{Was ist Traceability?}
-\gls{traceability} bedeutet Nachvollziehbarkeit. Sie zeigt, wie Artefakte zusammenhängen. Bei MBSE ist das einer der größten praktischen Vorteile.
+Traceability beantwortet Fragen wie:
+
+\begin{itemize}
+    \item Welche Komponente erfüllt diese Anforderung?
+    \item Welcher Test verifiziert diese Anforderung?
+    \item Welche ROS2-Node implementiert diesen Block?
+    \item Welche Schnittstellen sind betroffen, wenn ein Sensor geändert wird?
+    \item Welche Anforderungen haben noch keinen Test?
+\end{itemize}
 
 \section{Kette im Roboterprojekt}
 \begin{verbatim}
@@ -17,15 +28,96 @@ REQ-002 Hindernisse erkennen
 -> TC-002 Hinderniserkennung
 \end{verbatim}
 
+Diese Kette zeigt, wie eine Anforderung bis zu Implementierung und Test verfolgt werden kann.
+
 \section{Nutzen}
 Wenn sich REQ-002 ändert, kann analysiert werden, welche Komponenten betroffen sind. Vielleicht muss der Lidar ausgetauscht werden. Vielleicht muss der Test angepasst werden. Vielleicht reicht eine Softwareänderung.
 
 \section{Impact Analysis}
 Impact Analysis bedeutet Auswirkungsanalyse. Sie beantwortet die Frage: Was ändert sich, wenn eine Anforderung, Komponente oder Schnittstelle geändert wird?
 
-\section{Typische Fehler}
-Traceability wird oft zu spät aufgebaut. Dann ist sie mühsam. Besser ist es, Beziehungen während der Modellierung schrittweise zu pflegen.
+Beispiel: Die maximale Geschwindigkeit wird erhöht. Betroffen sein können:
 
+\begin{itemize}
+    \item Sicherheitsanforderungen
+    \item Bremswegmodell
+    \item Hinderniserkennung
+    \item Motorsteuerung
+    \item Akkulaufzeit
+    \item Tests zur Stoppdistanz
+    \item ROS2-Parameter für Geschwindigkeit
+\end{itemize}
+
+\section{Traceability-Matrix}
+Eine einfache Matrix kann Spalten enthalten:
+
+\begin{itemize}
+    \item Anforderung
+    \item Funktion
+    \item SysML-Block
+    \item ROS2-Node
+    \item Schnittstelle
+    \item Testfall
+\end{itemize}
+
+Diese Matrix ist kein Ersatz für das Modell, aber eine nützliche Sicht.
+
+\section{Änderungsmanagement}
+Änderungen sollten bewusst bewertet werden. Ein einfacher Ablauf:
+
+\begin{enumerate}
+    \item Änderungswunsch beschreiben.
+    \item Betroffene Anforderungen identifizieren.
+    \item Betroffene Architekturteile und Schnittstellen ermitteln.
+    \item Betroffene Tests prüfen.
+    \item Aufwand und Risiko bewerten.
+    \item Entscheidung dokumentieren.
+\end{enumerate}
+
+\section{Typische Fehler}
+Traceability wird oft zu spät aufgebaut. Dann ist sie mühsam. Besser ist es, Beziehungen während der Modellierung schrittweise zu pflegen. Ein weiterer Fehler ist zu viel Traceability ohne Nutzen. Verknüpfen Sie vor allem die Elemente, die für Entscheidungen, Änderungen und Tests wichtig sind.
+
+\section{Pragmatischer Umfang}
+Traceability kann sehr schnell groß werden. Für ein Einsteigerprojekt sollte sie bewusst begrenzt werden. Wichtig sind zunächst die Hauptanforderungen, Hauptblöcke, zentralen Schnittstellen, ROS2-Nodes und Testfälle.
+
+Eine gute Startregel lautet: Jede Hauptanforderung sollte mindestens eine Beziehung zu einem erfüllenden Modellelement und einem Nachweis besitzen. Jede sicherheitsrelevante Anforderung sollte zusätzlich mit betroffenen Schnittstellen und Fehlerfällen verbunden sein.
+
+Für den Indoor-Roboter sind besonders traceability-würdig:
+
+\begin{itemize}
+    \item Hinderniserkennung
+    \item Personenerkennung
+    \item Rückkehr zur Ladestation
+    \item sicherer Stopp
+    \item Akkustandsüberwachung
+    \item Status- und Fehlermeldungen
+\end{itemize}
+
+Diese Ketten liefern viel Nutzen, ohne dass das Modell sofort überladen wird.
+
+\section{Zusammenfassung}
+Traceability verbindet Anforderungen, Architektur, Umsetzung und Tests. Sie macht Änderungen beherrschbar und hilft, Lücken im Modell zu finden. Für den Indoor-Roboter ist sie besonders wertvoll, weil Sensorik, Software, Energie und Sicherheit eng zusammenhängen.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Was bedeutet Traceability?
+    \item Warum ist Traceability in MBSE wichtig?
+    \item Was ist Impact Analysis?
+    \item Welche Elemente enthält eine Traceability-Kette?
+    \item Warum sollte Traceability früh aufgebaut werden?
+    \item Welche Elemente wären von einer höheren Robotergeschwindigkeit betroffen?
+\end{enumerate}
+
+\section{Übungen}
 \begin{uebungbox}
+\textbf{Übung 1: Traceability-Kette}\\
 Wählen Sie eine Anforderung aus und erstellen Sie eine vollständige Traceability-Kette bis zu einem Testfall.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Impact Analysis}\\
+Analysieren Sie die Änderung: Die Kamera wird durch eine Tiefenkamera ersetzt. Welche Anforderungen, Blöcke, Schnittstellen, ROS2-Nodes und Tests sind betroffen?
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Traceability ist ein Kernthema von MBSE und Requirements Engineering. SysML bietet dafür Beziehungen wie \texttt{satisfy}, \texttt{verify}, \texttt{deriveReqt} und \texttt{trace} \cite{friedenthal2014}.

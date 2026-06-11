@@ -1,43 +1,144 @@
 \chapter{SysML-Grundlagen}
 
 \begin{lernziele}
-Nach diesem Kapitel kennen Sie die wichtigsten SysML-Diagrammtypen und wissen, wofür sie eingesetzt werden.
+Nach diesem Kapitel kennen Sie die Grundidee von \gls{sysml}, die wichtigsten Diagrammtypen und deren Rolle in einem MBSE-Projekt. Sie können erklären, warum ein SysML-Diagramm nur eine Sicht auf ein Modell ist, welche Diagramme für den Einstieg besonders wichtig sind und wie diese Diagramme beim autonomen Indoor-Roboter zusammenspielen.
 \end{lernziele}
 
-\section{Was ist SysML?}
-\gls{sysml} steht für Systems Modeling Language. Die Sprache wurde entwickelt, um technische Systeme modellieren zu können. Sie basiert auf UML, ist aber stärker auf Systeme aus Hardware, Software, Menschen, Prozessen und physikalischen Zusammenhängen ausgerichtet.
+\section{Einleitung}
+In den ersten beiden Kapiteln haben wir geklärt, warum Systems Engineering und MBSE nützlich sind. Jetzt benötigen wir eine Sprache, mit der wir Anforderungen, Struktur, Verhalten, Schnittstellen und Tests präzise beschreiben können. Diese Sprache ist in diesem Buch \gls{sysml}.
 
-\section{Diagrammtypen}
-Für den Einstieg sind sechs Diagrammtypen besonders wichtig.
+\gls{sysml} steht für Systems Modeling Language. Die Sprache wurde entwickelt, um technische Systeme zu modellieren. Sie basiert historisch auf UML, ist aber stärker auf Systeme aus Hardware, Software, Menschen, Prozessen, Daten und physikalischen Zusammenhängen ausgerichtet. Das passt gut zu unserem autonomen Indoor-Roboter: Er besteht nicht nur aus Software, sondern auch aus Sensorik, Antrieb, Batterie, Gehäuse, Ladestation, Bedienung und realer Umgebung.
 
-\subsection{Requirement Diagram}
-Das Requirement Diagram beschreibt Anforderungen und ihre Beziehungen. Es zeigt, welche Anforderungen voneinander abhängen und welche Elemente sie erfüllen oder verifizieren.
+Für Einsteiger ist wichtig: SysML ist kein Zeichenprogramm. SysML ist eine Modellierungssprache. Ein Diagramm ist nur eine sichtbare Darstellung von Modellelementen. Der eigentliche Wert entsteht im Modell: Anforderungen sind mit Blöcken verbunden, Blöcke besitzen Schnittstellen, Verhalten beschreibt Abläufe, Tests verifizieren Anforderungen.
 
-\subsection{Block Definition Diagram}
-Das \gls{bdd} beschreibt die Systemstruktur auf einer eher abstrakten Ebene. Es zeigt Blöcke und ihre Beziehungen.
+\section{Warum eine Modellierungssprache?}
+Ohne gemeinsame Sprache entstehen in Projekten schnell Missverständnisse. Ein Teammitglied zeichnet Kästen für Funktionen, ein anderes für Softwaremodule, ein drittes für Hardwarekomponenten. Alle Diagramme sehen ähnlich aus, meinen aber unterschiedliche Dinge. SysML hilft, solche Bedeutungen zu klären.
 
-\subsection{Internal Block Diagram}
-Das \gls{ibd} zeigt die innere Struktur eines Blocks. Es zeigt Teile, Ports und Verbindungen.
+SysML bietet vordefinierte Konzepte:
 
-\subsection{Activity Diagram}
-Aktivitätsdiagramme beschreiben Abläufe. Sie eignen sich für Prozesse, Algorithmen und Betriebsabläufe.
+\begin{itemize}
+    \item Requirements für Anforderungen
+    \item Blocks für Systemelemente
+    \item Ports und Interfaces für Schnittstellen
+    \item Activities für Abläufe
+    \item State Machines für Zustände
+    \item Parametrics für mathematische Zusammenhänge
+    \item Relationships für Nachvollziehbarkeit
+\end{itemize}
 
-\subsection{State Machine Diagram}
-Zustandsdiagramme beschreiben Zustände und Übergänge. Sie sind besonders nützlich für Systeme mit klaren Betriebsmodi.
-
-\subsection{Parametric Diagram}
-Parametrische Diagramme beschreiben mathematische Beziehungen, zum Beispiel Energieverbrauch oder Reichweite.
-
-\section{Nicht alles gleichzeitig lernen}
-Einsteiger sollten nicht versuchen, sofort jedes Diagramm perfekt zu beherrschen. Der sinnvolle Einstieg lautet: Anforderungen, BDD, IBD, Aktivitätsdiagramm und Zustandsdiagramm. Parametrik kann später folgen.
+Damit kann ein Team über dasselbe System sprechen, ohne jedes Symbol neu erklären zu müssen.
 
 \begin{praxisbox}
-Für den Indoor-Roboter beginnen wir mit Anforderungen und Struktur. Erst wenn klar ist, was der Roboter können soll und aus welchen Hauptsystemen er besteht, modellieren wir Verhalten und technische Details.
+Wenn im Modell ein Block \texttt{PerceptionSystem} existiert, kann er in einem BDD als Teil des Roboters erscheinen, in einem IBD mit Kamera und Lidar verbunden werden und über eine \texttt{satisfy}-Beziehung Anforderungen zur Hinderniserkennung erfüllen. Es ist derselbe Modellinhalt, nur aus verschiedenen Blickwinkeln.
 \end{praxisbox}
 
+\section{Die wichtigsten Diagrammtypen}
+SysML enthält mehrere Diagrammtypen. Für den Einstieg in dieses Buch konzentrieren wir uns auf diejenigen, die für das Roboterprojekt den größten Nutzen bringen.
+
+\subsection{Requirement Diagram}
+Das Requirement Diagram beschreibt Anforderungen und Beziehungen zwischen Anforderungen. Es zeigt zum Beispiel, dass eine allgemeine Sicherheitsanforderung in konkrete Anforderungen zur Hinderniserkennung, Bremsung und Personenerkennung zerlegt wird.
+
+Typische Fragen:
+
+\begin{itemize}
+    \item Was muss das System leisten?
+    \item Welche Anforderungen hängen zusammen?
+    \item Welche Anforderung wurde aus welcher höheren Anforderung abgeleitet?
+    \item Welche Komponenten erfüllen eine Anforderung?
+    \item Welche Tests überprüfen eine Anforderung?
+\end{itemize}
+
+\subsection{Block Definition Diagram}
+Das \gls{bdd} beschreibt die Struktur des Systems auf einer eher abstrakten Ebene. Es zeigt Blöcke und deren Beziehungen. Beim Roboter könnten Blöcke \texttt{Robot}, \texttt{NavigationSystem}, \texttt{PerceptionSystem}, \texttt{BatterySystem} und \texttt{MotionControl} heißen.
+
+Das BDD beantwortet die Frage: Aus welchen Hauptbausteinen besteht das System?
+
+\subsection{Internal Block Diagram}
+Das \gls{ibd} zeigt die innere Struktur eines Blocks. Es beschreibt Teile, Ports und Verbindungen. Während das BDD sagt, dass es ein \texttt{PerceptionSystem} gibt, zeigt das IBD, wie Kamera, Lidar, Objekterkennung und Hinderniserkennung innerhalb dieses Systems zusammenarbeiten.
+
+\subsection{Activity Diagram}
+Aktivitätsdiagramme beschreiben Abläufe. Sie eignen sich für Prozesse wie \enquote{Transportauftrag ausführen}, \enquote{Zur Ladestation zurückkehren} oder \enquote{Hindernis behandeln}. Sie zeigen Aktionen, Entscheidungen, Verzweigungen und parallele Abläufe.
+
+\subsection{State Machine Diagram}
+Zustandsdiagramme beschreiben Zustände und Übergänge. Ein Roboter besitzt Betriebszustände wie \texttt{Idle}, \texttt{Navigating}, \texttt{AvoidingObstacle}, \texttt{ReturningToDock}, \texttt{Charging} und \texttt{Error}. Ein Zustandsdiagramm zeigt, welche Ereignisse Wechsel zwischen diesen Zuständen auslösen.
+
+\subsection{Parametric Diagram}
+Parametrische Diagramme beschreiben mathematische Beziehungen. Sie sind nützlich, wenn technische Größen zusammenhängen, etwa Akkukapazität, Leistungsaufnahme, Betriebszeit, Geschwindigkeit oder Bremsweg.
+
 \section{Modell statt Bild}
-Ein SysML-Diagramm ist nur eine Sicht auf ein Modell. Das ist wichtig: Wenn ein Block in mehreren Diagrammen erscheint, ist es derselbe Block. Wird der Name geändert, sollte sich die Änderung überall widerspiegeln. Gute Modellierungswerkzeuge speichern also nicht nur Zeichnungen, sondern Modellinformationen.
+Ein SysML-Diagramm ist nur eine Sicht auf ein Modell. Diese Unterscheidung ist zentral. Wenn Sie in einem Zeichenprogramm drei Kästen mit dem Namen \texttt{NavigationSystem} zeichnen, sind das drei unabhängige grafische Objekte. In einem Modellierungswerkzeug sollte \texttt{NavigationSystem} dagegen ein einziges Modellelement sein, das in mehreren Diagrammen dargestellt werden kann.
+
+Das hat praktische Vorteile:
+
+\begin{itemize}
+    \item Namen bleiben konsistent.
+    \item Beziehungen können ausgewertet werden.
+    \item Änderungen sind leichter nachvollziehbar.
+    \item Diagramme können unterschiedliche Sichten auf denselben Inhalt zeigen.
+    \item Traceability wird möglich.
+\end{itemize}
+
+\section{Wie die Diagramme zusammenarbeiten}
+SysML-Diagramme sollten nicht isoliert entstehen. Sie ergänzen sich.
+
+Beim Indoor-Roboter kann eine Modellkette so aussehen:
+
+\begin{enumerate}
+    \item Im Requirement Diagram steht: \enquote{Der Roboter muss Hindernisse erkennen.}
+    \item Im BDD gibt es den Block \texttt{PerceptionSystem}.
+    \item Im IBD wird gezeigt, dass Kamera und Lidar Daten an Erkennungsfunktionen liefern.
+    \item Im Activity Diagram wird beschrieben, wie ein Hindernis während der Fahrt behandelt wird.
+    \item Im State Machine Diagram wird modelliert, dass der Roboter bei Gefahr in einen Stopp- oder Ausweichzustand wechselt.
+    \item Im Testmodell wird ein Testfall mit der Anforderung verbunden.
+\end{enumerate}
+
+So entsteht ein zusammenhängendes Modell statt einer losen Sammlung schöner Bilder.
+
+\section{Typische Anfängerfehler}
+\subsection{Zu viele Diagramme zu früh}
+Einsteiger möchten oft sofort alle Diagrammtypen verwenden. Das führt schnell zu Überforderung. Beginnen Sie mit Anforderungen, BDD und einfachen IBDs. Verhalten und Parametrik können danach folgen.
+
+\subsection{Unklare Bedeutung von Blöcken}
+Manchmal werden Funktionen, Softwaremodule, Hardwareteile und Rollen wild gemischt. Das ist nicht grundsätzlich verboten, muss aber bewusst geschehen. Ein \texttt{Camera} Block ist ein physisches Element. Ein \texttt{ObjectDetector} ist eher eine Software- oder Funktionskomponente.
+
+\subsection{Diagramme ohne Text}
+Ein Diagramm ohne Beschreibung ist oft schwer verständlich. Nutzen Sie Beschreibungsfelder im Werkzeug. Schreiben Sie kurz, welchen Zweck ein Diagramm hat und welche Fragen es beantworten soll.
+
+\subsection{Keine Wiederverwendung}
+Wenn dasselbe Element mehrfach neu angelegt wird, verliert das Modell seinen Wert. Verwenden Sie Modellelemente wieder, statt sie neu zu zeichnen.
+
+\section{Zusammenfassung}
+SysML ist eine Modellierungssprache für technische Systeme. Sie hilft, Anforderungen, Struktur, Verhalten, Schnittstellen und Nachweise einheitlich zu beschreiben. Für dieses Buch sind besonders Requirement Diagrams, BDDs, IBDs, Activity Diagrams, State Machines und Parametric Diagrams wichtig. Entscheidend ist nicht das Zeichnen einzelner Diagramme, sondern der Aufbau eines zusammenhängenden Modells.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Wofür steht SysML?
+    \item Warum ist SysML für Systeme aus Hardware und Software geeignet?
+    \item Was ist der Unterschied zwischen einem Diagramm und einem Modell?
+    \item Welche Fragen beantwortet ein Requirement Diagram?
+    \item Welche Fragen beantwortet ein BDD?
+    \item Wozu dient ein IBD?
+    \item Wann verwenden Sie ein Activity Diagram?
+    \item Wann verwenden Sie ein State Machine Diagram?
+    \item Warum sollte man Modellelemente wiederverwenden?
+    \item Nennen Sie einen typischen Anfängerfehler bei SysML.
+\end{enumerate}
+
+\section{Übungen}
+\begin{uebungbox}
+\textbf{Übung 1: Diagrammtyp zuordnen}\\
+Ordnen Sie folgende Fragen einem SysML-Diagrammtyp zu: Was muss das System leisten? Aus welchen Teilen besteht es? Welche Daten fließen zwischen Komponenten? Welche Zustände kann der Roboter haben? Wie läuft ein Transportauftrag ab?
+\end{uebungbox}
 
 \begin{uebungbox}
-Ordnen Sie folgende Fragen einem Diagrammtyp zu: Was muss das System leisten? Aus welchen Teilen besteht es? Welche Daten fließen zwischen Komponenten? Welche Zustände kann der Roboter haben?
+\textbf{Übung 2: Erste Modellkette}\\
+Wählen Sie die Funktion \enquote{Akkustand überwachen}. Beschreiben Sie dazu eine Anforderung, einen Block, einen Datenfluss, einen möglichen Zustand und einen Testfall.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 3: Diagrammzweck formulieren}\\
+Formulieren Sie für ein Requirement Diagram, ein BDD und ein IBD jeweils in zwei Sätzen, welchen Zweck das Diagramm im Roboterprojekt erfüllen soll.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Für den Einstieg in SysML sind praxisnahe Einführungen besonders hilfreich. Delligatti \cite{delligatti2014} erklärt SysML kompakt und einsteigerfreundlich. Friedenthal, Moore und Steiner \cite{friedenthal2014} bieten eine umfassendere Darstellung mit vielen Modellierungsdetails.

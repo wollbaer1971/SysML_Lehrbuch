@@ -1,32 +1,439 @@
 \chapter{Systems Engineering verstehen}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie erklären, was ein System ist, warum Systems Engineering bei komplexen Produkten notwendig wird und warum ein autonomer Roboter mehr ist als eine Sammlung einzelner Bauteile.
+Nach diesem Kapitel können Sie erklären, was ein System ist und warum Systems Engineering bei komplexen technischen Produkten notwendig wird. Sie verstehen den Unterschied zwischen einer einzelnen Komponente und einem Systemverhalten. Sie können Stakeholder benennen, eine einfache Systemgrenze ziehen, typische Anfangsfehler erkennen und das Denken in Anforderungen, Funktionen, Schnittstellen und Nachweisen auf einen autonomen Indoor-Roboter anwenden.
 \end{lernziele}
 
+\section{Einleitung}
+Viele technische Projekte beginnen mit einer einfachen Idee. Jemand sagt: \enquote{Wir bauen einen Roboter, der selbstständig durch ein Gebäude fährt.} Das klingt zunächst überschaubar. Der Roboter braucht Räder, Motoren, Sensoren, einen Rechner, etwas Software und eine Batterie. Wenn die Bauteile verfügbar sind, müsste das Projekt doch vor allem aus Konstruktion, Programmierung und Tests bestehen.
+
+In der Praxis zeigt sich schnell, dass diese Sicht zu einfach ist. Ein autonomer Indoor-Roboter soll nicht nur fahren. Er soll sicher fahren. Er soll Hindernisse erkennen, Menschen nicht gefährden, Türen und enge Flure bewältigen, seinen Akkustand überwachen, bei Bedarf zur Ladestation zurückkehren und für Nutzer verständlich bedienbar sein. Gleichzeitig soll er bezahlbar bleiben, wartbar sein und in eine reale Umgebung passen. Schon dieses kleine Beispiel verbindet Mechanik, Elektronik, Software, künstliche Intelligenz, Energieversorgung, Sicherheitsüberlegungen, Bedienkonzepte und organisatorische Fragen.
+
+Genau an dieser Stelle beginnt Systems Engineering. Systems Engineering ist eine Arbeitsweise für die Entwicklung komplexer Systeme. Es hilft dabei, vom Problem aus zu denken, statt vorschnell einzelne Lösungen zu bauen. Es fragt:
+
+\begin{itemize}
+    \item Welches Problem soll gelöst werden?
+    \item Wer hat Erwartungen an das System?
+    \item Was gehört zum System und was gehört zur Umgebung?
+    \item Welche Funktionen muss das System erfüllen?
+    \item Welche Anforderungen müssen überprüfbar erfüllt werden?
+    \item Welche Komponenten, Schnittstellen und Abläufe sind dafür notwendig?
+    \item Wie wird nachgewiesen, dass das fertige System wirklich funktioniert?
+\end{itemize}
+
+Für Einsteiger ist wichtig: Systems Engineering ist keine zusätzliche Bürokratie, die ein Projekt künstlich schwerer macht. Gut eingesetzt sorgt es für Klarheit. Es verhindert, dass ein Team zu früh in Details springt und später feststellt, dass wichtige Erwartungen übersehen wurden. In diesem Lehrbuch nutzen wir Systems Engineering als Denkwerkzeug. Wir wollen nicht jede Norm auswendig lernen. Wir wollen verstehen, wie man ein technisches System sauber beschreibt, strukturiert und Schritt für Schritt in eine umsetzbare Architektur überführt.
+
 \section{Was ist ein System?}
-Ein System ist eine Menge von Elementen, die zusammenwirken, um einen Zweck zu erfüllen. Ein autonomer Indoor-Roboter besteht zum Beispiel aus Sensoren, Rechner, Software, Batterie, Motoren, Rädern, Gehäuse und Benutzerschnittstellen. Entscheidend ist nicht nur, dass diese Elemente existieren. Entscheidend ist, dass sie zusammen funktionieren.
+Ein System ist eine Menge von Elementen, die zusammenwirken, um einen Zweck zu erfüllen. Diese Definition klingt einfach, enthält aber drei wichtige Aussagen.
 
-Ein einzelner Lidar-Sensor macht noch keinen autonomen Roboter. Erst wenn Sensordaten verarbeitet, in eine Karte eingebaut, mit einer Navigation verknüpft und in Motorbefehle übersetzt werden, entsteht ein Systemverhalten.
+Erstens besteht ein System aus mehreren Elementen. Beim Indoor-Roboter sind das zum Beispiel Sensoren, Rechner, Softwarekomponenten, Batterie, Motoren, Räder, Gehäuse, Ladekontakte und Benutzerschnittstellen. Auch Menschen können im erweiterten Sinn Teil einer Systembetrachtung sein, etwa Bediener, Wartungspersonal oder Personen im Fahrbereich.
 
-\section{Warum Systems Engineering?}
-In einfachen Projekten reicht es oft aus, direkt mit der Umsetzung zu beginnen. Bei komplexeren technischen Systemen führt das schnell zu Problemen. Eine Änderung an einer Komponente kann viele andere Bereiche beeinflussen. Eine stärkere Kamera kann zum Beispiel mehr Rechenleistung benötigen, mehr Strom verbrauchen und andere Treiber voraussetzen.
+Zweitens wirken diese Elemente zusammen. Ein einzelner Lidar-Sensor macht noch keinen autonomen Roboter. Erst wenn der Sensor Messdaten liefert, diese Daten verarbeitet werden, daraus eine Karte entsteht, die Navigation einen Weg plant und die Motorsteuerung passende Fahrbefehle ausführt, entsteht das gewünschte Verhalten.
 
-Systems Engineering hilft dabei, solche Abhängigkeiten sichtbar zu machen. Es zwingt nicht zu Bürokratie, sondern zu Klarheit: Was soll das System leisten? Welche Komponenten sind beteiligt? Welche Schnittstellen gibt es? Wie wird geprüft, ob das System funktioniert?
+Drittens hat ein System einen Zweck. Der Zweck unseres Roboters könnte lauten: \enquote{Der Roboter transportiert kleine Gegenstände selbstständig innerhalb eines Bürogebäudes.} Ein anderer Zweck wäre: \enquote{Der Roboter überwacht nachts Flure und meldet ungewöhnliche Ereignisse.} Beide Systeme könnten äußerlich ähnlich aussehen, hätten aber andere Anforderungen, andere Stakeholder und andere technische Schwerpunkte.
 
 \begin{praxisbox}
-Beim autonomen Indoor-Roboter reicht die Aussage \enquote{Der Roboter soll fahren} nicht aus. Wir müssen wissen, wo er fahren soll, wie schnell er fahren darf, welche Hindernisse erkannt werden müssen, welche Sensoren eingesetzt werden und was bei niedrigem Akkustand passiert.
+Stellen Sie sich zwei Roboter mit ähnlicher Hardware vor. Der erste Roboter transportiert Medikamente in einem Krankenhaus. Der zweite Roboter liefert Werkzeuge in einer Werkstatt. Beide brauchen Navigation und Hinderniserkennung. Trotzdem unterscheiden sich die Anforderungen stark. Im Krankenhaus sind Hygiene, leiser Betrieb, Patientensicherheit und zuverlässige Dokumentation besonders wichtig. In der Werkstatt zählen Robustheit, Staubschutz und die sichere Bewegung zwischen Maschinen. Das System wird also nicht nur durch seine Bauteile definiert, sondern durch seinen Zweck und seine Einsatzumgebung.
 \end{praxisbox}
 
-\section{Systemgrenze}
-Eine wichtige Entscheidung ist die Systemgrenze. Sie legt fest, was zum betrachteten System gehört und was nur Teil der Umgebung ist. Beim Indoor-Roboter kann die Ladestation zum System gehören oder als externes System modelliert werden. Beide Entscheidungen sind möglich, aber sie müssen bewusst getroffen werden.
+\subsection{Elemente, Beziehungen und Verhalten}
+Ein häufiger Anfängerfehler besteht darin, ein System nur als Liste von Teilen zu betrachten:
 
-\section{Stakeholder}
-Stakeholder sind Personen oder Organisationen, die Anforderungen an das System haben. Beim Roboter sind das zum Beispiel Nutzer, Betreiber, Wartungspersonal, Entwickler und möglicherweise Sicherheitsbeauftragte. Unterschiedliche Stakeholder haben unterschiedliche Interessen. Nutzer wollen einfache Bedienung. Wartungspersonal will Diagnosemöglichkeiten. Entwickler wollen klare Schnittstellen.
+\begin{itemize}
+    \item Kamera
+    \item Lidar
+    \item Akku
+    \item Motorcontroller
+    \item Computer
+    \item ROS2-Software
+\end{itemize}
 
-\section{Typische Fehler am Anfang}
-Ein häufiger Fehler besteht darin, sofort Komponenten zu zeichnen. Das wirkt produktiv, überspringt aber die Frage, warum diese Komponenten überhaupt gebraucht werden. Ein anderer Fehler ist, Anforderungen zu allgemein zu formulieren. \enquote{Der Roboter soll zuverlässig sein} klingt gut, ist aber kaum testbar.
+Diese Liste ist nützlich, aber sie reicht nicht aus. Entscheidend sind die Beziehungen zwischen den Teilen. Die Kamera liefert Bilder an eine Erkennungssoftware. Die Erkennungssoftware meldet erkannte Personen an die Navigation. Die Navigation berücksichtigt Hindernisse und erzeugt Sollgeschwindigkeiten. Der Motorcontroller setzt diese Sollgeschwindigkeiten in elektrische Ansteuerung der Motoren um. Der Batteriemonitor meldet einen niedrigen Ladezustand, woraufhin die Missionsplanung eine Rückkehr zur Ladestation auslöst.
+
+Das Systemverhalten entsteht also aus dem Zusammenspiel. Man spricht oft von emergentem Verhalten: Das Verhalten des Gesamtsystems ist mehr als die Summe der Einzelteile. Ein Motor kann drehen, ein Sensor kann messen und ein Rechner kann Programme ausführen. Autonome Navigation entsteht aber erst, wenn diese Fähigkeiten sinnvoll verbunden sind.
+
+\subsection{Offene und geschlossene Systeme}
+Viele technische Systeme sind offene Systeme. Sie stehen in ständigem Austausch mit ihrer Umgebung. Der Indoor-Roboter nimmt seine Umgebung über Sensoren wahr, gibt Bewegung in die Umgebung ab, erhält Energie von der Ladestation und kommuniziert möglicherweise mit Nutzern oder einem Gebäudemanagementsystem.
+
+Das ist wichtig, weil offene Systeme nicht vollständig im Labor verstanden werden können. Ein Roboter, der in einer Testhalle gut funktioniert, kann in einem echten Bürogebäude Probleme bekommen: spiegelnde Glasflächen, enge Durchgänge, wechselnde Lichtverhältnisse, Menschen mit Rollkoffern, offene Türen, Teppichkanten oder WLAN-Ausfälle. Systems Engineering zwingt uns deshalb, die Umgebung früh mitzudenken.
+
+\section{Warum Systems Engineering?}
+In kleinen Projekten kann man oft direkt loslegen. Wer ein einfaches Python-Skript schreibt, kann Anforderungen, Entwurf, Umsetzung und Test im Kopf behalten. Bei einem komplexeren Produkt funktioniert das nicht mehr zuverlässig. Zu viele Entscheidungen hängen voneinander ab.
+
+Nehmen wir an, ein Team entscheidet sich für eine stärkere Kamera, damit Personen besser erkannt werden. Diese Änderung klingt lokal. In Wahrheit kann sie viele Folgen haben:
+
+\begin{itemize}
+    \item Die Kamera erzeugt mehr Daten.
+    \item Der Rechner benötigt mehr Rechenleistung.
+    \item Die Software muss größere Bilder schneller verarbeiten.
+    \item Der Stromverbrauch steigt.
+    \item Der Akku hält kürzer.
+    \item Das Gehäuse braucht eventuell eine andere Befestigung.
+    \item Die Wärmeentwicklung kann zunehmen.
+    \item Der Preis des Roboters steigt.
+\end{itemize}
+
+Systems Engineering hilft, solche Abhängigkeiten sichtbar zu machen. Es betrachtet nicht nur eine Komponente, sondern das Gesamtsystem und seinen Lebenszyklus: Idee, Anforderungen, Entwurf, Umsetzung, Integration, Test, Betrieb, Wartung und spätere Weiterentwicklung.
+
+\subsection{Komplexität beherrschbar machen}
+Komplexität bedeutet nicht nur, dass ein System viele Teile hat. Komplex wird ein System vor allem durch viele Wechselwirkungen, unklare Erwartungen und Änderungen während der Entwicklung. Ein Roboterprojekt wird komplex, weil Hardware, Software und Umgebung gleichzeitig eine Rolle spielen.
+
+Ein Beispiel: Die Navigation soll den kürzesten Weg wählen. Die Sicherheitsanforderung sagt aber, dass der Roboter in der Nähe von Personen langsam fahren muss. Die Batterieanforderung sagt, dass der Roboter rechtzeitig zur Ladestation zurückkehren muss. Die Nutzeranforderung sagt, dass Lieferungen nicht zu lange dauern dürfen. Diese Anforderungen können miteinander in Konflikt geraten. Systems Engineering macht solche Konflikte sichtbar, bevor sie erst beim Test des fertigen Roboters auffallen.
+
+\subsection{Kommunikation verbessern}
+Technische Projekte sind Teamarbeit. Mechanik, Elektronik, Software, Test, Projektleitung, Einkauf, Betrieb und Kundenseite verwenden oft unterschiedliche Begriffe. Was für einen Softwareentwickler ein \enquote{Node} ist, ist für einen Systemingenieur vielleicht eine Funktionseinheit. Was ein Nutzer als \enquote{schnell} empfindet, muss für die Entwicklung in messbare Anforderungen übersetzt werden.
+
+Systems Engineering schafft gemeinsame Beschreibungen. Diese Beschreibungen können Texte, Tabellen, Diagramme und Modelle sein. Später nutzen wir dafür SysML. Im ersten Schritt geht es aber um die Denkweise: Wir wollen Begriffe klären, Zusammenhänge sichtbar machen und Entscheidungen nachvollziehbar dokumentieren.
+
+\subsection{Fehler früher finden}
+Je später ein Fehler entdeckt wird, desto teurer wird seine Korrektur. Wenn erst kurz vor der Auslieferung auffällt, dass die Batterie für die geplante Fahrzeit zu klein ist, muss vielleicht das Gehäuse geändert, der Schwerpunkt neu bewertet und die Ladeelektronik angepasst werden. Wenn diese Frage früh durch Anforderungen und einfache Berechnungen betrachtet wird, ist die Anpassung deutlich einfacher.
+
+Systems Engineering verlagert Denken und Prüfen nach vorne. Das bedeutet nicht, dass man alles im Voraus perfekt wissen muss. Es bedeutet, dass man Annahmen bewusst macht und gezielt überprüft.
+
+\section{Eine kurze Geschichte des Systems Engineering}
+Systems Engineering entstand nicht aus einer einzelnen Erfindung. Es entwickelte sich aus praktischen Problemen großer technischer Vorhaben. Immer dann, wenn viele Fachgebiete zusammenarbeiten mussten, wurde eine übergreifende Sicht notwendig.
+
+\subsection{Frühe technische Großsysteme}
+Schon der Bau von Eisenbahnen, Telefonnetzen, Kraftwerken und Flugzeugen erforderte systemisches Denken. Ein Eisenbahnnetz besteht nicht nur aus Schienen und Lokomotiven. Es benötigt Bahnhöfe, Signale, Fahrpläne, Wartung, Energieversorgung, Personal, Sicherheitsregeln und Betriebsprozesse. Wird ein Teil geändert, wirkt sich das auf viele andere Teile aus.
+
+Der Begriff Systems Engineering wurde besonders im 20. Jahrhundert wichtig. Große Telekommunikations-, Luftfahrt- und Raumfahrtprojekte machten deutlich, dass klassische Einzeldisziplinen allein nicht ausreichen. Man brauchte Methoden, um Anforderungen, Architektur, Schnittstellen, Tests und Projektentscheidungen zusammenzuführen.
+
+\subsection{Luft- und Raumfahrt als Treiber}
+In der Luft- und Raumfahrt sind die Folgen von Fehlern besonders gravierend. Ein Satellit, eine Rakete oder ein Flugzeug besteht aus vielen Teilsystemen: Struktur, Antrieb, Energie, Kommunikation, Steuerung, Sensorik, Software und Bodeninfrastruktur. Diese Teilsysteme müssen unter extremen Bedingungen zusammen funktionieren.
+
+Solche Projekte prägten viele Grundideen des Systems Engineering: klare Anforderungen, kontrollierte Schnittstellen, Konfigurationsmanagement, Verifikation, Validierung und Nachvollziehbarkeit. Der zentrale Gedanke lautet: Man entwickelt nicht nur Bauteile, sondern ein Gesamtsystem mit nachweisbarer Erfüllung seiner Aufgaben.
+
+\subsection{Software und vernetzte Systeme}
+Später wurde Software immer wichtiger. Moderne Systeme sind oft cyber-physische Systeme: physische Komponenten werden durch Software gesteuert und sind über Netzwerke verbunden. Ein autonomer Roboter ist ein typisches Beispiel. Er bewegt sich physisch durch die Welt, entscheidet aber mit Hilfe von Software, Sensorfusion und Algorithmen.
+
+Damit verschiebt sich auch die Herausforderung. Mechanische Teile ändern sich meist langsamer als Software. Software kann häufig aktualisiert werden, führt aber auch neue Risiken ein: Versionskonflikte, unerwartete Laufzeitfehler, unvollständige Tests oder schwer nachvollziehbare Entscheidungen von Machine-Learning-Komponenten. Systems Engineering muss deshalb heute Hardware, Software, Daten, KI-Modelle und Betriebsprozesse gemeinsam betrachten.
+
+\section{Systemdenken}
+Systemdenken bedeutet, Zusammenhänge wichtiger zu nehmen als isolierte Einzelteile. Es ist eine Denkweise, die fragt: \enquote{Was passiert im Gesamtsystem, wenn ich an einer Stelle etwas ändere?}
+
+\subsection{Vom Bauteil zur Wirkung}
+Einsteiger denken oft zuerst in Bauteilen. Das ist verständlich, denn Bauteile kann man kaufen, anfassen und einbauen. Systems Engineering beginnt jedoch früher. Es fragt zunächst nach Wirkungen und Funktionen.
+
+Für den Indoor-Roboter könnte eine gewünschte Wirkung lauten: \enquote{Der Roboter vermeidet Zusammenstöße mit Menschen und Gegenständen.} Daraus ergeben sich Funktionen:
+
+\begin{itemize}
+    \item Umgebung erfassen
+    \item Hindernisse erkennen
+    \item Abstand bewerten
+    \item Geschwindigkeit anpassen
+    \item bei Gefahr stoppen
+    \item Nutzer über Störung informieren
+\end{itemize}
+
+Erst danach entscheiden wir, welche Komponenten diese Funktionen erfüllen. Vielleicht braucht der Roboter einen Lidar-Sensor. Vielleicht reicht eine Tiefenkamera nicht aus. Vielleicht ist eine Kombination aus mehreren Sensoren sinnvoll. Die Lösung folgt aus dem Problem, nicht umgekehrt.
+
+\subsection{Rückkopplungen}
+Viele Systeme enthalten Rückkopplungen. Der Roboter misst seine Umgebung, entscheidet eine Bewegung, bewegt sich, misst erneut und korrigiert seine Entscheidung. Navigation ist ohne Rückkopplung kaum möglich.
+
+Auch organisatorisch gibt es Rückkopplungen. Testergebnisse führen zu neuen Anforderungen oder zu geänderten Entwürfen. Nutzerfeedback verändert Bedienkonzepte. Lieferprobleme beeinflussen die Auswahl von Komponenten. Systems Engineering akzeptiert diese Schleifen. Es versucht nicht, Entwicklung als starre Gerade zu behandeln.
+
+\subsection{Trade-offs}
+Ein Trade-off ist ein Zielkonflikt. Man verbessert eine Eigenschaft und verschlechtert dabei möglicherweise eine andere. Beim Roboter gibt es viele typische Trade-offs:
+
+\begin{itemize}
+    \item Höhere Geschwindigkeit verkürzt Lieferzeiten, kann aber Sicherheitsabstände vergrößern.
+    \item Mehr Sensoren verbessern die Wahrnehmung, erhöhen aber Kosten und Energieverbrauch.
+    \item Ein größerer Akku verlängert die Laufzeit, erhöht aber Gewicht und Ladezeit.
+    \item Ein komplexeres KI-Modell erkennt Personen besser, benötigt aber mehr Rechenleistung.
+    \item Eine sehr einfache Bedienung kann technische Diagnosemöglichkeiten verstecken.
+\end{itemize}
+
+Gute Entwicklung bedeutet nicht, jede Eigenschaft zu maximieren. Gute Entwicklung bedeutet, begründete Kompromisse zu finden. Systems Engineering liefert dafür die Struktur: Anforderungen, Randbedingungen, Alternativen, Bewertungen und Entscheidungen werden nachvollziehbar gemacht.
+
+\begin{hinweisbox}
+Wenn ein Team sagt: \enquote{Wir wollen maximale Reichweite, maximale Geschwindigkeit, niedrigste Kosten, höchste Sicherheit und kleinste Bauform}, dann ist das noch keine realistische Zieldefinition. Systems Engineering hilft, solche Wünsche in priorisierte, überprüfbare Anforderungen zu übersetzen.
+\end{hinweisbox}
+
+\section{Anforderungen und Lösungen unterscheiden}
+Ein sehr wichtiger Grundsatz lautet: Anforderungen beschreiben, was erreicht werden soll. Lösungen beschreiben, wie es erreicht werden soll. Diese Unterscheidung klingt einfach, wird aber in Projekten ständig vermischt.
+
+Eine schlechte Anforderung wäre:
+
+\begin{quote}
+Der Roboter muss einen Lidar-Sensor vom Typ X verwenden.
+\end{quote}
+
+Das kann in manchen Fällen berechtigt sein, etwa wenn ein bestimmter Sensor aus Plattformgründen vorgeschrieben ist. Oft ist es aber bereits eine Lösungsentscheidung. Eine bessere Anforderung könnte lauten:
+
+\begin{quote}
+Der Roboter muss Hindernisse ab einer Breite von 10 cm in einem Abstand von mindestens 1,5 m erkennen.
+\end{quote}
+
+Diese Formulierung beschreibt die benötigte Fähigkeit. Ob diese Fähigkeit mit Lidar, Kamera, Ultraschall oder Sensorfusion erreicht wird, bleibt zunächst offen. Dadurch kann das Team technische Alternativen vergleichen.
+
+\subsection{Warum diese Trennung wichtig ist}
+Wenn Anforderungen zu früh konkrete Lösungen enthalten, wird der Lösungsraum unnötig eingeschränkt. Das Team baut dann vielleicht eine Komponente ein, obwohl eine bessere, günstigere oder zuverlässigere Lösung möglich wäre.
+
+Umgekehrt dürfen Anforderungen nicht so allgemein bleiben, dass sie nicht prüfbar sind. \enquote{Der Roboter soll zuverlässig sein} ist ein Wunsch, aber noch keine testbare Anforderung. Besser wäre:
+
+\begin{quote}
+Der Roboter muss in einem Büroflur mit normaler Beleuchtung 95 von 100 Zielanfahrten ohne manuellen Eingriff abschließen.
+\end{quote}
+
+Diese Anforderung ist noch nicht perfekt, aber sie ist deutlich überprüfbarer. Man kann Testbedingungen definieren, Fahrten zählen und Ergebnisse auswerten.
+
+\section{Stakeholderanalyse}
+Stakeholder sind Personen, Gruppen oder Organisationen, die ein Interesse am System haben oder von ihm betroffen sind. Eine Stakeholderanalyse beantwortet die Frage: \enquote{Für wen bauen wir das System eigentlich, und wessen Erwartungen müssen wir berücksichtigen?}
+
+Beim autonomen Indoor-Roboter gibt es mehr Stakeholder, als man zunächst denkt:
+
+\begin{itemize}
+    \item Nutzer, die den Roboter beauftragen
+    \item Personen, die sich im Gebäude bewegen
+    \item Betreiber des Gebäudes
+    \item Wartungspersonal
+    \item Entwicklerinnen und Entwickler
+    \item Sicherheitsbeauftragte
+    \item Datenschutzverantwortliche
+    \item Einkauf oder Management
+    \item Reinigungspersonal
+    \item IT-Administration
+\end{itemize}
+
+Jede dieser Gruppen sieht das System anders. Nutzer fragen: \enquote{Ist der Roboter einfach zu bedienen?} Wartungspersonal fragt: \enquote{Wie erkenne ich Fehler?} IT-Administratoren fragen: \enquote{Wie wird der Roboter ins Netzwerk eingebunden?} Datenschutzverantwortliche fragen: \enquote{Was passiert mit Kamerabildern?} Sicherheitsbeauftragte fragen: \enquote{Wie wird verhindert, dass jemand verletzt wird?}
+
+\subsection{Stakeholderbedürfnisse erfassen}
+Stakeholder äußern oft Bedürfnisse, keine fertigen Anforderungen. Ein Nutzer sagt vielleicht: \enquote{Der Roboter soll nicht nerven.} Das ist alltagssprachlich verständlich, aber technisch unklar. Dahinter können mehrere Anforderungen stecken:
+
+\begin{itemize}
+    \item Der Roboter soll leise fahren.
+    \item Der Roboter soll nicht mitten im Flur stehen bleiben.
+    \item Der Roboter soll seine Absicht anzeigen.
+    \item Der Roboter soll Menschen nicht dicht auffahren.
+    \item Der Roboter soll keine komplizierte Bedienoberfläche haben.
+\end{itemize}
+
+Die Aufgabe im Systems Engineering besteht darin, solche Aussagen ernst zu nehmen und in überprüfbare Anforderungen zu übersetzen. Dabei darf der ursprüngliche Sinn nicht verloren gehen.
+
+\subsection{Konflikte zwischen Stakeholdern}
+Stakeholder haben nicht immer dieselben Ziele. Das Management möchte niedrige Kosten. Das Entwicklungsteam möchte genug Zeit für saubere Tests. Nutzer möchten schnelle Lieferungen. Sicherheitsverantwortliche möchten vorsichtige Fahrstrategien. Datenschutzverantwortliche möchten möglichst wenige personenbezogene Daten erfassen, während das KI-Team gerne viele Kameradaten für Personenerkennung nutzen würde.
+
+Solche Konflikte sind normal. Gefährlich werden sie erst, wenn sie unausgesprochen bleiben. Systems Engineering macht Konflikte sichtbar und dokumentiert Entscheidungen. Nicht jede Gruppe bekommt alles, was sie möchte. Aber gute Entscheidungen sind begründet und nachvollziehbar.
+
+\begin{praxisbox}
+Für unseren Indoor-Roboter könnte die Stakeholderanalyse ergeben, dass die Kamera zwar für Personenerkennung nützlich ist, aber Datenschutzfragen auslöst. Eine mögliche Systementscheidung wäre, Bilder nur lokal auf dem Roboter zu verarbeiten und nicht dauerhaft zu speichern. Daraus entstehen neue Anforderungen an Softwarearchitektur, Speicherverwaltung und Tests.
+\end{praxisbox}
+
+\section{Systemgrenzen}
+Die Systemgrenze legt fest, was zum betrachteten System gehört und was als Umgebung betrachtet wird. Diese Entscheidung ist nicht nur eine Zeichnung. Sie beeinflusst Anforderungen, Verantwortlichkeiten, Schnittstellen und Tests.
+
+Beim Indoor-Roboter stellt sich zum Beispiel die Frage: Gehört die Ladestation zum System? Es gibt zwei mögliche Antworten.
+
+\subsection{Variante 1: Ladestation gehört zum System}
+Wenn die Ladestation Teil des Systems ist, entwickelt oder spezifiziert das Projektteam auch die Ladestation. Dann gehören Ladeelektronik, mechanische Andockhilfe, Statusanzeige und Kommunikation zwischen Roboter und Station zur Systemarchitektur. Der Vorteil ist Kontrolle. Das Team kann Roboter und Ladestation optimal aufeinander abstimmen. Der Nachteil ist mehr Entwicklungsaufwand.
+
+\subsection{Variante 2: Ladestation ist ein externes System}
+Wenn die Ladestation als externes System betrachtet wird, muss der Roboter nur mit ihr kompatibel sein. Dann wird die Schnittstelle wichtig: Spannung, Strom, mechanische Kontakte, Andockposition, Sicherheitsabschaltung und eventuell Kommunikationsprotokoll. Der Vorteil ist weniger eigener Entwicklungsumfang. Der Nachteil ist Abhängigkeit von einem Fremdsystem.
+
+Beide Entscheidungen können richtig sein. Wichtig ist, dass sie bewusst getroffen werden. Eine unklare Systemgrenze führt später fast immer zu Missverständnissen. Wer ist verantwortlich, wenn das Andocken nicht zuverlässig funktioniert? Das Robotikteam? Der Lieferant der Ladestation? Die Gebäudetechnik? Genau solche Fragen klärt die Systemgrenze.
+
+\subsection{Kontext des Systems}
+Außerhalb der Systemgrenze liegt der Systemkontext. Dazu gehören alle externen Akteure und Systeme, mit denen der Roboter interagiert:
+
+\begin{itemize}
+    \item Menschen im Gebäude
+    \item Türen, Aufzüge, Flure und Räume
+    \item WLAN oder anderes Netzwerk
+    \item Ladestation, falls extern betrachtet
+    \item Bedienoberfläche auf Tablet oder PC
+    \item Wartungswerkzeug
+    \item Gebäudemanagementsystem
+    \item rechtliche und organisatorische Vorgaben
+\end{itemize}
+
+Der Kontext ist wichtig, weil viele Anforderungen an den Grenzen entstehen. Schnittstellen sind häufig Fehlerquellen. Ein Roboter kann intern sauber funktionieren und trotzdem im Betrieb scheitern, wenn die Kommunikation mit der Umgebung unklar ist.
+
+\section{Fallstudie: Autonomer Indoor-Roboter}
+Wir verwenden in diesem Buch durchgehend einen autonomen Indoor-Roboter als Praxisbeispiel. In diesem Kapitel betrachten wir ihn noch ohne SysML-Details. Wir beschreiben ihn so, wie ein Systems-Engineering-Team am Anfang eines Projekts darüber sprechen könnte.
+
+\subsection{Ausgangssituation}
+Ein mittelgroßes Bürogebäude möchte interne Botengänge automatisieren. Kleine Gegenstände wie Dokumentenmappen, Werkzeuge, Laborproben oder Ersatzteile sollen zwischen Räumen transportiert werden. Bisher erledigen Mitarbeitende diese Wege manuell. Das kostet Zeit und unterbricht Arbeitsabläufe.
+
+Der Roboter soll sich selbstständig im Gebäude bewegen. Er soll Ziele anfahren, Hindernisse erkennen, Personen ausweichen, seinen Akkustand überwachen und bei niedrigem Akkustand automatisch zur Ladestation zurückkehren. Bediener sollen einen Transportauftrag einfach starten können.
+
+\subsection{Erste Systembeschreibung}
+Eine erste Systembeschreibung könnte lauten:
+
+\begin{quote}
+Das System \enquote{Autonomer Indoor-Roboter} transportiert kleine Gegenstände innerhalb eines definierten Gebäudebereichs. Es navigiert autonom auf Basis einer Karte, erkennt Hindernisse und Personen, vermeidet Kollisionen, überwacht seinen Energiezustand und kehrt bei Bedarf selbstständig zur Ladestation zurück.
+\end{quote}
+
+Diese Beschreibung ist noch grob, aber sie enthält bereits wichtige Punkte: Zweck, Einsatzbereich, Hauptfunktionen und Sicherheitsaspekt.
+
+\subsection{Hauptfunktionen}
+Aus der Beschreibung lassen sich erste Hauptfunktionen ableiten:
+
+\begin{itemize}
+    \item Auftrag entgegennehmen
+    \item aktuelle Position bestimmen
+    \item Umgebung erfassen
+    \item Karte nutzen oder aktualisieren
+    \item Route planen
+    \item Bewegung ausführen
+    \item Hindernisse erkennen und vermeiden
+    \item Personen erkennen und Abstand halten
+    \item Akkustand überwachen
+    \item Ladestation anfahren
+    \item Status an Nutzer melden
+    \item Fehler erkennen und sicher reagieren
+\end{itemize}
+
+Diese Funktionsliste ist noch keine Architektur. Sie sagt noch nicht, welche ROS2-Nodes es geben wird oder welche Sensoren verwendet werden. Sie ist aber ein guter Zwischenschritt zwischen Problem und Lösung.
+
+\subsection{Erste Randbedingungen}
+Neben Funktionen gibt es Randbedingungen. Randbedingungen beschreiben Grenzen, unter denen das System arbeiten muss. Beispiele:
+
+\begin{itemize}
+    \item Der Roboter wird ausschließlich in Innenräumen eingesetzt.
+    \item Der Roboter fährt auf ebenen Böden.
+    \item Der Roboter muss durch normale Bürotüren passen.
+    \item Der Roboter darf Fluchtwege nicht dauerhaft blockieren.
+    \item Der Roboter soll während der Arbeitszeit nicht störend laut sein.
+    \item Der Roboter muss ohne Spezialwissen bedienbar sein.
+    \item Die Verarbeitung von Kameradaten muss datenschutzfreundlich erfolgen.
+\end{itemize}
+
+Randbedingungen sind für Einsteiger manchmal weniger spannend als Funktionen. Trotzdem sind sie entscheidend. Viele Fehlentwicklungen entstehen, weil Randbedingungen zu spät erkannt werden.
+
+\subsection{Vom Wunsch zur Anforderung}
+Im nächsten Schritt werden Wünsche in Anforderungen übersetzt. Die folgende Tabelle zeigt einfache Beispiele.
+
+\begin{center}
+\begin{tabular}{p{0.38\textwidth}p{0.50\textwidth}}
+\toprule
+\textbf{Wunsch oder Aussage} & \textbf{Mögliche Anforderung} \\
+\midrule
+Der Roboter soll sicher sein. & Der Roboter muss bei einem Hindernis im Abstand von 0,5 m seine Geschwindigkeit reduzieren und bei 0,2 m stoppen. \\
+Der Akku soll lange halten. & Der Roboter muss mindestens 4 Stunden typischen Bürotransportbetrieb ohne Nachladen durchführen. \\
+Die Bedienung soll einfach sein. & Ein Standardauftrag muss mit höchstens drei Benutzereingaben gestartet werden können. \\
+Der Roboter soll Menschen erkennen. & Der Roboter muss Personen im Fahrbereich unter normalen Lichtbedingungen erkennen und seine Route entsprechend anpassen. \\
+Der Roboter soll nicht verloren gehen. & Der Roboter muss seine Position innerhalb des kartierten Bereichs mit ausreichender Genauigkeit für die Navigation bestimmen. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Die Zahlen in dieser Tabelle sind nur Beispielwerte. In einem echten Projekt müssten sie begründet, abgestimmt und getestet werden. Für den Einstieg zeigen sie aber den Unterschied zwischen einem Wunsch und einer überprüfbaren Anforderung.
+
+\section{Typische Projektfehler}
+Systems Engineering wird besonders verständlich, wenn man typische Fehler betrachtet. Viele Projekte scheitern nicht an fehlendem Talent, sondern an unklaren Grundlagen.
+
+\subsection{Fehler 1: Zu früh in Komponenten denken}
+Ein Team entscheidet am ersten Tag: \enquote{Wir nehmen diesen Lidar, diese Kamera und diesen Rechner.} Das fühlt sich konkret an. Vielleicht entstehen sogar schnell erste Prototypen. Das Problem: Es ist noch nicht klar, welche Fähigkeiten wirklich benötigt werden. Später stellt sich heraus, dass die Kamera in dunklen Fluren schlecht funktioniert oder der Rechner für das KI-Modell zu schwach ist.
+
+Besser ist es, zuerst Funktionen, Anforderungen und Einsatzbedingungen zu beschreiben. Komponenten werden dann gezielt ausgewählt.
+
+\subsection{Fehler 2: Unklare Begriffe}
+Ein Stakeholder sagt \enquote{autonom}, ein anderer versteht darunter \enquote{ohne Fernsteuerung}, ein dritter versteht \enquote{ohne menschliche Aufsicht}. Solche Begriffe müssen geklärt werden. Für unser Projekt könnte \enquote{autonom} bedeuten: Der Roboter fährt innerhalb eines kartierten Bereichs selbstständig zu einem Ziel, ohne dass ein Mensch die Fahrt kontinuierlich steuert.
+
+\subsection{Fehler 3: Anforderungen sind nicht testbar}
+Formulierungen wie \enquote{schnell}, \enquote{zuverlässig}, \enquote{intuitiv} oder \enquote{robust} sind als erste Wünsche in Ordnung. Als Anforderungen reichen sie nicht aus. Testbare Anforderungen brauchen beobachtbare Kriterien. Sonst kann am Ende niemand eindeutig sagen, ob sie erfüllt wurden.
+
+\subsection{Fehler 4: Schnittstellen werden unterschätzt}
+Viele Probleme entstehen an Schnittstellen: zwischen Sensor und Software, zwischen Navigation und Motorsteuerung, zwischen Roboter und Ladestation, zwischen Bedienoberfläche und Missionsplanung. Wenn Schnittstellen nicht klar beschrieben sind, integrieren Teams ihre Teile erst spät und entdecken dann teure Fehler.
+
+\subsection{Fehler 5: Die Umgebung wird idealisiert}
+Ein Roboter fährt in der Simulation perfekt. Im echten Gebäude rutscht er auf glattem Boden, erkennt Glaswände schlecht, verliert WLAN oder wird durch Menschen blockiert. Systems Engineering erinnert daran, dass das System im realen Kontext funktionieren muss. Deshalb gehören Einsatzszenarien, Annahmen und Umgebungsbedingungen früh in die Betrachtung.
+
+\subsection{Fehler 6: Verifikation wird zu spät geplant}
+Verifikation bedeutet: Wir prüfen, ob das System die spezifizierten Anforderungen erfüllt. Wenn Tests erst am Ende überlegt werden, sind manche Anforderungen vielleicht gar nicht sinnvoll prüfbar. Besser ist es, bei jeder wichtigen Anforderung früh zu fragen: \enquote{Wie würden wir das später nachweisen?}
+
+\begin{hinweisbox}
+Eine einfache Kontrollfrage für jedes Projekt lautet: \enquote{Woran erkennen wir am Ende, dass wir fertig sind?} Wenn diese Frage nicht beantwortet werden kann, sind Zweck, Anforderungen oder Nachweise noch zu unklar.
+\end{hinweisbox}
+
+\section{Systems Engineering im Projektablauf}
+Systems Engineering ist kein einzelner Arbeitsschritt. Es begleitet das Projekt. Für den Einstieg kann man den Ablauf in einfache Schritte zerlegen.
+
+\subsection{Problem verstehen}
+Am Anfang steht nicht die Lösung, sondern das Problem. Wer braucht den Roboter? Welche Aufgabe soll er übernehmen? Was ist heute unbefriedigend? Welche Umgebung liegt vor? Welche Risiken gibt es?
+
+Für unser Beispiel: Botengänge kosten Zeit, sollen aber nicht durch ein unsicheres oder störendes System ersetzt werden. Das Problem ist also nicht \enquote{Wir brauchen ROS2}, sondern \enquote{Wir möchten interne Transporte zuverlässig automatisieren}.
+
+\subsection{Stakeholder und Kontext klären}
+Danach werden Stakeholder und Systemkontext beschrieben. Wer nutzt das System? Wer betreibt es? Wer wartet es? Welche externen Systeme sind beteiligt? Welche Regeln gelten?
+
+\subsection{Anforderungen ableiten}
+Aus Bedürfnissen und Kontext entstehen Anforderungen. Gute Anforderungen sind verständlich, eindeutig und prüfbar. In späteren Kapiteln werden wir Anforderungen ausführlicher behandeln.
+
+\subsection{Architektur entwickeln}
+Die Architektur beschreibt, aus welchen Hauptteilen das System besteht und wie diese zusammenarbeiten. Beim Roboter könnten Hauptteile sein: Wahrnehmung, Lokalisierung, Navigation, Antrieb, Energieversorgung, Nutzerschnittstelle und Sicherheitslogik.
+
+\subsection{Integration und Nachweis planen}
+Schon während der Architekturarbeit muss klar werden, wie das System integriert und getestet wird. Ein Roboter kann nicht erst ganz am Ende zum ersten Mal als Gesamtsystem ausprobiert werden. Man braucht schrittweise Integration: Sensor einzeln testen, Navigation in Simulation testen, Motorsteuerung abgesichert testen, Gesamtsystem in definierten Szenarien testen.
+
+\section{Zusammenfassung}
+Systems Engineering ist die Disziplin, komplexe Systeme ganzheitlich zu verstehen, zu strukturieren und nachweisbar zu entwickeln. Ein System besteht nicht nur aus Teilen, sondern aus dem Zusammenspiel dieser Teile in einem bestimmten Kontext. Beim autonomen Indoor-Roboter entstehen die wichtigen Fragen an den Übergängen: zwischen Sensorik und Software, zwischen Roboter und Mensch, zwischen Batterie und Mission, zwischen KI-Erkennung und Datenschutz, zwischen Navigation und Sicherheit.
+
+Für Einsteiger sind vier Grundgedanken besonders wichtig:
+
+\begin{itemize}
+    \item Zuerst das Problem verstehen, dann Lösungen auswählen.
+    \item Anforderungen und technische Lösungen bewusst unterscheiden.
+    \item Stakeholder, Systemgrenze und Kontext früh klären.
+    \item Nachweise und Tests nicht erst am Ende planen.
+\end{itemize}
+
+Dieses Kapitel bildet die Grundlage für den Rest des Buches. Im nächsten Kapitel geht es um Model-Based Systems Engineering. Dort übertragen wir die hier besprochenen Gedanken in ein Modell: Anforderungen, Funktionen, Strukturen, Verhalten, Schnittstellen und Tests werden nicht nur in Texten beschrieben, sondern systematisch miteinander verbunden.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Was ist ein System? Erklären Sie die Definition mit eigenen Worten.
+    \item Warum ist ein autonomer Indoor-Roboter mehr als eine Sammlung von Bauteilen?
+    \item Was ist der Unterschied zwischen einer Funktion und einer Komponente?
+    \item Warum sollte man Anforderungen und Lösungen unterscheiden?
+    \item Nennen Sie fünf Stakeholder eines autonomen Indoor-Roboters.
+    \item Welche Interessen könnten Nutzer, Wartungspersonal und Datenschutzverantwortliche jeweils haben?
+    \item Was versteht man unter einer Systemgrenze?
+    \item Warum ist die Frage wichtig, ob die Ladestation Teil des Systems ist?
+    \item Was ist ein Trade-off? Nennen Sie ein Beispiel aus dem Roboterprojekt.
+    \item Warum sollten Tests und Nachweise früh geplant werden?
+    \item Was ist an der Anforderung \enquote{Der Roboter soll zuverlässig sein} problematisch?
+    \item Nennen Sie drei typische Fehler am Anfang eines technischen Projekts.
+\end{enumerate}
+
+\section{Übungen}
+\begin{uebungbox}
+\textbf{Übung 1: Systembeschreibung formulieren}\\
+Beschreiben Sie den autonomen Indoor-Roboter in fünf bis acht Sätzen. Vermeiden Sie dabei konkrete Produktnamen oder Bauteiltypen. Markieren Sie anschließend farblich oder mit Symbolen, welche Wörter Funktionen, Stakeholder, Randbedingungen und mögliche Komponenten beschreiben.
+\end{uebungbox}
 
 \begin{uebungbox}
-Beschreiben Sie den autonomen Indoor-Roboter in fünf Sätzen. Markieren Sie anschließend, welche Wörter Funktionen, Komponenten, Stakeholder oder Randbedingungen beschreiben.
+\textbf{Übung 2: Stakeholderliste erstellen}\\
+Erstellen Sie eine Tabelle mit drei Spalten: Stakeholder, Interesse, mögliche Anforderung. Tragen Sie mindestens acht Stakeholder ein. Beispiel: Wartungspersonal, möchte Fehler schnell erkennen, benötigt Diagnoseinformationen über Sensorstatus und Akkuzustand.
 \end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 3: Systemgrenze diskutieren}\\
+Entscheiden Sie, ob die Ladestation in Ihrem Modell Teil des Systems sein soll oder ein externes System ist. Begründen Sie Ihre Entscheidung in fünf Sätzen. Notieren Sie anschließend drei Schnittstellen, die durch diese Entscheidung wichtig werden.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 4: Wünsche in Anforderungen übersetzen}\\
+Übersetzen Sie die folgenden Wünsche in überprüfbare Anforderungen: \enquote{Der Roboter soll sicher sein}, \enquote{Der Roboter soll einfach bedienbar sein}, \enquote{Der Roboter soll lange fahren}, \enquote{Der Roboter soll Menschen erkennen}. Achten Sie darauf, dass jede Anforderung später prinzipiell getestet werden kann.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 5: Trade-offs erkennen}\\
+Beschreiben Sie zwei Zielkonflikte im Roboterprojekt. Wählen Sie zum Beispiel Geschwindigkeit gegen Sicherheit oder Akkulaufzeit gegen Gewicht. Erklären Sie jeweils, welche Entscheidung Sie treffen würden und welche Information Ihnen für eine bessere Entscheidung noch fehlt.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Für den Einstieg in Systems Engineering lohnt sich zunächst ein praxisorientierter Zugang. Lesen Sie nicht nur Definitionen, sondern achten Sie darauf, wie Anforderungen, Architektur, Schnittstellen und Tests zusammenhängen. Besonders hilfreich sind Einführungen des International Council on Systems Engineering (INCOSE), Grundlagenwerke zum Systems Engineering sowie praxisnahe Darstellungen zu SysML und MBSE.
+
+Für dieses Lehrbuch sind außerdem die folgenden Themen als weiterführende Lektüre sinnvoll:
+
+\begin{itemize}
+    \item Grundlagen des Systems Engineering und des Systemdenkens
+    \item Anforderungsanalyse und Stakeholdermanagement
+    \item Verifikation und Validierung technischer Systeme
+    \item Model-Based Systems Engineering
+    \item SysML als Modellierungssprache für technische Systeme
+    \item Sicherheits- und Datenschutzfragen in autonomen Robotiksystemen
+\end{itemize}
+
+Die in späteren Kapiteln verwendete SysML-Literatur, insbesondere praxisnahe Einführungen in SysML, ist auch für dieses Kapitel nützlich, weil sie die Brücke vom allgemeinen Systems Engineering zur konkreten Modellierung schlägt.
