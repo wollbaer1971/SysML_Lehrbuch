@@ -1,31 +1,55 @@
-\chapter{Von SysML zu ROS2}
+\chapter{Von SysML v2 zu ROS2}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie SysML-Elemente auf ROS2-Elemente abbilden. Sie verstehen, warum Mapping für Traceability wichtig ist und wie Anforderungen, Blöcke, Ports, Datenflüsse und Tests mit Nodes, Topics, Services, Actions und Testcode verbunden werden können.
+Nach diesem Kapitel können Sie SysML-v2-Elemente auf ROS2-Elemente abbilden. Sie verstehen, warum Mapping für Traceability wichtig ist und wie Requirements, Part Definitions, Parts, Ports, Connections, Actions und Tests mit Nodes, Topics, Services, Actions und Testcode verbunden werden können.
 \end{lernziele}
 
 \section{Einleitung}
-Das SysML-Modell beschreibt die Architektur. ROS2 ist die Umsetzung. Ohne Verbindung zwischen beiden entsteht eine Lücke. Das Mapping schließt diese Lücke. Es zeigt, wie Modellentscheidungen in Softwareelemente übersetzt werden.
+Das SysML-v2-Modell beschreibt die Architektur. ROS2 ist die Umsetzung. Ohne Verbindung zwischen beiden entsteht eine Lücke. Das Mapping schließt diese Lücke. Es zeigt, wie Modellentscheidungen in Softwareelemente übersetzt werden.
 
 \section{Grundprinzip}
-Ein SysML-Block kann einem ROS2-Node entsprechen. Ein SysML-Port oder Datenfluss kann einem Topic entsprechen. Eine Funktion kann durch einen Node oder eine Gruppe von Nodes realisiert werden. Ein Use Case kann eine Action verwenden. Ein Testfall im Modell kann einem automatisierten Test entsprechen.
+Eine SysML-v2-Part-Definition kann einem ROS2-Node entsprechen, wenn sie eine klare softwarebezogene Verantwortung beschreibt. Ein Port oder eine Connection kann einem Topic, Service oder einer Action entsprechen. Eine Action im Modell kann durch einen Node oder eine Gruppe von Nodes realisiert werden. Ein Testfall im Modell kann einem automatisierten Test entsprechen.
+
+Nicht jedes Modellelement wird eins zu eins umgesetzt. Ein physisches Element wie \texttt{Camera} kann durch Hardware beschrieben werden, während die Ansteuerung über einen \texttt{camera\_node} erfolgt. Ein größeres Systemelement wie \texttt{NavigationSystem} kann aus mehreren Nodes bestehen.
 
 \section{Beispieltabelle}
 \begin{longtable}{p{45mm}p{45mm}p{45mm}}
 \toprule
-SysML-Element & ROS2-Element & Bemerkung\\
+SysML-v2-Element & ROS2-Element & Bemerkung\\
 \midrule
-ObjectDetector & \texttt{object\_detector\_node} & Führt ML-Inferenz aus\\
-Camera & \texttt{camera\_node} & Liefert Bilddaten\\
-NavigationSystem & \texttt{navigation\_node} & Plant und überwacht Bewegung\\
-BatterySystem & \texttt{battery\_monitor\_node} & Überwacht Akkustatus\\
-MotionControl & \texttt{motion\_control\_node} & Setzt Geschwindigkeitsbefehle um\\
-UserInterface & \texttt{user\_interface\_node} & Nimmt Aufträge entgegen\\
+Part Definition \texttt{ObjectDetector} & \texttt{object\_detector\_node} & Führt ML-Inferenz aus\\
+Part Definition \texttt{Camera} & \texttt{camera\_node} & Liefert Bilddaten\\
+Part Definition \texttt{NavigationSystem} & \texttt{navigation\_node} & Plant und überwacht Bewegung\\
+Part Definition \texttt{BatterySystem} & \texttt{battery\_monitor\_node} & Überwacht Akkustatus\\
+Part Definition \texttt{MotionControl} & \texttt{motion\_control\_node} & Setzt Geschwindigkeitsbefehle um\\
+Part Definition \texttt{UserInterface} & \texttt{user\_interface\_node} & Nimmt Aufträge entgegen\\
 \bottomrule
 \end{longtable}
 
+\section{Textuelles Mapping-Beispiel}
+In SysML v2 kann ein kleiner Ausschnitt des Modells direkt als Text formuliert werden:
+
+\begin{lstlisting}
+package AutonomousIndoorRobot {
+  part def BatterySystem;
+  part def NavigationSystem;
+
+  part def Robot {
+    part batterySystem: BatterySystem;
+    part navigationSystem: NavigationSystem;
+  }
+
+  requirement REQ_ReturnToDock {
+    doc /* Der Roboter muss bei niedrigem Akkustand
+           selbstständig zur Ladestation zurückkehren. */
+  }
+}
+\end{lstlisting}
+
+Das ROS2-Mapping ergänzt dazu die technische Entscheidung: \texttt{BatterySystem} wird durch \texttt{battery\_monitor\_node} realisiert, der den Akkustatus über \texttt{/battery\_state} veröffentlicht. \texttt{NavigationSystem} reagiert darauf und startet bei Bedarf eine Navigation zur Ladestation.
+
 \section{Mapping von Schnittstellen}
-Ports und Datenflüsse werden auf Topics, Services oder Actions abgebildet:
+Ports, Connections und modellierte Datenflüsse werden auf Topics, Services oder Actions abgebildet:
 
 \begin{itemize}
     \item Bilddaten: \texttt{/camera/image\_raw}
@@ -35,11 +59,13 @@ Ports und Datenflüsse werden auf Topics, Services oder Actions abgebildet:
     \item Zielnavigation: Action \texttt{NavigateToPose}
 \end{itemize}
 
+Für ein Einsteigermodell reicht zunächst die fachliche Richtung des Datenflusses. Später sollten Nachrichtentyp, Frequenz, Einheiten, QoS-Einstellungen und Fehlerfälle ergänzt werden.
+
 \section{Traceability}
-Das Mapping ist ein Teil der Traceability. Es zeigt, welche Implementierung eine Architekturkomponente realisiert.
+Das Mapping ist ein Teil der Traceability. Es zeigt, welche Implementierung eine Architekturentscheidung realisiert.
 
 \begin{praxisbox}
-REQ-004 \enquote{Personen erkennen} wird durch den Block \texttt{ObjectDetector} erfüllt. Dieser Block wird durch den ROS2-Node \texttt{object\_detector\_node} implementiert. Die Ergebnisse werden über \texttt{/detected\_objects} veröffentlicht und durch einen Testfall zur Personenerkennung geprüft.
+REQ-004 \enquote{Personen erkennen} wird durch die Part Definition \texttt{ObjectDetector} erfüllt. Diese Modellentscheidung wird durch den ROS2-Node \texttt{object\_detector\_node} umgesetzt. Die Ergebnisse werden über \texttt{/detected\_objects} veröffentlicht und durch einen Testfall zur Personenerkennung geprüft.
 \end{praxisbox}
 
 \section{Von Anforderungen bis Code}
@@ -47,8 +73,8 @@ Eine vollständige Kette kann so aussehen:
 
 \begin{verbatim}
 REQ-006 Zur Ladestation zurückkehren
--> Funktion: Akkustand überwachen
--> Block: BatterySystem
+-> Action: Akkustand überwachen
+-> Part Definition: BatterySystem
 -> Node: battery_monitor_node
 -> Topic: /battery_state
 -> Node: navigation_node
@@ -58,7 +84,7 @@ REQ-006 Zur Ladestation zurückkehren
 
 \section{Typische Fehler}
 \subsection{Eins-zu-eins-Zwang}
-Nicht jeder Block muss genau ein Node werden. Mapping ist eine bewusste Architekturentscheidung.
+Nicht jede Part Definition muss genau ein Node werden. Mapping ist eine bewusste Architekturentscheidung.
 
 \subsection{Mapping nicht pflegen}
 Wenn sich die ROS2-Architektur ändert, muss das Mapping aktualisiert werden. Sonst verliert die Traceability ihren Wert.
@@ -67,13 +93,13 @@ Wenn sich die ROS2-Architektur ändert, muss das Mapping aktualisiert werden. So
 Ein Mapping ohne Topic-Namen, Nachrichtentypen oder Verantwortlichkeiten ist zu ungenau.
 
 \section{Mapping als lebendes Artefakt}
-Das Mapping ist kein einmaliges Abschlussdokument. Es wächst mit dem Projekt. Am Anfang reicht eine grobe Tabelle: Block zu Node, Datenfluss zu Topic. Später kommen Nachrichtentypen, Parameter, Launch-Dateien und Tests hinzu.
+Das Mapping ist kein einmaliges Abschlussdokument. Es wächst mit dem Projekt. Am Anfang reicht eine grobe Tabelle: Part Definition zu Node, Connection zu Topic. Später kommen Nachrichtentypen, Parameter, Launch-Dateien und Tests hinzu.
 
 Eine gute Mapping-Tabelle kann zusätzliche Spalten enthalten:
 
 \begin{itemize}
-    \item SysML-Block
-    \item Funktion
+    \item SysML-v2-Element
+    \item Action oder Verantwortung
     \item ROS2-Node
     \item Topic, Service oder Action
     \item Nachrichtentyp
@@ -82,16 +108,16 @@ Eine gute Mapping-Tabelle kann zusätzliche Spalten enthalten:
     \item Status der Umsetzung
 \end{itemize}
 
-Damit wird das Mapping zu einem Arbeitsmittel. Es hilft bei Reviews, bei der Codeplanung und beim Erkennen von Lücken. Wenn ein wichtiger Block keinen Node und keinen Test besitzt, ist das ein Signal für weitere Klärung.
+Damit wird das Mapping zu einem Arbeitsmittel. Es hilft bei Reviews, bei der Codeplanung und beim Erkennen von Lücken. Wenn ein wichtiges Modellelement keinen Node und keinen Test besitzt, ist das ein Signal für weitere Klärung.
 
 \section{Zusammenfassung}
-Das SysML-ROS2-Mapping verbindet Modell und Umsetzung. Es hilft, Anforderungen bis zur Software nachzuverfolgen und Änderungen gezielt zu analysieren. Für dieses Lehrbuch ist es die zentrale Brücke zwischen MBSE und praktischer Robotiksoftware.
+Das SysML-v2-ROS2-Mapping verbindet Modell und Umsetzung. Es hilft, Anforderungen bis zur Software nachzuverfolgen und Änderungen gezielt zu analysieren. Für dieses Lehrbuch ist es die zentrale Brücke zwischen MBSE und praktischer Robotiksoftware.
 
 \section{Kontrollfragen}
 \begin{enumerate}
-    \item Warum ist Mapping zwischen SysML und ROS2 wichtig?
-    \item Welche SysML-Elemente können auf ROS2-Nodes abgebildet werden?
-    \item Welche SysML-Elemente passen zu Topics?
+    \item Warum ist Mapping zwischen SysML v2 und ROS2 wichtig?
+    \item Welche SysML-v2-Elemente können auf ROS2-Nodes abgebildet werden?
+    \item Welche SysML-v2-Elemente passen zu Topics?
     \item Warum muss Mapping gepflegt werden?
     \item Warum ist ein Eins-zu-eins-Mapping nicht immer sinnvoll?
     \item Erklären Sie eine Traceability-Kette für Batteriemanagement.
@@ -100,13 +126,13 @@ Das SysML-ROS2-Mapping verbindet Modell und Umsetzung. Es hilft, Anforderungen b
 \section{Übungen}
 \begin{uebungbox}
 \textbf{Übung 1: Mapping-Tabelle}\\
-Erstellen Sie eine Mapping-Tabelle für alle Hauptblöcke Ihres BDD.
+Erstellen Sie eine Mapping-Tabelle für die wichtigsten Part Definitions Ihres Robotermodells.
 \end{uebungbox}
 
 \begin{uebungbox}
 \textbf{Übung 2: Vollständige Kette}\\
-Erstellen Sie eine Kette von einer Anforderung über Block, Node, Topic und Testfall für die Hinderniserkennung.
+Erstellen Sie eine Kette von einer Anforderung über Part Definition, Node, Topic und Testfall für die Hinderniserkennung.
 \end{uebungbox}
 
 \section{Literaturhinweise}
-Das Mapping verbindet SysML-Grundlagen \cite{delligatti2014,friedenthal2014} mit ROS2-Kommunikation \cite{ros2docs}. In realen Projekten wird diese Verbindung oft projektspezifisch definiert.
+Das Mapping verbindet SysML-v2-Modellierung \cite{sysmlv2spec,sysmlv2pilot} mit ROS2-Kommunikation \cite{ros2docs}. In realen Projekten wird diese Verbindung oft projektspezifisch definiert.

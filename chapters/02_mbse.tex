@@ -204,7 +204,7 @@ Eine einfache Startstruktur für das Modell könnte so aussehen:
     \item Paket \enquote{Tests und Verifikation}
 \end{itemize}
 
-Ein Paket ist hier zunächst nur ein Ordnungsbereich. Es hilft, das Modell übersichtlich zu halten. Später werden wir in Enterprise Architect sehen, wie solche Pakete konkret angelegt werden können.
+Ein Paket ist hier zunächst nur ein Ordnungsbereich. Es hilft, das Modell übersichtlich zu halten. Später werden wir sehen, wie solche Pakete als SysML-v2-Dateien und Namespaces konkret angelegt werden können.
 
 \subsection{Beispielkette: Hinderniserkennung}
 Betrachten wir eine typische Modellkette:
@@ -272,13 +272,13 @@ Ein gutes Modell enthält nicht jedes Detail. Es enthält die Details, die für 
 Ein Modell unterstützt Kommunikation, ersetzt sie aber nicht. Menschen müssen weiterhin Fragen stellen, Entscheidungen treffen und Annahmen klären. Das Modell dokumentiert und verknüpft die Ergebnisse.
 
 \subsection{Missverständnis 3: Das Werkzeug macht das Engineering}
-Enterprise Architect oder ein anderes Modellierungswerkzeug kann Beziehungen speichern, Diagramme erzeugen und Konsistenzprüfungen unterstützen. Es entscheidet aber nicht, welche Anforderungen sinnvoll sind oder welche Architektur gut ist. Das bleibt Ingenieursarbeit.
+Ein SysML-v2-Werkzeug kann Beziehungen prüfen, Sichten erzeugen und Konsistenzprüfungen unterstützen. Es entscheidet aber nicht, welche Anforderungen sinnvoll sind oder welche Architektur gut ist. Das bleibt Ingenieursarbeit.
 
 \subsection{Missverständnis 4: MBSE ist nur für große Konzerne}
 MBSE wird oft mit großen Luftfahrt-, Automobil- oder Raumfahrtprojekten verbunden. Die Grundidee ist aber auch für kleine Projekte nützlich. Gerade ein Lernprojekt profitiert davon, weil Zusammenhänge sichtbar werden. Man muss nur den Umfang passend wählen.
 
 \begin{hinweisbox}
-Für dieses Lehrbuch gilt: Wir modellieren so viel, dass die Zusammenhänge zwischen SysML, Enterprise Architect und ROS2 verständlich werden. Wir modellieren nicht jedes denkbare Detail des Roboters.
+Für dieses Lehrbuch gilt: Wir modellieren so viel, dass die Zusammenhänge zwischen SysML v2, MBSE und ROS2 verständlich werden. Wir modellieren nicht jedes denkbare Detail des Roboters.
 \end{hinweisbox}
 
 \section{Ein pragmatischer Einstieg in MBSE}
@@ -380,7 +380,7 @@ Beim Indoor-Roboter könnten Testsichten zeigen:
 Diese Sicht verhindert, dass Tests erst am Ende erfunden werden. Gute Tests entstehen parallel zum Systemverständnis.
 
 \section{Vom MBSE-Modell zur ROS2-Architektur}
-Ein zentrales Ziel dieses Lehrbuchs ist die Verbindung von SysML, Enterprise Architect und ROS2. Deshalb ist es wichtig, früh zu verstehen, wie ein Systemmodell zur späteren Softwarestruktur führen kann.
+Ein zentrales Ziel dieses Lehrbuchs ist die Verbindung von SysML v2, MBSE und ROS2. Deshalb ist es wichtig, früh zu verstehen, wie ein Systemmodell zur späteren Softwarestruktur führen kann.
 
 Der Übergang erfolgt nicht automatisch. Ein SysML-Block wird nicht durch Zauberei zu einer ROS2-Node. Aber das Modell kann systematisch vorbereiten, welche Softwareeinheiten sinnvoll sind und wie sie miteinander kommunizieren.
 

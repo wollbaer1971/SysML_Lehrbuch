@@ -1,0 +1,166 @@
+\chapter{Werkzeuge für SysML v2 einrichten}
+
+\begin{lernziele}
+Nach diesem Kapitel können Sie erklären, warum dieses Lehrbuch eine textuelle SysML-v2-Arbeitsweise verwendet. Sie können ein einfaches Projekt in VS Code mit dem Syside Editor anlegen, SysML-v2-Dateien strukturieren und grafische Sichten als Ergänzung einordnen. Außerdem verstehen Sie, warum ein Werkzeug fachliches Modellieren unterstützt, aber nicht ersetzt.
+\end{lernziele}
+
+\section{Einleitung}
+SysML v2 kann grafisch und textuell verwendet werden. Für dieses Lehrbuch steht die textuelle Notation im Vordergrund. Das passt gut zu modernen Entwicklungsabläufen: Modelle liegen in Dateien, können versioniert, verglichen, überprüft und gemeinsam mit Code gepflegt werden.
+
+Als kostenloser Einstieg eignet sich der Syside Editor für VS Code. Er unterstützt SysML-v2-Dateien mit Syntaxhervorhebung, Autovervollständigung, Formatierung, Gliederung und Validierung. Für grafische Sichten kann zusätzlich Eclipse SysON genutzt werden. SysON ist ein webbasiertes Open-Source-Werkzeug für SysML-v2-Modelle.
+
+\begin{hinweisbox}
+Ein Werkzeug löst keine Modellierungsaufgabe automatisch. Es hilft beim Schreiben, Prüfen und Anzeigen des Modells. Die fachliche Entscheidung bleibt Ihre Aufgabe: Welche Elemente gibt es? Welche Beziehungen sind wichtig? Welche Anforderungen müssen nachverfolgbar sein?
+\end{hinweisbox}
+
+\section{Warum textuelle Modellierung?}
+Viele Einsteiger erwarten bei SysML zuerst Diagramme. Diagramme bleiben wichtig, aber SysML v2 macht den Modellinhalt stärker als präzisen Text zugänglich. Ein Modell kann dadurch ähnlich behandelt werden wie Quellcode.
+
+Textuelle Modellierung hat mehrere Vorteile:
+
+\begin{itemize}
+    \item Modelle lassen sich in Git versionieren.
+    \item Änderungen sind als Textvergleich sichtbar.
+    \item Beispiele können direkt im Lehrbuch gezeigt werden.
+    \item Modellteile können leichter wiederverwendet werden.
+    \item Validierung und Automatisierung werden einfacher.
+    \item ROS2-Code und SysML-v2-Modell können im selben Projekt liegen.
+\end{itemize}
+
+Das bedeutet nicht, dass Diagramme unwichtig werden. Diagramme sind weiterhin wertvolle Sichten. Der Unterschied ist: Das Modell entsteht nicht nur durch Zeichnen, sondern durch präzise definierte Modellelemente.
+
+\section{Empfohlene Werkzeugkette}
+Für dieses Lehrbuch verwenden wir eine einfache Werkzeugkette:
+
+\begin{itemize}
+    \item VS Code als Editor
+    \item Syside Editor als SysML-v2-Erweiterung
+    \item Git für Versionsverwaltung
+    \item optional Eclipse SysON für grafische Sichten
+    \item optional das SysML-v2-Pilotprojekt als Referenz für fortgeschrittene Experimente
+\end{itemize}
+
+Diese Auswahl ist bewusst pragmatisch. Sie ist kostenlos zugänglich, passt zu textueller Modellierung und überfordert Einsteiger weniger als große industrielle Modellierungsumgebungen.
+
+\section{Projekt anlegen}
+Für das Lehrbuch verwenden wir ein Projekt mit dem Namen \texttt{AutonomousIndoorRobot}. Der Name ist bewusst englisch, weil spätere ROS2-Pakete, Nodes und Topics ebenfalls englische technische Bezeichnungen verwenden. Die erklärenden Texte im Modell können trotzdem deutsch sein.
+
+Eine einfache Projektstruktur kann so aussehen:
+
+\begin{verbatim}
+AutonomousIndoorRobot/
+  model/
+    00_overview.sysml
+    01_context.sysml
+    02_requirements.sysml
+    03_structure.sysml
+    04_behavior.sysml
+    05_interfaces.sysml
+    06_tests.sysml
+    07_ros2_mapping.sysml
+  code/
+    status_node.py
+    battery_monitor_node.py
+  docs/
+    decisions.md
+\end{verbatim}
+
+Die Dateien im Ordner \texttt{model} enthalten das SysML-v2-Modell. Der Ordner \texttt{code} enthält spätere ROS2-Beispiele. Der Ordner \texttt{docs} kann kurze Architekturentscheidungen aufnehmen.
+
+\section{Erste SysML-v2-Datei}
+Eine erste Datei \texttt{00\_overview.sysml} kann den Projektrahmen beschreiben:
+
+\begin{lstlisting}
+package AutonomousIndoorRobot {
+  doc
+  /* Ein Lernmodell für einen autonomen Indoor-Roboter.
+     Das Modell verbindet Anforderungen, Struktur, Verhalten,
+     Schnittstellen, ROS2-Mapping und Tests. */
+
+  part def Robot;
+}
+\end{lstlisting}
+
+Dieses Beispiel ist noch sehr klein. Es zeigt aber bereits eine wichtige Idee: Das System wird nicht als loses Bild begonnen, sondern als benannter Modellraum mit einem ersten Systemelement.
+
+\section{Empfohlene Modellstruktur}
+Die Modellstruktur orientiert sich an den wichtigsten Fragen des Projekts:
+
+\begin{itemize}
+    \item \texttt{00\_overview.sysml}: Ziel, Umfang und Systemgrenze
+    \item \texttt{01\_context.sysml}: Stakeholder, externe Systeme und Umgebung
+    \item \texttt{02\_requirements.sysml}: Anforderungen und Beziehungen
+    \item \texttt{03\_structure.sysml}: Systemteile, Subsysteme und Komponenten
+    \item \texttt{04\_behavior.sysml}: Aktionen, Abläufe und Zustände
+    \item \texttt{05\_interfaces.sysml}: Ports, Verbindungen und Datenflüsse
+    \item \texttt{06\_tests.sysml}: Testfälle und Verifikation
+    \item \texttt{07\_ros2\_mapping.sysml}: Zuordnung zu ROS2-Nodes, Topics, Services und Actions
+\end{itemize}
+
+Diese Struktur ist bewusst schlicht. Sie trennt die wichtigsten Modellbereiche, ohne schon zu Beginn ein kompliziertes Metamodell einzuführen.
+
+\section{Namenskonventionen}
+Klare Namen machen Modelle lesbar. Für dieses Lehrbuch verwenden wir einfache Regeln:
+
+\begin{itemize}
+    \item Packages: \texttt{AutonomousIndoorRobot}
+    \item Part Definitions: \texttt{Robot}, \texttt{BatterySystem}, \texttt{NavigationSystem}
+    \item Parts: \texttt{batterySystem}, \texttt{navigationSystem}
+    \item Actions: \texttt{MonitorBattery}, \texttt{NavigateToGoal}
+    \item Requirements: \texttt{REQ\_DetectObstacles}, \texttt{REQ\_ReturnToDock}
+    \item Testfälle: \texttt{TC\_BatteryLowReturn}
+    \item ROS2-Nodes: \texttt{battery\_monitor\_node}
+    \item Topics: \texttt{/battery\_state}, \texttt{/cmd\_vel}
+\end{itemize}
+
+Vermeiden Sie wechselnde Namen für dasselbe Element. Wenn ein Element einmal \texttt{BatterySystem} heißt, sollte es nicht an anderer Stelle \texttt{PowerModule} genannt werden, außer Sie modellieren bewusst unterschiedliche Dinge.
+
+\section{Grafische Sichten}
+Grafische Sichten sind besonders hilfreich, wenn ein Team schnell über Struktur oder Schnittstellen sprechen möchte. In SysML v2 sollte man sie als Darstellung des Modells verstehen, nicht als Ersatz für das Modell.
+
+Eclipse SysON kann für solche Sichten interessant sein. Es ist besonders dann nützlich, wenn Sie aus dem textuellen Modell heraus Struktur-, Verbindungs- oder Anforderungssichten visualisieren wollen. Für den Einstieg in diesem Buch reicht es aber, zunächst die textuelle Notation sauber zu verstehen.
+
+\section{Typische Anfängerfehler}
+\subsection{Text wie Programmcode ohne Bedeutung schreiben}
+SysML-v2-Text sieht teilweise wie Code aus. Trotzdem modellieren Sie kein Programm, sondern ein System. Fragen Sie bei jedem Element: Welche fachliche Aussage steckt dahinter?
+
+\subsection{Zu früh zu viele Dateien anlegen}
+Eine klare Struktur hilft, aber zu viele leere Dateien machen den Einstieg schwer. Beginnen Sie mit Überblick, Anforderungen und Struktur. Verhalten, Tests und Mapping können anschließend wachsen.
+
+\subsection{Diagramme als Wahrheit behandeln}
+Ein Diagramm zeigt nur eine Sicht. Die eigentliche Wahrheit liegt im Modell und seinen Beziehungen. Wenn Diagramm und Modell auseinanderlaufen, muss das Modell geklärt werden.
+
+\subsection{Werkzeugvalidierung mit Modellqualität verwechseln}
+Ein syntaktisch gültiges Modell kann fachlich trotzdem schlecht sein. Validierung findet Schreibfehler und Regelverstöße, aber keine unklare Systemgrenze oder fehlende Sicherheitsanforderung.
+
+\section{Zusammenfassung}
+Dieses Lehrbuch verwendet SysML v2 textuell und einsteigerfreundlich. VS Code mit dem Syside Editor ist die empfohlene kostenlose Arbeitsumgebung. Eclipse SysON kann grafische Sichten ergänzen. Entscheidend bleibt aber nicht das Werkzeug, sondern ein verständliches, konsistentes und nachverfolgbares Modell.
+
+\section{Kontrollfragen}
+\begin{enumerate}
+    \item Warum eignet sich textuelle Modellierung gut für SysML v2?
+    \item Welche Rolle spielt der Syside Editor in diesem Lehrbuch?
+    \item Warum sind grafische Sichten trotzdem nützlich?
+    \item Welche Dateien enthält die empfohlene Modellstruktur?
+    \item Warum sollten Modellelemente einheitlich benannt werden?
+    \item Warum ersetzt Werkzeugvalidierung keine fachliche Modellprüfung?
+\end{enumerate}
+
+\section{Übungen}
+\begin{uebungbox}
+\textbf{Übung 1: Projektstruktur anlegen}\\
+Legen Sie die empfohlene Ordnerstruktur für \texttt{AutonomousIndoorRobot} an. Erstellen Sie eine Datei \texttt{00\_overview.sysml} und beschreiben Sie Ziel, Umfang und Systemgrenze des Roboterprojekts.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 2: Namensregeln anwenden}\\
+Formulieren Sie Namen für fünf Anforderungen, drei Testfälle, fünf Part Definitions und vier ROS2-Topics. Achten Sie auf einheitliche Schreibweise.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 3: Sicht statt Wahrheit}\\
+Beschreiben Sie in drei Sätzen, warum ein Diagramm in SysML v2 nur eine Sicht auf das Modell ist.
+\end{uebungbox}
+
+\section{Literaturhinweise}
+Für die praktische Arbeit mit SysML v2 sind die Dokumentation des Syside Editors, das Eclipse-SysON-Projekt und das SysML-v2-Pilotprojekt hilfreich \cite{syside,syson,sysmlv2pilot}. Für die fachliche Einordnung bleiben klassische SysML- und MBSE-Grundlagen nützlich, müssen aber bewusst auf SysML v2 übertragen werden.

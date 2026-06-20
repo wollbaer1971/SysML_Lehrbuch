@@ -1,6 +1,6 @@
 # SysML_Lehrbuch
 
-LaTeX-Lehrbuch für Einsteiger: **SysML, Enterprise Architect und ROS2** am Beispiel eines autonomen Indoor-Roboters.
+LaTeX-Lehrbuch für Einsteiger: **SysML v2, MBSE und ROS2** am Beispiel eines autonomen Indoor-Roboters.
 
 ## Struktur
 
@@ -39,17 +39,17 @@ pdflatex main.tex
 
 ## Zielgruppe
 
-Einsteiger ohne Vorkenntnisse in SysML, Enterprise Architect oder ROS2.
+Einsteiger ohne Vorkenntnisse in SysML v2, MBSE oder ROS2.
 
 ## Inhalt
 
 Das Lehrbuch behandelt:
 - Systems Engineering
 - MBSE
-- SysML-Grundlagen
-- Enterprise Architect
+- SysML-v2-Grundlagen
+- kostenlose SysML-v2-Werkzeuge mit VS Code, Syside Editor und optional SysON
 - Anforderungen
-- BDD und IBD
+- Struktur- und Schnittstellensichten
 - Verhaltensmodellierung
 - ROS2-Grundlagen
 - Mapping von SysML auf ROS2
