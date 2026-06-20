@@ -33,35 +33,16 @@ Ereignisse lösen Übergänge aus. Beispiele:
 \end{itemize}
 
 \section{Beispiel}
-In SysML v2 wird eine State Machine mit \texttt{state def} modelliert. Jeder Zustand
-kann Übergänge mit \texttt{transition} enthalten:
-
-\begin{lstlisting}
-state def RobotOperation {
-  entry; then idle;
-
-  state idle {
-    transition accept GoalReceived then navigating;
-  }
-  state navigating {
-    transition accept ObstacleDetected then avoidingObstacle;
-    transition accept BatteryLow      then returnToDock;
-    transition accept ErrorDetected   then error;
-  }
-  state avoidingObstacle {
-    transition accept PathFree then navigating;
-  }
-  state returnToDock {
-    transition accept DockReached then charging;
-  }
-  state charging {
-    transition accept ChargingComplete then idle;
-  }
-  state error {
-    transition accept Reset then idle;
-  }
-}
-\end{lstlisting}
+\begin{verbatim}
+Idle --GoalReceived--> Navigating
+Navigating --ObstacleDetected--> AvoidingObstacle
+AvoidingObstacle --PathFree--> Navigating
+Navigating --BatteryLow--> ReturnToDock
+ReturnToDock --DockReached--> Charging
+Charging --ChargingComplete--> Idle
+Navigating --ErrorDetected--> Error
+Error --Reset--> Idle
+\end{verbatim}
 
 \section{Guard-Bedingungen}
 Guards sind Bedingungen an Übergängen. Ein Übergang findet nur statt, wenn die Bedingung erfüllt ist. Beispiel: \texttt{GoalReceived [batteryOk]} führt zu \texttt{Navigating}. Wenn der Akku nicht ausreichend ist, führt das Ereignis vielleicht zu \texttt{ReturnToDock} oder zu einer Ablehnung des Auftrags.
