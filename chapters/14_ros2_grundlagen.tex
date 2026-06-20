@@ -10,7 +10,7 @@ Bis hierher haben wir den Roboter vor allem aus Systems-Engineering- und SysML-S
 \section{Was ist ROS2?}
 \gls{ros2} ist ein Framework für Robotiksoftware. Es stellt Kommunikationsmechanismen, Werkzeuge und Konventionen bereit. ROS2 ist kein Betriebssystem im klassischen Sinn, sondern eine Middleware und Entwicklungsumgebung.
 
-ROS2 hilft dabei, ein Robotiksystem aus mehreren Programmen aufzubauen, die miteinander Nachrichten austauschen. Das passt sehr gut zu unserem SysML-Modell: Blöcke, Schnittstellen und Datenflüsse können später auf Nodes, Topics, Services und Actions abgebildet werden.
+ROS2 hilft dabei, ein Robotiksystem aus mehreren Programmen aufzubauen, die miteinander Nachrichten austauschen. Das passt sehr gut zu unserem SysML-Modell: Systemteile (\texttt{part def}), Schnittstellen und Datenflüsse können später auf Nodes, Topics, Services und Actions abgebildet werden.
 
 \section{Nodes}
 Ein Node ist ein ausführbares Programm mit einer klaren Aufgabe. Beispiele:
@@ -58,7 +58,7 @@ Parameter erlauben Konfiguration. Ein Node kann Parameter wie maximale Geschwind
 Launch-Dateien starten mehrere Nodes gemeinsam mit passenden Parametern. Für den Roboter könnte eine Launch-Datei Kamera, Lidar, Navigation, Batteriemonitor und Objekterkennung starten.
 
 \section{Zusammenhang mit SysML}
-SysML beschreibt die Architektur auf Modellebene. ROS2 setzt sie technisch um. Ein SysML-Block kann zu einem Node werden. Ein IBD-Datenfluss kann zu einem Topic werden. Ein Use Case \enquote{Ziel anfahren} kann später eine Action nutzen.
+SysML beschreibt die Architektur auf Modellebene. ROS2 setzt sie technisch um. Ein SysML-Systemelement (\texttt{part def}) kann zu einem Node werden. Ein Verbindungsmodell-Datenfluss kann zu einem Topic werden. Ein Use Case \enquote{Ziel anfahren} kann später eine Action nutzen.
 
 \section{Typische Fehler}
 \subsection{Nodes nach Zufall schneiden}

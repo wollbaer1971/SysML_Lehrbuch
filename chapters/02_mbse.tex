@@ -64,7 +64,7 @@ Ein Modellelement kann zum Beispiel sein:
     \item eine Anforderung
     \item ein Stakeholder
     \item eine Funktion
-    \item ein Block oder Teilsystem
+    \item ein Systemelement (\texttt{part def}) oder Teilsystem
     \item eine Schnittstelle
     \item ein Datenfluss
     \item ein Zustand
@@ -77,7 +77,7 @@ Die Beziehungen sind mindestens genauso wichtig wie die Elemente. Eine Anforderu
 \subsection{Modell statt Bild}
 Für Einsteiger ist dieser Punkt besonders wichtig: Ein Diagramm ist nicht automatisch ein Modell. Ein Diagramm kann nur ein Bild sein. Wenn man in PowerPoint Kästen und Pfeile zeichnet, sieht das vielleicht wie ein Architekturmodell aus. Die Kästen wissen aber nichts voneinander. Wenn derselbe Block in drei Diagrammen vorkommt, sind das in PowerPoint drei getrennte grafische Objekte.
 
-In einem echten Modellierungswerkzeug ist ein Diagramm dagegen eine Sicht auf Modellelemente. Der Block \enquote{Navigation} existiert im Modell. Er kann in mehreren Diagrammen erscheinen. Wenn sein Name geändert wird, sollte die Änderung überall sichtbar werden. Wenn eine Anforderung mit diesem Block verknüpft ist, kann das Werkzeug diese Beziehung anzeigen.
+In einem echten Modellierungswerkzeug ist ein Diagramm dagegen eine Sicht auf Modellelemente. Das Systemelement \texttt{NavigationSystem} existiert im Modell. Er kann in mehreren Diagrammen erscheinen. Wenn sein Name geändert wird, sollte die Änderung überall sichtbar werden. Wenn eine Anforderung mit diesem Block verknüpft ist, kann das Werkzeug diese Beziehung anzeigen.
 
 \begin{hinweisbox}
 Ein MBSE-Modell ist nicht gut, weil es hübsche Diagramme enthält. Es ist gut, wenn es wichtige Fragen beantwortet: Was muss das System leisten? Welche Teile erfüllen welche Anforderungen? Welche Schnittstellen gibt es? Was passiert bei einer Änderung? Wie wird die Erfüllung nachgewiesen?
@@ -118,7 +118,7 @@ Funktionen beschreiben, was das System tut. Sie liegen zwischen Anforderungen un
 \end{itemize}
 
 \subsection{Struktur}
-Die Struktur beschreibt, aus welchen Hauptteilen das System besteht. In SysML werden dafür später Blöcke verwendet. Für den Einstieg kann man an Teilsysteme denken:
+Die Struktur beschreibt, aus welchen Hauptteilen das System besteht. In SysML werden dafür später Systemteile mit \texttt{part def} definiert. Für den Einstieg kann man an Teilsysteme denken:
 
 \begin{itemize}
     \item Fahrwerk
@@ -294,7 +294,7 @@ Danach werden wichtige Anforderungen gesammelt. Sie müssen am Anfang noch nicht
 Aus Anforderungen werden Funktionen abgeleitet. Wenn der Roboter automatisch zur Ladestation zurückkehren soll, braucht er Funktionen wie \enquote{Akkustand überwachen}, \enquote{Ladestation lokalisieren} und \enquote{Rückkehr planen}.
 
 \subsection{Schritt 4: Struktur entwerfen}
-Dann wird überlegt, welche Systemelemente die Funktionen realisieren. Hier entstehen erste Blöcke, Teilsysteme oder Komponenten. Beim Roboter sind das zum Beispiel Sensorik, Navigation, Energieversorgung und Bedienung.
+Dann wird überlegt, welche Systemelemente die Funktionen realisieren. Hier entstehen erste Systemteile (\texttt{part def}), Teilsysteme oder Komponenten. Beim Roboter sind das zum Beispiel Sensorik, Navigation, Energieversorgung und Bedienung.
 
 \subsection{Schritt 5: Schnittstellen beschreiben}
 Schnittstellen sollten früh beschrieben werden. Wer liefert welche Daten? Wer benötigt welche Information? Welche Signale, Nachrichten oder Energieflüsse gibt es?
@@ -382,7 +382,7 @@ Diese Sicht verhindert, dass Tests erst am Ende erfunden werden. Gute Tests ents
 \section{Vom MBSE-Modell zur ROS2-Architektur}
 Ein zentrales Ziel dieses Lehrbuchs ist die Verbindung von SysML v2, MBSE und ROS2. Deshalb ist es wichtig, früh zu verstehen, wie ein Systemmodell zur späteren Softwarestruktur führen kann.
 
-Der Übergang erfolgt nicht automatisch. Ein SysML-Block wird nicht durch Zauberei zu einer ROS2-Node. Aber das Modell kann systematisch vorbereiten, welche Softwareeinheiten sinnvoll sind und wie sie miteinander kommunizieren.
+Der Übergang erfolgt nicht automatisch. Ein SysML-Systemelement wird nicht durch Zauberei zu einer ROS2-Node. Aber das Modell kann systematisch vorbereiten, welche Softwareeinheiten sinnvoll sind und wie sie miteinander kommunizieren.
 
 \subsection{Funktionen als Ausgangspunkt}
 Am Anfang stehen Funktionen. Funktionen beschreiben, was das System tun muss. Für den Roboter sind das zum Beispiel \enquote{Umgebung erfassen}, \enquote{Position bestimmen}, \enquote{Route planen}, \enquote{Hindernisse vermeiden}, \enquote{Personen erkennen} und \enquote{Akkustand überwachen}.
