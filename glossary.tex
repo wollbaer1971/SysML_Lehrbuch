@@ -1,8 +1,8 @@
 \newacronym{mbse}{MBSE}{Model-Based Systems Engineering}
 \newacronym{sysml}{SysML}{Systems Modeling Language}
 \newacronym{ros2}{ROS2}{Robot Operating System 2}
-\newacronym{bdd}{BDD}{Block Definition Diagram}
-\newacronym{ibd}{IBD}{Internal Block Diagram}
+\newacronym{bdd}{BDD}{Block Definition Diagram (SysML v1)}
+\newacronym{ibd}{IBD}{Internal Block Diagram (SysML v1)}
 \newacronym{slam}{SLAM}{Simultaneous Localization and Mapping}
 \newacronym{ml}{ML}{Machine Learning}
 \newacronym{api}{API}{Application Programming Interface}
@@ -13,7 +13,11 @@
 }
 \newglossaryentry{block}{
     name=Block,
-    description={Zentrales Strukturelement in SysML zur Beschreibung von Komponenten, Subsystemen oder logischen Einheiten}
+    description={Strukturelement in SysML v1. In SysML v2 ersetzt durch \texttt{part def} (Typdefinition) und \texttt{part} (Instanz)}
+}
+\newglossaryentry{partdef}{
+    name=part def,
+    description={Typdefinition in SysML v2. Entspricht dem Block aus SysML v1. Definiert, welche Eigenschaften und Teile ein Systemelement besitzen kann}
 }
 \newglossaryentry{node}{
     name=ROS2-Node,
