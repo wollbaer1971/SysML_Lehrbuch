@@ -1,132 +1,172 @@
-\chapter{Block Definition Diagram}
+\chapter{Strukturmodellierung mit \texttt{part def}}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie die Hauptstruktur des Roboters als Block Definition Diagram modellieren. Sie verstehen Blöcke, Teil-Ganzes-Beziehungen, Dekomposition und den Unterschied zwischen logischen, physischen und softwarebezogenen Blöcken.
+Nach diesem Kapitel können Sie die Hauptstruktur des Roboters als SysML-v2-Strukturmodell beschreiben. Sie verstehen \texttt{part def}, \texttt{part}, Teil-Ganzes-Beziehungen und Dekomposition. Außerdem kennen Sie den Unterschied zwischen logischen, physischen und softwarebezogenen Systemteilen.
 \end{lernziele}
 
 \section{Einleitung}
-Das \gls{bdd} ist eines der wichtigsten SysML-Diagramme für den Einstieg. Es zeigt, aus welchen Bausteinen ein System besteht und wie diese Bausteine strukturell zusammenhängen. Beim autonomen Indoor-Roboter hilft das BDD, Ordnung in Sensorik, Navigation, Antrieb, Energieversorgung, Bedienung und Software zu bringen.
+Die Strukturmodellierung ist einer der wichtigsten Einstiegspunkte in ein MBSE-Projekt. Sie zeigt, aus welchen Bausteinen ein System besteht und wie diese strukturell zusammenhängen. Beim autonomen Indoor-Roboter hilft die Strukturmodellierung, Ordnung in Sensorik, Navigation, Antrieb, Energieversorgung, Bedienung und Software zu bringen.
 
-\section{Zweck des BDD}
-Ein Block kann Hardware, Software, Mensch, Datenobjekt oder abstrakte Funktion darstellen. Im BDD wird sichtbar, welche Blöcke existieren und welche Beziehungen zwischen ihnen bestehen.
+In SysML v2 erfolgt die Strukturmodellierung textuell mit \texttt{part def} und \texttt{part}. \texttt{part def} definiert den Typ eines Systemelements. \texttt{part} erzeugt eine benannte Instanz dieses Typs als Teil eines übergeordneten Elements.
 
-Typische Fragen:
+\begin{hinweisbox}
+SysML v1 verwendete den Begriff \enquote{Block} und das Block Definition Diagram (BDD). In SysML v2 wird beides durch \texttt{part def} (Typdefinition) und \texttt{part} (Instanz) ersetzt. Das Konzept bleibt ähnlich, die Syntax ist präziser und textuell.
+\end{hinweisbox}
+
+\section{Zweck der Strukturmodellierung}
+Eine Struktursicht beantwortet Fragen wie:
 
 \begin{itemize}
     \item Aus welchen Hauptteilen besteht das System?
     \item Welche Teilsysteme gehören zum Roboter?
-    \item Welche Blöcke sind spezialisiert oder zusammengesetzt?
+    \item Welche Systemteile sind spezialisiert oder zusammengesetzt?
     \item Welche Struktur ist logisch, welche physisch?
 \end{itemize}
 
 \section{Hauptstruktur des Roboters}
-\begin{verbatim}
-Robot
-|- PerceptionSystem
-|- NavigationSystem
-|- MotionControl
-|- BatterySystem
-|- UserInterface
-|- CommunicationSystem
-|- SafetyLogic
-\end{verbatim}
+Eine erste Strukturbeschreibung für den autonomen Indoor-Roboter kann so aussehen:
 
-Diese Darstellung ist noch grob. Sie eignet sich aber hervorragend, um den Systemumfang zu verstehen. Im BDD würden diese Elemente als Blöcke modelliert und über Komposition mit \texttt{Robot} verbunden.
+\begin{lstlisting}
+package RobotStructure {
+
+  part def Robot {
+    part perceptionSystem  : PerceptionSystem;
+    part navigationSystem  : NavigationSystem;
+    part motionControl     : MotionControl;
+    part batterySystem     : BatterySystem;
+    part userInterface     : UserInterface;
+    part communicationSystem : CommunicationSystem;
+    part safetyLogic       : SafetyLogic;
+  }
+
+  part def PerceptionSystem;
+  part def NavigationSystem;
+  part def MotionControl;
+  part def BatterySystem;
+  part def UserInterface;
+  part def CommunicationSystem;
+  part def SafetyLogic;
+}
+\end{lstlisting}
+
+Diese Darstellung ist noch grob. Sie eignet sich aber hervorragend, um den Systemumfang zu verstehen. Jedes \texttt{part} innerhalb von \texttt{Robot} ist eine Instanz des angegebenen Typs. Der Typ wird durch \texttt{part def} definiert.
 
 \section{Komposition}
-Eine Komposition beschreibt eine starke Teil-Ganzes-Beziehung. Wenn das \texttt{PerceptionSystem} Teil des Roboters ist, kann dies als Komposition modelliert werden. Das bedeutet: In dieser Systembetrachtung gehört das Wahrnehmungssystem zum Roboter.
+Wenn ein \texttt{part} innerhalb einer \texttt{part def} definiert ist, beschreibt das eine starke Teil-Ganzes-Beziehung. Das \texttt{perceptionSystem} gehört zum \texttt{Robot}. Das bedeutet: In dieser Systembetrachtung ist das Wahrnehmungssystem fester Bestandteil des Roboters.
 
 Komposition ist besonders nützlich, um die Systemgrenze sichtbar zu machen. Gehört die Ladestation zum System oder ist sie extern? Beide Varianten können modelliert werden, aber die Entscheidung muss bewusst sein.
 
 \section{Dekomposition}
-Dekomposition bedeutet, einen Block in kleinere Teile zu zerlegen. Das \texttt{PerceptionSystem} kann zum Beispiel weiter zerlegt werden:
+Dekomposition bedeutet, ein Systemelement in kleinere Teile zu zerlegen. Das \texttt{PerceptionSystem} kann zum Beispiel weiter zerlegt werden:
 
-\begin{verbatim}
-PerceptionSystem
-|- Camera
-|- Lidar
-|- ObjectDetector
-|- ObstacleDetector
-\end{verbatim}
+\begin{lstlisting}
+part def PerceptionSystem {
+  part camera          : Camera;
+  part lidar           : Lidar;
+  part objectDetector  : ObjectDetector;
+  part obstacleDetector : ObstacleDetector;
+}
+\end{lstlisting}
 
-Das \texttt{NavigationSystem} könnte enthalten:
+Das \texttt{NavigationSystem} könnte folgende Teile enthalten:
 
-\begin{verbatim}
-NavigationSystem
-|- Localization
-|- Mapping
-|- PathPlanner
-|- PathFollower
-\end{verbatim}
+\begin{lstlisting}
+part def NavigationSystem {
+  part localization : Localization;
+  part mapping      : Mapping;
+  part pathPlanner  : PathPlanner;
+  part pathFollower : PathFollower;
+}
+\end{lstlisting}
 
-\section{Logische und physische Blöcke}
-Ein häufiger Anfängerfehler besteht darin, logische Funktionen und physische Bauteile unklar zu vermischen. \texttt{Camera} ist eher physisch. \texttt{ObjectDetector} ist eher softwarebezogen. \texttt{Hindernis erkennen} ist eher eine Funktion.
+\section{Logische und physische Systemteile}
+Ein häufiger Anfängerfehler besteht darin, logische Funktionen und physische Bauteile unklar zu vermischen. \texttt{Camera} ist eher physisch. \texttt{ObjectDetector} ist eher softwarebezogen. \enquote{Hindernis erkennen} ist eher eine Funktion.
 
 Alle drei Sichtweisen dürfen im Modell vorkommen. Sie sollten aber bewusst getrennt oder klar benannt werden. Eine einfache Regel lautet:
 
 \begin{itemize}
-    \item Physische Blöcke beschreiben greifbare Teile.
-    \item Logische Blöcke beschreiben Verantwortlichkeiten oder Teilsysteme.
-    \item Softwareblöcke beschreiben spätere Implementierungseinheiten.
+    \item Physische Systemteile beschreiben greifbare Bauteile.
+    \item Logische Systemteile beschreiben Verantwortlichkeiten oder Teilsysteme.
+    \item Softwareteile beschreiben spätere Implementierungseinheiten.
 \end{itemize}
 
-\section{BDD und Anforderungen}
-Blöcke stehen nicht isoliert im Modell. Sie erfüllen Anforderungen. Der Block \texttt{BatterySystem} kann Anforderungen zur Akkustandsüberwachung erfüllen. Das \texttt{PerceptionSystem} erfüllt Anforderungen zur Hindernis- und Personenerkennung.
+\section{Strukturmodell und Anforderungen}
+Systemteile stehen nicht isoliert im Modell. Sie erfüllen Anforderungen über \texttt{satisfy}-Beziehungen. Das \texttt{BatterySystem} kann Anforderungen zur Akkustandsüberwachung erfüllen. Das \texttt{PerceptionSystem} erfüllt Anforderungen zur Hindernis- und Personenerkennung.
 
 \begin{praxisbox}
-REQ-006 \enquote{Der Roboter muss bei niedrigem Akkustand zur Ladestation fahren} wird nicht durch einen einzelnen Block erfüllt. Beteiligt sind \texttt{BatterySystem}, \texttt{NavigationSystem}, \texttt{MotionControl} und möglicherweise \texttt{UserInterface}. Das BDD hilft, diese beteiligten Systemteile sichtbar zu machen.
+REQ-006 \enquote{Der Roboter muss bei niedrigem Akkustand zur Ladestation fahren} wird nicht durch ein einzelnes Systemelement erfüllt. Beteiligt sind \texttt{BatterySystem}, \texttt{NavigationSystem}, \texttt{MotionControl} und möglicherweise \texttt{UserInterface}. Die Strukturmodellierung hilft, diese beteiligten Systemteile sichtbar zu machen.
 \end{praxisbox}
+
+\section{Typen wiederverwenden}
+Ein wichtiger Vorteil von \texttt{part def} ist die Wiederverwendbarkeit. Wenn ein Roboter zwei Kameras besitzt, wird \texttt{Camera} nur einmal definiert und zweimal instanziiert:
+
+\begin{lstlisting}
+part def PerceptionSystem {
+  part frontCamera : Camera;
+  part rearCamera  : Camera;
+  part lidar       : Lidar;
+}
+\end{lstlisting}
+
+Ändert sich die Definition von \texttt{Camera}, gilt die Änderung automatisch für beide Instanzen.
 
 \section{Typische Fehler}
 \subsection{Zu tiefe Dekomposition}
-Ein BDD muss nicht jedes Kabel und jede Schraube enthalten. Modellieren Sie so tief, wie es für Verständnis, Schnittstellen und Entscheidungen nötig ist.
+Ein Strukturmodell muss nicht jedes Kabel und jede Schraube enthalten. Modellieren Sie so tief, wie es für Verständnis, Schnittstellen und Entscheidungen nötig ist.
 
-\subsection{Unklare Blocknamen}
-\texttt{System1} oder \texttt{ModuleA} sind schlechte Namen. Namen sollten die Verantwortung des Blocks ausdrücken.
+\subsection{Unklare Namen}
+\texttt{System1} oder \texttt{ModuleA} sind schlechte Namen. Namen sollten die Verantwortung des Systemteils ausdrücken.
 
 \subsection{Funktionen als Hardware modellieren}
 \texttt{ObstacleDetector} kann eine Softwarekomponente sein, aber \enquote{Hindernis erkennen} ist zunächst eine Funktion. Klare Benennung verhindert Verwirrung.
 
 \section{Modellierungsstrategie für Einsteiger}
-Ein gutes BDD entsteht schrittweise. Beginnen Sie mit einem einzigen Block \texttt{Robot}. Darunter modellieren Sie fünf bis sieben Hauptsysteme. Mehr sollte die erste Ebene nicht enthalten, sonst verliert das Diagramm seine Übersicht.
+Ein gutes Strukturmodell entsteht schrittweise. Beginnen Sie mit einer einzigen \texttt{part def Robot}. Darunter modellieren Sie fünf bis sieben Hauptsysteme. Mehr sollte die erste Ebene nicht enthalten.
 
-Danach wählen Sie ein Teilsystem aus und zerlegen es weiter. Für den Einstieg eignet sich das \texttt{PerceptionSystem}, weil es Hardware, Software und Datenverarbeitung verbindet. Modellieren Sie Kamera und Lidar als Sensoren, \texttt{ObjectDetector} und \texttt{ObstacleDetector} als softwarebezogene Blöcke und dokumentieren Sie kurz, warum diese Trennung sinnvoll ist.
+Danach wählen Sie ein Teilsystem aus und zerlegen es weiter. Für den Einstieg eignet sich das \texttt{PerceptionSystem}, weil es Hardware, Software und Datenverarbeitung verbindet. Modellieren Sie Kamera und Lidar als physische Teile, \texttt{ObjectDetector} und \texttt{ObstacleDetector} als softwarebezogene Teile und dokumentieren Sie kurz, warum diese Trennung sinnvoll ist.
 
 Für das \texttt{BatterySystem} reicht zunächst eine einfachere Dekomposition:
 
-\begin{verbatim}
-BatterySystem
-|- Battery
-|- BatteryMonitor
-|- ChargingInterface
-\end{verbatim}
+\begin{lstlisting}
+part def BatterySystem {
+  part battery          : Battery;
+  part batteryMonitor   : BatteryMonitor;
+  part chargingInterface : ChargingInterface;
+}
+\end{lstlisting}
 
 Damit wird sichtbar, dass Akkuzelle, Überwachung und Ladeschnittstelle unterschiedliche Verantwortlichkeiten haben. Diese Unterscheidung hilft später beim Mapping auf ROS2 und beim Testen.
 
 \section{Zusammenfassung}
-Das BDD beschreibt die strukturelle Sicht auf das System. Es zeigt Hauptblöcke, Teil-Ganzes-Beziehungen und Dekomposition. Für den Indoor-Roboter ist es der Einstieg in die Architektur: Wahrnehmung, Navigation, Antrieb, Energieversorgung, Bedienung und Sicherheit werden als Systemteile sichtbar.
+Die Strukturmodellierung mit \texttt{part def} und \texttt{part} beschreibt die strukturelle Sicht auf das System. Sie zeigt Hauptsystemteile, Teil-Ganzes-Beziehungen und Dekomposition. Für den Indoor-Roboter ist sie der Einstieg in die Architektur: Wahrnehmung, Navigation, Antrieb, Energieversorgung, Bedienung und Sicherheit werden als Systemteile sichtbar.
 
 \section{Kontrollfragen}
 \begin{enumerate}
-    \item Wozu dient ein BDD?
-    \item Was ist ein Block?
+    \item Wozu dient die Strukturmodellierung?
+    \item Was ist der Unterschied zwischen \texttt{part def} und \texttt{part}?
     \item Was beschreibt eine Komposition?
     \item Was bedeutet Dekomposition?
-    \item Warum sollte man logische und physische Blöcke unterscheiden?
-    \item Welche Hauptblöcke besitzt der Indoor-Roboter?
-    \item Wie hängt ein BDD mit Anforderungen zusammen?
+    \item Warum sollte man logische und physische Systemteile unterscheiden?
+    \item Welche Hauptteile besitzt der Indoor-Roboter?
+    \item Wie hängt die Strukturmodellierung mit Anforderungen zusammen?
+    \item Welchen Vorteil bietet die Wiederverwendung von \texttt{part def}?
 \end{enumerate}
 
 \section{Übungen}
 \begin{uebungbox}
-\textbf{Übung 1: BDD erstellen}\\
-Erstellen Sie ein BDD mit dem Block \texttt{Robot} und mindestens fünf Subsystemen. Ergänzen Sie beim \texttt{PerceptionSystem} Kamera, Lidar und Objekterkennung.
+\textbf{Übung 1: Strukturmodell erstellen}\\
+Erstellen Sie eine \texttt{part def Robot} mit mindestens fünf Subsystemen. Zerlegen Sie das \texttt{PerceptionSystem} weiter in Kamera, Lidar und Objekterkennung.
 \end{uebungbox}
 
 \begin{uebungbox}
-\textbf{Übung 2: Blöcke klassifizieren}\\
-Ordnen Sie folgende Begriffe als physisch, logisch, softwarebezogen oder funktional ein: Kamera, NavigationSystem, object\_detector\_node, Hindernis erkennen, Batterie, PathPlanner.
+\textbf{Übung 2: Systemteile klassifizieren}\\
+Ordnen Sie folgende Begriffe als physisch, logisch oder softwarebezogen ein: Kamera, NavigationSystem, object\_detector\_node, Hindernis erkennen, Batterie, PathPlanner.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 3: Wiederverwendung}\\
+Modellieren Sie ein \texttt{PerceptionSystem} mit zwei Kameras (\texttt{frontCamera} und \texttt{rearCamera}). Erklären Sie, warum \texttt{Camera} nur einmal als \texttt{part def} definiert werden muss.
 \end{uebungbox}
 
 \section{Literaturhinweise}
-BDD-Grundlagen werden ausführlich in SysML-Einführungen behandelt \cite{delligatti2014,friedenthal2014}. Für dieses Lehrbuch ist besonders wichtig, BDDs nicht isoliert, sondern mit Anforderungen und IBDs zusammen zu betrachten.
+Die Strukturmodellierung in SysML v2 ist im SysML-v2-Pilotprojekt dokumentiert \cite{sysmlv2pilot}. Der Syside Editor bietet praktische Beispiele direkt in der Entwicklungsumgebung \cite{syside}. Für den Vergleich mit SysML v1 und dem dort verwendeten Block-Begriff sind Delligatti \cite{delligatti2014} und Friedenthal et al. \cite{friedenthal2014} hilfreich, müssen aber bewusst auf v2 übertragen werden.

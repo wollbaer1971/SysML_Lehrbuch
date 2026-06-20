@@ -1,117 +1,148 @@
-\chapter{Internal Block Diagram}
+\chapter{Verbindungsmodellierung mit \texttt{port} und \texttt{connection}}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie interne Verbindungen zwischen Komponenten im \gls{ibd} darstellen. Sie verstehen Teile, Ports, Konnektoren und Datenflüsse und können diese Konzepte auf ROS2-nahe Kommunikation im Roboterprojekt übertragen.
+Nach diesem Kapitel können Sie interne Verbindungen zwischen Systemteilen in SysML v2 beschreiben. Sie verstehen \texttt{port}, \texttt{connection} und Datenflüsse und können diese Konzepte auf ROS2-nahe Kommunikation im Roboterprojekt übertragen.
 \end{lernziele}
 
 \section{Einleitung}
-Das BDD zeigt, welche Bausteine existieren. Das \gls{ibd} zeigt, wie Teile eines Blocks intern verbunden sind. Damit ist das IBD der nächste Schritt von der Struktur zur Zusammenarbeit.
+Die Strukturmodellierung aus dem vorherigen Kapitel zeigt, welche Systemteile existieren. Die Verbindungsmodellierung zeigt, wie diese Teile zusammenarbeiten. Sie ist der nächste Schritt von der Struktur zur Zusammenarbeit.
 
-\section{Zweck des IBD}
-Ein IBD beantwortet Fragen wie:
+In SysML v2 erfolgt die Verbindungsmodellierung mit \texttt{port} und \texttt{connection}. Ports beschreiben die Schnittstellen eines Systemteils nach außen. Verbindungen verknüpfen Ports verschiedener Teile miteinander.
+
+\begin{hinweisbox}
+SysML v1 verwendete das Internal Block Diagram (IBD) für diese Sicht. In SysML v2 sind Ports und Verbindungen direkte Modellelemente innerhalb von \texttt{part def}. Das Konzept bleibt ähnlich, die textuelle Notation ist präziser.
+\end{hinweisbox}
+
+\section{Zweck der Verbindungsmodellierung}
+Eine Verbindungssicht beantwortet Fragen wie:
 
 \begin{itemize}
-    \item Welche Teile arbeiten innerhalb eines Blocks zusammen?
+    \item Welche Teile arbeiten innerhalb eines Systems zusammen?
     \item Welche Daten oder Signale fließen zwischen ihnen?
     \item Welche Ports besitzen die Teile?
     \item Welche Schnittstellen müssen beschrieben werden?
     \item Wo entstehen Integrationsrisiken?
 \end{itemize}
 
-\section{Beispiel Datenfluss}
-\begin{verbatim}
-Camera -> ObjectDetector -> NavigationSystem
-Lidar  -> SLAM           -> NavigationSystem
-NavigationSystem -> MotionControl -> Motors
-BatterySystem -> NavigationSystem
-\end{verbatim}
-
-Diese Textdarstellung kann in SysML als IBD mit Parts, Ports und Konnektoren modelliert werden.
-
-\section{Parts}
-Parts sind konkrete Verwendungen von Blöcken innerhalb eines übergeordneten Blocks. Der Block \texttt{Camera} beschreibt den Typ. Ein Part \texttt{frontCamera:Camera} beschreibt eine konkrete Kamera im Roboter.
-
-Diese Unterscheidung wirkt am Anfang technisch, ist aber wichtig. Ein Block ist eine Art Bausteinbeschreibung. Ein Part zeigt, dass dieser Baustein an einer bestimmten Stelle im System verwendet wird.
-
 \section{Ports}
-Ports beschreiben Ein- und Ausgänge von Blöcken. Ein Kamerablock kann einen Port \texttt{imageOut} haben. Der \texttt{ObjectDetector} kann Ports \texttt{imageIn} und \texttt{objectsOut} haben.
+Ein Port beschreibt einen Ein- oder Ausgang eines Systemteils. Ports machen Schnittstellen explizit und erzwingen, dass Daten- oder Signalflüsse benannt werden.
 
-Ports sollten sprechende Namen besitzen. Außerdem sollte dokumentiert werden, welche Daten über sie fließen.
+\begin{lstlisting}
+port def ImagePort;
+port def ScanPort;
+port def ObjectListPort;
 
-\section{Konnektoren und Schnittstellen}
-Konnektoren verbinden Ports. Eine Verbindung ohne klare Schnittstelle ist wenig wert. Deshalb sollte dokumentiert werden, welche Daten übertragen werden. Beispiel: \texttt{sensor\_msgs/Image} für Kamerabilder in ROS2.
+part def Camera {
+  port imageOut : ImagePort;
+}
 
-\section{IBD und ROS2}
-Das IBD passt gut zur ROS2-Kommunikation. ROS2-Topics können als Datenflüsse modelliert werden. Ein Topic \texttt{/camera/image\_raw} verbindet \texttt{camera\_node} und \texttt{object\_detector\_node}. Ein Topic \texttt{/cmd\_vel} verbindet Navigation und Bewegungssteuerung.
+part def Lidar {
+  port scanOut : ScanPort;
+}
+
+part def ObjectDetector {
+  port imageIn  : ~ImagePort;
+  port objectsOut : ObjectListPort;
+}
+\end{lstlisting}
+
+Das Tilde-Zeichen \texttt{\textasciitilde} markiert einen konjugierten Port, der empfängt statt sendet.
+
+\section{Verbindungen}
+\texttt{connection} verknüpft kompatible Ports miteinander. Eine Verbindung sollte immer dokumentieren, was über sie fließt.
+
+\begin{lstlisting}
+part def PerceptionSystem {
+  part camera          : Camera;
+  part lidar           : Lidar;
+  part objectDetector  : ObjectDetector;
+  part obstacleDetector : ObstacleDetector;
+
+  connection c1 connect camera.imageOut
+                      to objectDetector.imageIn;
+  connection c2 connect lidar.scanOut
+                      to obstacleDetector.scanIn;
+}
+\end{lstlisting}
+
+\section{Datenflüsse und ROS2}
+Die Verbindungsmodellierung passt gut zur ROS2-Kommunikation. ROS2-Topics können als Datenflüsse modelliert werden. Ein Topic \texttt{/camera/image\_raw} verbindet \texttt{camera\_node} und \texttt{object\_detector\_node}. Ein Topic \texttt{/cmd\_vel} verbindet Navigation und Bewegungssteuerung.
 
 \begin{praxisbox}
-Ein IBD für das \texttt{PerceptionSystem} kann zeigen, dass die Kamera Bilddaten an den \texttt{ObjectDetector} liefert, während der Lidar Laserscandaten an den \texttt{ObstacleDetector} liefert. Beide Ergebnisse gehen an die Navigation. Daraus lassen sich später ROS2-Topics ableiten.
+Eine Verbindungssicht für das \texttt{PerceptionSystem} zeigt: Die Kamera liefert Bilddaten an den \texttt{ObjectDetector}, während der Lidar Laserscandaten an den \texttt{ObstacleDetector} liefert. Beide Ergebnisse gehen an die Navigation. Daraus lassen sich später ROS2-Topics direkt ableiten.
 \end{praxisbox}
 
-\section{IBD für das PerceptionSystem}
-Ein mögliches internes Modell:
+\section{Verbindungsmodell für die Navigation}
+Eine Verbindungssicht für die Navigation macht sichtbar, dass Lokalisierung, Karte, Pfadplanung und Bewegungssteuerung zusammenarbeiten:
 
-\begin{verbatim}
-perception:PerceptionSystem
-|- camera:Camera
-|- lidar:Lidar
-|- objectDetector:ObjectDetector
-|- obstacleDetector:ObstacleDetector
+\begin{lstlisting}
+part def NavigationSystem {
+  part localization : Localization;
+  part mapProvider  : MapProvider;
+  part pathPlanner  : PathPlanner;
+  part pathFollower : PathFollower;
 
-camera.imageOut -> objectDetector.imageIn
-lidar.scanOut -> obstacleDetector.scanIn
-objectDetector.objectsOut -> navigation.objectsIn
-obstacleDetector.obstaclesOut -> navigation.obstaclesIn
-\end{verbatim}
+  connection c1 connect localization.poseOut
+                      to pathPlanner.poseIn;
+  connection c2 connect mapProvider.mapOut
+                      to pathPlanner.mapIn;
+  connection c3 connect pathPlanner.pathOut
+                      to pathFollower.pathIn;
+}
+\end{lstlisting}
+
+Navigation entsteht aus mehreren zusammenarbeitenden Teilen. Gleichzeitig werden Schnittstellen sichtbar, die später in ROS2 umgesetzt werden können.
+
+\section{Annahmen dokumentieren}
+Ein gutes Verbindungsmodell sollte auch Annahmen dokumentieren. Wird die Karte vorher geladen oder während der Fahrt aktualisiert? Arbeitet die Lokalisierung relativ zu \texttt{map} oder \texttt{odom}? Solche Fragen gehören als Dokumentation (\texttt{doc /* ... */}) zum Modellelement.
+
+\begin{lstlisting}
+part def NavigationSystem {
+  doc /* Voraussetzung: Eine initiale Karte ist vorhanden.
+         Lokalisierung arbeitet relativ zum map-Frame. */
+  ...
+}
+\end{lstlisting}
 
 \section{Typische Fehler}
-\subsection{Nur Kästen verbinden}
-Ein IBD sollte nicht nur Kästen mit Linien zeigen. Es sollte klar sein, was über eine Verbindung fließt.
+\subsection{Nur Teile verbinden ohne Ports}
+Verbindungen sollten immer über benannte Ports laufen. Direkte Verbindungen ohne Ports lassen offen, was genau übertragen wird.
 
-\subsection{Ports vergessen}
-Ports machen Schnittstellen sichtbar. Ohne Ports bleiben Verbindungen ungenau.
+\subsection{Ports ohne Datentypen}
+Ein Port wird erst nützlich, wenn bekannt ist, welche Daten darüber fließen. Definieren Sie \texttt{port def} mit sprechenden Namen.
 
-\subsection{Zu viele Details in einem Diagramm}
-Ein IBD sollte eine klare Frage beantworten. Für große Systeme sind mehrere kleinere IBDs besser als ein überladenes Gesamtbild.
-
-\section{Praxisbeispiel: Navigation als Zusammenspiel}
-Ein IBD für die Navigation kann zeigen, dass Lokalisierung, Karte, Pfadplanung und Bewegungssteuerung zusammenarbeiten. Die Lokalisierung liefert die aktuelle Pose. Die Karte liefert Hindernisinformationen und Raumstruktur. Die Pfadplanung berechnet einen Weg. Der PathFollower erzeugt Bewegungsbefehle.
-
-\begin{verbatim}
-localization.poseOut -> pathPlanner.poseIn
-mapProvider.mapOut -> pathPlanner.mapIn
-pathPlanner.pathOut -> pathFollower.pathIn
-pathFollower.cmdVelOut -> motionControl.cmdVelIn
-\end{verbatim}
-
-Dieses IBD ist für Einsteiger wertvoll, weil es zeigt: Navigation ist nicht ein einzelner magischer Block. Sie entsteht aus mehreren zusammenarbeitenden Teilen. Gleichzeitig werden Schnittstellen sichtbar, die später in ROS2 umgesetzt werden können.
-
-Ein gutes IBD sollte außerdem Annahmen dokumentieren. Wird die Karte vorher geladen oder während der Fahrt aktualisiert? Arbeitet die Lokalisierung relativ zu \texttt{map} oder \texttt{odom}? Solche Fragen gehören mindestens als Notiz zum Diagramm.
+\subsection{Zu viele Details in einem Modellabschnitt}
+Eine Verbindungssicht sollte eine klare Frage beantworten. Für große Systeme sind mehrere fokussierte Abschnitte besser als ein überladenes Modell.
 
 \section{Zusammenfassung}
-Das IBD zeigt die interne Zusammenarbeit von Teilen innerhalb eines Blocks. Es ist besonders nützlich für Schnittstellen und Datenflüsse. Im Roboterprojekt bildet es eine Brücke von SysML-Struktur zu ROS2-Kommunikation.
+Die Verbindungsmodellierung mit \texttt{port} und \texttt{connection} zeigt die interne Zusammenarbeit von Systemteilen. Sie ist besonders nützlich für Schnittstellen und Datenflüsse. Im Roboterprojekt bildet sie eine Brücke von der SysML-v2-Struktur zur ROS2-Kommunikation.
 
 \section{Kontrollfragen}
 \begin{enumerate}
-    \item Was ist der Unterschied zwischen BDD und IBD?
-    \item Was ist ein Part?
-    \item Wozu dienen Ports?
-    \item Was zeigt ein Konnektor?
-    \item Warum ist das IBD für ROS2 hilfreich?
+    \item Was zeigt eine Verbindungssicht gegenüber einer Struktursicht?
+    \item Was beschreibt ein \texttt{port}?
+    \item Was bewirkt das Tilde-Zeichen bei einem Port?
+    \item Wozu dient \texttt{connection}?
+    \item Warum ist die Verbindungsmodellierung für ROS2 hilfreich?
     \item Welches Topic könnte zwischen Kamera und ObjectDetector liegen?
-    \item Warum sollte ein IBD nicht überladen werden?
+    \item Warum sollte ein Verbindungsmodell Annahmen dokumentieren?
 \end{enumerate}
 
 \section{Übungen}
 \begin{uebungbox}
-\textbf{Übung 1: IBD PerceptionSystem}\\
-Erstellen Sie ein IBD für das \texttt{PerceptionSystem}. Modellieren Sie Kamera, Lidar, ObjectDetector und ObstacleDetector inklusive Datenflüssen.
+\textbf{Übung 1: Verbindungsmodell PerceptionSystem}\\
+Erstellen Sie eine \texttt{part def PerceptionSystem} mit Kamera, Lidar, ObjectDetector und ObstacleDetector. Definieren Sie Ports und verbinden Sie sie mit \texttt{connection}.
 \end{uebungbox}
 
 \begin{uebungbox}
 \textbf{Übung 2: Ports benennen}\\
-Definieren Sie für \texttt{BatterySystem}, \texttt{NavigationSystem} und \texttt{MotionControl} jeweils mindestens zwei Ports.
+Definieren Sie für \texttt{BatterySystem}, \texttt{NavigationSystem} und \texttt{MotionControl} jeweils mindestens zwei Ports mit sprechenden Namen.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 3: ROS2-Mapping vorbereiten}\\
+Wählen Sie drei Verbindungen aus Ihrem Modell und ordnen Sie ihnen jeweils ein mögliches ROS2-Topic zu.
 \end{uebungbox}
 
 \section{Literaturhinweise}
-IBDs werden in SysML-Literatur als zentrale Schnittstellensicht behandelt \cite{delligatti2014,friedenthal2014}. Für die spätere Umsetzung lohnt sich parallel ein Blick auf ROS2-Kommunikationskonzepte \cite{ros2docs}.
+Ports und Verbindungen in SysML v2 sind im SysML-v2-Pilotprojekt dokumentiert \cite{sysmlv2pilot}. Der Syside Editor bietet konkrete Beispiele für die Verbindungsmodellierung \cite{syside}. Für die Umsetzung in ROS2 sind die ROS2-Dokumentation und einschlägige Einführungen hilfreich \cite{ros2docs}.

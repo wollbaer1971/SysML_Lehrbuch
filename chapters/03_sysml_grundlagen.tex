@@ -1,72 +1,96 @@
 \chapter{SysML-Grundlagen}
 
 \begin{lernziele}
-Nach diesem Kapitel kennen Sie die Grundidee von \gls{sysml}, die wichtigsten Diagrammtypen und deren Rolle in einem MBSE-Projekt. Sie können erklären, warum ein SysML-Diagramm nur eine Sicht auf ein Modell ist, welche Diagramme für den Einstieg besonders wichtig sind und wie diese Diagramme beim autonomen Indoor-Roboter zusammenspielen.
+Nach diesem Kapitel kennen Sie die Grundidee von \gls{sysml} v2, die wichtigsten Modellierungskonzepte und deren Rolle in einem MBSE-Projekt. Sie können erklären, warum ein SysML-Diagramm nur eine Sicht auf ein Modell ist, welche Konzepte für den Einstieg besonders wichtig sind und wie diese Konzepte beim autonomen Indoor-Roboter zusammenspielen.
 \end{lernziele}
 
 \section{Einleitung}
-In den ersten beiden Kapiteln haben wir geklärt, warum Systems Engineering und MBSE nützlich sind. Jetzt benötigen wir eine Sprache, mit der wir Anforderungen, Struktur, Verhalten, Schnittstellen und Tests präzise beschreiben können. Diese Sprache ist in diesem Buch \gls{sysml}.
+In den ersten beiden Kapiteln haben wir geklärt, warum Systems Engineering und MBSE nützlich sind. Jetzt benötigen wir eine Sprache, mit der wir Anforderungen, Struktur, Verhalten, Schnittstellen und Tests präzise beschreiben können. Diese Sprache ist in diesem Buch \gls{sysml} v2.
 
-\gls{sysml} steht für Systems Modeling Language. Die Sprache wurde entwickelt, um technische Systeme zu modellieren. Sie basiert historisch auf UML, ist aber stärker auf Systeme aus Hardware, Software, Menschen, Prozessen, Daten und physikalischen Zusammenhängen ausgerichtet. Das passt gut zu unserem autonomen Indoor-Roboter: Er besteht nicht nur aus Software, sondern auch aus Sensorik, Antrieb, Batterie, Gehäuse, Ladestation, Bedienung und realer Umgebung.
+\gls{sysml} steht für Systems Modeling Language. Die Sprache wurde entwickelt, um technische Systeme zu modellieren. SysML v2 ist eine vollständige Neuentwicklung gegenüber SysML v1 mit einer präzisen textuellen Notation und einer klaren, modernen Semantik. Sie ist stärker auf Systeme aus Hardware, Software, Menschen, Prozessen, Daten und physikalischen Zusammenhängen ausgerichtet als UML. Das passt gut zu unserem autonomen Indoor-Roboter: Er besteht nicht nur aus Software, sondern auch aus Sensorik, Antrieb, Batterie, Gehäuse, Ladestation, Bedienung und realer Umgebung.
 
-Für Einsteiger ist wichtig: SysML ist kein Zeichenprogramm. SysML ist eine Modellierungssprache. Ein Diagramm ist nur eine sichtbare Darstellung von Modellelementen. Der eigentliche Wert entsteht im Modell: Anforderungen sind mit Blöcken verbunden, Blöcke besitzen Schnittstellen, Verhalten beschreibt Abläufe, Tests verifizieren Anforderungen.
+Für Einsteiger ist wichtig: SysML ist kein Zeichenprogramm. SysML ist eine Modellierungssprache. Ein Diagramm ist nur eine sichtbare Darstellung von Modellelementen. Der eigentliche Wert entsteht im Modell: Anforderungen sind mit Systemteilen verbunden, Systemteile besitzen Schnittstellen, Verhalten beschreibt Abläufe, Tests verifizieren Anforderungen.
 
 \section{Warum eine Modellierungssprache?}
 Ohne gemeinsame Sprache entstehen in Projekten schnell Missverständnisse. Ein Teammitglied zeichnet Kästen für Funktionen, ein anderes für Softwaremodule, ein drittes für Hardwarekomponenten. Alle Diagramme sehen ähnlich aus, meinen aber unterschiedliche Dinge. SysML hilft, solche Bedeutungen zu klären.
 
-SysML bietet vordefinierte Konzepte:
+SysML v2 bietet vordefinierte Konzepte:
 
 \begin{itemize}
-    \item Requirements für Anforderungen
-    \item Blocks für Systemelemente
-    \item Ports und Interfaces für Schnittstellen
-    \item Activities für Abläufe
-    \item State Machines für Zustände
-    \item Parametrics für mathematische Zusammenhänge
-    \item Relationships für Nachvollziehbarkeit
+    \item \texttt{requirement} für Anforderungen
+    \item \texttt{part def} und \texttt{part} für Systemelemente und deren Instanzen
+    \item \texttt{port} und \texttt{connection} für Schnittstellen
+    \item \texttt{action def} und \texttt{action} für Abläufe
+    \item \texttt{state def} und \texttt{state} für Zustände
+    \item \texttt{calc def} und \texttt{constraint} für mathematische Zusammenhänge
+    \item \texttt{satisfy}, \texttt{verify}, \texttt{derive} für Nachvollziehbarkeit
 \end{itemize}
 
 Damit kann ein Team über dasselbe System sprechen, ohne jedes Symbol neu erklären zu müssen.
 
 \begin{praxisbox}
-Wenn im Modell ein Block \texttt{PerceptionSystem} existiert, kann er in einem BDD als Teil des Roboters erscheinen, in einem IBD mit Kamera und Lidar verbunden werden und über eine \texttt{satisfy}-Beziehung Anforderungen zur Hinderniserkennung erfüllen. Es ist derselbe Modellinhalt, nur aus verschiedenen Blickwinkeln.
+Wenn im Modell eine \texttt{part def PerceptionSystem} existiert, kann sie in einer Struktursicht als Teil des Roboters erscheinen, in einer Verbindungssicht mit Kamera und Lidar verknüpft werden und über eine \texttt{satisfy}-Beziehung Anforderungen zur Hinderniserkennung erfüllen. Es ist derselbe Modellinhalt, nur aus verschiedenen Blickwinkeln.
 \end{praxisbox}
 
-\section{Die wichtigsten Diagrammtypen}
-SysML enthält mehrere Diagrammtypen. Für den Einstieg in dieses Buch konzentrieren wir uns auf diejenigen, die für das Roboterprojekt den größten Nutzen bringen.
+\section{Wichtige Konzepte in SysML v2}
+SysML v2 kennt keine festen Diagrammtypen mehr wie in v1. Stattdessen gibt es Sichten (\emph{views}) und Sichtpunkte (\emph{viewpoints}) auf ein gemeinsames Modell. Für den Einstieg konzentrieren wir uns auf diejenigen Konzepte, die für das Roboterprojekt den größten Nutzen bringen.
 
-\subsection{Requirement Diagram}
-Das Requirement Diagram beschreibt Anforderungen und Beziehungen zwischen Anforderungen. Es zeigt zum Beispiel, dass eine allgemeine Sicherheitsanforderung in konkrete Anforderungen zur Hinderniserkennung, Bremsung und Personenerkennung zerlegt wird.
+\subsection{Anforderungen (\texttt{requirement})}
+Anforderungen beschreiben, was das System leisten muss. In SysML v2 werden sie textuell mit \texttt{requirement} definiert. Beziehungen wie \texttt{satisfy}, \texttt{verify} und \texttt{derive} verbinden Anforderungen mit Systemteilen und Testfällen.
 
 Typische Fragen:
 
 \begin{itemize}
     \item Was muss das System leisten?
     \item Welche Anforderungen hängen zusammen?
-    \item Welche Anforderung wurde aus welcher höheren Anforderung abgeleitet?
-    \item Welche Komponenten erfüllen eine Anforderung?
+    \item Welche Anforderung wurde aus welcher höheren abgeleitet?
+    \item Welche Teile erfüllen eine Anforderung?
     \item Welche Tests überprüfen eine Anforderung?
 \end{itemize}
 
-\subsection{Block Definition Diagram}
-Das \gls{bdd} beschreibt die Struktur des Systems auf einer eher abstrakten Ebene. Es zeigt Blöcke und deren Beziehungen. Beim Roboter könnten Blöcke \texttt{Robot}, \texttt{NavigationSystem}, \texttt{PerceptionSystem}, \texttt{BatterySystem} und \texttt{MotionControl} heißen.
+\subsection{Strukturmodellierung (\texttt{part def}, \texttt{part})}
+In SysML v2 beschreibt \texttt{part def} den Typ eines Systemelements. \texttt{part} erzeugt eine Instanz davon. Zusammen ersetzen sie den Block-Begriff aus SysML v1.
 
-Das BDD beantwortet die Frage: Aus welchen Hauptbausteinen besteht das System?
+\begin{lstlisting}
+package RobotStructure {
+  part def Robot {
+    part perceptionSystem : PerceptionSystem;
+    part navigationSystem : NavigationSystem;
+    part batterySystem    : BatterySystem;
+    part motionControl    : MotionControl;
+  }
+  part def PerceptionSystem;
+  part def NavigationSystem;
+  part def BatterySystem;
+  part def MotionControl;
+}
+\end{lstlisting}
 
-\subsection{Internal Block Diagram}
-Das \gls{ibd} zeigt die innere Struktur eines Blocks. Es beschreibt Teile, Ports und Verbindungen. Während das BDD sagt, dass es ein \texttt{PerceptionSystem} gibt, zeigt das IBD, wie Kamera, Lidar, Objekterkennung und Hinderniserkennung innerhalb dieses Systems zusammenarbeiten.
+Diese Darstellung beantwortet die Frage: Aus welchen Hauptbausteinen besteht das System?
 
-\subsection{Activity Diagram}
-Aktivitätsdiagramme beschreiben Abläufe. Sie eignen sich für Prozesse wie \enquote{Transportauftrag ausführen}, \enquote{Zur Ladestation zurückkehren} oder \enquote{Hindernis behandeln}. Sie zeigen Aktionen, Entscheidungen, Verzweigungen und parallele Abläufe.
+\subsection{Verbindungsmodellierung (\texttt{port}, \texttt{connection})}
+\texttt{port} beschreibt die Schnittstelle eines Systemteils nach außen. \texttt{connection} verbindet Ports verschiedener Teile miteinander. Damit wird sichtbar, wie Teile eines Systems intern zusammenarbeiten.
 
-\subsection{State Machine Diagram}
-Zustandsdiagramme beschreiben Zustände und Übergänge. Ein Roboter besitzt Betriebszustände wie \texttt{Idle}, \texttt{Navigating}, \texttt{AvoidingObstacle}, \texttt{ReturningToDock}, \texttt{Charging} und \texttt{Error}. Ein Zustandsdiagramm zeigt, welche Ereignisse Wechsel zwischen diesen Zuständen auslösen.
+\begin{lstlisting}
+part def PerceptionSystem {
+  port sensorData : ~SensorDataPort;
+  part camera  : Camera;
+  part lidar   : Lidar;
+  part detector : ObjectDetector;
+}
+\end{lstlisting}
 
-\subsection{Parametric Diagram}
-Parametrische Diagramme beschreiben mathematische Beziehungen. Sie sind nützlich, wenn technische Größen zusammenhängen, etwa Akkukapazität, Leistungsaufnahme, Betriebszeit, Geschwindigkeit oder Bremsweg.
+\subsection{Verhaltensmodellierung (\texttt{action def}, \texttt{action})}
+Aktivitäten beschreiben Abläufe. Sie eignen sich für Prozesse wie \enquote{Transportauftrag ausführen}, \enquote{Zur Ladestation zurückkehren} oder \enquote{Hindernis behandeln}. In SysML v2 werden Abläufe mit \texttt{action def} und \texttt{action} modelliert.
+
+\subsection{Zustandsmodellierung (\texttt{state def}, \texttt{state})}
+Zustandsmodelle beschreiben Zustände und Übergänge. Ein Roboter besitzt Betriebszustände wie \texttt{Idle}, \texttt{Navigating}, \texttt{AvoidingObstacle} und \texttt{Charging}. In SysML v2 werden diese mit \texttt{state def} definiert.
+
+\subsection{Parametrische Modellierung (\texttt{calc def}, \texttt{constraint})}
+Parametrische Modelle beschreiben mathematische Beziehungen. Sie helfen, technische Entscheidungen früh zu prüfen. In SysML v2 werden Berechnungen mit \texttt{calc def} und Bedingungen mit \texttt{constraint} ausgedrückt.
 
 \section{Modell statt Bild}
-Ein SysML-Diagramm ist nur eine Sicht auf ein Modell. Diese Unterscheidung ist zentral. Wenn Sie in einem Zeichenprogramm drei Kästen mit dem Namen \texttt{NavigationSystem} zeichnen, sind das drei unabhängige grafische Objekte. In einem Modellierungswerkzeug sollte \texttt{NavigationSystem} dagegen ein einziges Modellelement sein, das in mehreren Diagrammen dargestellt werden kann.
+Ein SysML-Diagramm ist nur eine Sicht auf ein Modell. Diese Unterscheidung ist zentral. Wenn Sie in einem Zeichenprogramm drei Kästen mit dem Namen \texttt{NavigationSystem} zeichnen, sind das drei unabhängige grafische Objekte. In einem Modellierungswerkzeug wie dem Syside Editor ist \texttt{NavigationSystem} ein einziges Modellelement, das in mehreren Sichten dargestellt werden kann.
 
 Das hat praktische Vorteile:
 
@@ -74,71 +98,92 @@ Das hat praktische Vorteile:
     \item Namen bleiben konsistent.
     \item Beziehungen können ausgewertet werden.
     \item Änderungen sind leichter nachvollziehbar.
-    \item Diagramme können unterschiedliche Sichten auf denselben Inhalt zeigen.
+    \item Verschiedene Sichten zeigen denselben Inhalt.
     \item Traceability wird möglich.
 \end{itemize}
 
-\section{Wie die Diagramme zusammenarbeiten}
-SysML-Diagramme sollten nicht isoliert entstehen. Sie ergänzen sich.
+\section{Wie die Konzepte zusammenarbeiten}
+SysML-v2-Modellelemente sollten nicht isoliert entstehen. Sie ergänzen sich.
 
 Beim Indoor-Roboter kann eine Modellkette so aussehen:
 
 \begin{enumerate}
-    \item Im Requirement Diagram steht: \enquote{Der Roboter muss Hindernisse erkennen.}
-    \item Im BDD gibt es den Block \texttt{PerceptionSystem}.
-    \item Im IBD wird gezeigt, dass Kamera und Lidar Daten an Erkennungsfunktionen liefern.
-    \item Im Activity Diagram wird beschrieben, wie ein Hindernis während der Fahrt behandelt wird.
-    \item Im State Machine Diagram wird modelliert, dass der Roboter bei Gefahr in einen Stopp- oder Ausweichzustand wechselt.
-    \item Im Testmodell wird ein Testfall mit der Anforderung verbunden.
+    \item Im Anforderungsmodell steht: \enquote{Der Roboter muss Hindernisse erkennen.}
+    \item \texttt{part def PerceptionSystem} wird als Systemteil definiert.
+    \item Ports und Verbindungen zeigen, wie Kamera und Lidar Daten liefern.
+    \item Eine \texttt{action def} beschreibt, wie ein Hindernis während der Fahrt behandelt wird.
+    \item Ein \texttt{state def} modelliert, dass der Roboter bei Gefahr in einen Stopp- oder Ausweichzustand wechselt.
+    \item Ein Testfall wird über \texttt{verify} mit der Anforderung verbunden.
 \end{enumerate}
 
 So entsteht ein zusammenhängendes Modell statt einer losen Sammlung schöner Bilder.
 
-\section{Typische Anfängerfehler}
-\subsection{Zu viele Diagramme zu früh}
-Einsteiger möchten oft sofort alle Diagrammtypen verwenden. Das führt schnell zu Überforderung. Beginnen Sie mit Anforderungen, BDD und einfachen IBDs. Verhalten und Parametrik können danach folgen.
+\section{SysML v1 und SysML v2 im Vergleich}
+Einsteiger stoßen in der Literatur häufig noch auf SysML v1. Die wichtigsten Begriffsänderungen sind:
 
-\subsection{Unklare Bedeutung von Blöcken}
-Manchmal werden Funktionen, Softwaremodule, Hardwareteile und Rollen wild gemischt. Das ist nicht grundsätzlich verboten, muss aber bewusst geschehen. Ein \texttt{Camera} Block ist ein physisches Element. Ein \texttt{ObjectDetector} ist eher eine Software- oder Funktionskomponente.
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{SysML v1} & \textbf{SysML v2} \\
+\midrule
+Block (block) & \texttt{part def} \\
+Block Definition Diagram (BDD) & Struktursicht (\texttt{part def}, \texttt{part}) \\
+Internal Block Diagram (IBD) & Verbindungssicht (\texttt{port}, \texttt{connection}) \\
+Activity Diagram & \texttt{action def}, \texttt{action} \\
+State Machine Diagram & \texttt{state def}, \texttt{state} \\
+Parametric Diagram & \texttt{calc def}, \texttt{constraint} \\
+\texttt{deriveRqt} & \texttt{derive} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Dieses Buch verwendet durchgehend SysML v2. Wo alte Begriffe aus Kompatibilitätsgründen erwähnt werden, ist das explizit gekennzeichnet.
+
+\section{Typische Anfängerfehler}
+\subsection{Zu viele Elemente zu früh}
+Einsteiger möchten oft sofort alle Konzepte verwenden. Das führt schnell zu Überforderung. Beginnen Sie mit Anforderungen, \texttt{part def} und einfachen Verbindungen. Verhalten und Parametrik können danach folgen.
+
+\subsection{Unklare Bedeutung von Systemteilen}
+Manchmal werden Funktionen, Softwaremodule, Hardwareteile und Rollen wild gemischt. Das ist nicht grundsätzlich verboten, muss aber bewusst geschehen. Eine \texttt{part def Camera} ist ein physisches Element. Eine \texttt{part def ObjectDetector} ist eher eine Software- oder Funktionskomponente.
 
 \subsection{Diagramme ohne Text}
-Ein Diagramm ohne Beschreibung ist oft schwer verständlich. Nutzen Sie Beschreibungsfelder im Werkzeug. Schreiben Sie kurz, welchen Zweck ein Diagramm hat und welche Fragen es beantworten soll.
+Ein Diagramm ohne Beschreibung ist oft schwer verständlich. Nutzen Sie Dokumentationsfelder (\texttt{doc /* ... */}). Schreiben Sie kurz, welchen Zweck ein Modellelement hat.
 
 \subsection{Keine Wiederverwendung}
-Wenn dasselbe Element mehrfach neu angelegt wird, verliert das Modell seinen Wert. Verwenden Sie Modellelemente wieder, statt sie neu zu zeichnen.
+Wenn dasselbe Element mehrfach neu angelegt wird, verliert das Modell seinen Wert. Definieren Sie Typen mit \texttt{part def} einmal und instanziieren Sie sie mit \texttt{part}.
 
 \section{Zusammenfassung}
-SysML ist eine Modellierungssprache für technische Systeme. Sie hilft, Anforderungen, Struktur, Verhalten, Schnittstellen und Nachweise einheitlich zu beschreiben. Für dieses Buch sind besonders Requirement Diagrams, BDDs, IBDs, Activity Diagrams, State Machines und Parametric Diagrams wichtig. Entscheidend ist nicht das Zeichnen einzelner Diagramme, sondern der Aufbau eines zusammenhängenden Modells.
+SysML v2 ist eine Modellierungssprache für technische Systeme. Sie hilft, Anforderungen, Struktur, Verhalten, Schnittstellen und Nachweise einheitlich zu beschreiben. Für dieses Buch sind besonders \texttt{requirement}, \texttt{part def}, \texttt{port}, \texttt{connection}, \texttt{action def}, \texttt{state def} und \texttt{calc def} wichtig. Entscheidend ist nicht das Zeichnen einzelner Diagramme, sondern der Aufbau eines zusammenhängenden Modells.
 
 \section{Kontrollfragen}
 \begin{enumerate}
     \item Wofür steht SysML?
-    \item Warum ist SysML für Systeme aus Hardware und Software geeignet?
+    \item Was unterscheidet SysML v2 von SysML v1?
     \item Was ist der Unterschied zwischen einem Diagramm und einem Modell?
-    \item Welche Fragen beantwortet ein Requirement Diagram?
-    \item Welche Fragen beantwortet ein BDD?
-    \item Wozu dient ein IBD?
-    \item Wann verwenden Sie ein Activity Diagram?
-    \item Wann verwenden Sie ein State Machine Diagram?
+    \item Welche Fragen beantwortet ein Anforderungsmodell?
+    \item Was ist der Unterschied zwischen \texttt{part def} und \texttt{part}?
+    \item Wozu dienen \texttt{port} und \texttt{connection}?
+    \item Wann verwenden Sie \texttt{action def}?
+    \item Wann verwenden Sie \texttt{state def}?
     \item Warum sollte man Modellelemente wiederverwenden?
     \item Nennen Sie einen typischen Anfängerfehler bei SysML.
 \end{enumerate}
 
 \section{Übungen}
 \begin{uebungbox}
-\textbf{Übung 1: Diagrammtyp zuordnen}\\
-Ordnen Sie folgende Fragen einem SysML-Diagrammtyp zu: Was muss das System leisten? Aus welchen Teilen besteht es? Welche Daten fließen zwischen Komponenten? Welche Zustände kann der Roboter haben? Wie läuft ein Transportauftrag ab?
+\textbf{Übung 1: Konzept zuordnen}\\
+Ordnen Sie folgende Fragen einem SysML-v2-Konzept zu: Was muss das System leisten? Aus welchen Teilen besteht es? Welche Daten fließen zwischen Komponenten? Welche Zustände kann der Roboter haben? Wie läuft ein Transportauftrag ab?
 \end{uebungbox}
 
 \begin{uebungbox}
 \textbf{Übung 2: Erste Modellkette}\\
-Wählen Sie die Funktion \enquote{Akkustand überwachen}. Beschreiben Sie dazu eine Anforderung, einen Block, einen Datenfluss, einen möglichen Zustand und einen Testfall.
+Wählen Sie die Funktion \enquote{Akkustand überwachen}. Beschreiben Sie dazu eine Anforderung, eine \texttt{part def}, einen Port, einen möglichen Zustand und einen Testfall.
 \end{uebungbox}
 
 \begin{uebungbox}
-\textbf{Übung 3: Diagrammzweck formulieren}\\
-Formulieren Sie für ein Requirement Diagram, ein BDD und ein IBD jeweils in zwei Sätzen, welchen Zweck das Diagramm im Roboterprojekt erfüllen soll.
+\textbf{Übung 3: v1 vs. v2}\\
+Nennen Sie für BDD, IBD und Constraint Block jeweils das entsprechende SysML-v2-Konzept und erklären Sie in einem Satz den Unterschied.
 \end{uebungbox}
 
 \section{Literaturhinweise}
-Für den Einstieg in SysML sind praxisnahe Einführungen besonders hilfreich. Delligatti \cite{delligatti2014} erklärt SysML kompakt und einsteigerfreundlich. Friedenthal, Moore und Steiner \cite{friedenthal2014} bieten eine umfassendere Darstellung mit vielen Modellierungsdetails.
+Für den Einstieg in SysML v2 sind die offizielle Spezifikation und das SysML-v2-Pilotprojekt grundlegend \cite{sysmlv2pilot}. Der Syside Editor bietet eigene Dokumentation und Beispiele \cite{syside}. Ältere Einführungen wie Delligatti \cite{delligatti2014} und Friedenthal et al. \cite{friedenthal2014} beziehen sich auf SysML v1 und sind nur noch als Hintergrundlektüre empfehlenswert.

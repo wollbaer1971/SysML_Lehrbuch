@@ -88,7 +88,7 @@ Die allgemeine Sicherheitsanforderung wird dadurch handhabbarer.
 Wichtige Beziehungen in SysML sind:
 
 \begin{itemize}
-    \item \texttt{deriveReqt}: Eine Anforderung wird aus einer anderen abgeleitet.
+    \item \texttt{derive}: Eine Anforderung wird aus einer anderen abgeleitet.
     \item \texttt{satisfy}: Ein Modellelement erfüllt eine Anforderung.
     \item \texttt{verify}: Ein Testfall überprüft eine Anforderung.
     \item \texttt{trace}: Eine allgemeine Nachverfolgungsbeziehung.
@@ -100,9 +100,29 @@ REQ-002 \enquote{Hindernisse erkennen} wird durch das \texttt{PerceptionSystem} 
 \end{praxisbox}
 
 \section{Anforderungen in SysML v2}
-Erstellen Sie in der Datei \texttt{02\_requirements.sysml} erste Requirement-Elemente. Verwenden Sie klare Namen, eine stabile ID und einen prüfbaren Text. Achten Sie darauf, dass Anforderungen nicht nur als Liste existieren, sondern später mit Struktur, Verhalten und Tests verbunden werden.
+In SysML v2 werden Anforderungen textuell mit dem Schlüsselwort \texttt{requirement} definiert:
 
-Nutzen Sie Beschreibungsfelder, um Annahmen, Begründungen oder offene Fragen zu dokumentieren. Wenn eine Anforderung noch unklar ist, markieren Sie sie bewusst, statt sie stillschweigend als fertig zu behandeln.
+\begin{lstlisting}
+package Requirements {
+
+  requirement REQ_001 {
+    doc /* Der Roboter muss in einem bekannten Innenraumbereich
+           autonom navigieren koennen. */
+  }
+
+  requirement REQ_SAFE {
+    doc /* Sicherheitsanforderungen. */
+    requirement REQ_SAFE_001 {
+      doc /* Der Roboter muss Hindernisse im Fahrweg erkennen. */
+      derive REQ_001;
+    }
+  }
+}
+\end{lstlisting}
+
+Erstellen Sie in der Datei \texttt{02\_requirements.sysml} erste Requirement-Elemente. Verwenden Sie klare Namen, eine stabile ID und einen prüfbaren Text. Achten Sie darauf, dass Anforderungen nicht nur als Liste existieren, sondern später mit Systemteilen, Verhalten und Tests verbunden werden.
+
+Nutzen Sie Beschreibungsfelder (\texttt{doc /* ... */}), um Annahmen, Begründungen oder offene Fragen zu dokumentieren. Wenn eine Anforderung noch unklar ist, markieren Sie sie bewusst, statt sie stillschweigend als fertig zu behandeln.
 
 \section{Typische Fehler}
 \subsection{Zu allgemeine Anforderungen}
@@ -118,14 +138,14 @@ Eine Anforderung sollte erkennen lassen, wie sie später geprüft wird. Sonst en
 Anforderungen ändern sich. Wichtig ist, Änderungen nachvollziehbar zu halten und betroffene Modellelemente zu prüfen.
 
 \section{Zusammenfassung}
-Anforderungen verbinden Stakeholderbedürfnisse mit Architektur und Tests. Gute Anforderungen sind verständlich, eindeutig und prüfbar. In SysML werden Anforderungen nicht nur gesammelt, sondern über Beziehungen mit Funktionen, Blöcken, Schnittstellen und Testfällen verbunden.
+Anforderungen verbinden Stakeholderbedürfnisse mit Architektur und Tests. Gute Anforderungen sind verständlich, eindeutig und prüfbar. In SysML v2 werden Anforderungen nicht nur gesammelt, sondern über Beziehungen mit Systemteilen, Aktionen, Schnittstellen und Testfällen verbunden.
 
 \section{Kontrollfragen}
 \begin{enumerate}
     \item Was macht eine gute Anforderung aus?
     \item Warum ist \enquote{Der Roboter soll gut navigieren} problematisch?
     \item Was ist der Unterschied zwischen funktionalen und nicht-funktionalen Anforderungen?
-    \item Wozu dient \texttt{deriveReqt}?
+    \item Wozu dient \texttt{derive}?
     \item Wozu dient \texttt{satisfy}?
     \item Wozu dient \texttt{verify}?
     \item Warum sollten Anforderungen möglichst lösungsneutral sein?
