@@ -1,0 +1,186 @@
+/* epub.css – Stylesheet für SysML_Lehrbuch EPUB
+   Autor: Wolfgang Becker
+*/
+
+/* ── Basis-Typografie ─────────────────────────────────────────── */
+
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1em;
+  line-height: 1.6;
+  margin: 1em;
+  color: #1a1a1a;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  color: #1a1a2e;
+  margin-top: 1.4em;
+  margin-bottom: 0.4em;
+  line-height: 1.2;
+}
+
+h1 { font-size: 1.8em; border-bottom: 2px solid #1a3a6e; padding-bottom: 0.2em; }
+h2 { font-size: 1.35em; }
+h3 { font-size: 1.1em; }
+h4 { font-size: 1em; font-style: italic; }
+
+p  { margin: 0.6em 0; text-align: justify; }
+
+/* ── Inline-Code ──────────────────────────────────────────────── */
+
+code {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.88em;
+  background: #f4f4f4;
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  color: #333;
+}
+
+/* ── Code-Blöcke (lstlisting) ─────────────────────────────────── */
+
+pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.82em;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  padding: 1em;
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 1em 0;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* ── Listen ───────────────────────────────────────────────────── */
+
+ul, ol {
+  margin: 0.6em 0 0.6em 1.5em;
+  padding: 0;
+}
+
+li { margin: 0.25em 0; }
+
+/* ── Tabellen ─────────────────────────────────────────────────── */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  font-size: 0.9em;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 0.4em 0.7em;
+  text-align: left;
+}
+
+th {
+  background: #1a3a6e;
+  color: white;
+  font-weight: bold;
+}
+
+tr:nth-child(even) { background: #f8f8f8; }
+
+/* ── Zitat-Blöcke (blockquote) ────────────────────────────────── */
+
+blockquote {
+  border-left: 4px solid #aaa;
+  margin: 1em 0;
+  padding: 0.5em 1em;
+  color: #555;
+}
+
+/* ── Box: Lernziele (blau) ────────────────────────────────────── */
+
+div.lernziele {
+  background: #eef3fb;
+  border-left: 5px solid #1a5276;
+  border-radius: 4px;
+  padding: 0.8em 1.1em;
+  margin: 1.2em 0;
+}
+
+div.lernziele p:first-child strong {
+  color: #1a5276;
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.4em;
+}
+
+/* ── Box: Praxisbeispiel (grün) ───────────────────────────────── */
+
+div.praxisbox {
+  background: #eafaf1;
+  border-left: 5px solid #1e8449;
+  border-radius: 4px;
+  padding: 0.8em 1.1em;
+  margin: 1.2em 0;
+}
+
+div.praxisbox p:first-child strong {
+  color: #1e8449;
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.4em;
+}
+
+/* ── Box: Hinweis (gelb) ──────────────────────────────────────── */
+
+div.hinweisbox {
+  background: #fefce8;
+  border-left: 5px solid #b7950b;
+  border-radius: 4px;
+  padding: 0.8em 1.1em;
+  margin: 1.2em 0;
+}
+
+div.hinweisbox p:first-child strong {
+  color: #9a7d0a;
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.4em;
+}
+
+/* ── Box: Übung (grau) ────────────────────────────────────────── */
+
+div.uebungbox {
+  background: #f4f4f4;
+  border-left: 5px solid #5d6d7e;
+  border-radius: 4px;
+  padding: 0.8em 1.1em;
+  margin: 1.2em 0;
+}
+
+div.uebungbox p:first-child strong {
+  color: #4a5568;
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.4em;
+}
+
+/* ── Cover ────────────────────────────────────────────────────── */
+
+.cover img {
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+}

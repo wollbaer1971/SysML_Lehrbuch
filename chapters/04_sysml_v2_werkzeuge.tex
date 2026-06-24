@@ -1,7 +1,7 @@
 \chapter{Werkzeuge für SysML v2 einrichten}
 
 \begin{lernziele}
-Nach diesem Kapitel können Sie erklären, warum dieses Lehrbuch eine textuelle SysML-v2-Arbeitsweise verwendet. Sie können ein einfaches Projekt in VS Code mit dem Syside Editor anlegen, SysML-v2-Dateien strukturieren und grafische Sichten als Ergänzung einordnen. Außerdem verstehen Sie, warum ein Werkzeug fachliches Modellieren unterstützt, aber nicht ersetzt.
+Nach diesem Kapitel können Sie erklären, warum dieses Lehrbuch eine textuelle SysML-v2-Arbeitsweise verwendet. Sie können ein einfaches Projekt in VS Code mit dem Syside Editor anlegen und SysML-v2-Dateien strukturieren. Außerdem können Sie Ziel, Umfang und Systemgrenze, Anforderungen, Part Definitions, Testfälle und ROS2-Topic-Zuordnungen in der SysML-v2-Textnotation formulieren.
 \end{lernziele}
 
 \section{Einleitung}
@@ -67,21 +67,249 @@ AutonomousIndoorRobot/
 
 Die Dateien im Ordner \texttt{model} enthalten das SysML-v2-Modell. Der Ordner \texttt{code} enthält spätere ROS2-Beispiele. Der Ordner \texttt{docs} kann kurze Architekturentscheidungen aufnehmen.
 
-\section{Erste SysML-v2-Datei}
-Eine erste Datei \texttt{00\_overview.sysml} kann den Projektrahmen beschreiben:
+\section{Ziel, Umfang und Systemgrenze beschreiben}
+
+Die erste Datei \texttt{00\_overview.sysml} dient dazu, das Projekt zu rahmen. Sie beantwortet drei grundlegende Fragen:
+
+\begin{itemize}
+    \item \textbf{Ziel:} Wofür ist das System da?
+    \item \textbf{Umfang:} Was gehört dazu, was nicht?
+    \item \textbf{Systemgrenze:} Wo endet das System und wo beginnt die Umgebung?
+\end{itemize}
+
+In SysML v2 beginnt jede Datei mit einem \texttt{package}. Das Package ist der benannte Modellraum. Innerhalb davon beschreiben wir Ziel und Umfang als Dokumentation mit \texttt{doc~/*~...~*/}. Die Systemgrenze zeigt sich darin, was wir als \texttt{part def} definieren und was wir als externen Akteur behandeln.
 
 \begin{lstlisting}
 package AutonomousIndoorRobot {
   doc
-  /* Ein Lernmodell für einen autonomen Indoor-Roboter.
-     Das Modell verbindet Anforderungen, Struktur, Verhalten,
-     Schnittstellen, ROS2-Mapping und Tests. */
+  /* Ziel: Ein autonomer Indoor-Roboter transportiert kleine
+     Gegenstaende innerhalb eines Gebaeudes zu ausgewaehlten Zielen.
+     Er faehrt selbststaendig, erkennt Hindernisse und kehrt bei
+     niedrigem Akkustand zur Ladestation zurueck.
+
+     Umfang: Dieses Modell beschreibt Navigation, Wahrnehmung,
+     Energieversorgung, Bedienung und Sicherheit des Roboters.
+
+     Systemgrenze: Zur Ladestation und zum Gebaeude gehoert die
+     physische Infrastruktur, die der Roboter nutzt, aber nicht
+     selbst steuert. Personen sind externe Akteure. */
 
   part def Robot;
+  part def ChargingStation;  // extern, aber modellrelevant
 }
 \end{lstlisting}
 
-Dieses Beispiel ist noch sehr klein. Es zeigt aber bereits eine wichtige Idee: Das System wird nicht als loses Bild begonnen, sondern als benannter Modellraum mit einem ersten Systemelement.
+Die \texttt{part def Robot} zeigt: Das System ist der Roboter. Die \texttt{ChargingStation} taucht als externe Komponente auf, weil der Roboter sie anfahren muss, sie aber nicht Teil des Roboters ist. Diese Entscheidung muss bewusst getroffen und dokumentiert werden.
+
+\begin{praxisbox}
+Häufiger Anfängerfehler: Systemgrenze unklar lassen. Wenn Sie nicht entscheiden, ob die Ladestation \enquote{im System} oder \enquote{außen} ist, entstehen später Widersprüche in Anforderungen und Tests. Eine kurze \texttt{doc}-Notiz am Anfang verhindert das.
+\end{praxisbox}
+
+\section{Anforderungen formulieren}
+
+Anforderungen beschreiben, was das System leisten muss, nicht wie. In SysML v2 werden sie in der Datei \texttt{02\_requirements.sysml} mit dem Schlüsselwort \texttt{requirement} definiert.
+
+Jede Anforderung bekommt einen eindeutigen Namen und eine Beschreibung als \texttt{doc}-Block. Anforderungen können geschachtelt werden, um Hierarchien auszudrücken.
+
+\begin{lstlisting}
+package Requirements {
+
+  requirement REQ_Navigate {
+    doc /* Der Roboter muss in einem bekannten Innenraumbereich
+           autonom ein ausgewaehltes Ziel anfahren koennen. */
+  }
+
+  requirement REQ_Safety {
+    doc /* Sicherheitsanforderungen fuer den Betrieb
+           in der Naehe von Personen. */
+
+    requirement REQ_DetectObstacles {
+      doc /* Der Roboter muss Hindernisse im Fahrweg erkennen. */
+    }
+
+    requirement REQ_StopSafely {
+      doc /* Der Roboter muss bei einem Hindernis in 0,5 m
+             Abstand bremsen und bei 0,2 m stoppen. */
+    }
+  }
+
+  requirement REQ_Battery {
+    doc /* Akkumanagement und Energieversorgung. */
+
+    requirement REQ_MonitorBattery {
+      doc /* Der Roboter muss seinen Akkustand kontinuierlich
+             ueberwachen. */
+    }
+
+    requirement REQ_ReturnToDock {
+      doc /* Der Roboter muss bei einem Akkustand unter 20 Prozent
+             selbststaendig zur Ladestation fahren. */
+    }
+  }
+}
+\end{lstlisting}
+
+Lesen Sie jede Anforderung laut vor und fragen Sie: Kann ich das testen? Wenn nicht, ist sie zu vage. \enquote{Der Roboter muss navigieren} ist nicht testbar. \enquote{Der Roboter muss bei 20 Prozent Akkustand die Ladestation anfahren} ist testbar.
+
+\section{Part Definitions formulieren}
+
+Part Definitions beschreiben die Bausteine des Systems. In SysML v2 definiert \texttt{part def} einen Typ. \texttt{part} erzeugt eine Instanz davon. Die Datei \texttt{03\_structure.sysml} enthält die Strukturmodellierung.
+
+Beginnen Sie mit dem Hauptelement \texttt{Robot} und listen Sie seine Hauptteile auf. Jeder Teil wird zuerst grob benannt. Die Details kommen schrittweise.
+
+\begin{lstlisting}
+package Structure {
+
+  part def Robot {
+    doc /* Das Gesamtsystem. Enthaelt alle funktionalen Subsysteme. */
+
+    part perception  : PerceptionSystem;
+    part navigation  : NavigationSystem;
+    part motion      : MotionControl;
+    part battery     : BatterySystem;
+    part ui          : UserInterface;
+    part safety      : SafetyLogic;
+  }
+
+  part def PerceptionSystem {
+    doc /* Nimmt Sensordaten auf und verarbeitet sie zu
+           Objektlisten und Hindernissignalen. */
+
+    part frontCamera : Camera;
+    part lidar       : Lidar;
+    part detector    : ObjectDetector;
+  }
+
+  part def BatterySystem {
+    doc /* Ueberwacht den Akkustand und meldet kritische Werte. */
+
+    part cell    : Battery;
+    part monitor : BatteryMonitor;
+    part charger : ChargingInterface;
+  }
+
+  part def NavigationSystem;
+  part def MotionControl;
+  part def UserInterface;
+  part def SafetyLogic;
+  part def Camera;
+  part def Lidar;
+  part def ObjectDetector;
+  part def Battery;
+  part def BatteryMonitor;
+  part def ChargingInterface;
+}
+\end{lstlisting}
+
+Der \texttt{doc}-Block bei jeder \texttt{part def} ist optional, aber empfohlen. Er hält fest, welche Verantwortung dieser Baustein trägt. Wenn Sie das nicht in einem Satz beschreiben können, ist die Verantwortung noch unklar.
+
+\section{Testfälle anlegen}
+
+Testfälle überprüfen, ob das System eine Anforderung erfüllt. In SysML v2 wird die Verbindung zwischen Testfall und Anforderung mit dem Schlüsselwort \texttt{verify} ausgedrückt. Die Datei \texttt{06\_tests.sysml} enthält die Testmodellierung.
+
+Ein Testfall beschreibt: Was wird getestet? Welche Vorbedingungen gelten? Was ist die erwartete Reaktion? Welche Anforderung wird damit geprüft?
+
+\begin{lstlisting}
+package Tests {
+
+  verification def TC_BatteryLowReturn {
+    doc /* Test: Roboter kehrt bei niedrigem Akkustand zurueck.
+         Vorbedingung: Roboter navigiert, Akkustand betraegt 25 Prozent.
+         Aktion: Akkustand sinkt auf 18 Prozent.
+         Erwartung: Roboter bricht Navigation ab und faehrt Ladestation an.
+         Akzeptanzkriterium: Ladestation erreicht innerhalb von 120 Sekunden. */
+  }
+
+  verification def TC_ObstacleStop {
+    doc /* Test: Roboter haelt vor Hindernis an.
+         Vorbedingung: Roboter faehrt mit 0,3 m/s.
+         Aktion: Hindernis erscheint in 0,4 m Abstand.
+         Erwartung: Roboter bremst und stoppt innerhalb von 0,2 m Sicherheitsabstand.
+         Akzeptanzkriterium: Keine Kollision, Stopp in weniger als 2 Sekunden. */
+  }
+
+  part robot : Robot {
+    verify REQ_ReturnToDock    by tc1 : TC_BatteryLowReturn;
+    verify REQ_StopSafely      by tc2 : TC_ObstacleStop;
+  }
+}
+\end{lstlisting}
+
+Die \texttt{verify}-Beziehung verbindet den Testfall mit der Anforderung. Das ist der Kern der Nachvollziehbarkeit: Jede Anforderung sollte mindestens einen Testfall haben, der sie prüft. Anforderungen ohne Test bleiben im Projekt unkontrolliert.
+
+\section{ROS2-Topics zuordnen}
+
+Die Datei \texttt{07\_ros2\_mapping.sysml} verbindet das SysML-Modell mit der späteren ROS2-Implementierung. Für jeden Systemteil wird dokumentiert, welcher ROS2-Node ihn umsetzt und welche Topics er verwendet.
+
+In SysML v2 können solche Zuordnungen als Attribute oder als Dokumentation modelliert werden. Für den Einstieg reicht eine klare Textnotation:
+
+\begin{lstlisting}
+package ROS2Mapping {
+
+  part def BatterySystem_ROS2 {
+    doc /* ROS2-Umsetzung des BatterySystem.
+
+         Node: battery_monitor_node
+         Paket: autonomous_indoor_robot/battery_monitor
+
+         Publizierte Topics:
+           /battery_state   (sensor_msgs/BatteryState)  -- Akkustand, 1 Hz
+
+         Abonnierte Topics:
+           keine
+
+         Verbindung zum Modell:
+           BatterySystem.monitor -> battery_monitor_node
+           REQ_MonitorBattery wird durch diesen Node erfuellt. */
+
+    attribute rosNode  : String = "battery_monitor_node";
+    attribute topicOut : String = "/battery_state";
+  }
+
+  part def NavigationSystem_ROS2 {
+    doc /* ROS2-Umsetzung des NavigationSystem.
+
+         Nodes: nav2_stack (extern), path_planner_node
+         Abonnierte Topics:
+           /battery_state   -- triggert Rueckkehr bei niedrigem Akku
+           /scan            (sensor_msgs/LaserScan)  -- Lidardaten
+           /map             (nav_msgs/OccupancyGrid) -- Karte
+
+         Publizierte Topics:
+           /cmd_vel         (geometry_msgs/Twist) -- Fahrbefehle
+           /robot_status    (std_msgs/String)     -- Betriebszustand
+
+         Verbindung zum Modell:
+           REQ_Navigate und REQ_ReturnToDock werden durch diese Nodes erfuellt. */
+
+    attribute rosNode  : String = "nav2_stack";
+    attribute topicIn  : String = "/battery_state, /scan, /map";
+    attribute topicOut : String = "/cmd_vel, /robot_status";
+  }
+}
+\end{lstlisting}
+
+Diese Datei wird im Laufe des Projekts wachsen. Beginnen Sie mit den Nodes, die Sie als Erstes implementieren. Die Verbindung zwischen SysML-Systemelement und ROS2-Node sollte immer explizit dokumentiert sein.
+
+\section{Alles zusammen: Ein Minimalmodell}
+
+Nach den ersten Schritten sieht ein Minimalmodell für den Indoor-Roboter so aus:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Datei} & \textbf{Inhalt} & \textbf{Schlüsselwörter} \\
+\midrule
+\texttt{00\_overview.sysml} & Ziel, Umfang, Systemgrenze & \texttt{package}, \texttt{doc}, \texttt{part def} \\
+\texttt{02\_requirements.sysml} & Anforderungen & \texttt{requirement}, \texttt{doc} \\
+\texttt{03\_structure.sysml} & Systembausteine & \texttt{part def}, \texttt{part} \\
+\texttt{06\_tests.sysml} & Testfälle & \texttt{verification def}, \texttt{verify} \\
+\texttt{07\_ros2\_mapping.sysml} & ROS2-Zuordnung & \texttt{attribute}, \texttt{doc} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Dieses Minimalmodell ist kein perfektes Systemmodell. Es ist ein Ausgangspunkt. Jede Datei kann mit wenigen Zeilen begonnen und schrittweise erweitert werden.
 
 \section{Empfohlene Modellstruktur}
 Die Modellstruktur orientiert sich an den wichtigsten Fragen des Projekts:
@@ -105,12 +333,11 @@ Klare Namen machen Modelle lesbar. Für dieses Lehrbuch verwenden wir einfache R
 \begin{itemize}
     \item Packages: \texttt{AutonomousIndoorRobot}
     \item Part Definitions: \texttt{Robot}, \texttt{BatterySystem}, \texttt{NavigationSystem}
-    \item Parts: \texttt{batterySystem}, \texttt{navigationSystem}
-    \item Actions: \texttt{MonitorBattery}, \texttt{NavigateToGoal}
-    \item Requirements: \texttt{REQ\_DetectObstacles}, \texttt{REQ\_ReturnToDock}
-    \item Testfälle: \texttt{TC\_BatteryLowReturn}
-    \item ROS2-Nodes: \texttt{battery\_monitor\_node}
-    \item Topics: \texttt{/battery\_state}, \texttt{/cmd\_vel}
+    \item Parts (Instanzen): \texttt{battery}, \texttt{navigation}, \texttt{motion}
+    \item Anforderungen: \texttt{REQ\_DetectObstacles}, \texttt{REQ\_ReturnToDock}
+    \item Testfälle: \texttt{TC\_BatteryLowReturn}, \texttt{TC\_ObstacleStop}
+    \item ROS2-Nodes: \texttt{battery\_monitor\_node}, \texttt{path\_planner\_node}
+    \item ROS2-Topics: \texttt{/battery\_state}, \texttt{/cmd\_vel}, \texttt{/robot\_status}
 \end{itemize}
 
 Vermeiden Sie wechselnde Namen für dasselbe Element. Wenn ein Element einmal \texttt{BatterySystem} heißt, sollte es nicht an anderer Stelle \texttt{PowerModule} genannt werden, außer Sie modellieren bewusst unterschiedliche Dinge.
@@ -121,45 +348,63 @@ Grafische Sichten sind besonders hilfreich, wenn ein Team schnell über Struktur
 Eclipse SysON kann für solche Sichten interessant sein. Es ist besonders dann nützlich, wenn Sie aus dem textuellen Modell heraus Struktur-, Verbindungs- oder Anforderungssichten visualisieren wollen. Für den Einstieg in diesem Buch reicht es aber, zunächst die textuelle Notation sauber zu verstehen.
 
 \section{Typische Anfängerfehler}
+\subsection{Systemgrenze nicht klären}
+Viele Modelle beginnen ohne eine klare Antwort auf die Frage: Was gehört zum System? Diese Entscheidung prägt alle späteren Anforderungen und Tests. Dokumentieren Sie die Systemgrenze explizit in der Übersichtsdatei.
+
+\subsection{Anforderungen nicht testbar formulieren}
+Anforderungen wie \enquote{Der Roboter soll gut navigieren} sind nicht prüfbar. Formulieren Sie immer mit konkreten Bedingungen und messbaren Erwartungen.
+
+\subsection{Part Definitions ohne Verantwortung}
+Eine \texttt{part def} ohne \texttt{doc}-Block lässt offen, wozu dieser Baustein da ist. Schreiben Sie für jeden Baustein mindestens einen Satz über seine Aufgabe.
+
+\subsection{Testfälle ohne Verbindung zu Anforderungen}
+Ein Testfall, der keine Anforderung prüft, ist nutzlos für die Nachvollziehbarkeit. Jede \texttt{verification def} sollte mindestens eine \texttt{verify}-Beziehung haben.
+
+\subsection{ROS2-Topics nicht dokumentieren}
+Der Name eines Topics allein reicht nicht. Welcher Node sendet? Welcher empfängt? Welches Nachrichtenformat? Diese Angaben gehören in die Mapping-Datei.
+
 \subsection{Text wie Programmcode ohne Bedeutung schreiben}
 SysML-v2-Text sieht teilweise wie Code aus. Trotzdem modellieren Sie kein Programm, sondern ein System. Fragen Sie bei jedem Element: Welche fachliche Aussage steckt dahinter?
 
-\subsection{Zu früh zu viele Dateien anlegen}
-Eine klare Struktur hilft, aber zu viele leere Dateien machen den Einstieg schwer. Beginnen Sie mit Überblick, Anforderungen und Struktur. Verhalten, Tests und Mapping können anschließend wachsen.
-
-\subsection{Diagramme als Wahrheit behandeln}
-Ein Diagramm zeigt nur eine Sicht. Die eigentliche Wahrheit liegt im Modell und seinen Beziehungen. Wenn Diagramm und Modell auseinanderlaufen, muss das Modell geklärt werden.
-
-\subsection{Werkzeugvalidierung mit Modellqualität verwechseln}
-Ein syntaktisch gültiges Modell kann fachlich trotzdem schlecht sein. Validierung findet Schreibfehler und Regelverstöße, aber keine unklare Systemgrenze oder fehlende Sicherheitsanforderung.
-
 \section{Zusammenfassung}
-Dieses Lehrbuch verwendet SysML v2 textuell und einsteigerfreundlich. VS Code mit dem Syside Editor ist die empfohlene kostenlose Arbeitsumgebung. Eclipse SysON kann grafische Sichten ergänzen. Entscheidend bleibt aber nicht das Werkzeug, sondern ein verständliches, konsistentes und nachverfolgbares Modell.
+Dieses Kapitel hat gezeigt, wie ein SysML-v2-Projekt von Anfang an strukturiert wird. Ziel, Umfang und Systemgrenze werden im Übersichtspaket als \texttt{doc}-Blöcke festgehalten. Anforderungen werden als \texttt{requirement} mit prüfbarem Text formuliert. Part Definitions beschreiben die Systembausteine mit \texttt{part def}. Testfälle verbinden sich über \texttt{verify} mit Anforderungen. ROS2-Topics werden in einer Mapping-Datei als \texttt{attribute} und Dokumentation zugeordnet. VS Code mit dem Syside Editor ist die empfohlene kostenlose Arbeitsumgebung. Entscheidend bleibt nicht das Werkzeug, sondern ein verständliches, konsistentes und nachverfolgbares Modell.
 
 \section{Kontrollfragen}
 \begin{enumerate}
     \item Warum eignet sich textuelle Modellierung gut für SysML v2?
-    \item Welche Rolle spielt der Syside Editor in diesem Lehrbuch?
-    \item Warum sind grafische Sichten trotzdem nützlich?
-    \item Welche Dateien enthält die empfohlene Modellstruktur?
-    \item Warum sollten Modellelemente einheitlich benannt werden?
+    \item Welche drei Fragen beantwortet die Datei \texttt{00\_overview.sysml}?
+    \item Was ist der Unterschied zwischen \texttt{part def} und \texttt{part}?
+    \item Was macht eine Anforderung testbar?
+    \item Wie verbindet SysML v2 einen Testfall mit einer Anforderung?
+    \item Welche Informationen gehören in die ROS2-Mapping-Datei?
+    \item Warum sollte jede \texttt{part def} eine \texttt{doc}-Notiz haben?
     \item Warum ersetzt Werkzeugvalidierung keine fachliche Modellprüfung?
 \end{enumerate}
 
 \section{Übungen}
 \begin{uebungbox}
-\textbf{Übung 1: Projektstruktur anlegen}\\
-Legen Sie die empfohlene Ordnerstruktur für \texttt{AutonomousIndoorRobot} an. Erstellen Sie eine Datei \texttt{00\_overview.sysml} und beschreiben Sie Ziel, Umfang und Systemgrenze des Roboterprojekts.
+\textbf{Übung 1: Systemgrenze beschreiben}\\
+Erstellen Sie die Datei \texttt{00\_overview.sysml}. Beschreiben Sie Ziel, Umfang und Systemgrenze des autonomen Indoor-Roboters im \texttt{doc}-Block des Hauptpakets. Entscheiden Sie bewusst: Gehört die Ladestation zum System oder ist sie extern? Begründen Sie Ihre Entscheidung in einem Satz.
 \end{uebungbox}
 
 \begin{uebungbox}
-\textbf{Übung 2: Namensregeln anwenden}\\
-Formulieren Sie Namen für fünf Anforderungen, drei Testfälle, fünf Part Definitions und vier ROS2-Topics. Achten Sie auf einheitliche Schreibweise.
+\textbf{Übung 2: Anforderungen formulieren}\\
+Erstellen Sie die Datei \texttt{02\_requirements.sysml} mit mindestens fünf Anforderungen. Verwenden Sie die Namen \texttt{REQ\_Navigate}, \texttt{REQ\_DetectObstacles}, \texttt{REQ\_StopSafely}, \texttt{REQ\_MonitorBattery} und \texttt{REQ\_ReturnToDock}. Formulieren Sie jeden \texttt{doc}-Block so, dass die Anforderung messbar und testbar ist.
 \end{uebungbox}
 
 \begin{uebungbox}
-\textbf{Übung 3: Sicht statt Wahrheit}\\
-Beschreiben Sie in drei Sätzen, warum ein Diagramm in SysML v2 nur eine Sicht auf das Modell ist.
+\textbf{Übung 3: Part Definitions anlegen}\\
+Erstellen Sie die Datei \texttt{03\_structure.sysml} mit einer \texttt{part def Robot}, die mindestens vier Subsysteme als \texttt{part} enthält. Zerlegen Sie das \texttt{PerceptionSystem} weiter in Kamera, Lidar und Detektor. Schreiben Sie für jeden Baustein eine kurze \texttt{doc}-Notiz.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 4: Testfälle anlegen}\\
+Erstellen Sie die Datei \texttt{06\_tests.sysml} mit mindestens zwei Testfällen. Beschreiben Sie für jeden Testfall Vorbedingung, Aktion und erwartetes Ergebnis im \texttt{doc}-Block. Verbinden Sie jeden Testfall über \texttt{verify} mit der zugehörigen Anforderung.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Übung 5: ROS2-Topics zuordnen}\\
+Erstellen Sie die Datei \texttt{07\_ros2\_mapping.sysml}. Ordnen Sie dem \texttt{BatterySystem} den Node \texttt{battery\_monitor\_node} und das Topic \texttt{/battery\_state} zu. Ordnen Sie dem \texttt{NavigationSystem} mindestens zwei Topics zu. Dokumentieren Sie Sender, Empfänger und Nachrichtenformat.
 \end{uebungbox}
 
 \section{Literaturhinweise}
