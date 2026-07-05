@@ -21,52 +21,83 @@
     node distance=8mm and 6mm,
     every node/.style={font=\small},
     box/.style={
-        rectangle, rounded corners=1.5pt, draw=black!70, thick,
-        minimum width=30mm, minimum height=9mm,
-        align=center, drop shadow
+      rectangle, rounded corners=1.5pt, draw=black!70, thick,
+      minimum width=30mm, minimum height=9mm,
+      align=center, drop shadow
     },
     root/.style={box, fill=blue!12},
     decomposed/.style={box, fill=green!20, draw=green!40!black},
     open/.style={box, fill=black!6, draw=black!50, dashed},
     leaf/.style={box, fill=green!8, minimum width=26mm, minimum height=7mm,
-        draw=green!40!black},
+    draw=green!40!black},
     edg/.style={-{Stealth[length=2mm]}, thick, black!60}
-]
+  ]
 
-% --- Ebene 0: Wurzel ---
-\node[root] (robot) {\texttt{part def Robot}};
+  % --- Ebene 0: Wurzel ---
+  \node[root] (robot) at (-0.99,0.05) {\texttt{part def Robot}};
 
-% --- Ebene 1: Subsysteme von Robot ---
-\node[decomposed, below=of robot, xshift=-52mm] (perception) {\texttt{perception :}\\\texttt{PerceptionSystem}};
-\node[open,       right=of perception]           (navigation) {\texttt{navigation :}\\\texttt{NavigationSystem}};
-\node[open,       right=of navigation]           (motion)     {\texttt{motion :}\\\texttt{MotionControl}};
-\node[decomposed, right=of motion]               (battery)    {\texttt{battery :}\\\texttt{BatterySystem}};
-\node[open,       right=of battery]              (ui)         {\texttt{ui :}\\\texttt{UserInterface}};
-\node[open,       right=of ui]                   (safety)     {\texttt{safety :}\\\texttt{SafetyLogic}};
+  % --- Ebene 1: Subsysteme von Robot ---
+  \node[
+    decomposed,
+    below=of robot,
+    xshift=-40mm
+  ] (perception) {\texttt{perception :}\\\texttt{PerceptionSystem}};
+  \node[
+    decomposed,
+    below=3.8cm of robot,
+    xshift=20mm
+  ]  (battery)    {\texttt{battery :}\\\texttt{BatterySystem}};
 
-\foreach \n in {perception,navigation,motion,battery,ui,safety}
+  \node[open, right=3cm of robot ] (navigation) {\texttt{navigation :}\\\texttt{NavigationSystem}};
+  \node[open, below=1cm of navigation] (motion)     {\texttt{motion :}\\\texttt{MotionControl}};
+
+  \node[open, below=1cm of motion] (ui)         {\texttt{ui :}\\\texttt{UserInterface}};
+  \node[open, below=1cm of ui]   (safety)     {\texttt{safety :}\\\texttt{SafetyLogic}};
+
+  \begin{scope}[on background layer]
+    \foreach \n in {perception,navigation,motion,battery,ui,safety}
     \draw[edg] (robot) -- (\n);
+  \end{scope}
 
-% --- Ebene 2: Zerlegung von PerceptionSystem ---
-\node[leaf, below=14mm of perception, xshift=-20mm] (camera)   {\texttt{frontCamera :}\\\texttt{Camera}};
-\node[leaf, below=14mm of perception]               (lidar)    {\texttt{lidar :}\\\texttt{Lidar}};
-\node[leaf, below=14mm of perception, xshift=20mm]  (detector) {\texttt{detector :}\\\texttt{ObjectDetector}};
+  % --- Ebene 2: Zerlegung von PerceptionSystem ---
+  \node[
+    leaf,
+    below=1.98cm of perception,
+    xshift=-20mm
+  ] (camera)   {\texttt{frontCamera :}\\\texttt{Camera}};
+  \node[leaf, below=3.27cm of perception]               (lidar)    {\texttt{lidar :}\\\texttt{Lidar}};
+  \node[
+    leaf,
+    below=1.98cm of perception,
+    xshift=20mm
+  ]  (detector) {\texttt{detector :}\\\texttt{ObjectDetector}};
 
-\foreach \n in {camera,lidar,detector}
-    \draw[edg] (perception) -- (\n);
+  \foreach \n in {camera,lidar,detector}
+  \draw[edg] (perception) -- (\n);
 
-% --- Ebene 2: Zerlegung von BatterySystem ---
-\node[leaf, below=14mm of battery, xshift=-20mm] (cell)    {\texttt{cell :}\\\texttt{Battery}};
-\node[leaf, below=14mm of battery]               (monitor) {\texttt{monitor :}\\\texttt{BatteryMonitor}};
-\node[leaf, below=14mm of battery, xshift=20mm]  (charger) {\texttt{charger :}\\\texttt{ChargingInterface}};
+  % --- Ebene 2: Zerlegung von BatterySystem ---
+  \node[leaf, below=1.99cm of battery, xshift=-20mm] (cell)    {\texttt{cell :}\\\texttt{Battery}};
+  \node[leaf, below=3.29cm of battery]               (monitor) {\texttt{monitor :}\\\texttt{BatteryMonitor}};
+  \node[
+    leaf,
+    below=1.99cm of battery,
+    xshift=20mm
+  ]  (charger) {\texttt{charger :}\\\texttt{ChargingInterface}};
 
-\foreach \n in {cell,monitor,charger}
-    \draw[edg] (battery) -- (\n);
+  \foreach \n in {cell,monitor,charger}
+  \draw[edg] (battery) -- (\n);
 
-% --- Legende ---
-\node[decomposed, minimum width=6mm, minimum height=4mm, below=20mm of camera, xshift=-8mm, font=\tiny] (leg1) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {bereits weiter zerlegt};
-\node[open, minimum width=6mm, minimum height=4mm, below=6mm of leg1, font=\tiny] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {noch leere \texttt{part def} (offen)};
+  % --- Legende ---
+  \node[
+    decomposed,
+    minimum width=6mm,
+    minimum height=4mm,
+    below=20mm of camera,
+    xshift=-8mm,
+    font=\tiny
+  ] (leg1) {};
+  \node[right=1mm of leg1, font=\tiny, align=left] {bereits weiter zerlegt};
+  \node[open, minimum width=6mm, minimum height=4mm, below=6mm of leg1, font=\tiny] (leg2) {};
+  \node[right=1mm of leg2, font=\tiny, align=left] {noch leere \texttt{part def} (offen)};
 
 \end{tikzpicture}
