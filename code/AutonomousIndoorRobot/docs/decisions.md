@@ -46,7 +46,7 @@ nav2_bringup ist Pflichtabhängigkeit. Launch-Datei muss nav2 einbinden. Anpassu
 Lokalisierung erfolgt mit AMCL (Adaptive Monte Carlo Localization) auf einer vorab erstellten 2D-Karte.
 
 **Begründung:**  
-AMCL ist stabil, rechenarmsam und für strukturierte Innenräume ausreichend genau (Zielgenauigkeit: 10 cm). Alternatives SLAM zur Laufzeit (z.B. SLAM Toolbox) ist optional, aber nicht Standardbetrieb.
+AMCL ist stabil, ressourcensparsam und für strukturierte Innenräume ausreichend genau (Zielgenauigkeit: 10 cm). Alternatives SLAM zur Laufzeit (z.B. SLAM Toolbox) ist optional, aber nicht Standardbetrieb.
 
 **Alternativen verworfen:**  
 - SLAM Toolbox: Sinnvoll für unbekannte Umgebungen, aber höherer Rechenaufwand.

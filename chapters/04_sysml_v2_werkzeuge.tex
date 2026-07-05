@@ -79,6 +79,8 @@ Die erste Datei \texttt{00\_overview.sysml} dient dazu, das Projekt zu rahmen. S
 
 In SysML v2 beginnt jede Datei mit einem \texttt{package}. Das Package ist der benannte Modellraum. Innerhalb davon beschreiben wir Ziel und Umfang als Dokumentation mit \texttt{doc~/*~...~*/}. Die Systemgrenze zeigt sich darin, was wir als \texttt{part def} definieren und was wir als externen Akteur behandeln.
 
+Beachten Sie: In \texttt{doc}-Kommentaren schreiben wir Umlaute bewusst aus (\texttt{ae}, \texttt{oe}, \texttt{ue}), um Encoding-Probleme zwischen unterschiedlichen Werkzeugen und Betriebssystemen zu vermeiden.
+
 \begin{lstlisting}
 package AutonomousIndoorRobot {
   doc
@@ -104,6 +106,8 @@ Die \texttt{part def Robot} zeigt: Das System ist der Roboter. Die \texttt{Charg
 \begin{praxisbox}
 Häufiger Anfängerfehler: Systemgrenze unklar lassen. Wenn Sie nicht entscheiden, ob die Ladestation \enquote{im System} oder \enquote{außen} ist, entstehen später Widersprüche in Anforderungen und Tests. Eine kurze \texttt{doc}-Notiz am Anfang verhindert das.
 \end{praxisbox}
+
+Diese Darstellung ist für den Einstieg vereinfacht: \texttt{ChargingStation} steht hier als \texttt{part def} auf derselben Ebene wie \texttt{Robot}. Sauberer wäre es, externe Systeme in einem eigenen Kontext-Package zu modellieren, um die Systemgrenze auch strukturell sichtbar zu machen.
 
 \section{Anforderungen formulieren}
 
@@ -201,6 +205,16 @@ package Structure {
 }
 \end{lstlisting}
 
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_struktur_robot}
+  \caption{Strukturbaum des Roboters mit \texttt{part def Robot} und seinen
+    Subsystemen. Grün hinterlegte Kästen sind im Modell bereits weiter
+    zerlegt, grau hinterlegte Kästen sind an dieser Stelle noch leere
+    \texttt{part def}s.}
+  \label{fig:struktur-robot}
+\end{figure}
+
 Der \texttt{doc}-Block bei jeder \texttt{part def} ist optional, aber empfohlen. Er hält fest, welche Verantwortung dieser Baustein trägt. Wenn Sie das nicht in einem Satz beschreiben können, ist die Verantwortung noch unklar.
 
 \section{Testfälle anlegen}
@@ -236,6 +250,8 @@ package Tests {
 \end{lstlisting}
 
 Die \texttt{verify}-Beziehung verbindet den Testfall mit der Anforderung. Das ist der Kern der Nachvollziehbarkeit: Jede Anforderung sollte mindestens einen Testfall haben, der sie prüft. Anforderungen ohne Test bleiben im Projekt unkontrolliert.
+
+Die genaue Syntax von \texttt{verify ... by} kann sich zwischen SysML-v2-Werkzeugversionen leicht unterscheiden, da die Sprache noch in Entwicklung ist. Prüfen Sie im Zweifel gegen Ihre installierte Werkzeugversion.
 
 \section{ROS2-Topics zuordnen}
 
@@ -288,6 +304,8 @@ package ROS2Mapping {
   }
 }
 \end{lstlisting}
+
+Für den Einstieg vereinfacht: Mehrere Topics in einem String zusammenzufassen ist praktisch, aber unsauber. Sauberer wäre ein eigenes Attribut je Topic (z.\,B. \texttt{topicScan}, \texttt{topicMap}), damit jedes Topic einzeln typisiert und nachverfolgt werden kann.
 
 Diese Datei wird im Laufe des Projekts wachsen. Beginnen Sie mit den Nodes, die Sie als Erstes implementieren. Die Verbindung zwischen SysML-Systemelement und ROS2-Node sollte immer explizit dokumentiert sein.
 

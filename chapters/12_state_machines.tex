@@ -63,6 +63,15 @@ state def RobotOperation {
 }
 \end{lstlisting}
 
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_state_machine}
+  \caption{Zustandsdiagramm zu \texttt{state def RobotOperation}. Jeder
+    Pfeil entspricht einer \texttt{transition accept ... then ...}-Zeile
+    aus dem Listing oben. Der Fehlerzustand ist rot hervorgehoben.}
+  \label{fig:state-machine}
+\end{figure}
+
 \section{Guard-Bedingungen}
 Guards sind Bedingungen an Übergängen. Ein Übergang findet nur statt, wenn die Bedingung erfüllt ist. Beispiel: \texttt{GoalReceived [batteryOk]} führt zu \texttt{Navigating}. Wenn der Akku nicht ausreichend ist, führt das Ereignis vielleicht zu \texttt{ReturnToDock} oder zu einer Ablehnung des Auftrags.
 

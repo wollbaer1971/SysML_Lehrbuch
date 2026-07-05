@@ -58,7 +58,7 @@ ros2 run robot_basic_nodes status_node
 \end{lstlisting}
 
 \section{Vom Modell zum Node}
-Ein SysML-Block \texttt{BatterySystem} kann zur Entscheidung führen, einen \texttt{battery\_monitor\_node} zu implementieren. Die Schnittstelle \enquote{Akkustatus} wird zum Topic \texttt{/battery\_state}. Der Testfall prüft später, ob der Node plausible Werte veröffentlicht.
+Die \texttt{part def BatterySystem} kann zur Entscheidung führen, einen \texttt{battery\_monitor\_node} zu implementieren. Die Schnittstelle \enquote{Akkustatus} wird zum Topic \texttt{/battery\_state}. Der Testfall prüft später, ob der Node plausible Werte veröffentlicht.
 
 \begin{hinweisbox}
 Der Code ist bewusst minimal. In realen Projekten kommen Fehlerbehandlung, Parameter, Logging, Launch-Dateien, Tests und saubere Package-Strukturen hinzu.

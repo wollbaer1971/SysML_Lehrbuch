@@ -80,6 +80,10 @@ part def PerceptionSystem {
 }
 \end{lstlisting}
 
+\begin{hinweisbox}
+Das Tilde-Zeichen (\texttt{\textasciitilde}) kennzeichnet einen sogenannten konjugierten Port; was das genau bedeutet, erklären wir ausführlich in Kapitel 9.
+\end{hinweisbox}
+
 \subsection{Verhaltensmodellierung (\texttt{action def}, \texttt{action})}
 Aktivitäten beschreiben Abläufe. Sie eignen sich für Prozesse wie \enquote{Transportauftrag ausführen}, \enquote{Zur Ladestation zurückkehren} oder \enquote{Hindernis behandeln}. In SysML v2 werden Abläufe mit \texttt{action def} und \texttt{action} modelliert.
 
@@ -88,6 +92,8 @@ Zustandsmodelle beschreiben Zustände und Übergänge. Ein Roboter besitzt Betri
 
 \subsection{Parametrische Modellierung (\texttt{calc def}, \texttt{constraint})}
 Parametrische Modelle beschreiben mathematische Beziehungen. Sie helfen, technische Entscheidungen früh zu prüfen. In SysML v2 werden Berechnungen mit \texttt{calc def} und Bedingungen mit \texttt{constraint} ausgedrückt.
+
+Verhalten, Zustände und Parametrik lernen Sie ab Kapitel 11 im Detail kennen. Für den ersten Einstieg in Kapitel 4 genügen zunächst Anforderungen und Struktur.
 
 \section{Modell statt Bild}
 Ein SysML-Diagramm ist nur eine Sicht auf ein Modell. Diese Unterscheidung ist zentral. Wenn Sie in einem Zeichenprogramm drei Kästen mit dem Namen \texttt{NavigationSystem} zeichnen, sind das drei unabhängige grafische Objekte. In einem Modellierungswerkzeug wie dem Syside Editor ist \texttt{NavigationSystem} ein einziges Modellelement, das in mehreren Sichten dargestellt werden kann.

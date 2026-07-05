@@ -46,7 +46,7 @@ part def ObjectDetector {
 }
 \end{lstlisting}
 
-Das Tilde-Zeichen \texttt{\textasciitilde} markiert einen konjugierten Port, der empfängt statt sendet.
+Das Tilde-Zeichen \texttt{\textasciitilde} markiert einen \gls{conjport}, der empfängt statt sendet.
 
 \section{Verbindungen}
 \texttt{connection} verknüpft kompatible Ports miteinander. Eine Verbindung sollte immer dokumentieren, was über sie fließt.
@@ -64,6 +64,15 @@ part def PerceptionSystem {
                       to obstacleDetector.scanIn;
 }
 \end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_ports_connections}
+  \caption{Verbindungsmodell des \texttt{PerceptionSystem}. Die kleinen
+    Quadrate an den Boxrändern sind Ports. Das Tilde-Zeichen markiert einen
+    konjugierten Port, der empfängt statt sendet.}
+  \label{fig:ports-connections}
+\end{figure}
 
 \section{Datenflüsse und ROS2}
 Die Verbindungsmodellierung passt gut zur ROS2-Kommunikation. ROS2-Topics können als Datenflüsse modelliert werden. Ein Topic \texttt{/camera/image\_raw} verbindet \texttt{camera\_node} und \texttt{object\_detector\_node}. Ein Topic \texttt{/cmd\_vel} verbindet Navigation und Bewegungssteuerung.

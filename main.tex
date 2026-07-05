@@ -2,6 +2,7 @@
 
 \usepackage[ngerman]{babel}
 \usepackage[T1]{fontenc}
+\usepackage{textcomp}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage{microtype}
@@ -20,6 +21,7 @@
 \usepackage{caption}
 \usepackage{float}
 \usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shadows,calc,quotes}
 \usepackage{tcolorbox}
 \usepackage{amsmath}
 \usepackage{makeidx}
@@ -48,6 +50,7 @@
     tabsize=2,
     extendedchars=true,
     inputencoding=utf8,
+    upquote=true,
     literate=
         {ä}{{\"a}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
         {Ä}{{\"A}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
@@ -96,6 +99,8 @@ Was ist ein Systemmodell? Wie beschreibt man Anforderungen? Wie entsteht daraus 
 
 Als durchgängiges Beispiel dient ein autonomer Indoor-Roboter. Der Roboter soll Hindernisse erkennen, Räume kartieren, Ziele anfahren, Personen erkennen und seinen Akkustand überwachen.
 Das Beispiel ist klein genug für den Einstieg, aber realistisch genug, um die wichtigsten Ideen von Model-Based Systems Engineering sichtbar zu machen.
+
+Alle SysML-v2-Codebeispiele in diesem Buch wurden mit dem Syside Editor geprüft ([BITTE HIER SYSIDE-VERSION UND PRÜFDATUM EINTRAGEN]). Da sich SysML v2 und die zugehörigen Werkzeuge derzeit noch kontinuierlich weiterentwickeln, kann es bei abweichenden Werkzeugversionen zu kleinen Syntaxunterschieden kommen, etwa bei der Schreibweise von \texttt{verify ... by}. Prüfen Sie Codebeispiele im Zweifel gegen Ihre installierte Werkzeugversion.
 
 \mainmatter
 

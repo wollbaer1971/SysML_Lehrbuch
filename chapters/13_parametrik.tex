@@ -14,22 +14,22 @@ Parametrische Modelle beschreiben mathematische Beziehungen. Sie helfen, technis
 
 \section{Einfaches Beispiel: Betriebszeit}
 \[
-t_{betrieb} = \frac{E_{akku}}{P_{gesamt}}
+t_{\text{betrieb}} = \frac{E_{\text{akku}}}{P_{\text{gesamt}}}
 \]
 
-Dabei ist \(E_{akku}\) die nutzbare Energie der Batterie und \(P_{gesamt}\) die durchschnittliche Leistungsaufnahme.
+Dabei ist \(E_{\text{akku}}\) die nutzbare Energie der Batterie und \(P_{\text{gesamt}}\) die durchschnittliche Leistungsaufnahme.
 
 Wenn die Batterie 100 Wh nutzbare Energie besitzt und das System im Mittel 25 W aufnimmt, ergibt sich:
 
 \[
-t_{betrieb} = \frac{100 Wh}{25 W} = 4 h
+t_{\text{betrieb}} = \frac{100\,\text{Wh}}{25\,\text{W}} = 4\,\text{h}
 \]
 
 \section{Leistungsaufnahme}
 Die Gesamtleistung kann grob abgeschätzt werden:
 
 \[
-P_{gesamt} = P_{rechner} + P_{sensoren} + P_{motoren} + P_{sonstiges}
+P_{\text{gesamt}} = P_{\text{rechner}} + P_{\text{sensoren}} + P_{\text{motoren}} + P_{\text{sonstiges}}
 \]
 
 Diese Formel ist einfach, aber nützlich für frühe Architekturentscheidungen. Wenn ein stärkerer Rechner 15 W mehr benötigt, sinkt die Betriebszeit. Das kann Anforderungen an Batteriegröße, Gewicht und Ladezeit beeinflussen.
@@ -58,6 +58,18 @@ Beispiel:
     \item Parameter: \(t\), \(E\), \(P\)
     \item Verbindung: \(E\) mit Batteriekapazität, \(P\) mit Leistungsaufnahme
 \end{itemize}
+
+Als Code sieht dieselbe \texttt{calc def} so aus:
+
+\begin{lstlisting}
+calc def OperatingTimeCalc {
+  in energy : Real;   // nutzbare Energie in Wh
+  in power  : Real;   // mittlere Leistungsaufnahme in W
+  return operatingTime : Real = energy / power;
+}
+\end{lstlisting}
+
+Die \texttt{in}-Parameter \texttt{energy} und \texttt{power} werden im Modell mit den Attributen von Batterie und Verbrauchern verbunden. Das Ergebnis \texttt{operatingTime} steht dann als berechneter Wert am Systemteil zur Verfügung.
 
 \section{Grenzen einfacher Modelle}
 Parametrische Modelle sind nur so gut wie ihre Annahmen. Ein Roboter verbraucht beim Anfahren mehr Energie als im Stillstand. Teppichboden, Nutzlast und Fahrprofil beeinflussen die Laufzeit. Ein einfaches Modell ist trotzdem nützlich, weil es früh Größenordnungen sichtbar macht.
