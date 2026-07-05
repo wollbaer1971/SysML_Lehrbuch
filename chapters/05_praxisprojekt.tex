@@ -108,7 +108,7 @@ Ein Nutzer wählt ein Ziel aus. Der Roboter prüft, ob eine Karte verfügbar ist
 Während der Navigation erkennt der Roboter ein Hindernis. Er bewertet, ob Ausweichen möglich ist. Falls ja, plant er lokal eine neue Bewegung. Falls nicht, stoppt er und meldet eine Blockade.
 
 \subsection{Szenario 3: Niedriger Akkustand}
-Der Batteriemonitor erkennt einen niedrigen Ladezustand. Der Roboter beendet keine riskante neue Mission mehr, informiert den Nutzer und plant die Rückkehr zur Ladestation.
+Der Batteriemonitor erkennt einen niedrigen Ladezustand. Der Roboter bricht seine aktuelle Mission ab, informiert den Nutzer und plant die Rückkehr zur Ladestation.
 
 \subsection{Szenario 4: Personenerkennung}
 Die Kamera liefert Bilder an einen ML-basierten Erkennungs-Node. Erkennt das System eine Person im Fahrbereich, reduziert der Roboter seine Geschwindigkeit oder wählt einen anderen Pfad.
