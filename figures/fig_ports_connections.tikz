@@ -1,0 +1,48 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=30mm, minimum height=12mm,
+        align=center, fill=blue!8, drop shadow
+    },
+    port/.style={rectangle, draw=black, fill=black!75, minimum width=2.2mm,
+        minimum height=2.2mm, inner sep=0pt},
+    portlbl/.style={font=\tiny},
+    flow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black}
+]
+
+% --- Systemteile ---
+\node[part] (camera) at (0, 3)   {\texttt{camera :}\\\texttt{Camera}};
+\node[part] (lidar)  at (0, 0)   {\texttt{lidar :}\\\texttt{Lidar}};
+\node[part] (detect) at (7, 3)   {\texttt{objectDetector :}\\\texttt{ObjectDetector}};
+\node[part] (obst)   at (7, 0)   {\texttt{obstacleDetector :}\\\texttt{ObstacleDetector}};
+
+% --- Ports (kleine Quadrate am Rand) ---
+\node[port] (p-cam-out)   at ($(camera.east)$)   {};
+\node[port] (p-lidar-out) at ($(lidar.east)$)    {};
+\node[port] (p-det-in)    at ($(detect.west)$)   {};
+\node[port] (p-det-out)   at ($(detect.east)$)   {};
+\node[port] (p-obst-in)   at ($(obst.west)$)     {};
+
+\node[portlbl, above=0.5mm of p-cam-out]   {\texttt{imageOut}};
+\node[portlbl, above=0.5mm of p-lidar-out] {\texttt{scanOut}};
+\node[portlbl, above=0.5mm of p-det-in]    {\texttt{imageIn} \textcolor{orange!70!black}{$\sim$}};
+\node[portlbl, above=0.5mm of p-det-out]   {\texttt{objectsOut}};
+\node[portlbl, above=0.5mm of p-obst-in]   {\texttt{scanIn} \textcolor{orange!70!black}{$\sim$}};
+
+% --- Verbindungen (connection c1 / c2) ---
+\draw[flow] (p-cam-out)   -- node[above, midway, font=\tiny]{c1} (p-det-in);
+\draw[flow] (p-lidar-out) -- node[above, midway, font=\tiny]{c2} (p-obst-in);
+
+% --- Weiterleitung an Navigation (objectsOut, im Listing nicht verbunden) ---
+\draw[flow, dashed] (p-det-out) -- ++(2.2,0)
+    node[right, font=\tiny, align=left] {an\\Navigation};
+
+% --- Legende ---
+\node[port, below=16mm of lidar, xshift=-4mm] (leg1) {};
+\node[portlbl, right=1mm of leg1] {Port};
+\node[portlbl, below=2mm of leg1, xshift=6mm] (legtilde) {\textcolor{orange!70!black}{$\sim$} = konjugierter Port (empfaengt statt sendet)};
+\draw[flow] ([yshift=-8mm]leg1.south) -- ++(6mm,0)
+    node[right=1mm, font=\tiny] {Verbindung (\texttt{connection})};
+
+\end{tikzpicture}
