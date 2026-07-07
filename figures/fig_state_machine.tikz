@@ -1,0 +1,48 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    state/.style={
+        rectangle, rounded corners=2pt, draw=black!70, thick,
+        minimum width=27mm, minimum height=9mm,
+        align=center, fill=blue!10, drop shadow
+    },
+    errstate/.style={state, fill=red!12, draw=red!60!black},
+    initial/.style={circle, fill=black, minimum size=3mm, inner sep=0pt},
+    trans/.style={-{Stealth[length=2.2mm]}, thick, black!70},
+    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+]
+
+% --- Zustaende (Koordinaten in cm) ---
+\node[initial]  (init)   at (-2.8, 0)    {};
+\node[state]    (idle)   at (0, 0)       {\texttt{idle}};
+\node[state]    (nav)    at (6.5, 0)     {\texttt{navigating}};
+\node[state]    (avoid)  at (6.5, 4.5)   {\texttt{avoidingObstacle}};
+\node[state]    (dock)   at (13, 0)      {\texttt{returnToDock}};
+\node[state]    (charge) at (13, -6)     {\texttt{charging}};
+\node[errstate] (error)  at (6.5, -6)    {\texttt{error}};
+
+% --- entry ---
+\draw[trans] (init) -- (idle);
+
+% --- Hauptzyklus: idle -> navigating -> returnToDock -> charging -> idle ---
+\draw[trans] (idle.east) -- node[lbl, above]{GoalReceived} (nav.west);
+\draw[trans] (nav.east)  -- node[lbl, above]{BatteryLow}   (dock.west);
+\draw[trans] (dock.south) -- node[lbl, right]{DockReached} (charge.north);
+\draw[trans] (charge.south) -- ++(0,-1.6) -| node[lbl, pos=0.85, above]{ChargingComplete} ([xshift=-3mm]idle.south);
+
+% --- Nebenschleife: navigating <-> avoidingObstacle ---
+\draw[trans] ([xshift=-4mm]nav.north) -- node[lbl, right, pos=0.15]{ObstacleDetected} ([xshift=-4mm]avoid.south);
+\draw[trans] ([xshift=4mm]avoid.south) -- node[lbl, left, pos=0.15]{PathFree} ([xshift=4mm]nav.north);
+
+% --- Fehlerzweig: navigating -> error -> idle ---
+\draw[trans] (nav.south) -- node[lbl, right]{ErrorDetected} (error.north);
+\draw[trans] (error.west) -| node[lbl, pos=0.9, above]{Reset} ([xshift=3mm]idle.south);
+
+% --- Legende ---
+\node[state, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0,-9) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Normalzustand};
+\node[errstate, minimum width=6mm, minimum height=4mm, font=\tiny, right=28mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {Fehlerzustand};
+\node[initial, right=28mm of leg2] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] {Startpunkt (\texttt{entry})};
+
+\end{tikzpicture}
