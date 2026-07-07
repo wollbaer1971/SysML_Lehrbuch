@@ -1,0 +1,35 @@
+\begin{tikzpicture}[
+    node distance=8mm and 4mm,
+    every node/.style={font=\small},
+    box/.style={
+      rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+      minimum width=27mm, minimum height=9mm,
+      align=center, drop shadow, font=\scriptsize
+    },
+    root/.style={
+      rectangle, rounded corners=1.5pt, draw=black!70, thick,
+      minimum width=30mm, minimum height=10mm,
+      align=center, drop shadow, fill=blue!12
+    },
+    child/.style={box, fill=green!15},
+    edg/.style={-{Stealth[length=2mm]}, thick, black!60}
+  ]
+
+  % --- Wurzel ---
+  \node[root] (robot) at (0,0) {\texttt{Robot}};
+
+  % --- Erste Reihe: vier Kindknoten ---
+  \node[child, below=16mm of robot, xshift=-46mm] (perception)   {PerceptionSystem};
+  \node[child, right=3mm of perception]           (navigation)   {NavigationSystem};
+  \node[child, right=3mm of navigation]           (motion)       {MotionControl};
+  \node[child, right=3mm of motion]               (battery)      {BatterySystem};
+
+  % --- Zweite Reihe: drei weitere Kindknoten ---
+  \node[child, below=10mm of navigation, xshift=-15mm] (ui)     {UserInterface};
+  \node[child, right=3mm of ui]                        (comm)   {CommunicationSystem};
+  \node[child, right=3mm of comm]                       (safety) {SafetyLogic};
+
+  \foreach \n in {perception,navigation,motion,battery,ui,comm,safety}
+    \draw[edg] (robot) -- (\n);
+
+\end{tikzpicture}

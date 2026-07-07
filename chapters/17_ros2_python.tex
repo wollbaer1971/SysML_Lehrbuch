@@ -14,7 +14,16 @@ Ein Python-Package wird typischerweise mit folgendem Befehl erstellt:
 ros2 pkg create robot_basic_nodes --build-type ament_python --dependencies rclpy std_msgs sensor_msgs geometry_msgs
 \end{lstlisting}
 
-Ein Package bündelt Code, Konfiguration und Startinformationen. Für größere Systeme werden mehrere Packages sinnvoll.
+Der Parameter \texttt{--build-type ament\_python} legt den Build-Typ fest: \texttt{ament\_python} eignet sich für reine Python-Packages, während \texttt{ament\_cmake} für C++- oder gemischte Packages verwendet wird.
+
+Ein Package bündelt Code, Konfiguration und Startinformationen. Für größere Systeme werden mehrere Packages sinnvoll. Abbildung~\ref{fig:kap17-workspace-struktur} zeigt die resultierende Workspace- und Package-Struktur.
+
+\begin{figure}[H]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures/fig_kap17_workspace_struktur}}
+  \caption{Verzeichnisstruktur eines ROS2-Workspace mit dem Package \texttt{robot\_basic\_nodes} sowie den Geschwisterordnern \texttt{build/}, \texttt{install/} und \texttt{log/}.}
+  \label{fig:kap17-workspace-struktur}
+\end{figure}
 
 \section{Ein einfacher Node}
 \begin{lstlisting}[language=Python]
@@ -39,18 +48,32 @@ def main():
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
 \end{lstlisting}
+
+Damit \texttt{ros2 run robot\_basic\_nodes status\_node} diesen Code später findet, muss zusätzlich ein passender Eintrag in den \texttt{entry\_points} der \texttt{setup.py} des Packages angelegt werden; darauf gehen wir hier nicht im Detail ein.
 
 \section{Publisher}
 Ein Publisher veröffentlicht Nachrichten auf einem Topic. Im Beispiel sendet der Node regelmäßig einen Status auf \texttt{/robot/status}. Ein Batteriemonitor würde ähnlich regelmäßig \texttt{/battery\_state} veröffentlichen.
 
 \section{Subscriber}
-Ein Subscriber empfängt Nachrichten von einem Topic. Der ObjectDetector würde zum Beispiel \texttt{/camera/image\_raw} abonnieren. Eine Callback-Funktion verarbeitet eingehende Nachrichten.
+Ein Subscriber empfängt Nachrichten von einem Topic. Der ObjectDetector würde zum Beispiel \texttt{/camera/image\_raw} abonnieren. Eine Callback-Funktion (eine Methode, die automatisch aufgerufen wird, sobald eine neue Nachricht eintrifft) verarbeitet eingehende Nachrichten.
 
 \section{Timer}
-Timer lösen Funktionen regelmäßig aus. Sie eignen sich für Statusmeldungen, simulierte Sensordaten oder periodische Prüfungen.
+Timer lösen Funktionen regelmäßig aus. Sie eignen sich für Statusmeldungen, simulierte Sensordaten oder periodische Prüfungen. Abbildung~\ref{fig:kap17-ablauf-publisher-timer} zeigt den Ablauf im \texttt{StatusNode} vom Timer bis zur Nachricht auf dem Topic.
+
+\begin{figure}[H]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures/fig_kap17_ablauf_publisher_timer}}
+  \caption{Ablauf im \texttt{StatusNode}: Der Timer löst periodisch \texttt{publish\_status()} aus, das eine Nachricht erzeugt und auf dem Topic \texttt{/robot/status} veröffentlicht.}
+  \label{fig:kap17-ablauf-publisher-timer}
+\end{figure}
 
 \section{Build und Start}
+\texttt{colcon} ist das Standard-Build-Werkzeug für ROS2-Workspaces; es übersetzt und verlinkt alle Packages im Workspace gemeinsam. Der Workspace gliedert sich dabei typischerweise in die Ordner \texttt{src/} (Quellcode), \texttt{build/} und \texttt{install/} (Build-Ergebnisse) sowie \texttt{log/} (Protokolle), wie in Abbildung~\ref{fig:kap17-workspace-struktur} gezeigt.
+
 \begin{lstlisting}[language=bash]
 colcon build
 source install/setup.bash

@@ -1,0 +1,54 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=26mm, minimum height=9mm,
+        align=center, fill=green!15, drop shadow
+    },
+    container/.style={
+        rectangle, rounded corners=2pt, draw=green!40!black, thick,
+        align=center, fill=green!4, drop shadow
+    },
+    port/.style={rectangle, draw=black, fill=black!75, minimum width=2.2mm,
+        minimum height=2.2mm, inner sep=0pt},
+    portlbl/.style={font=\tiny},
+    reflink/.style={-{Stealth[length=2mm]}, thin, black!45, dashed}
+]
+
+% --- Aeussere Struktursicht: Robot ---
+\draw[container] (0.2,0.3) rectangle (6.2,5.3);
+\node[font=\small\itshape, anchor=north west] at (0.3,5.2) {Robot};
+
+\node[part] (perc) at (1.8,4.0) {perceptionSystem};
+\node[part] (nav)  at (4.6,4.0) {navigationSystem};
+\node[part] (batt) at (1.8,1.6) {batterySystem};
+\node[part] (mot)  at (4.6,1.6) {motionControl};
+
+% --- Detailbox: PerceptionSystem mit Ports ---
+\draw[container] (8.2,0.3) rectangle (13.6,5.3);
+\node[font=\small\itshape, anchor=north west] at (8.3,5.2) {PerceptionSystem};
+
+\node[part, minimum width=22mm] (camera)   at (10.0,4.1) {camera};
+\node[part, minimum width=22mm] (lidar)    at (10.0,2.7) {lidar};
+\node[part, minimum width=22mm] (detector) at (10.0,1.3) {detector};
+
+\node[port] (sensport) at (13.6,2.7) {};
+\node[portlbl, right=0.5mm of sensport, align=left]
+    {\texttt{sensorData} \textcolor{orange!70!black}{$\sim$}};
+
+\draw[black!55, thick] (detector.east) -- ++(1.6,0) |- (sensport.west);
+\draw[black!55, thick] (camera.east)   -- ++(0.9,0) |- (sensport.west);
+\draw[black!55, thick] (lidar.east)    -- (sensport.west);
+
+% --- Referenz zwischen Uebersicht und Detailbox ---
+\draw[reflink] (perc.east) to[bend left=15] node[midway, above, font=\tiny, fill=white, inner sep=1pt]
+    {Detailsicht} (8.2,4.6);
+
+% --- Legende ---
+\node[part, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0.5,-1.1) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {\texttt{part} (Instanz einer \texttt{part def})};
+\node[port, right=42mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {Port};
+\node[right=58mm of leg1, font=\tiny, align=left] {\textcolor{orange!70!black}{$\sim$} = konjugierter Port};
+
+\end{tikzpicture}

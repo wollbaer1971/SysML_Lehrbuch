@@ -99,8 +99,17 @@ Wichtige Beziehungen in SysML sind:
 REQ-002 \enquote{Hindernisse erkennen} wird durch das \texttt{PerceptionSystem} erfüllt. Der Testfall \texttt{TC-002 Hinderniserkennung} verifiziert diese Anforderung. Eine \texttt{trace}-Beziehung kann zusätzlich zeigen, dass der ROS2-Node \texttt{obstacle\_detector\_node} zur Umsetzung gehört.
 \end{praxisbox}
 
+Abbildung~\ref{fig:kap06-traceability-req002} stellt diese Traceability-Kette grafisch dar: \texttt{satisfy} und \texttt{verify} zeigen als zwei getrennte, eingehende Beziehungen auf das \texttt{PerceptionSystem}, von dort führt \texttt{trace} weiter zum ROS2-Node.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap06_traceability_req002}
+  \caption{Traceability-Kette von REQ-002 über \texttt{satisfy} und \texttt{verify} zum \texttt{PerceptionSystem} und per \texttt{trace} weiter zum ROS2-Node.}
+  \label{fig:kap06-traceability-req002}
+\end{figure}
+
 \section{Anforderungen in SysML v2}
-In SysML v2 werden Anforderungen textuell mit dem Schlüsselwort \texttt{requirement} definiert:
+In SysML v2 werden Anforderungen – eingebettet in ein \texttt{package} wie bereits aus Kapitel 3 bekannt – textuell mit dem Schlüsselwort \texttt{requirement} definiert:
 
 \begin{lstlisting}
 package Requirements {
@@ -120,9 +129,11 @@ package Requirements {
 }
 \end{lstlisting}
 
+Anders als bei \texttt{part def} und \texttt{part} in Kapitel 8 unterscheidet SysML v2 bei \texttt{requirement} im Grundfall nicht zwischen Typ und Nutzung: Das Schlüsselwort \texttt{requirement} definiert die Anforderung im Beispiel gleichzeitig als solche.
+
 Erstellen Sie in der Datei \texttt{02\_requirements.sysml} erste Requirement-Elemente. Verwenden Sie klare Namen, eine stabile ID und einen prüfbaren Text. Achten Sie darauf, dass Anforderungen nicht nur als Liste existieren, sondern später mit Systemteilen, Verhalten und Tests verbunden werden.
 
-Nutzen Sie Beschreibungsfelder (\texttt{doc /* ... */}), um Annahmen, Begründungen oder offene Fragen zu dokumentieren. Wenn eine Anforderung noch unklar ist, markieren Sie sie bewusst, statt sie stillschweigend als fertig zu behandeln.
+Nutzen Sie Beschreibungsfelder (\texttt{doc /* ... */}), um Annahmen, Begründungen oder offene Fragen zu dokumentieren. Wenn eine Anforderung noch unklar ist, markieren Sie sie bewusst, statt sie stillschweigend als fertig zu behandeln – zum Beispiel mit einem kurzen \texttt{doc /* TBD: ... */}-Vermerk im betroffenen Requirement-Element.
 
 \section{Typische Fehler}
 \subsection{Zu allgemeine Anforderungen}
@@ -132,7 +143,7 @@ Nutzen Sie Beschreibungsfelder (\texttt{doc /* ... */}), um Annahmen, Begründun
 \enquote{Der Roboter muss Sensor X verwenden} ist häufig bereits eine Designentscheidung. Besser ist eine lösungsneutrale Fähigkeit, sofern kein konkreter Sensor vorgeschrieben ist.
 
 \subsection{Keine Akzeptanzkriterien}
-Eine Anforderung sollte erkennen lassen, wie sie später geprüft wird. Sonst entstehen Diskussionen am Projektende.
+Eine Anforderung sollte erkennen lassen, wie sie später geprüft wird. Ein Akzeptanzkriterium legt fest, woran sich die Erfüllung konkret zeigt, zum Beispiel: \enquote{Testfall: Bei einem simulierten Hindernis in 0,5\,m Abstand muss die Geschwindigkeit innerhalb 1\,s reduziert werden.} Ohne solche Kriterien entstehen Diskussionen am Projektende.
 
 \subsection{Keine Pflege}
 Anforderungen ändern sich. Wichtig ist, Änderungen nachvollziehbar zu halten und betroffene Modellelemente zu prüfen.

@@ -14,7 +14,18 @@ Validierung fragt: Wurde das richtige System gebaut? Das bedeutet: Löst das Sys
 
 Beide Fragen sind wichtig. Ein Roboter kann alle spezifizierten Anforderungen erfüllen und trotzdem für Nutzer unpraktisch sein. Umgekehrt kann ein Prototyp nützlich wirken, aber wichtige Anforderungen nicht nachweisbar erfüllen.
 
+Das klassische V-Modell veranschaulicht diesen Zusammenhang: Jede Spezifikationsebene auf dem absteigenden Ast hat eine entsprechende Verifikations- oder Validierungsebene auf dem aufsteigenden Ast (siehe Abbildung~\ref{fig:kap19-v-modell}).
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap19_v_modell}
+  \caption{Das V-Modell verbindet den absteigenden Spezifikationsast mit dem aufsteigenden Verifikationsast.}
+  \label{fig:kap19-v-modell}
+\end{figure}
+
 \section{Testfälle}
+Die folgende Tabelle listet die Testfälle des Roboterprojekts auf. Das Kürzel \enquote{TC} steht dabei für \emph{Test Case} (Testfall), das Kürzel \enquote{REQ} für \emph{Requirement} (Anforderung, siehe Kapitel 6).
+
 \begin{longtable}{p{25mm}p{55mm}p{55mm}}
 \toprule
 ID & Testfall & Verifizierte Anforderung\\
@@ -62,10 +73,31 @@ Integrationstests prüfen das Zusammenspiel mehrerer Komponenten. Beispiel: \tex
 Systemtests prüfen das Verhalten des gesamten Roboters in definierten Szenarien.
 
 \subsection{Simulationstests}
-Simulationstests erlauben viele Tests ohne echte Hardware. Sie ersetzen reale Tests nicht vollständig, sind aber für frühe Entwicklung sehr wertvoll.
+Simulationstests erlauben viele Tests ohne echte Hardware. Sie ersetzen reale Tests nicht vollständig, sind aber für frühe Entwicklung sehr wertvoll. Kapitel 22 stellt mit Gazebo ein konkretes Simulationswerkzeug für solche Tests vor.
 
 \section{Tests im Modell}
-In SysML können Testfälle mit \texttt{verify}-Beziehungen an Anforderungen gehängt werden. Dadurch ist erkennbar, welche Anforderungen noch keine Tests haben.
+In SysML können Testfälle mit \texttt{verify}-Beziehungen an Anforderungen gehängt werden. Dadurch ist erkennbar, welche Anforderungen noch keine Tests haben. Abbildung~\ref{fig:kap19-verify-beziehung} zeigt dies am Beispiel von TC-006 und REQ-006.
+
+In SysML v2 kann eine solche \texttt{verify}-Beziehung textuell etwa so notiert werden:
+
+\begin{lstlisting}
+package Tests {
+  import Requirements::*;
+
+  test def TC_006 {
+    doc /* Prueft, ob der Roboter bei niedrigem Akkustand
+           selbststaendig zur Ladestation faehrt. */
+    verify requirement REQ_006;
+  }
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap19_verify_beziehung}
+  \caption{Der Testfall TC-006 verifiziert die Anforderung REQ-006 über eine \texttt{verify}-Beziehung.}
+  \label{fig:kap19-verify-beziehung}
+\end{figure}
 
 \begin{praxisbox}
 Wenn REQ-006 eine Rückkehr zur Ladestation fordert, sollte ein Testfall prüfen, ob der Roboter bei unterschrittenem Akkuschwellwert tatsächlich ein Rückkehrziel setzt und keinen neuen normalen Transportauftrag startet.
@@ -94,7 +126,9 @@ Für das Roboterprojekt kann die Testplanung schrittweise wachsen:
     \item Szenarien wie Zielnavigation werden als Systemtests beschrieben.
 \end{itemize}
 
-Ein gutes Testmodell macht auch Lücken sichtbar. Wenn eine Anforderung keinen Testfall besitzt, ist das nicht automatisch falsch, aber es ist eine offene Frage. Vielleicht wird sie durch Analyse, Review oder Inspektion nachgewiesen. Auch das sollte dokumentiert werden.
+Sinnvoll ist außerdem, bestehende Tests nach jeder Änderung erneut auszuführen (Regressionstest), damit neu eingeführte Fehler frühzeitig auffallen – besonders relevant im Zusammenhang mit dem Änderungsmanagement aus Kapitel 20.
+
+Ein gutes Testmodell macht auch Lücken sichtbar. Wenn eine Anforderung keinen Testfall besitzt, ist das nicht automatisch falsch, aber es ist eine offene Frage. Vielleicht wird sie durch Analyse, Review oder Inspektion nachgewiesen. Test, Analyse, Inspektion und Demonstration gelten dabei als die vier klassischen Verifikationsmethoden. Auch das sollte dokumentiert werden.
 
 \section{Zusammenfassung}
 Tests und Verifikation schließen den Kreis von Anforderungen zur Umsetzung. Ein gutes Modell zeigt nicht nur, was gebaut werden soll, sondern auch, wie die Erfüllung geprüft wird.

@@ -28,13 +28,30 @@ REQ-002 Hindernisse erkennen
 -> TC-002 Hinderniserkennung
 \end{verbatim}
 
-Diese Kette zeigt, wie eine Anforderung bis zu Implementierung und Test verfolgt werden kann.
+Diese Kette zeigt, wie eine Anforderung bis zu Implementierung und Test verfolgt werden kann. In SysML v2 lassen sich solche Verbindungen über die Beziehungen \texttt{satisfy}, \texttt{derive} und \texttt{trace} konkret im Modell verankern, zum Beispiel:
+
+\begin{lstlisting}
+satisfy requirement REQ_002 by PerceptionSystem;
+derive requirement REQ_002 from REQ_SAFE_002;
+trace PerceptionSystem to obstacle_detector_node;
+\end{lstlisting}
+
+Abbildung~\ref{fig:kap20-traceability-kette-req002} stellt dieselbe Kette grafisch dar, einschließlich der jeweiligen Beziehungsart zwischen den Elementen.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap20_traceability_kette_req002}
+  \caption{Traceability-Kette von REQ-002 über SysML-Systemelemente und ROS2-Node/Topic bis zum Testfall TC-002.}
+  \label{fig:kap20-traceability-kette-req002}
+\end{figure}
 
 \section{Nutzen}
 Wenn sich REQ-002 ändert, kann analysiert werden, welche Komponenten betroffen sind. Vielleicht muss der Lidar ausgetauscht werden. Vielleicht muss der Test angepasst werden. Vielleicht reicht eine Softwareänderung.
 
 \section{Impact Analysis}
 Impact Analysis bedeutet Auswirkungsanalyse. Sie beantwortet die Frage: Was ändert sich, wenn eine Anforderung, Komponente oder Schnittstelle geändert wird?
+
+Methodisch lässt sich diese Frage beantworten, indem man von der geänderten Anforderung ausgehend die Traceability-Matrix rückwärts verfolgt: Welche Systemelemente, Schnittstellen, ROS2-Nodes und Tests sind über eine Beziehung mit ihr verbunden?
 
 Beispiel: Die maximale Geschwindigkeit wird erhöht. Betroffen sein können:
 
@@ -60,7 +77,14 @@ Eine einfache Matrix kann Spalten enthalten:
     \item Testfall
 \end{itemize}
 
-Diese Matrix ist kein Ersatz für das Modell, aber eine nützliche Sicht.
+Diese Matrix ist kein Ersatz für das Modell, aber eine nützliche Sicht. Abbildung~\ref{fig:kap20-traceability-matrix} zeigt einen Auszug für zwei Anforderungen des Indoor-Roboters. Moderne SysML-v2-Werkzeuge können eine solche Matrix häufig automatisch aus den Modellbeziehungen erzeugen, was den manuellen Pflegeaufwand deutlich reduziert.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap20_traceability_matrix}
+  \caption{Auszug aus einer Traceability-Matrix: Jede Zeile verbindet eine Anforderung über Funktion, Systemelement und ROS2-Node bis zum Testfall.}
+  \label{fig:kap20-traceability-matrix}
+\end{figure}
 
 \section{Änderungsmanagement}
 Änderungen sollten bewusst bewertet werden. Ein einfacher Ablauf:
@@ -73,6 +97,17 @@ Diese Matrix ist kein Ersatz für das Modell, aber eine nützliche Sicht.
     \item Aufwand und Risiko bewerten.
     \item Entscheidung dokumentieren.
 \end{enumerate}
+
+Am Beispiel der Geschwindigkeitserhöhung aus dem vorigen Abschnitt lässt sich dieser Ablauf konkret durchspielen: Der Änderungswunsch (höhere Maximalgeschwindigkeit) macht die betroffenen Sicherheitsanforderungen und das Bremswegmodell sichtbar, die Tests zur Stoppdistanz müssen angepasst werden, und erst nach Bewertung von Aufwand und Risiko wird die Entscheidung dokumentiert. Bei größeren Projekten übernimmt häufig ein eigenes Genehmigungsgremium, das Change Control Board (CCB), diese Entscheidung; für das Einsteigerprojekt reicht in der Regel eine einfache, dokumentierte Entscheidung.
+
+Abbildung~\ref{fig:kap20-aenderungsmanagement-ablauf} zeigt diesen Ablauf inklusive der Entscheidung über Genehmigung oder Ablehnung.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap20_aenderungsmanagement_ablauf}
+  \caption{Ablauf des Änderungsmanagements von der Beschreibung des Änderungswunschs bis zur dokumentierten Entscheidung.}
+  \label{fig:kap20-aenderungsmanagement-ablauf}
+\end{figure}
 
 \section{Typische Fehler}
 Traceability wird oft zu spät aufgebaut. Dann ist sie mühsam. Besser ist es, Beziehungen während der Modellierung schrittweise zu pflegen. Ein weiterer Fehler ist zu viel Traceability ohne Nutzen. Verknüpfen Sie vor allem die Elemente, die für Entscheidungen, Änderungen und Tests wichtig sind.

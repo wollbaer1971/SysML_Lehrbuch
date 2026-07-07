@@ -1,0 +1,64 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    ext/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
+        minimum width=24mm, minimum height=13mm,
+        align=center, fill=white, drop shadow, font=\scriptsize
+    },
+    req/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=24mm, minimum height=13mm,
+        align=center, fill=blue!12, drop shadow, font=\scriptsize
+    },
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=24mm, minimum height=13mm,
+        align=center, fill=green!15, drop shadow, font=\scriptsize
+    },
+    tool/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=24mm, minimum height=13mm,
+        align=center, fill=orange!15, drop shadow, font=\scriptsize
+    },
+    test/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick,
+        minimum width=24mm, minimum height=13mm,
+        align=center, fill=black!6, drop shadow, font=\scriptsize
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60}
+]
+
+% --- Zeile 1: Stakeholderbedarf bis Systemelement Lidar-Sensor ---
+\node[ext]  (need) at (1.2,3.5)  {Stakeholder-\\bedarf};
+\node[req]  (req)  at (4.0,3.5)  {Anforderung};
+\node[part] (f1)   at (6.8,3.5)  {Funktion:\\Hindernis\\erkennen};
+\node[part] (f2)   at (9.6,3.5)  {Funktion:\\Bewegung sicher\\begrenzen};
+\node[part] (lidar)at (12.4,3.5) {Systemelement:\\Lidar-Sensor};
+
+\draw[flow] (need) -- (req);
+\draw[flow] (req)  -- (f1);
+\draw[flow] (f1)   -- (f2);
+\draw[flow] (f2)   -- (lidar);
+
+% --- Zeile 2: Systemelement Sicherheitslogik bis Testfall ---
+\node[part] (safety) at (12.4,0) {Systemelement:\\Sicherheitslogik};
+\node[tool] (topic)  at (9.6,0)  {ROS2-Topic};
+\node[tool] (rosnode)   at (6.8,0)  {ROS2-Node};
+\node[test] (tc)     at (4.0,0)  {Testfall};
+
+\draw[flow] (lidar.south)  -- (safety.north);
+\draw[flow] (safety) -- (topic);
+\draw[flow] (topic)  -- (rosnode);
+\draw[flow] (rosnode)   -- (tc);
+
+% --- Legende ---
+\node[req, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (1.2,-2.2) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Anforderung};
+\node[part, minimum width=6mm, minimum height=4mm, font=\tiny, right=18mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {Funktion / Systemelement};
+\node[tool, minimum width=6mm, minimum height=4mm, font=\tiny, right=50mm of leg1] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] {ROS2-Element};
+\node[test, minimum width=6mm, minimum height=4mm, font=\tiny, right=68mm of leg1] (leg4) {};
+\node[right=1mm of leg4, font=\tiny, align=left] {Testfall};
+
+\end{tikzpicture}

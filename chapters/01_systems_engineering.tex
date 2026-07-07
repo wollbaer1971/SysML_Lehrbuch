@@ -1,7 +1,7 @@
 \chapter{Systems Engineering verstehen}
 
 \begin{lernziele}
-Dieses Kapitel erklärt Ihnen, was ein System ist und warum Systems Engineering für komplexe technische Produkte notwendig ist. Sie verstehen den Unterschied zwischen einer einzelnen Komponente und dem Verhalten eines Systems. Sie lernen, Stakeholder zu benennen, eine Systemgrenze zu ziehen und typische Anfangsfehler zu erkennen. Anhand eines autonomen Indoor-Roboters wenden Sie das Denken in Anforderungen, Funktionen, Schnittstellen und Nachweisen praktisch an.
+Dieses Kapitel erklärt Ihnen, was ein System ist und warum Systems Engineering für komplexe technische Produkte notwendig ist. Sie verstehen den Unterschied zwischen einer einzelnen Komponente und dem Verhalten eines Systems. Sie lernen, Stakeholder (Personen, Gruppen oder Organisationen mit Interesse am System) zu benennen, eine Systemgrenze zu ziehen und typische Anfangsfehler zu erkennen. Anhand eines autonomen Indoor-Roboters wenden Sie das Denken in Anforderungen, Funktionen, Schnittstellen und Nachweisen praktisch an.
 \end{lernziele}
 
 \section{Einleitung}
@@ -28,7 +28,7 @@ Ein System ist eine Menge von Elementen, die zusammenwirken, um einen Zweck zu e
 
 Erstens besteht ein System aus mehreren Elementen. Beim Indoor-Roboter sind das zum Beispiel Sensoren, Rechner, Softwarekomponenten, Batterie, Motoren, Räder, Gehäuse, Ladekontakte und Benutzerschnittstellen. Auch Menschen können im erweiterten Sinn Teil einer Systembetrachtung sein, etwa Bediener, Wartungspersonal oder Personen im Fahrbereich.
 
-Zweitens wirken diese Elemente zusammen. Ein einzelner Lidar-Sensor macht noch keinen autonomen Roboter. Erst wenn der Sensor Messdaten liefert, diese Daten verarbeitet werden, daraus eine Karte entsteht, die Navigation einen Weg plant und die Motorsteuerung passende Fahrbefehle ausführt, entsteht das gewünschte Verhalten.
+Zweitens wirken diese Elemente zusammen. Ein einzelner Lidar-Sensor (ein Sensor, der Abstände per Laser misst) macht noch keinen autonomen Roboter. Erst wenn der Sensor Messdaten liefert, diese Daten verarbeitet werden, daraus eine Karte entsteht, die Navigation einen Weg plant und die Motorsteuerung passende Fahrbefehle ausführt, entsteht das gewünschte Verhalten.
 
 Drittens hat ein System einen Zweck. Der Zweck unseres Roboters könnte lauten: \enquote{Der Roboter transportiert kleine Gegenstände selbstständig innerhalb eines Bürogebäudes.} Ein anderer Zweck wäre: \enquote{Der Roboter überwacht nachts Flure und meldet ungewöhnliche Ereignisse.} Beide Systeme könnten äußerlich ähnlich aussehen, hätten aber andere Anforderungen, andere Stakeholder und andere technische Schwerpunkte.
 
@@ -45,7 +45,7 @@ Ein häufiger Anfängerfehler besteht darin, ein System nur als Liste von Teilen
     \item Akku
     \item Motorcontroller
     \item Computer
-    \item ROS2-Software
+    \item ROS2-Software (eine Robotik-Software-Plattform, siehe Kapitel 14)
 \end{itemize}
 
 Diese Liste ist nützlich, aber sie reicht nicht aus. Entscheidend sind die Beziehungen zwischen den Teilen. Die Kamera liefert Bilder an eine Erkennungssoftware. Die Erkennungssoftware meldet erkannte Personen an die Navigation. Die Navigation berücksichtigt Hindernisse und erzeugt Sollgeschwindigkeiten. Der Motorcontroller setzt diese Sollgeschwindigkeiten in elektrische Ansteuerung der Motoren um. Der Batteriemonitor meldet einen niedrigen Ladezustand, woraufhin die Missionsplanung eine Rückkehr zur Ladestation auslöst.
@@ -101,7 +101,7 @@ Der Begriff Systems Engineering wurde besonders im 20. Jahrhundert wichtig. Gro�
 \subsection{Luft- und Raumfahrt als Treiber}
 In der Luft- und Raumfahrt sind die Folgen von Fehlern besonders gravierend. Ein Satellit, eine Rakete oder ein Flugzeug besteht aus vielen Teilsystemen: Struktur, Antrieb, Energie, Kommunikation, Steuerung, Sensorik, Software und Bodeninfrastruktur. Diese Teilsysteme müssen unter extremen Bedingungen zusammen funktionieren.
 
-Solche Projekte prägten viele Grundideen des Systems Engineering: klare Anforderungen, kontrollierte Schnittstellen, Konfigurationsmanagement, Verifikation, Validierung und Nachvollziehbarkeit. Der zentrale Gedanke lautet: Man entwickelt nicht nur Bauteile, sondern ein Gesamtsystem mit nachweisbarer Erfüllung seiner Aufgaben.
+Solche Projekte prägten viele Grundideen des Systems Engineering: klare Anforderungen, kontrollierte Schnittstellen, Konfigurationsmanagement (der geordnete Umgang mit Änderungen und Versionen), Verifikation (wird weiter unten in diesem Kapitel genauer erklärt), Validierung (die Prüfung, ob das System tatsächlich das richtige Problem löst) und Nachvollziehbarkeit. Der zentrale Gedanke lautet: Man entwickelt nicht nur Bauteile, sondern ein Gesamtsystem mit nachweisbarer Erfüllung seiner Aufgaben.
 
 \subsection{Software und vernetzte Systeme}
 Später wurde Software immer wichtiger. Moderne Systeme sind oft \glspl{cyberphysical}: physische Komponenten werden durch Software gesteuert und sind über Netzwerke verbunden. Ein autonomer Roboter ist ein typisches Beispiel. Er bewegt sich physisch durch die Welt, entscheidet aber mit Hilfe von Software, Sensorfusion und Algorithmen.
@@ -125,7 +125,14 @@ Für den Indoor-Roboter könnte eine gewünschte Wirkung lauten: \enquote{Der Ro
     \item Nutzer über Störung informieren
 \end{itemize}
 
-Erst danach entscheiden wir, welche Komponenten diese Funktionen erfüllen. Vielleicht braucht der Roboter einen Lidar-Sensor. Vielleicht reicht eine Tiefenkamera nicht aus. Vielleicht ist eine Kombination aus mehreren Sensoren sinnvoll. Die Lösung folgt aus dem Problem, nicht umgekehrt.
+Eine Funktion beschreibt dabei eine Fähigkeit, zum Beispiel \enquote{Hindernisse erkennen}, während eine Komponente das konkrete Bauteil ist, das diese Fähigkeit umsetzt, zum Beispiel ein Lidar-Sensor; dieselbe Funktion kann durch unterschiedliche Komponenten erfüllt werden. Erst danach entscheiden wir, welche Komponenten diese Funktionen erfüllen. Vielleicht braucht der Roboter einen Lidar-Sensor. Vielleicht reicht eine Tiefenkamera nicht aus. Vielleicht ist eine Kombination aus mehreren Sensoren sinnvoll. Die Lösung folgt aus dem Problem, nicht umgekehrt. Abbildung~\ref{fig:kap01-wirkkette} zeigt diese Wirkkette vom Sensor bis zu den Motoren sowie, parallel dazu, den Regelkreis der Energieversorgung.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap01_wirkkette}
+  \caption{Wirkkette der Hinderniserkennung von der Sensorik bis zu den Motoren, darunter der Regelkreis der Energieversorgung.}
+  \label{fig:kap01-wirkkette}
+\end{figure}
 
 \subsection{Rückkopplungen}
 Viele Systeme enthalten Rückkopplungen. Der Roboter misst seine Umgebung, entscheidet eine Bewegung, bewegt sich, misst erneut und korrigiert seine Entscheidung. Navigation ist ohne Rückkopplung kaum möglich.
@@ -219,6 +226,15 @@ Solche Konflikte sind normal. Gefährlich werden sie erst, wenn sie unausgesproc
 Für unseren Indoor-Roboter könnte die Stakeholderanalyse ergeben, dass die Kamera zwar für Personenerkennung nützlich ist, aber Datenschutzfragen auslöst. Eine mögliche Systementscheidung wäre, Bilder nur lokal auf dem Roboter zu verarbeiten und nicht dauerhaft zu speichern. Daraus entstehen neue Anforderungen an Softwarearchitektur, Speicherverwaltung und Tests.
 \end{praxisbox}
 
+Abbildung~\ref{fig:kap01-stakeholder} fasst die zehn wichtigsten Stakeholder des Indoor-Roboters noch einmal zusammen und zeigt jeweils ein typisches Interesse am System.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap01_stakeholder}
+  \caption{Stakeholder des autonomen Indoor-Roboters mit jeweils einem typischen Interesse am System.}
+  \label{fig:kap01-stakeholder}
+\end{figure}
+
 \section{Systemgrenzen}
 Die Systemgrenze legt fest, was zum betrachteten System gehört und was als Umgebung betrachtet wird. Diese Entscheidung ist nicht nur eine Zeichnung. Sie beeinflusst Anforderungen, Verantwortlichkeiten, Schnittstellen und Tests.
 
@@ -246,7 +262,14 @@ Außerhalb der Systemgrenze liegt der Systemkontext. Dazu gehören alle externen
     \item rechtliche und organisatorische Vorgaben
 \end{itemize}
 
-Der Kontext ist wichtig, weil viele Anforderungen an den Grenzen entstehen. Schnittstellen sind häufig Fehlerquellen. Ein Roboter kann intern sauber funktionieren und trotzdem im Betrieb scheitern, wenn die Kommunikation mit der Umgebung unklar ist.
+Der Kontext ist wichtig, weil viele Anforderungen an den Grenzen entstehen. Schnittstellen sind häufig Fehlerquellen. Ein Roboter kann intern sauber funktionieren und trotzdem im Betrieb scheitern, wenn die Kommunikation mit der Umgebung unklar ist. Abbildung~\ref{fig:kap01-systemgrenze} veranschaulicht die Systemgrenze und den Kontext mit den wichtigsten Energie-, Daten- und Bewegungsflüssen.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap01_systemgrenze}
+  \caption{Systemgrenze und Kontext des autonomen Indoor-Roboters mit Energie-, Daten- und Bewegungsflüssen über die Grenze hinweg.}
+  \label{fig:kap01-systemgrenze}
+\end{figure}
 
 \section{Fallstudie: Autonomer Indoor-Roboter}
 Wir verwenden in diesem Buch durchgehend einen autonomen Indoor-Roboter als Praxisbeispiel. In diesem Kapitel betrachten wir ihn noch ohne SysML-Details. Wir beschreiben ihn so, wie ein Systems-Engineering-Team am Anfang eines Projekts darüber sprechen könnte.
@@ -423,6 +446,7 @@ Beschreiben Sie zwei Zielkonflikte im Roboterprojekt. Wählen Sie zum Beispiel G
 \end{uebungbox}
 
 \section{Literaturhinweise}
+
 Für den Einstieg in Systems Engineering lohnt sich zunächst ein praxisorientierter Zugang. Lesen Sie nicht nur Definitionen, sondern achten Sie darauf, wie Anforderungen, Architektur, Schnittstellen und Tests zusammenhängen. Besonders hilfreich sind Einführungen des International Council on Systems Engineering (INCOSE), Grundlagenwerke zum Systems Engineering sowie praxisnahe Darstellungen zu SysML und MBSE.
 
 Für dieses Lehrbuch sind außerdem die folgenden Themen als weiterführende Lektüre sinnvoll:

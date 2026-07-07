@@ -1,0 +1,98 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    doc/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
+        minimum width=20mm, minimum height=8mm,
+        align=center, fill=white, drop shadow, font=\tiny
+    },
+    modellbox/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=26mm, minimum height=10mm,
+        align=center, fill=green!15, drop shadow
+    },
+    req/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=20mm, minimum height=8mm,
+        align=center, fill=blue!12, drop shadow, font=\tiny
+    },
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=20mm, minimum height=8mm,
+        align=center, fill=green!15, drop shadow, font=\tiny
+    },
+    tool/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=20mm, minimum height=8mm,
+        align=center, fill=orange!15, drop shadow, font=\tiny
+    },
+    test/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick,
+        minimum width=20mm, minimum height=8mm,
+        align=center, fill=black!6, drop shadow, font=\tiny
+    },
+    stakeholder/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
+        minimum width=20mm, minimum height=8mm,
+        align=center, fill=white, drop shadow, font=\tiny
+    },
+    chaos/.style={black!35, dashed, thin},
+    clearlink/.style={-{Stealth[length=1.8mm]}, thick, black!55}
+]
+
+% --- Titel ---
+\node[font=\bfseries\small] at (2.5,8.2) {Dokumentenzentriert};
+\node[font=\bfseries\small] at (11,8.2) {Modellbasiert};
+
+% --- Trennlinie ---
+\draw[black!25, dashed] (6.55,-0.6) -- (6.55,8.0);
+
+% --- Linke Seite: lose Dokumente, chaotisch verbunden ---
+\node[doc] (word) at (1,7)     {Word};
+\node[doc] (excel) at (4,6.4)  {Excel};
+\node[doc] (ppt)  at (1.8,5)   {PowerPoint};
+\node[doc] (mail) at (4.3,3.8) {E-Mail};
+\node[doc] (tmt)  at (1.3,2.6) {Testmanagement-\\Tool};
+\node[doc] (git)  at (4,1.4)   {Git};
+\node[doc] (jira) at (2,0.2)   {Jira};
+
+\draw[chaos] (word) -- (excel);
+\draw[chaos] (excel) -- (mail);
+\draw[chaos] (mail) -- (git);
+\draw[chaos] (git) -- (jira);
+\draw[chaos] (jira) -- (tmt);
+\draw[chaos] (tmt) -- (ppt);
+\draw[chaos] (ppt) -- (word);
+\draw[chaos] (word) -- (mail);
+\draw[chaos] (excel) -- (tmt);
+\draw[chaos] (git) -- (ppt);
+
+% --- Rechte Seite: zentrales Modell mit klaren Beziehungen ---
+\node[modellbox] (modell) at (11,4) {Modell};
+
+\node[stakeholder] (stake) at (11,6.4)    {Stakeholder};
+\node[req]         (anf)   at (12.88,5.5) {Anforderung};
+\node[tool]        (code)  at (13.34,3.47){Code};
+\node[test]        (test)  at (12.04,1.83){Test};
+\node[part]        (schn)  at (9.96,1.83) {Schnittstelle};
+\node[part]        (strukt)at (8.66,3.47) {Struktur};
+\node[part]        (funk)  at (9.12,5.5)  {Funktion};
+
+\draw[clearlink] (modell) -- (stake);
+\draw[clearlink] (modell) -- (anf);
+\draw[clearlink] (modell) -- (code);
+\draw[clearlink] (modell) -- (test);
+\draw[clearlink] (modell) -- (schn);
+\draw[clearlink] (modell) -- (strukt);
+\draw[clearlink] (modell) -- (funk);
+
+% --- Legende ---
+\node[req, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0.5,-2.2) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Anforderung};
+\node[part, minimum width=6mm, minimum height=4mm, font=\tiny, right=18mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {Struktur/Funktion/Schnittstelle};
+\node[tool, minimum width=6mm, minimum height=4mm, font=\tiny, right=48mm of leg1] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] {Code};
+\node[test, minimum width=6mm, minimum height=4mm, font=\tiny, right=62mm of leg1] (leg4) {};
+\node[right=1mm of leg4, font=\tiny, align=left] {Test};
+
+\end{tikzpicture}

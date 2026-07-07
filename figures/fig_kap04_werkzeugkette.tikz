@@ -1,0 +1,41 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    tool/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=27mm, minimum height=13mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    opt/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick, dashed,
+        minimum width=27mm, minimum height=13mm,
+        align=center, fill=orange!6, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
+    optflow/.style={{Stealth[length=2mm]}-{Stealth[length=2mm]}, thick, black!45, dashed},
+    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+]
+
+% --- Hauptkette: Editor -> Versionsverwaltung -> optionale Werkzeuge ---
+\node[tool] (vscode) at (1.8,4)  {VS Code\\{\tiny + Syside Editor}\\{\tiny (.sysml-Dateien)}};
+\node[tool] (git)    at (5.6,4)  {Git\\{\tiny (Versionsverwaltung)}};
+\node[opt]  (syson)  at (9.4,4)  {Eclipse SysON\\{\tiny grafische Sicht}\\{\tiny optional}};
+\node[opt]  (pilot)  at (13.2,4) {SysML-v2-\\Pilotprojekt\\{\tiny optional}};
+
+\draw[flow]    (vscode) -- node[lbl]{committen} (git);
+\draw[optflow] (git)    -- node[lbl]{optional} (syson);
+\draw[flow, dashed, black!45] (syson) -- node[lbl]{optional, Referenz} (pilot);
+
+% --- Paralleler Pfad: ROS2-Code ---
+\node[tool] (code)  at (1.8,0.5) {\texttt{code/}\\{\tiny ROS2-Python}};
+\node[tool] (mapfile) at (5.6,0.5) {\texttt{model/}\\\texttt{07\_ros2\_}\\\texttt{mapping.sysml}};
+
+\draw[flow] (code) -- node[lbl]{Zuordnung} (mapfile);
+\draw[flow] (mapfile.north) -- node[lbl, pos=0.6]{Teil des Modells} (vscode.south);
+
+% --- Legende ---
+\node[tool, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (1.8,-1.9) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Werkzeug/Datei (verbindlich)};
+\node[opt, minimum width=6mm, minimum height=4mm, font=\tiny, right=42mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {optionales Werkzeug};
+
+\end{tikzpicture}

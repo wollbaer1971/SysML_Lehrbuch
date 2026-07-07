@@ -1,0 +1,66 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    sensor/.style={
+        rectangle, rounded corners=2pt, draw=green!40!black, thick,
+        minimum width=28mm, minimum height=10mm,
+        align=center, fill=green!15, drop shadow
+    },
+    ros/.style={
+        rectangle, rounded corners=2pt, draw=orange!60!black, thick,
+        minimum width=28mm, minimum height=10mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    sysbox/.style={
+        rectangle, rounded corners=2pt, draw=black!70, thick,
+        minimum width=28mm, minimum height=10mm,
+        align=center, fill=blue!12, drop shadow
+    },
+    ext/.style={
+        rectangle, rounded corners=2pt, draw=black!50, dashed, thick,
+        minimum width=30mm, minimum height=10mm,
+        align=center, fill=white, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black},
+    ctrl/.style={-{Stealth[length=2.2mm]}, thick, blue!55!black},
+    lbl/.style={font=\tiny, fill=white, inner sep=1pt, align=center}
+]
+
+% --- Sensorik (links, gruen) ---
+\node[sensor] (camera)  at (0,8) {\texttt{camera :}\\\texttt{Camera}};
+\node[sensor] (lidar)   at (0,4) {\texttt{lidar :}\\\texttt{Lidar}};
+\node[sensor] (battery) at (0,0) {\texttt{batterySystem :}\\\texttt{BatterySystem}};
+
+% --- Verarbeitung (Mitte, ROS2-Knoten) ---
+\node[ros] (detect) at (6,8) {\texttt{objectDetector :}\\\texttt{ObjectDetector}};
+\node[ros] (slam)   at (6,4) {\texttt{slam :}\\\texttt{SLAM}};
+
+% --- Navigation/Steuerung (rechts, ROS2-Knoten) ---
+\node[ros] (nav)    at (12,6) {\texttt{navigation :}\\\texttt{Navigation}};
+\node[ros] (motion) at (12,2) {\texttt{motionControl :}\\\texttt{MotionControl}};
+
+% --- Roboter und Bedienoberflaeche (unten, separat) ---
+\node[sysbox] (robot) at (3,-4)  {\texttt{robot :}\\\texttt{Robot}};
+\node[ext]    (ui)    at (9,-4)  {Nutzer /\\\texttt{UserInterface}};
+
+% --- Datenfluesse (orange) ---
+\draw[flow] (camera.east)  -- node[lbl, above]{\texttt{sensor\_msgs/Image}\\30\,Hz} (detect.west);
+\draw[flow] (lidar.east)   -- node[lbl, above]{\texttt{sensor\_msgs/LaserScan}\\10\,Hz} (slam.west);
+\draw[flow] (battery.east) -| node[lbl, pos=0.8, right]{\texttt{sensor\_msgs/BatteryState}\\1\,Hz} ([xshift=-3mm]nav.south);
+\draw[flow] (detect.east)  -| node[lbl, pos=0.25, right]{Detection-Liste} ([xshift=3mm]nav.north);
+
+% --- Steuer- und Statusnachrichten (blau/grau) ---
+\draw[ctrl] (nav.south) -- node[lbl, right]{\texttt{geometry\_msgs/Twist}\\\texttt{/cmd\_vel}} (motion.north);
+\draw[ctrl] (robot.east) -- node[lbl, above]{Statusnachricht} (ui.west);
+
+% --- Legende ---
+\node[sensor, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0,-7.5) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Sensorik};
+\node[ros, minimum width=6mm, minimum height=4mm, font=\tiny, right=22mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {ROS2-Knoten};
+\node[ext, minimum width=6mm, minimum height=4mm, font=\tiny, right=22mm of leg2] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] {Externe Schnittstelle / UI};
+
+\draw[flow] (0,-9) -- ++(8mm,0) node[right=1mm, font=\tiny] {Sensordatenfluss};
+\draw[ctrl] (5,-9) -- ++(8mm,0) node[right=1mm, font=\tiny] {Steuer-/Statusnachricht};
+
+\end{tikzpicture}

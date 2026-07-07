@@ -49,6 +49,15 @@ Roboterstatus & Robot & UserInterface & Statusnachricht\\
 \bottomrule
 \end{longtable}
 
+Abbildung~\ref{fig:kap10-schnittstellenuebersicht} zeigt dieselben Schnittstellen im Zusammenhang: Sensordaten fließen von Camera, Lidar und BatterySystem über ObjectDetector und SLAM zur Navigation, während Steuer- und Statusnachrichten Navigation, MotionControl und die Bedienoberfläche verbinden.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap10_schnittstellenuebersicht}
+  \caption{Schnittstellenübersicht des Indoor-Roboters: Sensordaten (orange) fließen über ObjectDetector und SLAM zur Navigation, Steuer- und Statusnachrichten (blau) verbinden Navigation, MotionControl und die Bedienoberfläche.}
+  \label{fig:kap10-schnittstellenuebersicht}
+\end{figure}
+
 \section{Koordinatensysteme}
 In Robotikprojekten sind Koordinatensysteme kritisch. ROS2 nutzt häufig Frames wie \texttt{map}, \texttt{odom}, \texttt{base\_link} und \texttt{camera\_link}. Diese Frames sollten im Modell dokumentiert werden.
 
@@ -65,12 +74,12 @@ Wenn der \texttt{battery\_monitor\_node} keine gültigen Daten mehr liefert, dar
 \end{praxisbox}
 
 \section{Schnittstellen in SysML}
-In SysML v2 werden Schnittstellen über \texttt{port def}, \texttt{port} und \texttt{connection} dargestellt. Für den Einstieg reicht es, Ports und Datenflüsse sauber zu benennen und in Tabellen zu dokumentieren. Später kann die Modellierung formaler werden.
+In SysML v2 werden Schnittstellen in dieser vereinfachten Einsteigerversion über \texttt{port def}, \texttt{port} und \texttt{connection} dargestellt; ein \texttt{port} markiert dabei die Anschlussstelle eines Blocks, über die Daten ein- oder ausgehen, etwa \texttt{port def CameraPort \{ out image: Image; \}} für einen Kamera-Ausgang. Das eigentliche SysML-v2-Konstrukt für Schnittstellenverträge, \texttt{interface def} und \texttt{interface}, lernen Sie als Konzept im nächsten Abschnitt kennen. Für den Einstieg reicht es, Ports und Datenflüsse sauber zu benennen und in Tabellen zu dokumentieren. Später kann die Modellierung formaler werden.
 
 \section{Schnittstellen als Vertrag}
-Eine Schnittstelle ist ein Vertrag zwischen Sender und Empfänger. Dieser Vertrag muss nicht juristisch gemeint sein, sondern technisch: Der Sender verspricht, bestimmte Daten in einer bestimmten Form bereitzustellen. Der Empfänger darf sich darauf verlassen, solange die Schnittstelle gültig ist.
+Eine Schnittstelle ist ein Vertrag zwischen Sender und Empfänger. Dieser Vertrag muss nicht juristisch gemeint sein, sondern technisch: Der Sender verspricht, bestimmte Daten in einer bestimmten Form bereitzustellen. Der Empfänger darf sich darauf verlassen, solange die Schnittstelle gültig ist. Genau dieses Vertragskonzept bildet SysML v2 formal über \texttt{interface def} und \texttt{interface} ab; wir bleiben hier aber bei der einfacheren Port-Notation aus dem letzten Abschnitt, um den Einstieg zu erleichtern.
 
-Beim Topic \texttt{/cmd\_vel} erwartet die Bewegungssteuerung zum Beispiel Geschwindigkeitsbefehle. Wenn die Navigation plötzlich andere Einheiten verwendet oder Werte außerhalb erlaubter Grenzen sendet, kann das System gefährlich reagieren. Deshalb sollte eine Schnittstellenbeschreibung auch Grenzen enthalten: maximale Geschwindigkeit, erlaubte Wertebereiche und Verhalten bei ungültigen Nachrichten.
+Beim Topic \texttt{/cmd\_vel} (einem ROS2-Kommunikationskanal für Nachrichten) erwartet die Bewegungssteuerung zum Beispiel Geschwindigkeitsbefehle. Wenn die Navigation plötzlich andere Einheiten verwendet oder Werte außerhalb erlaubter Grenzen sendet, kann das System gefährlich reagieren. Deshalb sollte eine Schnittstellenbeschreibung auch Grenzen enthalten: maximale Geschwindigkeit, erlaubte Wertebereiche und Verhalten bei ungültigen Nachrichten. In ROS2 lassen sich solche Qualitätsanforderungen zusätzlich über sogenannte QoS-Profile (Quality of Service) technisch absichern, etwa bezüglich Zuverlässigkeit oder Aktualität einer Nachricht.
 
 Für den Roboter lohnt sich eine kleine Schnittstellen-Checkliste:
 
@@ -78,7 +87,7 @@ Für den Roboter lohnt sich eine kleine Schnittstellen-Checkliste:
     \item Ist die Richtung eindeutig?
     \item Ist der Datentyp bekannt?
     \item Sind Einheit und Frame dokumentiert?
-    \item Gibt es einen Timeout?
+    \item Gibt es einen Timeout (eine maximale Wartezeit, nach der fehlende Daten als Fehler gelten)?
     \item Ist bekannt, was bei ungültigen Daten passiert?
     \item Gibt es einen Test für die Schnittstelle?
 \end{itemize}
@@ -94,7 +103,7 @@ Schnittstellen sind entscheidend für die Integration. Eine gute Schnittstellenb
     \item Was bedeutet \texttt{base\_link}?
     \item Warum sollten Frequenzen dokumentiert werden?
     \item Welche Fehlerfälle kann die Kameraschnittstelle haben?
-    \item Wie hängen IBD und Schnittstellenmodellierung zusammen?
+    \item Wie hängen IBD (Internal Block Diagram) und Schnittstellenmodellierung zusammen?
 \end{enumerate}
 
 \section{Übungen}

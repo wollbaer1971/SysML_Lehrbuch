@@ -7,10 +7,10 @@ Nach diesem Kapitel können Sie die Hauptstruktur des Roboters als SysML-v2-Stru
 \section{Einleitung}
 Die Strukturmodellierung ist einer der wichtigsten Einstiegspunkte in ein MBSE-Projekt. Sie zeigt, aus welchen Bausteinen ein System besteht und wie diese strukturell zusammenhängen. Beim autonomen Indoor-Roboter hilft die Strukturmodellierung, Ordnung in Sensorik, Navigation, Antrieb, Energieversorgung, Bedienung und Software zu bringen.
 
-In SysML v2 erfolgt die Strukturmodellierung textuell mit \texttt{part def} und \texttt{part}. \texttt{part def} definiert den Typ eines Systemelements. \texttt{part} erzeugt eine benannte Instanz dieses Typs als Teil eines übergeordneten Elements.
+In SysML v2 erfolgt die Strukturmodellierung textuell mit \texttt{part def} und \texttt{part}. \texttt{part def} definiert den Typ eines Systemelements. \texttt{part} erzeugt eine benannte Instanz dieses Typs als Teil eines übergeordneten Elements. Wer bereits programmiert hat, kann sich \texttt{part def} wie eine Klassendefinition vorstellen und \texttt{part} wie ein konkretes Objekt dieser Klasse.
 
 \begin{hinweisbox}
-SysML v1 verwendete den Begriff \enquote{Block} und das Block Definition Diagram (BDD). In SysML v2 wird beides durch \texttt{part def} (Typdefinition) und \texttt{part} (Instanz) ersetzt. Das Konzept bleibt ähnlich, die Syntax ist präziser und textuell.
+SysML v1 verwendete den Begriff \enquote{Block} und das Block Definition Diagram (BDD) – ein grafisches Diagramm mit kastenförmigen Blöcken zur Darstellung von Bausteinen und ihren Beziehungen. In SysML v2 wird beides durch \texttt{part def} (Typdefinition) und \texttt{part} (Instanz) ersetzt. Das Konzept bleibt ähnlich, die Syntax ist präziser und textuell.
 \end{hinweisbox}
 
 \section{Zweck der Strukturmodellierung}
@@ -57,7 +57,7 @@ Wenn ein \texttt{part} innerhalb einer \texttt{part def} definiert ist, beschrei
 Komposition ist besonders nützlich, um die Systemgrenze sichtbar zu machen. Gehört die Ladestation zum System oder ist sie extern? Beide Varianten können modelliert werden, aber die Entscheidung muss bewusst sein.
 
 \section{Dekomposition}
-Dekomposition bedeutet, ein Systemelement in kleinere Teile zu zerlegen. Das \texttt{PerceptionSystem} kann zum Beispiel weiter zerlegt werden:
+Dekomposition bedeutet, ein Systemelement in kleinere Teile zu zerlegen. Die zuvor leer deklarierte \texttt{part def PerceptionSystem} wird dabei mit Inhalt gefüllt – es handelt sich um dieselbe Definition, nicht um eine zweite, gleichnamige. Das \texttt{PerceptionSystem} kann zum Beispiel weiter zerlegt werden:
 
 \begin{lstlisting}
 part def PerceptionSystem {
@@ -78,6 +78,15 @@ part def NavigationSystem {
   part pathFollower : PathFollower;
 }
 \end{lstlisting}
+
+Abbildung~\ref{fig:kap08-part-def-baum} zeigt die vollständige Dekomposition des Gesamtsystems \texttt{Robot} über zwei Ebenen: die sieben Hauptsubsysteme und ihre jeweils wichtigsten Teile.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap08_part_def_baum}
+  \caption{Vollständige Dekomposition von \texttt{Robot} in sieben Hauptsubsysteme und deren wichtigste Teile der zweiten Ebene.}
+  \label{fig:kap08-part-def-baum}
+\end{figure}
 
 \section{Logische und physische Systemteile}
 Ein häufiger Anfängerfehler besteht darin, logische Funktionen und physische Bauteile unklar zu vermischen. \texttt{Camera} ist eher physisch. \texttt{ObjectDetector} ist eher softwarebezogen. \enquote{Hindernis erkennen} ist eher eine Funktion.
@@ -112,7 +121,7 @@ part def PerceptionSystem {
 
 \section{Typische Fehler}
 \subsection{Zu tiefe Dekomposition}
-Ein Strukturmodell muss nicht jedes Kabel und jede Schraube enthalten. Modellieren Sie so tief, wie es für Verständnis, Schnittstellen und Entscheidungen nötig ist.
+Ein Strukturmodell muss nicht jedes Kabel und jede Schraube enthalten. Modellieren Sie so tief, wie es für Verständnis, Schnittstellen und Entscheidungen nötig ist. Eine einfache Faustregel: Dekomponieren Sie so lange, bis sich jede relevante Schnittstelle benennen lässt – tiefer muss ein Einsteigermodell in der Regel nicht gehen.
 
 \subsection{Unklare Namen}
 \texttt{System1} oder \texttt{ModuleA} sind schlechte Namen. Namen sollten die Verantwortung des Systemteils ausdrücken.

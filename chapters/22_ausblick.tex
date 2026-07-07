@@ -5,7 +5,14 @@ Nach diesem Kapitel kennen Sie sinnvolle nächste Schritte zur Vertiefung. Sie k
 \end{lernziele}
 
 \section{Einleitung}
-Dieses Buch bietet einen Einstieg. Es zeigt, wie SysML v2, MBSE und ROS2 am Beispiel eines autonomen Indoor-Roboters zusammenspielen. Nach dem Einstieg gibt es viele Wege zur Vertiefung. Dieses Kapitel ordnet die wichtigsten nächsten Schritte ein.
+Dieses Buch bietet einen Einstieg. Es zeigt, wie SysML v2, MBSE und ROS2 am Beispiel eines autonomen Indoor-Roboters zusammenspielen. Nach dem Einstieg gibt es viele Wege zur Vertiefung. Dieses Kapitel ordnet die wichtigsten nächsten Schritte ein. Abbildung~\ref{fig:kap22-vertiefungs-roadmap} gibt einen Überblick über die sechs Themenfelder, die in den folgenden Abschnitten behandelt werden.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap22_vertiefungs_roadmap}
+  \caption{Mögliche Vertiefungsrichtungen nach dem Einstieg, gegliedert in sechs Themenfelder mit ausgewählten Unterpunkten.}
+  \label{fig:kap22-vertiefungs-roadmap}
+\end{figure}
 
 \section{SysML vertiefen}
 Nach dem Einstieg lohnt es sich, SysML genauer zu lernen. Besonders relevant sind:
@@ -37,12 +44,12 @@ Wichtige Themen für später sind:
 Für Robotik sind folgende ROS2-Themen wichtige nächste Schritte:
 
 \begin{itemize}
-    \item Navigation2
-    \item TF2
-    \item Lifecycle Nodes
+    \item Navigation2 (Navigationsstack für Pfadplanung und Hindernisvermeidung)
+    \item TF2 (Bibliothek zur Verwaltung von Koordinatentransformationen)
+    \item Lifecycle Nodes (Nodes mit definierten, verwalteten Zustandsübergängen)
     \item Launch-Dateien
     \item Parameter
-    \item rosbag
+    \item rosbag (Werkzeug zum Aufzeichnen und Abspielen von Nachrichten)
     \item Simulation
     \item Tests mit launch testing
 \end{itemize}
@@ -51,10 +58,10 @@ Für Robotik sind folgende ROS2-Themen wichtige nächste Schritte:
 Gazebo oder andere Simulatoren ermöglichen Tests ohne echte Hardware. Das ist besonders wertvoll, wenn Algorithmen schnell ausprobiert werden sollen. Simulation kann helfen, Navigation, Sensorik, Hindernisse und Fehlerfälle früh zu prüfen.
 
 \section{Safety Engineering}
-Sobald Roboter mit Menschen in realen Umgebungen interagieren, werden Sicherheitsfragen wichtig. Dann reichen einfache Funktionsmodelle nicht mehr aus. Risikoanalysen, Sicherheitsanforderungen, FMEA, Gefährdungsanalysen und Normen müssen berücksichtigt werden.
+Sobald Roboter mit Menschen in realen Umgebungen interagieren, werden Sicherheitsfragen wichtig. Dann reichen einfache Funktionsmodelle nicht mehr aus. Risikoanalysen, Sicherheitsanforderungen, FMEA (Failure Mode and Effects Analysis – systematische Fehlermöglichkeits- und Einflussanalyse), Gefährdungsanalysen und Normen müssen berücksichtigt werden. Für einen Serviceroboter wie den Indoor-Roboter ist beispielsweise die Norm ISO 13482 für persönliche Assistenzroboter relevant.
 
 \section{Machine Learning vertiefen}
-ML-Integration endet nicht beim Laden eines Modells. Wichtige Vertiefungen sind:
+ML-Integration (Machine Learning) endet nicht beim Laden eines Modells. Wichtige Vertiefungen sind:
 
 \begin{itemize}
     \item Trainingsdaten
@@ -80,7 +87,14 @@ Die Kombination aus Systems Engineering, SysML, ROS2 und KI ist in Robotik, Auto
 \end{itemize}
 
 \section{Vom Lernprojekt zum echten Projekt}
-Der wichtigste Übergang nach diesem Buch ist der Schritt von einem didaktischen Modell zu einem echten Projekt. In einem echten Projekt werden Anforderungen widersprüchlicher, Schnittstellen technischer und Tests aufwendiger. Außerdem kommen organisatorische Themen hinzu: Versionierung, Reviews, Verantwortlichkeiten, Änderungsmanagement und Abnahme.
+Der wichtigste Übergang nach diesem Buch ist der Schritt von einem didaktischen Modell zu einem echten Projekt. In einem echten Projekt werden Anforderungen widersprüchlicher, Schnittstellen technischer und Tests aufwendiger. Außerdem kommen organisatorische Themen hinzu: Versionierung, Reviews, Verantwortlichkeiten, Änderungsmanagement und Abnahme. Abbildung~\ref{fig:kap22-lernprojekt-vs-echtes-projekt} stellt diesen Übergang gegenüber.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap22_lernprojekt_vs_echtes_projekt}
+  \caption{Der Übergang vom Lernprojekt zum echten Projekt bringt komplexere Anforderungen und Schnittstellen sowie neue, organisatorische Themen mit sich.}
+  \label{fig:kap22-lernprojekt-vs-echtes-projekt}
+\end{figure}
 
 Das Lernprojekt liefert dafür eine Grundlage. Wer verstanden hat, wie eine Anforderung zur Architektur und weiter zu ROS2-Nodes und Tests führt, kann dieses Denken auf größere Systeme übertragen. Der Maßstab wächst, aber das Prinzip bleibt gleich: Problem verstehen, Modell aufbauen, Schnittstellen klären, Umsetzung ableiten und Nachweise planen.
 

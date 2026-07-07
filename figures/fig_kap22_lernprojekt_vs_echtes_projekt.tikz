@@ -1,0 +1,54 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    lernbox/.style={
+        rectangle, rounded corners=2pt, draw=green!40!black, thick,
+        minimum width=55mm, minimum height=32mm,
+        align=left, fill=green!10, drop shadow
+    },
+    echtbox/.style={
+        rectangle, rounded corners=2pt, draw=orange!60!black, thick,
+        minimum width=55mm, minimum height=32mm,
+        align=left, fill=orange!12, drop shadow
+    },
+    themenbox/.style={
+        rectangle, rounded corners=2pt, draw=blue!50!black, thick,
+        minimum width=100mm, minimum height=20mm,
+        align=left, fill=blue!8, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.4mm]}, thick, black!60},
+    connector/.style={thin, black!40}
+]
+
+% --- Pole ---
+\node[lernbox] (lern) at (0,0) {
+    \textbf{Lernprojekt}\\[2mm]
+    \textbullet\ Anforderungen klar\\
+    \textbullet\ Schnittstellen einfach\\
+    \textbullet\ Tests übersichtlich
+};
+
+\node[echtbox] (echt) at (9,0) {
+    \textbf{Echtes Projekt}\\[2mm]
+    \textbullet\ Anforderungen widersprüchlich\\
+    \textbullet\ Schnittstellen komplex\\
+    \textbullet\ Tests aufwendig
+};
+
+% --- Uebergang ---
+\draw[flow] (lern.east) -- node[above, font=\tiny]{Übergang in der Praxis} (echt.west);
+
+% --- Neue Themen ---
+\node[themenbox] (themen) at (4.5,-4.8) {
+    \textbf{Neue Themen}\\[1mm]
+    \textbullet\ Versionierung \quad
+    \textbullet\ Reviews \quad
+    \textbullet\ Verantwortlichkeiten\\
+    \textbullet\ Änderungsmanagement \quad
+    \textbullet\ Abnahme
+};
+
+% --- Verbindung zu Neue Themen ---
+\draw[connector] (lern.south) -- ++(0,-0.6) -| (themen.north);
+\draw[connector] (echt.south) -- ++(0,-0.6) -| (themen.north);
+
+\end{tikzpicture}

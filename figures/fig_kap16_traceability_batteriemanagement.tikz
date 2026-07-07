@@ -1,0 +1,43 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    node distance=6mm,
+    req/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=70mm, minimum height=10mm,
+        align=center, fill=blue!12, drop shadow
+    },
+    sysml/.style={req, fill=green!15, draw=green!40!black},
+    ros/.style={req, fill=orange!15, draw=orange!60!black},
+    test/.style={req, fill=black!6, draw=black!50},
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60}
+]
+
+% --- Kette von oben nach unten ---
+\node[req]   (r1) at (0, 0)   {Requirement: REQ-006\\Zur Ladestation zurückkehren};
+\node[sysml] (r2) at (0, -1.9) {Action: Akkustand überwachen};
+\node[sysml] (r3) at (0, -3.8) {Part Definition: BatterySystem};
+\node[ros]   (r4) at (0, -5.7) {Node: \texttt{battery\_monitor\_node}};
+\node[ros]   (r5) at (0, -7.6) {Topic: \texttt{/battery\_state}};
+\node[ros]   (r6) at (0, -9.5) {Node: \texttt{navigation\_node}};
+\node[sysml] (r7) at (0, -11.4) {Action: \texttt{NavigateToDock}};
+\node[test]  (r8) at (0, -13.3) {Test: TC-006\\Rückkehr bei niedrigem Akkustand};
+
+\draw[flow] (r1) -- (r2);
+\draw[flow] (r2) -- (r3);
+\draw[flow] (r3) -- (r4);
+\draw[flow] (r4) -- (r5);
+\draw[flow] (r5) -- (r6);
+\draw[flow] (r6) -- (r7);
+\draw[flow] (r7) -- (r8);
+
+% --- Legende ---
+\node[req,   minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (-24mm,-15.6) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Requirement};
+\node[sysml, minimum width=6mm, minimum height=4mm, font=\tiny, right=20mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {SysML-Element};
+\node[ros,   minimum width=6mm, minimum height=4mm, font=\tiny, right=20mm of leg2] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] {ROS2-Element};
+\node[test,  minimum width=6mm, minimum height=4mm, font=\tiny, right=20mm of leg3] (leg4) {};
+\node[right=1mm of leg4, font=\tiny, align=left] {Test};
+
+\end{tikzpicture}

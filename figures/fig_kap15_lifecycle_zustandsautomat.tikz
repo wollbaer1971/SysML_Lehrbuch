@@ -1,0 +1,42 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    state/.style={
+        rectangle, rounded corners=2pt, draw=black!70, thick,
+        minimum width=30mm, minimum height=10mm,
+        align=center, fill=blue!10, drop shadow
+    },
+    finalstate/.style={state, fill=black!10, draw=black!60, double, double distance=1.2pt},
+    initial/.style={circle, fill=black, minimum size=3mm, inner sep=0pt},
+    trans/.style={-{Stealth[length=2.2mm]}, thick, black!70},
+    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+]
+
+% --- Zustaende ---
+\node[initial]    (init)   at (-2.6, 0)   {};
+\node[state]      (unconf) at (0, 0)      {\texttt{Unconfigured}};
+\node[state]      (inact)  at (5.5, 0)    {\texttt{Inactive}};
+\node[state]      (act)    at (11, 0)     {\texttt{Active}};
+\node[finalstate] (fin)    at (5.5, -5)   {\texttt{Finalized}};
+
+% --- entry ---
+\draw[trans] (init) -- (unconf);
+
+% --- Hauptzyklus ---
+\draw[trans] (unconf.east) -- node[lbl, above]{configure} (inact.west);
+\draw[trans] ([yshift=2mm]inact.east) -- node[lbl, above]{activate} ([yshift=2mm]act.west);
+\draw[trans] ([yshift=-2mm]act.west) -- node[lbl, below]{deactivate} ([yshift=-2mm]inact.east);
+\draw[trans] (inact.north) .. controls ++(0,1.6) and ++(0,1.6) .. node[lbl, above, pos=0.5]{cleanup} (unconf.north);
+
+% --- shutdown-Uebergaenge nach Finalized ---
+\draw[trans] (unconf.south) -- ++(0,-2.2) -| node[lbl, pos=0.55, above]{shutdown} (fin.north west);
+\draw[trans] (inact.south) -- node[lbl, right]{shutdown} (fin.north);
+
+% --- Legende ---
+\node[state, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0,-8) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Normalzustand};
+\node[finalstate, minimum width=6mm, minimum height=4mm, font=\tiny, right=28mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {Endzustand (\texttt{Finalized})};
+\node[initial, right=40mm of leg2] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] {Startzustand};
+
+\end{tikzpicture}

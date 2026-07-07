@@ -1,0 +1,26 @@
+% =====================================================================
+% Abbildung: part-def-Baum des Gesamtsystems Robot
+% Passend zu Kapitel 8, Abschnitt "Hauptstruktur des Roboters" /
+% "Dekomposition"
+%
+% Einbindung im Buch, z. B. in chapters/08_bdd.tex:
+%
+%   \begin{figure}[H]
+%     \centering
+%     \input{figures/fig_kap08_part_def_baum}
+%     \caption{Vollstaendige Dekomposition von \texttt{Robot} in sieben
+%       Hauptsubsysteme und deren wichtigste Teile der zweiten Ebene.}
+%     \label{fig:kap08-part-def-baum}
+%   \end{figure}
+%
+% Das Diagramm ist wegen der vollstaendigen Dekomposition sehr breit
+% (ca. 20 cm in der urspruenglichen TikZ-Koordinate). Es wird daher mit
+% \resizebox auf die Textbreite skaliert.
+%
+% Benoetigte Pakete (im Buch bereits in main.tex geladen): tikz, graphicx
+% Benoetigte TikZ-Bibliotheken: positioning, arrows.meta, shadows, calc
+% =====================================================================
+
+\resizebox{\textwidth}{!}{%
+\input{figures/fig_kap08_part_def_baum.tikz}%
+}

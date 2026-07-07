@@ -1,0 +1,69 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    proc/.style={
+        rectangle, rounded corners=2pt, draw=black!60, thick,
+        minimum width=34mm, minimum height=12mm,
+        align=center, fill=black!4, drop shadow
+    },
+    decide/.style={
+        rectangle, minimum width=32mm, minimum height=22mm,
+        align=center, inner sep=1pt
+    },
+    okbox/.style={
+        rectangle, rounded corners=2pt, draw=green!40!black, thick,
+        minimum width=34mm, minimum height=12mm,
+        align=center, fill=green!15, drop shadow
+    },
+    endbox/.style={
+        rectangle, rounded corners=2pt, draw=black!50, thick,
+        minimum width=34mm, minimum height=12mm,
+        align=center, fill=black!6, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
+    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+]
+
+% --- Reihe 1 (links nach rechts) ---
+\node[proc] (s1) at (0, 9)   {(1) Änderungswunsch\\beschreiben};
+\node[proc] (s2) at (4.6, 9) {(2) Betroffene\\Anforderungen\\identifizieren};
+\node[proc] (s3) at (9.2, 9) {(3) Betroffene Architektur-\\teile/Schnittstellen\\ermitteln};
+
+% --- Reihe 2 (rechts nach links, S-Verlauf) ---
+\node[proc] (s4) at (9.2, 5.2) {(4) Betroffene Tests\\prüfen};
+\node[proc] (s5) at (4.6, 5.2) {(5) Aufwand/Risiko\\bewerten};
+\node[proc] (s6) at (0, 5.2)   {(6) Entscheidung\\dokumentieren};
+
+% --- Entscheidung: Raute manuell gezeichnet (keine shapes.geometric-Bibliothek noetig) ---
+% Eckpunkte der Raute entsprechen den Rand-Ankerpunkten (.north/.east/.south/.west)
+% des unsichtbaren Knotens "dec" mit gleicher Breite/Hoehe.
+\filldraw[fill=black!4, draw=black!70, thick] (0, 2.1) -- (1.6, 1.0) -- (0, -0.1) -- (-1.6, 1.0) -- cycle;
+\node[decide] (dec) at (0, 1.0) {Genehmigt?};
+
+% --- Ergebnisboxen ---
+\node[okbox]  (ok)  at (5.0, 1.0)  {Umsetzung/\\Modelländerung};
+\node[endbox] (end) at (0, -3.2)   {Dokumentation\\\& Ende};
+
+% --- Fluss Reihe 1 ---
+\draw[flow] (s1) -- (s2);
+\draw[flow] (s2) -- (s3);
+
+% --- Uebergang Reihe1 -> Reihe2 ---
+\draw[flow] (s3.south) -- (s4.north);
+
+% --- Fluss Reihe 2 ---
+\draw[flow] (s4) -- (s5);
+\draw[flow] (s5) -- (s6);
+
+% --- zur Entscheidung ---
+\draw[flow] (s6.south) -- (dec.north);
+
+% --- Ja / Nein ---
+\draw[flow] (dec.east) -- node[lbl, midway]{Ja} (ok.west);
+\draw[flow] (dec.south) -- node[lbl, midway]{Nein} (end.north);
+
+% --- optionaler Ruecksprung (gestrichelt) ---
+\draw[dashed, thick, black!50, -{Stealth[length=2mm]}]
+    (end.west) -- ++(-2.2,0) -- ++(0, 12.2) -- (s1.west)
+    node[lbl, pos=0.55, left]{ggf. erneuter Änderungswunsch};
+
+\end{tikzpicture}

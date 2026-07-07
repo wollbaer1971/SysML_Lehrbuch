@@ -10,7 +10,7 @@ Das Abschlussprojekt bündelt die bisherigen Kapitel. Sie erstellen ein vollstä
 \section{Aufgabe}
 Erstellen Sie ein vollständiges Modell des autonomen Indoor-Roboters. Das Modell soll Anforderungen, Struktur, Verhalten, Schnittstellen, ROS2-Mapping und Tests enthalten.
 
-\section{Abzugebenes Modell}
+\section{Abzugebendes Modell}
 Das Modell sollte folgende Inhalte enthalten:
 
 \begin{itemize}
@@ -18,8 +18,8 @@ Das Modell sollte folgende Inhalte enthalten:
     \item Stakeholderliste
     \item Mindestens zehn Anforderungen
     \item Requirement Diagram
-    \item BDD mit Hauptsystemen
-    \item IBD für Perception oder Navigation
+    \item BDD mit Hauptsystemen (siehe Kapitel 8)
+    \item IBD für Perception oder Navigation (siehe Kapitel 9)
     \item Aktivitätsdiagramm für Zielnavigation
     \item Zustandsdiagramm für Betriebsmodi
     \item Schnittstellentabelle
@@ -27,6 +27,15 @@ Das Modell sollte folgende Inhalte enthalten:
     \item Mindestens fünf Testfälle
     \item Traceability-Matrix
 \end{itemize}
+
+Abbildung~\ref{fig:kap21-checkliste-abschlussmodell} fasst diese Inhalte als Checkliste zusammen, mit der Sie Ihr Modell vor der Abgabe prüfen können.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap21_checkliste_abschlussmodell}
+  \caption{Checkliste mit den zwölf Inhalten, die das Abschlussmodell enthalten sollte.}
+  \label{fig:kap21-checkliste-abschlussmodell}
+\end{figure}
 
 \section{Empfohlene Vorgehensweise}
 \begin{enumerate}
@@ -41,6 +50,15 @@ Das Modell sollte folgende Inhalte enthalten:
     \item Testfälle erstellen und mit Anforderungen verknüpfen.
     \item Traceability-Matrix prüfen.
 \end{enumerate}
+
+Abbildung~\ref{fig:kap21-projektfahrplan} fasst diese zehn Schritte als Fahrplan in vier Phasen zusammen.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap21_projektfahrplan}
+  \caption{Zehn Schritte des Abschlussprojekts, gruppiert in vier Phasen von den Anforderungen bis zur Verifikation.}
+  \label{fig:kap21-projektfahrplan}
+\end{figure}
 
 \section{Bewertungskriterien}
 Ein gutes Modell ist verständlich, konsistent und nachvollziehbar. Es muss nicht maximal detailliert sein. Es muss zeigen, dass die Architektur aus Anforderungen abgeleitet wurde.
@@ -58,8 +76,10 @@ Wichtige Kriterien:
     \item keine isolierten, unbegründeten Diagramme
 \end{itemize}
 
+Diese Kriterien eignen sich auch als kurze Checkliste, die Sie vor der Abgabe Punkt für Punkt durchgehen können.
+
 \section{Erweiterung}
-Wer weitergehen möchte, kann eine einfache ROS2-Simulation ergänzen. Möglich sind ein simulierter Batterieknoten, ein Statusknoten und ein Dummy-Object-Detector. Wichtig ist, dass die Umsetzung auf das Modell zurückgeführt wird.
+Wer weitergehen möchte, kann eine einfache ROS2-Simulation ergänzen. Möglich sind ein simulierter Batterieknoten, ein Statusknoten und ein Dummy-Object-Detector, orientiert an den Node-Beispielen aus Kapitel 17. Wichtig ist, dass die Umsetzung auf das Modell zurückgeführt wird. Kapitel 22 zeigt mit Gazebo eine Möglichkeit, eine solche Simulation weiter auszubauen.
 
 \section{Typische Projektfallen}
 \subsection{Zu viel Detail}

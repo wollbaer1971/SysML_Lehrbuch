@@ -44,12 +44,16 @@ part def ObjectDetector {
   port imageIn  : ~ImagePort;
   port objectsOut : ObjectListPort;
 }
+
+part def ObstacleDetector {
+  port scanIn : ~ScanPort;
+}
 \end{lstlisting}
 
-Das Tilde-Zeichen \texttt{\textasciitilde} markiert einen \gls{conjport}, der empfängt statt sendet.
+Das Tilde-Zeichen \texttt{\textasciitilde} markiert einen \glsdisp{conjport}{konjugierten Port}, der empfängt statt sendet.
 
 \section{Verbindungen}
-\texttt{connection} verknüpft kompatible Ports miteinander. Eine Verbindung sollte immer dokumentieren, was über sie fließt.
+\texttt{connection} verknüpft kompatible Ports miteinander. Eine Verbindung sollte immer dokumentieren, was über sie fließt. Die Grundform lautet: \texttt{connection <Name> connect <Teil1>.<Port1> to <Teil2>.<Port2>;}
 
 \begin{lstlisting}
 part def PerceptionSystem {
@@ -100,10 +104,19 @@ part def NavigationSystem {
 }
 \end{lstlisting}
 
-Navigation entsteht aus mehreren zusammenarbeitenden Teilen. Gleichzeitig werden Schnittstellen sichtbar, die später in ROS2 umgesetzt werden können.
+Dabei liefert \texttt{c1} die aktuelle Pose der Lokalisierung an den Pfadplaner, \texttt{c2} liefert die Karte an denselben Pfadplaner, und \texttt{c3} gibt den geplanten Pfad an die Bewegungssteuerung weiter.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap09_verbindungsmodell_navigation}
+  \caption{Verbindungsmodell des \texttt{NavigationSystem}: Lokalisierung und Karte liefern an den Pfadplaner, dessen Pfad an die Bewegungssteuerung weitergegeben wird.}
+  \label{fig:kap09-verbindungsmodell-navigation}
+\end{figure}
+
+Navigation entsteht aus mehreren zusammenarbeitenden Teilen (siehe Abbildung~\ref{fig:kap09-verbindungsmodell-navigation}). Gleichzeitig werden Schnittstellen sichtbar, die später in ROS2 umgesetzt werden können.
 
 \section{Annahmen dokumentieren}
-Ein gutes Verbindungsmodell sollte auch Annahmen dokumentieren. Wird die Karte vorher geladen oder während der Fahrt aktualisiert? Arbeitet die Lokalisierung relativ zu \texttt{map} oder \texttt{odom}? Solche Fragen gehören als Dokumentation (\texttt{doc /* ... */}) zum Modellelement.
+Ein gutes Verbindungsmodell sollte auch Annahmen dokumentieren. Wird die Karte vorher geladen oder während der Fahrt aktualisiert? Arbeitet die Lokalisierung relativ zu \texttt{map} oder \texttt{odom} (zwei gebräuchliche ROS2-Koordinatensysteme, die in Kapitel 10 näher erklärt werden)? Solche Fragen gehören als Dokumentation (\texttt{doc /* ... */}) zum Modellelement.
 
 \begin{lstlisting}
 part def NavigationSystem {

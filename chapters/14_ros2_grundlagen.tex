@@ -5,10 +5,10 @@ Nach diesem Kapitel kennen Sie die wichtigsten Grundbegriffe von ROS2: Nodes, To
 \end{lernziele}
 
 \section{Einleitung}
-Bis hierher haben wir den Roboter vor allem aus Systems-Engineering- und SysML-Sicht betrachtet. Nun wechseln wir näher zur Umsetzung. ROS2 ist die Softwareplattform, mit der wir die Roboterfunktionen später in ausführbare Komponenten übersetzen können. Dieses Kapitel führt die Grundbegriffe zunächst ohne Code ein; ein vollständiges, lauffähiges Beispiel für einen Publisher- und Subscriber-Node in Python (\texttt{rclpy}) finden Sie in Kapitel 17.
+Bis hierher haben wir den Roboter vor allem aus Systems-Engineering- und SysML-Sicht betrachtet. Nun wechseln wir näher zur Umsetzung. ROS2 ist die Softwareplattform, mit der wir die Roboterfunktionen später in ausführbare Komponenten übersetzen können. Dieses Kapitel führt die Grundbegriffe zunächst ohne Code ein; ein vollständiges, lauffähiges Beispiel für einen Publisher- und Subscriber-Node in Python (\texttt{rclpy}, der ROS-Client-Bibliothek für Python) finden Sie in Kapitel 17.
 
 \section{Was ist ROS2?}
-\gls{ros2} ist ein Framework für Robotiksoftware. Es stellt Kommunikationsmechanismen, Werkzeuge und Konventionen bereit. ROS2 ist kein Betriebssystem im klassischen Sinn, sondern eine \gls{middleware} und Entwicklungsumgebung.
+\gls{ros2} ist ein Framework für Robotiksoftware. Es stellt Kommunikationsmechanismen, Werkzeuge und Konventionen bereit. ROS2 ist kein Betriebssystem im klassischen Sinn, sondern eine \gls{middleware} und Entwicklungsumgebung. Technische Basis dafür ist DDS (Data Distribution Service), ein Standard für verteilte Kommunikation, den ROS2 im Hintergrund nutzt, um Nachrichten zuverlässig zwischen Nodes zu verteilen.
 
 ROS2 hilft dabei, ein Robotiksystem aus mehreren Programmen aufzubauen, die miteinander Nachrichten austauschen. Das passt sehr gut zu unserem SysML-Modell: Systemteile (\texttt{part def}), Schnittstellen und Datenflüsse können später auf Nodes, Topics, Services und Actions abgebildet werden.
 
@@ -26,7 +26,14 @@ Ein Node ist ein ausführbares Programm mit einer klaren Aufgabe. Beispiele:
 Ein guter Node hat eine klare Verantwortung. Zu große Nodes werden unübersichtlich. Zu viele kleine Nodes erhöhen Kommunikationsaufwand und Komplexität.
 
 \section{Topics}
-Topics sind Nachrichtenkanäle. Ein Node veröffentlicht Nachrichten, andere Nodes abonnieren sie. Diese Publish-Subscribe-Kommunikation passt sehr gut zu Sensordaten.
+Topics sind Nachrichtenkanäle. Ein Node veröffentlicht Nachrichten (er handelt dabei als \emph{Publisher}), andere Nodes abonnieren sie (sie handeln als \emph{Subscriber}). Diese Publish-Subscribe-Kommunikation passt sehr gut zu Sensordaten. Dabei kann ein Publisher gleichzeitig von mehreren Subscribern empfangen werden (siehe Abbildung~\ref{fig:kap14-publish-subscribe}). Wie zuverlässig Nachrichten dabei zugestellt werden, regeln sogenannte Quality-of-Service-Einstellungen, die in Kapitel 16 genauer erklärt werden.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap14_publish_subscribe}
+  \caption{Publish-Subscribe-Prinzip: Ein Publisher-Node sendet Nachrichten auf einem Topic, mehrere Subscriber-Nodes können sie gleichzeitig empfangen.}
+  \label{fig:kap14-publish-subscribe}
+\end{figure}
 
 Beispiele:
 
@@ -37,6 +44,8 @@ Beispiele:
 /battery_state          Akkustatus
 /detected_objects       erkannte Objekte
 \end{verbatim}
+
+Diese Namen sind keine ROS2-Vorgabe, sondern eine in diesem Buch verwendete Projektkonvention; in eigenen Projekten können Sie andere Topic-Namen wählen, sollten dabei aber konsistent bleiben.
 
 \section{Messages}
 Messages definieren die Struktur der Daten, die über Topics, Services oder Actions übertragen werden. ROS2 bringt viele Standardnachrichten mit, etwa \texttt{sensor\_msgs/Image}, \texttt{sensor\_msgs/LaserScan}, \texttt{geometry\_msgs/Twist} oder \texttt{sensor\_msgs/BatteryState}.
@@ -85,7 +94,7 @@ ROS2 bringt Kommandozeilenwerkzeuge mit, die beim Verstehen und Testen helfen. F
 Diese Werkzeuge passen gut zur Modellprüfung. Wenn im SysML-Modell ein Topic \texttt{/battery\_state} vorgesehen ist, sollte es im laufenden ROS2-System auffindbar sein. Wenn ein Node \texttt{object\_detector\_node} modelliert wurde, sollte er später auch als laufender Node erscheinen.
 
 \section{Zusammenfassung}
-ROS2 stellt die grundlegenden Kommunikations- und Strukturmechanismen für die Roboterimplementierung bereit. Nodes übernehmen Aufgaben, Topics transportieren Nachrichten, Services beantworten kurze Anfragen, Actions steuern längere Vorgänge. Diese Konzepte lassen sich gut aus einem SysML-Modell ableiten.
+ROS2 stellt die grundlegenden Kommunikations- und Strukturmechanismen für die Roboterimplementierung bereit. Nodes übernehmen Aufgaben, Topics transportieren Nachrichten, Services beantworten kurze Anfragen, Actions steuern längere Vorgänge. Diese Konzepte lassen sich gut aus einem SysML-Modell ableiten. Am Indoor-Roboter zeigt sich das Zusammenspiel exemplarisch: Der \texttt{camera\_node} veröffentlicht Bilder als Topic, der \texttt{object\_detector\_node} abonniert sie, ein Service liefert auf Anfrage den Kartenstatus, und eine Action steuert die länger dauernde Fahrt zur Ladestation.
 
 \section{Kontrollfragen}
 \begin{enumerate}

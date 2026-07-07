@@ -12,13 +12,14 @@ Ein Zustand beschreibt eine Situation, in der sich das System über eine gewisse
 
 \begin{itemize}
     \item \texttt{Idle}
-    \item \texttt{Mapping}
     \item \texttt{Navigating}
     \item \texttt{AvoidingObstacle}
     \item \texttt{ReturnToDock}
     \item \texttt{Charging}
     \item \texttt{Error}
 \end{itemize}
+
+Im Fließtext schreiben wir Zustände zur besseren Lesbarkeit in PascalCase (\texttt{Idle}, \texttt{Navigating}); im SysML-v2-Code weiter unten und im Zustandsdiagramm erscheinen dieselben Zustände in camelCase (\texttt{idle}, \texttt{navigating}) – gemeint ist jeweils derselbe Zustand.
 
 \section{Ereignisse}
 Ereignisse lösen Übergänge aus. Beispiele:
@@ -27,14 +28,16 @@ Ereignisse lösen Übergänge aus. Beispiele:
     \item \texttt{GoalReceived}
     \item \texttt{BatteryLow}
     \item \texttt{ObstacleDetected}
+    \item \texttt{PathFree}
     \item \texttt{DockReached}
     \item \texttt{ChargingComplete}
     \item \texttt{ErrorDetected}
+    \item \texttt{Reset}
 \end{itemize}
 
 \section{Beispiel}
 In SysML v2 wird eine State Machine mit \texttt{state def} modelliert. Jeder Zustand
-kann Übergänge mit \texttt{transition} enthalten:
+kann Übergänge mit \texttt{transition} enthalten; die Zeile \texttt{entry; then idle;} markiert dabei den Startzustand (auch \emph{Pseudozustand} genannt), von dem die State Machine beim Systemstart automatisch in den Zustand \texttt{idle} wechselt:
 
 \begin{lstlisting}
 state def RobotOperation {
@@ -73,7 +76,7 @@ state def RobotOperation {
 \end{figure}
 
 \section{Guard-Bedingungen}
-Guards sind Bedingungen an Übergängen. Ein Übergang findet nur statt, wenn die Bedingung erfüllt ist. Beispiel: \texttt{GoalReceived [batteryOk]} führt zu \texttt{Navigating}. Wenn der Akku nicht ausreichend ist, führt das Ereignis vielleicht zu \texttt{ReturnToDock} oder zu einer Ablehnung des Auftrags.
+Guards sind Bedingungen an Übergängen. Ein Übergang findet nur statt, wenn die Bedingung erfüllt ist. Beispiel: \texttt{GoalReceived [batteryOk]} führt zu \texttt{Navigating}. Wenn der Akku nicht ausreichend ist, führt das Ereignis vielleicht zu \texttt{ReturnToDock} oder zu einer Ablehnung des Auftrags. Im Codebeispiel weiter oben ist dieser Guard der Übersichtlichkeit halber weggelassen; ergänzt sähe die Zeile im \texttt{idle}-Zustand etwa so aus: \texttt{transition accept GoalReceived[batteryOk] then navigating;}.
 
 \section{Warum State Machines nützlich sind}
 Zustandsdiagramme verhindern unklare Logik. Sie zeigen, welche Übergänge erlaubt sind. Darf der Roboter während eines Fehlers ein neues Ziel annehmen? Darf er während des Ladens navigieren? Was passiert, wenn während der Navigation der Akku niedrig wird?
@@ -98,7 +101,7 @@ Jedes reale System braucht eine Vorstellung davon, was bei Fehlern passiert.
 \section{Praxisbeispiel: Betriebsmodi des Roboters}
 Für den Indoor-Roboter ist eine State Machine auf Systemebene besonders hilfreich. Sie legt fest, welche Betriebsmodi grundsätzlich erlaubt sind. Ein einfaches Modell beginnt mit \texttt{Idle}. Von dort kann der Roboter bei einem Zielauftrag in \texttt{Navigating} wechseln. Erkennt er einen niedrigen Akkustand, wechselt er zu \texttt{ReturnToDock}. Bei erfolgreichem Andocken wechselt er zu \texttt{Charging}.
 
-Der Zustand \texttt{Error} sollte aus mehreren Zuständen erreichbar sein. Ein Fehler kann während der Navigation, beim Laden oder während der Initialisierung auftreten. Wichtig ist, dass der Rückweg aus dem Fehlerzustand bewusst modelliert wird. Darf ein Nutzer einfach Reset drücken? Muss Wartungspersonal eingreifen? Muss der Roboter vorher die Motoren deaktivieren?
+Der Zustand \texttt{Error} sollte grundsätzlich aus mehreren Zuständen erreichbar sein, auch wenn das Codebeispiel oben aus Gründen der Übersichtlichkeit nur den Übergang von \texttt{navigating} zeigt. Ein Fehler kann während der Navigation, beim Laden oder während der Initialisierung auftreten; ein vollständigeres Modell würde daher zusätzliche Übergänge wie \texttt{transition accept ErrorDetected then error;} auch in \texttt{charging} und einem möglichen Initialisierungszustand ergänzen. Wichtig ist, dass der Rückweg aus dem Fehlerzustand bewusst modelliert wird. Darf ein Nutzer einfach Reset drücken? Muss Wartungspersonal eingreifen? Muss der Roboter vorher die Motoren deaktivieren?
 
 State Machines helfen außerdem bei der Bedienoberfläche. Wenn das System im Zustand \texttt{Charging} ist, sollte die Oberfläche keine normale Zielnavigation anbieten oder zumindest klar anzeigen, dass der Roboter gerade nicht verfügbar ist.
 

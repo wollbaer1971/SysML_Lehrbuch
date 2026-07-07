@@ -9,7 +9,7 @@ Im vorherigen Kapitel ging es um Systems Engineering als Denkweise: ein technisc
 
 In realen Projekten entsteht jedoch schnell ein praktisches Problem. Informationen liegen an vielen Orten. Anforderungen stehen in einem Word-Dokument oder in einer Excel-Tabelle. Architekturentscheidungen werden in PowerPoint gezeichnet. Schnittstellen werden in E-Mails diskutiert. Testfälle liegen in einem Testmanagement-Werkzeug. Software wird in Git entwickelt. Aufgaben stehen in Jira oder einem ähnlichen Werkzeug. Protokolle aus Besprechungen liegen irgendwo im Projektordner.
 
-Solange das Projekt klein ist, kann das funktionieren. Sobald aber mehrere Personen beteiligt sind und sich Anforderungen ändern, wird es schwierig. Welche Version ist aktuell? Welche Komponente erfüllt welche Anforderung? Welche Tests prüfen die Hinderniserkennung? Welche ROS2-Node nutzt welche Sensordaten? Welche Dokumente müssen angepasst werden, wenn der Roboter eine neue Kamera erhält?
+Solange das Projekt klein ist, kann das funktionieren. Sobald aber mehrere Personen beteiligt sind und sich Anforderungen ändern, wird es schwierig. Welche Version ist aktuell? Welche Komponente erfüllt welche Anforderung? Welche Tests prüfen die Hinderniserkennung? Welche ROS2-Node nutzt welche Sensordaten? (Eine Node ist ein Softwarebaustein, ein Topic ein Kommunikationskanal zwischen Nodes; mehr dazu weiter unten in diesem Kapitel.) Welche Dokumente müssen angepasst werden, wenn der Roboter eine neue Kamera erhält?
 
 \gls{mbse} setzt genau hier an. Model-Based Systems Engineering bedeutet, dass ein Modell zum zentralen Träger der wichtigsten Systeminformationen wird. Das Modell ersetzt nicht alles. Es ersetzt nicht den Code, nicht jede Berechnung und nicht jedes Gespräch. Aber es verbindet die entscheidenden Informationen so, dass Zusammenhänge nachvollziehbar bleiben.
 
@@ -84,7 +84,14 @@ Ein MBSE-Modell ist nicht gut, weil es hübsche Diagramme enthält. Es ist gut, 
 \end{hinweisbox}
 
 \subsection{Das Modell als gemeinsame Informationsbasis}
-Das Ziel eines MBSE-Modells ist eine gemeinsame Informationsbasis. Alle Beteiligten sollen nicht in getrennten Dokumentwelten arbeiten, sondern auf eine konsistente Systembeschreibung zugreifen können. Das bedeutet nicht, dass jeder jedes Detail sehen muss. Ein Projektleiter interessiert sich vielleicht für Anforderungen, Risiken und Meilensteine. Eine Softwareentwicklerin interessiert sich für Schnittstellen, Datenflüsse und ROS2-Nodes. Eine Testerin interessiert sich für Anforderungen und Testfälle. Das Modell kann für verschiedene Rollen verschiedene Sichten anbieten.
+Das Ziel eines MBSE-Modells ist eine gemeinsame Informationsbasis. Alle Beteiligten sollen nicht in getrennten Dokumentwelten arbeiten, sondern auf eine konsistente Systembeschreibung zugreifen können. Das bedeutet nicht, dass jeder jedes Detail sehen muss. Ein Projektleiter interessiert sich vielleicht für Anforderungen, Risiken und Meilensteine. Eine Softwareentwicklerin interessiert sich für Schnittstellen, Datenflüsse und ROS2-Nodes. Eine Testerin interessiert sich für Anforderungen und Testfälle. Das Modell kann für verschiedene Rollen verschiedene Sichten anbieten. Abbildung~\ref{fig:kap02-dokumentenzentriert-vs-modellbasiert} stellt diesen Unterschied zwischen loser Dokumentensammlung und zentralem Modell noch einmal bildlich gegenüber.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap02_dokumentenzentriert_vs_modellbasiert}
+  \caption{Dokumentenzentrierte Entwicklung mit vielen lose verknüpften Dokumenten im Vergleich zu einem zentralen, klar verknüpften Systemmodell.}
+  \label{fig:kap02-dokumentenzentriert-vs-modellbasiert}
+\end{figure}
 
 \section{Was gehört in ein MBSE-Modell?}
 Ein MBSE-Modell kann sehr groß werden. Für den Einstieg ist es deshalb wichtig, sich auf zentrale Inhalte zu konzentrieren. Beim autonomen Indoor-Roboter betrachten wir zunächst acht Bereiche.
@@ -118,7 +125,7 @@ Funktionen beschreiben, was das System tut. Sie liegen zwischen Anforderungen un
 \end{itemize}
 
 \subsection{Struktur}
-Die Struktur beschreibt, aus welchen Hauptteilen das System besteht. In SysML werden dafür später Systemteile mit \texttt{part def} definiert. Für den Einstieg kann man an Teilsysteme denken:
+Die Struktur beschreibt, aus welchen Hauptteilen das System besteht. In SysML werden dafür später Systemteile mit \texttt{part def} definiert (wird in Kapitel 3 genauer erklärt). Für den Einstieg kann man an Teilsysteme denken:
 
 \begin{itemize}
     \item Fahrwerk
@@ -221,7 +228,14 @@ Betrachten wir eine typische Modellkette:
     \item Testfall: Stoppverhalten bei Hindernis in definiertem Abstand prüfen.
 \end{enumerate}
 
-Diese Kette zeigt, wie MBSE die Brücke von einem menschlichen Bedürfnis bis zu einem technischen Test schlägt. Genau diese Brücke ist in komplexen Projekten wertvoll.
+Diese Kette zeigt, wie MBSE die Brücke von einem menschlichen Bedürfnis bis zu einem technischen Test schlägt. Genau diese Brücke ist in komplexen Projekten wertvoll. Abbildung~\ref{fig:kap02-modellkette-traceability} stellt diese Modellkette farbkodiert dar, von der Anforderung (blau) über Funktionen und Systemelemente (grün) bis zu ROS2-Elementen (orange) und dem Testfall (grau).
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap02_modellkette_traceability}
+  \caption{Farbkodierte Modellkette von einem Stakeholderbedarf über Anforderung, Funktionen und Systemelemente bis zu ROS2-Node und Testfall.}
+  \label{fig:kap02-modellkette-traceability}
+\end{figure}
 
 \subsection{Beispielkette: Batteriemanagement}
 Eine zweite Kette betrifft den Akku:
@@ -294,7 +308,7 @@ Danach werden wichtige Anforderungen gesammelt. Sie müssen am Anfang noch nicht
 Aus Anforderungen werden Funktionen abgeleitet. Wenn der Roboter automatisch zur Ladestation zurückkehren soll, braucht er Funktionen wie \enquote{Akkustand überwachen}, \enquote{Ladestation lokalisieren} und \enquote{Rückkehr planen}.
 
 \subsection{Schritt 4: Struktur entwerfen}
-Dann wird überlegt, welche Systemelemente die Funktionen realisieren. Hier entstehen erste Systemteile (\texttt{part def}), Teilsysteme oder Komponenten. Beim Roboter sind das zum Beispiel Sensorik, Navigation, Energieversorgung und Bedienung.
+Dann wird überlegt, welche Systemelemente die Funktionen realisieren. Hier entstehen erste Systemteile (\texttt{part def}, wird in Kapitel 3 genauer erklärt), Teilsysteme oder Komponenten. Beim Roboter sind das zum Beispiel Sensorik, Navigation, Energieversorgung und Bedienung.
 
 \subsection{Schritt 5: Schnittstellen beschreiben}
 Schnittstellen sollten früh beschrieben werden. Wer liefert welche Daten? Wer benötigt welche Information? Welche Signale, Nachrichten oder Energieflüsse gibt es?
@@ -379,6 +393,15 @@ Beim Indoor-Roboter könnten Testsichten zeigen:
 
 Diese Sicht verhindert, dass Tests erst am Ende erfunden werden. Gute Tests entstehen parallel zum Systemverständnis.
 
+Abbildung~\ref{fig:kap02-sichten-auf-modell} fasst die vier beschriebenen Sichten noch einmal zusammen: Alle greifen auf dasselbe Modell zu, betrachten es aber aus unterschiedlichen Blickwinkeln.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap02_sichten_auf_modell}
+  \caption{Vier Rollen betrachten dasselbe MBSE-Modell des Roboters aus unterschiedlichen Blickwinkeln.}
+  \label{fig:kap02-sichten-auf-modell}
+\end{figure}
+
 \section{Vom MBSE-Modell zur ROS2-Architektur}
 Ein zentrales Ziel dieses Lehrbuchs ist die Verbindung von SysML v2, MBSE und ROS2. Deshalb ist es wichtig, früh zu verstehen, wie ein Systemmodell zur späteren Softwarestruktur führen kann.
 
@@ -447,7 +470,7 @@ Das Modell darf nicht neben der Entwicklung herlaufen wie eine Pflichtübung. Es
 
 Der wichtigste Punkt ist nicht das Zeichnen von Diagrammen, sondern das Herstellen von Beziehungen. Eine Anforderung steht nicht isoliert im Raum. Sie hängt mit Stakeholdern, Funktionen, Systemelementen, Schnittstellen und Tests zusammen. Genau diese Nachvollziehbarkeit macht MBSE wertvoll.
 
-Für den autonomen Indoor-Roboter bedeutet das: Wir können vom Bedarf eines Nutzers über Anforderungen und Funktionen bis zur späteren ROS2-Architektur denken. Das Modell wird zur Brücke zwischen Problemverständnis, SysML-Modellierung, Enterprise-Architect-Arbeit und technischer Umsetzung.
+Für den autonomen Indoor-Roboter bedeutet das: Wir können vom Bedarf eines Nutzers über Anforderungen und Funktionen bis zur späteren ROS2-Architektur denken. Das Modell wird zur Brücke zwischen Problemverständnis, SysML-v2-Modellierung im Syside Editor und technischer Umsetzung.
 
 \section{Kontrollfragen}
 \begin{enumerate}

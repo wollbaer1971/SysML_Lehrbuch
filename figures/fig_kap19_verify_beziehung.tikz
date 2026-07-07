@@ -1,0 +1,26 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    req/.style={
+        rectangle, rounded corners=2pt, draw=black!70, thick,
+        minimum width=55mm, minimum height=12mm,
+        align=center, fill=blue!12, drop shadow
+    },
+    test/.style={
+        rectangle, rounded corners=2pt, draw=black!50, thick,
+        minimum width=55mm, minimum height=12mm,
+        align=center, fill=black!6, drop shadow
+    },
+    dependency/.style={
+        dashed, thick, black!60,
+        -{Triangle[open, length=2.6mm, width=2.2mm]}
+    }
+]
+
+% --- Knoten ---
+\node[req]  (req006) at (0, 3) {\texttt{«requirement»}\\REQ-006: Rückkehr\\zur Ladestation};
+\node[test] (tc006)  at (0, -1.5) {\texttt{«test case»}\\TC-006: Zur Ladestation\\fahren};
+
+% --- verify-Beziehung (gestrichelt, offene Pfeilspitze, von Test zu Anforderung) ---
+\draw[dependency] (tc006) -- node[midway, fill=white, inner sep=1pt, font=\tiny\itshape]{«verify»} (req006);
+
+\end{tikzpicture}

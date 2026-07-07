@@ -1,0 +1,42 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    center/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=32mm, minimum height=12mm,
+        align=center, fill=green!15, drop shadow
+    },
+    stake/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
+        minimum width=30mm, minimum height=11mm,
+        align=center, fill=white, drop shadow, font=\small
+    },
+    conn/.style={black!45, dashed, thick}
+]
+
+% --- Zentrum ---
+\node[center] (robot) at (0,0) {Autonomer\\Indoor-Roboter};
+
+% --- Stakeholder im Kreis (Radius 5.2cm, Polarkoordinaten) ---
+\node[stake] (nutzer)      at (90:5.2)  {Nutzer\\{\tiny Ziel erreichen}};
+\node[stake] (personen)    at (126:5.2) {Personen im Gebäude\\{\tiny sicher bleiben}};
+\node[stake] (betreiber)   at (162:5.2) {Betreiber\\{\tiny wirtschaftlicher Betrieb}};
+\node[stake] (wartung)     at (198:5.2) {Wartungspersonal\\{\tiny Fehler erkennen}};
+\node[stake] (entwickler)  at (234:5.2) {Entwickler\\{\tiny System verstehen}};
+\node[stake] (sicherheit)  at (270:5.2) {Sicherheits-\\beauftragte\\{\tiny Risiken bewerten}};
+\node[stake] (datenschutz) at (306:5.2) {Datenschutz-\\verantwortliche\\{\tiny Daten schützen}};
+\node[stake] (einkauf)     at (342:5.2) {Einkauf /\\Management\\{\tiny Kosten kontrollieren}};
+\node[stake] (reinigung)   at (18:5.2)  {Reinigungspersonal\\{\tiny nicht behindert werden}};
+\node[stake] (it)          at (54:5.2)  {IT-Administration\\{\tiny Netzwerk absichern}};
+
+% --- Verbindungen zum Zentrum ---
+\foreach \n in {nutzer,personen,betreiber,wartung,entwickler,sicherheit,
+                datenschutz,einkauf,reinigung,it}
+  \draw[conn] (robot) -- (\n);
+
+% --- Legende ---
+\node[stake, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (-3.2,-7.4) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Stakeholder (externer Akteur)};
+\node[center, minimum width=6mm, minimum height=4mm, font=\tiny, right=42mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {betrachtetes System};
+
+\end{tikzpicture}

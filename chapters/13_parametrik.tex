@@ -41,14 +41,30 @@ Auch Sicherheitsfragen lassen sich grob parametrisch betrachten. Ein vereinfacht
 s = \frac{v^2}{2a}
 \]
 
-Dabei ist \(v\) die Geschwindigkeit und \(a\) die Bremsverzögerung. Die Formel ist vereinfacht, zeigt aber einen wichtigen Zusammenhang: Wenn die Geschwindigkeit steigt, wächst der Bremsweg quadratisch.
+Dabei ist \(v\) die Geschwindigkeit und \(a\) die Bremsverzögerung. Die Formel ist vereinfacht, zeigt aber einen wichtigen Zusammenhang: Wenn die Geschwindigkeit steigt, wächst der Bremsweg quadratisch. Analog zu \texttt{OperatingTimeCalc} ließe sich das als \texttt{calc def BrakingDistanceCalc \{ in v: Real; in a: Real; return s: Real = v*v/(2*a); \}} formulieren. Abbildung~\ref{fig:kap13-graph-bremsweg} veranschaulicht diesen quadratischen Zusammenhang für Geschwindigkeiten zwischen 0 und 1,5 m/s.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap13_graph_bremsweg}
+  \caption{Bremsweg $s = v^2/(2a)$ in Abhängigkeit von der Geschwindigkeit $v$ (hier mit $a=1\,\text{m/s}^2$). Der Bremsweg wächst quadratisch; bei $v=0{,}5$\,m/s und $v=1{,}0$\,m/s sind die Werte markiert.}
+  \label{fig:kap13-graph-bremsweg}
+\end{figure}
+
+Als parametrisches Diagramm lässt sich der Bremsweg ebenfalls modellieren (siehe Abbildung~\ref{fig:kap13-parametrisch-bremsweg}): Die Geschwindigkeit des Roboters und die Bremsverzögerung des \texttt{BrakeSystem} fließen in \texttt{BrakingDistanceCalc} ein, dessen Ergebnis von der Bedingung \texttt{SafeBrakingDistance} gegen den maximal zulässigen Bremsweg geprüft wird.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap13_parametrisch_bremsweg}
+  \caption{Parametrisches Diagramm zum Bremsweg: Geschwindigkeit und Bremsverzögerung fließen in \texttt{BrakingDistanceCalc} ein, das Ergebnis wird von der Bedingung \texttt{SafeBrakingDistance} gegen den maximal zulässigen Bremsweg geprüft.}
+  \label{fig:kap13-parametrisch-bremsweg}
+\end{figure}
 
 \begin{praxisbox}
 Wenn der Roboter schneller fahren soll, reicht es nicht, nur die Motorsteuerung anzupassen. Auch Hinderniserkennung, Reaktionszeit, Bremsweg, Sicherheitsabstand und Tests müssen betrachtet werden.
 \end{praxisbox}
 
 \section{Parametric Diagram in SysML}
-In SysML v2 werden solche Zusammenhänge mit \texttt{calc def} (Berechnungen) und \texttt{constraint} (Bedingungen) modelliert. Eine \texttt{calc def} beschreibt eine Formel. Parameter werden als Attribute mit Systemteilen verbunden.
+In SysML v2 werden solche Zusammenhänge mit \texttt{calc def} (Berechnungen) und \texttt{constraint} (Bedingungen) modelliert. Eine \texttt{calc def} beschreibt eine Formel. Parameter werden als Attribute mit Systemteilen verbunden. Grafisch besteht ein Parametric Diagram aus Kästen für \texttt{calc def}- und \texttt{constraint}-Verwendungen mit ihren Parametern am Rand, die über gestrichelte Bindungslinien mit den Attributen der beteiligten Systemteile verbunden werden – so wie es die Abbildungen in diesem Abschnitt zeigen.
 
 Beispiel:
 
@@ -69,13 +85,32 @@ calc def OperatingTimeCalc {
 }
 \end{lstlisting}
 
-Die \texttt{in}-Parameter \texttt{energy} und \texttt{power} werden im Modell mit den Attributen von Batterie und Verbrauchern verbunden. Das Ergebnis \texttt{operatingTime} steht dann als berechneter Wert am Systemteil zur Verfügung.
+Die \texttt{in}-Parameter \texttt{energy} und \texttt{power} – \texttt{in} kennzeichnet dabei die Parameterrichtung als Eingang, analog gibt es \texttt{return} für das Ergebnis – werden im Modell mit den Attributen von Batterie und Verbrauchern verbunden. Das Ergebnis \texttt{operatingTime} steht dann als berechneter Wert am Systemteil zur Verfügung. Abbildung~\ref{fig:kap13-parametrisch-betriebszeit} zeigt dieses parametrische Diagramm grafisch: Die gestrichelten Bindungslinien verbinden die Parameter von \texttt{OperatingTimeCalc} mit den Attributen von \texttt{Battery}, \texttt{PowerConsumers} und \texttt{Mission}.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap13_parametrisch_betriebszeit}
+  \caption{Parametrisches Diagramm zur Berechnung der Betriebszeit: \texttt{OperatingTimeCalc} verbindet die Batteriekapazität und die Leistungsaufnahme der Verbraucher zur geschätzten Laufzeit der Mission.}
+  \label{fig:kap13-parametrisch-betriebszeit}
+\end{figure}
+
+Neben \texttt{calc def} bietet SysML v2 mit \texttt{constraint def} ein Konstrukt für Bedingungen, die eine berechnete Größe gegen einen Grenzwert prüfen. Für den Bremsweg aus Abschnitt~13.5 ließe sich das so formulieren:
+
+\begin{lstlisting}
+constraint def SafeBrakingDistance {
+  in s    : Real;   // berechneter Bremsweg in m
+  in sMax : Real;   // maximal zulaessiger Bremsweg in m
+  assert s <= sMax;
+}
+\end{lstlisting}
+
+Die Bedingung \texttt{assert s <= sMax} ist genau dann erfüllt, wenn der berechnete Bremsweg den zulässigen Grenzwert nicht überschreitet; verletzt sie, weist das Modell auf eine unsichere Kombination aus Geschwindigkeit und Bremsverzögerung hin.
 
 \section{Grenzen einfacher Modelle}
 Parametrische Modelle sind nur so gut wie ihre Annahmen. Ein Roboter verbraucht beim Anfahren mehr Energie als im Stillstand. Teppichboden, Nutzlast und Fahrprofil beeinflussen die Laufzeit. Ein einfaches Modell ist trotzdem nützlich, weil es früh Größenordnungen sichtbar macht.
 
 \section{Parametrik als Entscheidungswerkzeug}
-Parametrik ist besonders wertvoll, wenn mehrere Entwurfsvarianten verglichen werden. Nehmen wir an, das Team betrachtet zwei Rechner. Rechner A benötigt 10 W und schafft einfache Personenerkennung. Rechner B benötigt 25 W und erkennt Personen zuverlässiger. Die Entscheidung betrifft nicht nur ML-Qualität, sondern auch Akkulaufzeit, Wärme, Kosten und Gewicht.
+Parametrik ist besonders wertvoll, wenn mehrere Entwurfsvarianten verglichen werden. Nehmen wir an, das Team betrachtet zwei Rechner. Rechner A benötigt 10 W und schafft einfache Personenerkennung. Rechner B benötigt 25 W und erkennt Personen zuverlässiger. Die Entscheidung betrifft nicht nur die Qualität des maschinellen Lernens (ML), sondern auch Akkulaufzeit, Wärme, Kosten und Gewicht.
 
 Ein parametrisches Modell kann solche Auswirkungen sichtbar machen. Wenn die restliche Leistungsaufnahme 20 W beträgt, ergibt sich mit Rechner A eine Gesamtleistung von 30 W. Mit Rechner B steigt sie auf 45 W. Bei 100 Wh nutzbarer Energie sinkt die theoretische Betriebszeit von etwa 3,3 h auf etwa 2,2 h.
 

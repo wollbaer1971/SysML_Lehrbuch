@@ -1,0 +1,46 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=32mm, minimum height=12mm,
+        align=center, fill=green!15, drop shadow
+    },
+    port/.style={rectangle, draw=black, fill=black!75, minimum width=2.2mm,
+        minimum height=2.2mm, inner sep=0pt},
+    portlbl/.style={font=\tiny},
+    flow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black}
+]
+
+% --- Systemteile ---
+\node[part] (loc)  at (0, 3)   {\texttt{localization :}\\\texttt{Localization}};
+\node[part] (map)  at (0, 0)   {\texttt{mapProvider :}\\\texttt{MapProvider}};
+\node[part] (plan) at (6, 1.5) {\texttt{pathPlanner :}\\\texttt{PathPlanner}};
+\node[part] (foll) at (11.5, 1.5) {\texttt{pathFollower :}\\\texttt{PathFollower}};
+
+% --- Ports (kleine Quadrate am Rand) ---
+\node[port] (p-loc-out)  at ($(loc.east)$)  {};
+\node[port] (p-map-out)  at ($(map.east)$)  {};
+\node[port] (p-plan-posein) at ($(plan.west)!0.33!(plan.north west)$) {};
+\node[port] (p-plan-mapin)  at ($(plan.west)!0.33!(plan.south west)$) {};
+\node[port] (p-plan-out) at ($(plan.east)$) {};
+\node[port] (p-foll-in)  at ($(foll.west)$) {};
+
+\node[portlbl, above=0.5mm of p-loc-out]  {\texttt{poseOut}};
+\node[portlbl, above=0.5mm of p-map-out]  {\texttt{mapOut}};
+\node[portlbl, above=0.5mm of p-plan-posein] {\texttt{poseIn}};
+\node[portlbl, below=0.5mm of p-plan-mapin]  {\texttt{mapIn}};
+\node[portlbl, above=0.5mm of p-plan-out] {\texttt{pathOut}};
+\node[portlbl, above=0.5mm of p-foll-in]  {\texttt{pathIn}};
+
+% --- Verbindungen (connection c1 / c2 / c3) ---
+\draw[flow] (p-loc-out) -- node[above, midway, font=\tiny, sloped]{c1} (p-plan-posein);
+\draw[flow] (p-map-out) -- node[below, midway, font=\tiny, sloped]{c2} (p-plan-mapin);
+\draw[flow] (p-plan-out) -- node[above, midway, font=\tiny]{c3} (p-foll-in);
+
+% --- Legende ---
+\node[port, below=14mm of map, xshift=-4mm] (leg1) {};
+\node[portlbl, right=1mm of leg1] {Port};
+\draw[flow] ([yshift=-8mm]leg1.south) -- ++(6mm,0)
+    node[right=1mm, font=\tiny] {Verbindung (\texttt{connection})};
+
+\end{tikzpicture}

@@ -1,0 +1,48 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    req/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=34mm, minimum height=12mm,
+        align=center, fill=blue!12, drop shadow
+    },
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=34mm, minimum height=12mm,
+        align=center, fill=green!15, drop shadow
+    },
+    test/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick,
+        minimum width=34mm, minimum height=12mm,
+        align=center, fill=black!6, drop shadow
+    },
+    code/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=40mm, minimum height=12mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
+    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+]
+
+% --- Knoten ---
+\node[req]  (req002)  at (0, 3)     {\texttt{REQ-002}\\Hindernisse erkennen};
+\node[part] (percept) at (7, 3)     {\texttt{PerceptionSystem}};
+\node[test] (tc002)   at (0, -1.5)  {\texttt{TC-002}\\Hinderniserkennung};
+\node[code] (rosnode) at (7, -1.5)  {\texttt{obstacle\_detector\_node}};
+
+% --- Beziehungen ---
+\draw[flow] (req002) -- node[lbl, midway]{\texttt{satisfy}} (percept);
+\draw[flow] (tc002)  to[bend left=12] node[lbl, near end]{\texttt{verify}} (percept);
+\draw[flow] (percept) -- node[lbl, midway]{\texttt{trace}} (rosnode);
+
+% --- Legende ---
+\node[req,  minimum width=6mm, minimum height=4mm, below=15mm of tc002, xshift=-8mm, font=\tiny] (leg1) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Anforderung};
+\node[part, minimum width=6mm, minimum height=4mm, below=6mm of leg1, font=\tiny] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {Systemteil (\texttt{part def})};
+\node[test, minimum width=6mm, minimum height=4mm, below=6mm of leg2, font=\tiny] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] {Testfall};
+\node[code, minimum width=6mm, minimum height=4mm, below=6mm of leg3, font=\tiny] (leg4) {};
+\node[right=1mm of leg4, font=\tiny, align=left] {ROS2-Node};
+
+\end{tikzpicture}

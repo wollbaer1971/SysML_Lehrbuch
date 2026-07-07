@@ -1,0 +1,68 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=32mm, minimum height=14mm,
+        align=center, fill=green!15, drop shadow
+    },
+    calc/.style={
+        rectangle, rounded corners=1.5pt, draw=black!60, thick,
+        minimum width=42mm, minimum height=24mm,
+        align=center, fill=blue!10, drop shadow
+    },
+    constr/.style={
+        rectangle, rounded corners=1.5pt, draw=red!55!black, thick,
+        minimum width=44mm, minimum height=26mm,
+        align=center, fill=red!8, drop shadow
+    },
+    port/.style={rectangle, draw=black, fill=black!75, minimum width=2.2mm,
+        minimum height=2.2mm, inner sep=0pt},
+    portlbl/.style={font=\tiny},
+    bind/.style={dashed, thick, black!55}
+]
+
+% --- Systemteile (links) ---
+\node[part] (robot) at (0,0.7)
+    {\texttt{robot :}\\\texttt{Robot}\\{\tiny currentSpeed : Real [m/s]}};
+\node[part] (brake) at (0,-0.7)
+    {\texttt{brakeSystem :}\\\texttt{BrakeSystem}\\{\tiny deceleration : Real [m/s$^2$]}};
+
+% --- Berechnungsblock ---
+\node[calc] (calc) at (6.5,0) {\texttt{BrakingDistanceCalc}\\{\tiny(calc def)}};
+
+\node[port] (p-v) at ($(calc.west)+(0,0.7)$) {};
+\node[port] (p-a) at ($(calc.west)+(0,-0.7)$) {};
+\node[port] (p-s) at (calc.east) {};
+
+\node[portlbl, above=0.5mm of p-v] {\texttt{in v}};
+\node[portlbl, below=0.5mm of p-a] {\texttt{in a}};
+\node[portlbl, above=0.5mm of p-s] {\texttt{return s}};
+
+\draw[bind] (robot.east) -- (p-v);
+\draw[bind] (brake.east) -- (p-a);
+
+% --- Constraint-Block (rechts) ---
+\node[constr] (safe) at (14,0)
+    {\texttt{SafeBrakingDistance}\\{\tiny(constraint)}\\[1mm]{\footnotesize prüft: $s \le s_{\max}$}};
+
+\node[port] (p-sin)    at ($(safe.west)+(0,0.7)$) {};
+\node[port] (p-smaxin) at ($(safe.west)+(0,-0.7)$) {};
+
+\node[portlbl, above=0.5mm of p-sin]    {\texttt{s}};
+\node[portlbl, below=0.5mm of p-smaxin] {\texttt{sMax}};
+
+\draw[bind] (p-s) -- (p-sin);
+\draw[bind] (p-smaxin) -- ++(-2.4,0)
+    node[left, font=\tiny, align=right] {\texttt{sMax}\\(Vorgabe, z.\,B.\\aus Anforderung)};
+
+% --- Legende ---
+\node[port, below=10mm of brake, xshift=-2mm] (leg1) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Parameter (Port)};
+\node[part, minimum width=6mm, minimum height=4mm, font=\tiny, right=30mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {Systemteil (\texttt{part})};
+\node[calc, minimum width=6mm, minimum height=4mm, font=\tiny, right=30mm of leg2] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] {Berechnung (\texttt{calc def})};
+\node[constr, minimum width=6mm, minimum height=4mm, font=\tiny, right=30mm of leg3] (leg4) {};
+\node[right=1mm of leg4, font=\tiny, align=left] {Bedingung (\texttt{constraint})};
+
+\end{tikzpicture}

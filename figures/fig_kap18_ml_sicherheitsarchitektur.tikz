@@ -1,0 +1,33 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    node distance=10mm and 20mm,
+    ros/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=42mm, minimum height=11mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    navnode/.style={ros, minimum width=36mm},
+    flowunsafe/.style={-{Stealth[length=2.2mm]}, thick, black!60, dashed},
+    flowsafe/.style={-{Stealth[length=2.2mm]}, thick, black!60},
+    lbl/.style={font=\tiny, fill=white, inner sep=1pt, align=center}
+]
+
+% --- Pfad 1 (oben): ML ---
+\node[ros] (mldet) at (0, 3) {\texttt{object\_detector\_node}\\(ML, Kamera)};
+
+% --- Pfad 2 (unten): Lidar ---
+\node[ros] (lidar) at (0, -3) {\texttt{lidar\_node} $\rightarrow$\\Hinderniserkennung};
+
+% --- Gemeinsames Ziel ---
+\node[navnode] (nav) at (8, 0) {\texttt{navigation\_node}};
+
+\draw[flowunsafe] (mldet.east) -- node[lbl, above, text width=34mm]
+    {Person erkannt?\\(unsicher)} (nav.north west);
+\draw[flowsafe] (lidar.east) -- node[lbl, below, text width=34mm]
+    {physische Distanzmessung\\(zuverlässiger)} (nav.south west);
+
+% --- Hinweistext ---
+\node[font=\small, align=center, text width=110mm, below=14mm of nav, xshift=-30mm]
+    {ML ergänzt, ersetzt aber nicht die Lidar-basierte Sicherheitsprüfung.};
+
+\end{tikzpicture}

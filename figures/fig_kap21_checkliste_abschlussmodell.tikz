@@ -1,0 +1,43 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    box/.style={draw=black!70, thick, minimum width=2mm, minimum height=2mm, inner sep=0pt}
+]
+
+% --- Kontrollkaestchen und Text, Zeile fuer Zeile ---
+\node[box] (cb1)  at (0, 0)     {};
+\node[right=2mm of cb1,  font=\small, align=left] {Kontextbeschreibung};
+
+\node[box] (cb2)  at (0, -0.95) {};
+\node[right=2mm of cb2,  font=\small, align=left] {Stakeholderliste};
+
+\node[box] (cb3)  at (0, -1.90) {};
+\node[right=2mm of cb3,  font=\small, align=left] {Mindestens zehn Anforderungen};
+
+\node[box] (cb4)  at (0, -2.85) {};
+\node[right=2mm of cb4,  font=\small, align=left] {Requirement Diagram};
+
+\node[box] (cb5)  at (0, -3.80) {};
+\node[right=2mm of cb5,  font=\small, align=left] {BDD mit Hauptsystemen};
+
+\node[box] (cb6)  at (0, -4.75) {};
+\node[right=2mm of cb6,  font=\small, align=left] {IBD für ein Teilsystem (z.\,B. Perception oder Navigation)};
+
+\node[box] (cb7)  at (0, -5.70) {};
+\node[right=2mm of cb7,  font=\small, align=left] {Aktivitätsdiagramm für Zielnavigation};
+
+\node[box] (cb8)  at (0, -6.65) {};
+\node[right=2mm of cb8,  font=\small, align=left] {Zustandsdiagramm für Betriebsmodi};
+
+\node[box] (cb9)  at (0, -7.60) {};
+\node[right=2mm of cb9,  font=\small, align=left] {Schnittstellentabelle};
+
+\node[box] (cb10) at (0, -8.55) {};
+\node[right=2mm of cb10, font=\small, align=left] {ROS2-Mapping-Tabelle};
+
+\node[box] (cb11) at (0, -9.50) {};
+\node[right=2mm of cb11, font=\small, align=left] {Mindestens fünf Testfälle};
+
+\node[box] (cb12) at (0, -10.45) {};
+\node[right=2mm of cb12, font=\small, align=left] {Traceability-Matrix};
+
+\end{tikzpicture}

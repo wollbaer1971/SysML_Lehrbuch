@@ -33,8 +33,17 @@ object_detector_node -> /detected_objects -> navigation_node
 robot_state_node -> /robot/status -> user_interface_node
 \end{verbatim}
 
+Der vollständige Node-Graph mit allen neun Nodes und ihren Topic-Verbindungen ist in Abbildung~\ref{fig:kap15-node-graph} dargestellt.
+
+\begin{figure}[H]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures/fig_kap15_node_graph}}
+  \caption{Node-Graph des autonomen Indoor-Roboters mit den wichtigsten Topics zwischen Sensor-, Verarbeitungs-, Navigations- und Aktuatorik-Nodes.}
+  \label{fig:kap15-node-graph}
+\end{figure}
+
 \section{Granularität}
-Eine wichtige Entscheidung ist die Granularität. Zu viele Nodes erhöhen Kommunikationsaufwand. Zu wenige Nodes machen das System unübersichtlich. Für den Einstieg gilt: Eine klar abgegrenzte Funktion darf ein eigener Node sein.
+Eine wichtige Entscheidung ist die Granularität. Zu viele Nodes erhöhen Kommunikationsaufwand. Zu wenige Nodes machen das System unübersichtlich. Für den Einstieg gilt: Eine klar abgegrenzte Funktion darf ein eigener Node sein. Ein Node, der gleichzeitig Kamera, Lidar und Navigation übernimmt, wäre zu grob geschnitten; ein eigener Node für jede einzelne Sensor-Lesefunktion wäre dagegen meist zu fein.
 
 \section{Architekturentscheidungen}
 Wichtige Entscheidungen sind:
@@ -59,7 +68,14 @@ Wenn \texttt{camera\_node} keine Bilder liefert, darf die Personenerkennung nich
 Typische Parameter sind maximale Geschwindigkeit, Akkuschwellwert, Topic-Namen, Erkennungsgrenzen oder Timeout-Werte. Parameter sollten im Modell mit Annahmen und Anforderungen zusammenpassen.
 
 \section{Lifecycle Nodes}
-ROS2 unterstützt Lifecycle Nodes, die definierte Zustände wie unconfigured, inactive, active und finalized besitzen können. Für Einsteiger ist das optional, aber für robuste Systeme nützlich. Sensor-Nodes können zum Beispiel erst konfiguriert und dann aktiviert werden.
+ROS2 unterstützt Lifecycle Nodes, also Nodes mit einem definierten Zustandsautomaten zur kontrollierten Aktivierung und Deaktivierung. Sie besitzen definierte Zustände wie unconfigured, inactive, active und finalized. Für Einsteiger ist das optional, aber für robuste Systeme nützlich: Der Zustandsautomat ermöglicht zum Beispiel ein deterministisches Hochfahren, bei dem ein Sensor-Node zunächst seine Parameter lädt (Zustand \emph{configure}), bevor er aktiv Daten liefert (Zustand \emph{active}) – so startet die Navigation nicht mit ungültigen oder unvollständigen Daten. Abbildung~\ref{fig:kap15-lifecycle} zeigt den zugehörigen Zustandsautomaten.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap15_lifecycle_zustandsautomat}
+  \caption{Zustandsautomat eines ROS2-Lifecycle-Nodes von \texttt{Unconfigured} über \texttt{Inactive} und \texttt{Active} bis zum Endzustand \texttt{Finalized}.}
+  \label{fig:kap15-lifecycle}
+\end{figure}
 
 \section{Architekturreview}
 Bevor Code geschrieben wird, sollte die ROS2-Architektur kurz geprüft werden. Ein Review kann anhand einfacher Fragen erfolgen:
@@ -72,6 +88,8 @@ Bevor Code geschrieben wird, sollte die ROS2-Architektur kurz geprüft werden. E
     \item Sind Parameter für veränderliche Werte vorgesehen?
     \item Gibt es eine Verbindung zu Anforderungen und Tests?
 \end{itemize}
+
+Das Werkzeug \texttt{rqt\_graph} kann dabei helfen, die entworfene Node-Struktur später im laufenden System visuell zu überprüfen.
 
 Für den Indoor-Roboter ist besonders wichtig, dass Navigation, Hinderniserkennung und Bewegungssteuerung nicht unkontrolliert gekoppelt sind. Ein falscher Bewegungsbefehl kann direkt physische Folgen haben. Deshalb sollte der Datenfluss zu \texttt{/cmd\_vel} klar nachvollziehbar sein.
 

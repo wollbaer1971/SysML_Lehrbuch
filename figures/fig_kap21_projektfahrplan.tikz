@@ -1,0 +1,76 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    reqstep/.style={
+        rectangle, rounded corners=2pt, draw=black!70, thick,
+        minimum width=34mm, minimum height=13mm,
+        align=center, fill=blue!12, drop shadow
+    },
+    archstep/.style={
+        rectangle, rounded corners=2pt, draw=green!40!black, thick,
+        minimum width=34mm, minimum height=13mm,
+        align=center, fill=green!15, drop shadow
+    },
+    ifacestep/.style={
+        rectangle, rounded corners=2pt, draw=orange!60!black, thick,
+        minimum width=34mm, minimum height=13mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    veristep/.style={
+        rectangle, rounded corners=2pt, draw=black!50, thick,
+        minimum width=34mm, minimum height=13mm,
+        align=center, fill=black!6, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60}
+]
+
+% --- Phase 1: Anforderungen (blau) ---
+\node[reqstep] (s1) at (0, 15)   {\textbf{(1)} Systemziel/\\Systemgrenze\\formulieren};
+\node[reqstep] (s2) at (4.4, 15) {\textbf{(2)} Stakeholder/\\Bedürfnisse\\sammeln};
+\node[reqstep] (s3) at (8.8, 15) {\textbf{(3)} Anforderungen\\formulieren/\\nummerieren};
+
+% --- Phase 2: Architektur und Verhalten (gruen) ---
+\node[archstep] (s4) at (0, 10.5)   {\textbf{(4)} Hauptstruktur\\im BDD\\modellieren};
+\node[archstep] (s5) at (4.4, 10.5) {\textbf{(5)} Teilsystem\\im IBD\\darstellen};
+\node[archstep] (s6) at (8.8, 10.5) {\textbf{(6)} Aktivitäts-/\\Zustands-\\diagramm};
+
+% --- Phase 3: Schnittstellen/Umsetzung (orange) ---
+\node[ifacestep] (s7) at (0, 6)   {\textbf{(7)} Schnittstellen\\dokumentieren};
+\node[ifacestep] (s8) at (4.4, 6) {\textbf{(8)} ROS2-Mapping};
+
+% --- Phase 4: Verifikation (grau) ---
+\node[veristep] (s9)  at (0, 1.5)   {\textbf{(9)} Testfälle\\erstellen/\\verknüpfen};
+\node[veristep] (s10) at (4.4, 1.5) {\textbf{(10)} Traceability-\\Matrix prüfen};
+
+% --- Fluss innerhalb der Phasen ---
+\draw[flow] (s1) -- (s2);
+\draw[flow] (s2) -- (s3);
+\draw[flow] (s4) -- (s5);
+\draw[flow] (s5) -- (s6);
+\draw[flow] (s7) -- (s8);
+\draw[flow] (s9) -- (s10);
+
+% --- Uebergaenge zwischen Phasen (Elbow-Verbinder) ---
+\draw[flow] (s3.south) -- ++(0,-1.2) -| (s4.north);
+\draw[flow] (s6.south) -- ++(0,-1.0) -| (s7.north);
+\draw[flow] (s8.south) -- ++(0,-1.0) -| (s9.north);
+
+% --- Hintergrundrahmen je Phase ---
+\begin{scope}[on background layer]
+    \draw[dashed, thick, blue!50, rounded corners]
+        ($(s1.north west)+(-4mm,6mm)$) rectangle ($(s3.south east)+(4mm,-4mm)$);
+    \node[font=\small\bfseries, blue!50!black] at ($(s2.north)+(0,10mm)$) {Anforderungen};
+
+    \draw[dashed, thick, green!40!black, rounded corners]
+        ($(s4.north west)+(-4mm,6mm)$) rectangle ($(s6.south east)+(4mm,-4mm)$);
+    \node[font=\small\bfseries, green!40!black] at ($(s5.north)+(0,10mm)$) {Architektur / Verhalten};
+
+    \draw[dashed, thick, orange!60!black, rounded corners]
+        ($(s7.north west)+(-4mm,6mm)$) rectangle ($(s8.south east)+(4mm,-4mm)$);
+    \node[font=\small\bfseries, orange!60!black] at ($(s7.north east)+(0,10mm)$) {Schnittstellen/Umsetzung};
+
+    \draw[dashed, thick, black!50, rounded corners]
+        ($(s9.north west)+(-4mm,6mm)$) rectangle ($(s10.south east)+(4mm,-4mm)$);
+    \node[font=\small\bfseries, black!50] at ($(s9.north east)+(0,10mm)$) {Verifikation};
+\end{scope}
+
+\end{tikzpicture}

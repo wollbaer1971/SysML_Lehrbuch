@@ -1,0 +1,43 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    center/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=32mm, minimum height=12mm,
+        align=center, fill=green!15, drop shadow
+    },
+    ext/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, dashed,
+        minimum width=30mm, minimum height=10mm,
+        align=center, fill=white, drop shadow
+    },
+    edg/.style={black!50, thick}
+]
+
+% --- Zentrales System ---
+\node[center] (robot) at (0,0) {\textbf{Indoor-Roboter}};
+
+% --- Umgebende Elemente (in etwa kreisfoermig angeordnet, 7 Elemente) ---
+\node[ext] (nutzer)   at (-6.4, 3.2)  {Nutzer};
+\node[ext] (personen) at ( 0.0, 4.4)  {Personen im\\Gebäude};
+\node[ext] (raeume)   at ( 6.4, 3.2)  {Räume, Flure,\\Türen,\\Hindernisse};
+\node[ext] (lade)     at ( 7.2,-1.2)  {Ladestation};
+\node[ext] (wartung)  at ( 3.2,-4.2)  {Wartungs-\\personal};
+\node[ext] (netz)     at (-3.2,-4.2)  {WLAN /\\Gebäudenetz};
+\node[ext] (ui)       at (-7.2,-1.2)  {Bediengerät /\\Benutzer-\\oberfläche};
+
+% --- Verbindungslinien (ohne Pfeilrichtung, reine Assoziation) ---
+\draw[edg] (robot) -- (nutzer);
+\draw[edg] (robot) -- (personen);
+\draw[edg] (robot) -- (raeume);
+\draw[edg] (robot) -- (lade);
+\draw[edg] (robot) -- (wartung);
+\draw[edg] (robot) -- (netz);
+\draw[edg] (robot) -- (ui);
+
+% --- Legende ---
+\node[center, minimum width=6mm, minimum height=4mm, below=16mm of wartung, xshift=-14mm, font=\tiny] (leg1) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Betrachtetes System};
+\node[ext, minimum width=6mm, minimum height=4mm, below=6mm of leg1, font=\tiny] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {Externes Kontextelement};
+
+\end{tikzpicture}

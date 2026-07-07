@@ -1,0 +1,45 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    node distance=6mm and 8mm,
+    folder/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=34mm, minimum height=9mm,
+        align=center, fill=blue!8, drop shadow
+    },
+    subfolder/.style={folder, minimum width=44mm, fill=green!12, draw=green!40!black},
+    filenode/.style={folder, minimum width=52mm, minimum height=8mm, fill=orange!12,
+        draw=orange!60!black, font=\tiny},
+    sibling/.style={folder, fill=black!6, draw=black!50},
+    flow/.style={-{Stealth[length=2mm]}, thick, black!60},
+    lbl/.style={font=\tiny}
+]
+
+% --- Wurzel ---
+\node[folder] (ws) at (0, 0) {\texttt{robot\_ws/}};
+
+% --- Ebene 1 ---
+\node[subfolder] (src)     at (7, 2)   {\texttt{src/robot\_basic\_nodes/}};
+\node[sibling]    (build)   at (7, -1) {\texttt{build/}};
+\node[sibling]    (install) at (7, -3) {\texttt{install/}};
+\node[sibling]    (log)     at (7, -5) {\texttt{log/}};
+
+\draw[flow] (ws.east) -- (src.west);
+\draw[flow] (ws.east) -- (build.west);
+\draw[flow] (ws.east) -- (install.west);
+\draw[flow] (ws.east) -- (log.west);
+
+% --- Ebene 2: Inhalt von src/robot_basic_nodes ---
+\node[filenode] (setup)   at (15, 4)   {\texttt{setup.py}};
+\node[filenode] (pkgxml)  at (15, 2)   {\texttt{package.xml}};
+\node[filenode] (statuspy) at (15, 0)  {\texttt{robot\_basic\_nodes/}\\\texttt{status\_node.py}};
+
+\draw[flow] (src.east) -- (setup.west);
+\draw[flow] (src.east) -- (pkgxml.west);
+\draw[flow] (src.east) -- (statuspy.west);
+
+% --- Anmerkung install/setup.bash ---
+\node[lbl, align=left, right=3mm of install, xshift=8mm, text width=48mm]
+    (note) {wird mit \texttt{source} geladen, damit \texttt{ros2 run} das Package findet};
+\draw[flow, dashed] (install.east) -- (note.west);
+
+\end{tikzpicture}

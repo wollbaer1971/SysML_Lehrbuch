@@ -10,7 +10,9 @@ Das SysML-v2-Modell beschreibt die Architektur. ROS2 ist die Umsetzung. Ohne Ver
 \section{Grundprinzip}
 Eine SysML-v2-Part-Definition kann einem ROS2-Node entsprechen, wenn sie eine klare softwarebezogene Verantwortung beschreibt. Ein Port oder eine Connection kann einem Topic, Service oder einer Action entsprechen. Eine Action im Modell kann durch einen Node oder eine Gruppe von Nodes realisiert werden. Ein Testfall im Modell kann einem automatisierten Test entsprechen.
 
-Nicht jedes Modellelement wird eins zu eins umgesetzt. Ein physisches Element wie \texttt{Camera} kann durch Hardware beschrieben werden, während die Ansteuerung über einen \texttt{camera\_node} erfolgt. Ein größeres Systemelement wie \texttt{NavigationSystem} kann aus mehreren Nodes bestehen.
+\emph{Hinweis:} Der Begriff \enquote{Action} wird hier in zwei unterschiedlichen Bedeutungen verwendet – als SysML-v2-Verhaltenselement (Bestandteil einer Aktivität im Modell) und als ROS2-Action (ein asynchrones Kommunikationsmuster mit Feedback, siehe Kapitel 14). Im Mapping wird eine SysML-Action häufig durch eine ROS2-Action realisiert, die beiden Begriffe bezeichnen aber unterschiedliche Konzepte auf unterschiedlichen Ebenen.
+
+Nicht jedes Modellelement wird eins zu eins umgesetzt. Ein physisches Element wie \texttt{Camera} kann durch Hardware beschrieben werden, während die Ansteuerung über einen \texttt{camera\_node} erfolgt. Ein größeres Systemelement wie \texttt{NavigationSystem} kann aus mehreren Nodes bestehen (zum Beispiel \texttt{navigation\_node} für die Bewegungsplanung und \texttt{slam\_node} für die Kartierung, vgl. Kapitel 15).
 
 \section{Beispieltabelle}
 \begin{longtable}{p{45mm}p{45mm}p{45mm}}
@@ -25,6 +27,15 @@ Part Definition \texttt{MotionControl} & \texttt{motion\_control\_node} & Setzt 
 Part Definition \texttt{UserInterface} & \texttt{user\_interface\_node} & Nimmt Aufträge entgegen\\
 \bottomrule
 \end{longtable}
+
+Abbildung~\ref{fig:kap16-mapping-sysml-ros2} stellt dieses 1:1-Mapping grafisch dar.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap16_mapping_sysml_ros2}
+  \caption{Grafische Darstellung des 1:1-Mappings zwischen SysML-v2-Part-Definitions und den zugehörigen ROS2-Nodes.}
+  \label{fig:kap16-mapping-sysml-ros2}
+\end{figure}
 
 \section{Textuelles Mapping-Beispiel}
 In SysML v2 kann ein kleiner Ausschnitt des Modells direkt als Text formuliert werden:
@@ -62,7 +73,7 @@ Ports, Connections und modellierte Datenflüsse werden auf Topics, Services oder
 Für ein Einsteigermodell reicht zunächst die fachliche Richtung des Datenflusses. Später sollten Nachrichtentyp, Frequenz, Einheiten, \gls{qos}-Einstellungen (z.\,B. ob Nachrichten zuverlässig oder nur bestmöglich zugestellt werden) und Fehlerfälle ergänzt werden.
 
 \section{Traceability}
-Das Mapping ist ein Teil der Traceability. Es zeigt, welche Implementierung eine Architekturentscheidung realisiert.
+Das Mapping ist ein Teil der Traceability (deutsch: Nachverfolgbarkeit von Anforderungen bis zur Implementierung). Es zeigt, welche Implementierung eine Architekturentscheidung realisiert.
 
 \begin{praxisbox}
 REQ-004 \enquote{Personen erkennen} wird durch die Part Definition \texttt{ObjectDetector} erfüllt. Diese Modellentscheidung wird durch den ROS2-Node \texttt{object\_detector\_node} umgesetzt. Die Ergebnisse werden über \texttt{/detected\_objects} veröffentlicht und durch einen Testfall zur Personenerkennung geprüft.
@@ -81,6 +92,15 @@ REQ-006 Zur Ladestation zurückkehren
 -> Action: NavigateToDock
 -> Test: TC-006 Rückkehr bei niedrigem Akkustand
 \end{verbatim}
+
+Abbildung~\ref{fig:kap16-traceability-batteriemanagement} zeigt diese Traceability-Kette grafisch, von der Anforderung über SysML- und ROS2-Elemente bis zum Testfall.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap16_traceability_batteriemanagement}
+  \caption{Traceability-Kette vom Requirement REQ-006 über SysML- und ROS2-Elemente bis zum Testfall TC-006.}
+  \label{fig:kap16-traceability-batteriemanagement}
+\end{figure}
 
 \section{Typische Fehler}
 \subsection{Eins-zu-eins-Zwang}

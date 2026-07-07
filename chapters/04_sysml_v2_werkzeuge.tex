@@ -40,7 +40,14 @@ Für dieses Lehrbuch verwenden wir eine einfache Werkzeugkette:
     \item optional das SysML-v2-Pilotprojekt als Referenz für fortgeschrittene Experimente
 \end{itemize}
 
-Diese Auswahl ist bewusst pragmatisch. Sie ist kostenlos zugänglich, passt zu textueller Modellierung und überfordert Einsteiger weniger als große industrielle Modellierungsumgebungen.
+Diese Auswahl ist bewusst pragmatisch. Sie ist kostenlos zugänglich, passt zu textueller Modellierung und überfordert Einsteiger weniger als große industrielle Modellierungsumgebungen. Abbildung~\ref{fig:kap04-werkzeugkette} zeigt diese Werkzeugkette im Zusammenhang, einschließlich des parallelen Pfads zum ROS2-Code.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap04_werkzeugkette}
+  \caption{Empfohlene Werkzeugkette: VS Code mit Syside Editor und Git als Kern, optional ergänzt um Eclipse SysON und das SysML-v2-Pilotprojekt; parallel dazu der ROS2-Code.}
+  \label{fig:kap04-werkzeugkette}
+\end{figure}
 
 \section{Projekt anlegen}
 Für das Lehrbuch verwenden wir ein Projekt mit dem Namen \texttt{AutonomousIndoorRobot}. Der Name ist bewusst englisch, weil spätere ROS2-Pakete, Nodes und Topics ebenfalls englische technische Bezeichnungen verwenden. Die erklärenden Texte im Modell können trotzdem deutsch sein.
@@ -65,7 +72,14 @@ AutonomousIndoorRobot/
     decisions.md
 \end{verbatim}
 
-Die Dateien im Ordner \texttt{model} enthalten das SysML-v2-Modell. Der Ordner \texttt{code} enthält spätere ROS2-Beispiele. Der Ordner \texttt{docs} kann kurze Architekturentscheidungen aufnehmen.
+Die Dateien im Ordner \texttt{model} enthalten das SysML-v2-Modell. Der Ordner \texttt{code} enthält spätere ROS2-Beispiele. Der Ordner \texttt{docs} kann kurze Architekturentscheidungen aufnehmen. Abbildung~\ref{fig:kap04-projektstruktur} stellt diese Projektstruktur grafisch dar und ordnet jeder Modell-Datei ein kurzes Stichwort zu.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap04_projektstruktur}
+  \caption{Projektstruktur \texttt{AutonomousIndoorRobot} mit den Ordnern \texttt{model/}, \texttt{code/} und \texttt{docs/} sowie den wichtigsten Dateien.}
+  \label{fig:kap04-projektstruktur}
+\end{figure}
 
 \section{Ziel, Umfang und Systemgrenze beschreiben}
 
@@ -153,6 +167,8 @@ package Requirements {
 }
 \end{lstlisting}
 
+Diese Schachtelung ist zunächst eine reine Namensraum-Gruppierung: Sie ordnet verwandte Anforderungen thematisch unter einer übergeordneten Anforderung ein, erzeugt aber keine automatische \texttt{derive}-Beziehung zwischen übergeordneter und untergeordneter Anforderung; eine solche Ableitungsbeziehung müssten Sie bei Bedarf zusätzlich explizit mit \texttt{derive} modellieren.
+
 Lesen Sie jede Anforderung laut vor und fragen Sie: Kann ich das testen? Wenn nicht, ist sie zu vage. \enquote{Der Roboter muss navigieren} ist nicht testbar. \enquote{Der Roboter muss bei 20 Prozent Akkustand die Ladestation anfahren} ist testbar.
 
 \section{Part Definitions formulieren}
@@ -219,7 +235,7 @@ Der \texttt{doc}-Block bei jeder \texttt{part def} ist optional, aber empfohlen.
 
 \section{Testfälle anlegen}
 
-Testfälle überprüfen, ob das System eine Anforderung erfüllt. In SysML v2 wird die Verbindung zwischen Testfall und Anforderung mit dem Schlüsselwort \texttt{verify} ausgedrückt. Die Datei \texttt{06\_tests.sysml} enthält die Testmodellierung.
+Testfälle überprüfen, ob das System eine Anforderung erfüllt. Mit \texttt{verification def} wird der Testfall selbst definiert, mit dem Schlüsselwort \texttt{verify} wird anschließend die Verbindung zwischen diesem Testfall und einer Anforderung ausgedrückt. Die Datei \texttt{06\_tests.sysml} enthält die Testmodellierung.
 
 Ein Testfall beschreibt: Was wird getestet? Welche Vorbedingungen gelten? Was ist die erwartete Reaktion? Welche Anforderung wird damit geprüft?
 
@@ -257,7 +273,7 @@ Die genaue Syntax von \texttt{verify ... by} kann sich zwischen SysML-v2-Werkzeu
 
 Die Datei \texttt{07\_ros2\_mapping.sysml} verbindet das SysML-Modell mit der späteren ROS2-Implementierung. Für jeden Systemteil wird dokumentiert, welcher ROS2-Node ihn umsetzt und welche Topics er verwendet.
 
-In SysML v2 können solche Zuordnungen als Attribute oder als Dokumentation modelliert werden. Für den Einstieg reicht eine klare Textnotation:
+In SysML v2 können solche Zuordnungen als Attribute oder als Dokumentation modelliert werden. Das Schlüsselwort \texttt{attribute} definiert dabei eine benannte, typisierte Eigenschaft eines Modellelements, hier jeweils vom Typ \texttt{String}. Für den Einstieg reicht eine klare Textnotation:
 
 \begin{lstlisting}
 package ROS2Mapping {

@@ -1,0 +1,28 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    node distance=14mm and 24mm,
+    ros/.style={
+        rectangle, rounded corners=2pt, draw=orange!60!black, thick,
+        minimum width=32mm, minimum height=11mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black},
+    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+]
+
+% --- Knoten ---
+\node[ros] (pub)  at (0,0)      {Node A\\(Publisher)};
+\node[ros] (sub1) at (7.5,1.7)  {Node B\\(Subscriber)};
+\node[ros] (sub2) at (7.5,-1.7) {Node C\\(Subscriber)};
+
+% --- Verbindungen ---
+\draw[flow] (pub.east) -- ++(1.4,1.7) -- (sub1.west)
+    node[lbl, pos=0.35, above, align=center]
+    {Topic: \texttt{/topic\_name}\\(Nachrichtentyp)};
+\draw[flow] (pub.east) -- ++(1.4,-1.7) -- (sub2.west);
+
+% --- Anmerkung ---
+\node[font=\tiny, align=center, below=8mm of pub, xshift=15mm]
+    {1 Publisher $\rightarrow$ n Subscriber};
+
+\end{tikzpicture}

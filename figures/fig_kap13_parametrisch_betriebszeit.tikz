@@ -1,0 +1,54 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=32mm, minimum height=14mm,
+        align=center, fill=green!15, drop shadow
+    },
+    calc/.style={
+        rectangle, rounded corners=1.5pt, draw=black!60, thick,
+        minimum width=44mm, minimum height=26mm,
+        align=center, fill=blue!10, drop shadow
+    },
+    port/.style={rectangle, draw=black, fill=black!75, minimum width=2.2mm,
+        minimum height=2.2mm, inner sep=0pt},
+    portlbl/.style={font=\tiny},
+    bind/.style={dashed, thick, black!55}
+]
+
+% --- Systemteile ---
+\node[part] (battery) at (0,1.2)
+    {\texttt{battery :}\\\texttt{Battery}\\{\tiny capacity : Real [Wh]}};
+\node[part] (consumers) at (12.5,1.2)
+    {\texttt{consumers :}\\\texttt{PowerConsumers}\\{\tiny totalPower : Real [W]}};
+\node[part] (mission) at (6,-4.2)
+    {\texttt{mission :}\\\texttt{Mission}\\{\tiny estimatedRuntime : Real [h]}};
+
+% --- Berechnungsblock ---
+\node[calc] (calc) at (6,0.5) {\texttt{OperatingTimeCalc}\\{\tiny(calc def)}};
+
+% --- Parameter (Ports) ---
+\node[port] (p-energy) at ($(calc.west)+(0,0.7)$) {};
+\node[port] (p-power)  at ($(calc.east)+(0,0.7)$) {};
+\node[port] (p-time)   at (calc.south) {};
+
+\node[portlbl, above=0.5mm of p-energy] {\texttt{in energy}};
+\node[portlbl, above=0.5mm of p-power]  {\texttt{in power}};
+\node[portlbl, right=0.5mm of p-time]   {\texttt{return operatingTime}};
+
+% --- Bindungen (gestrichelt, ohne Pfeilspitze) ---
+\draw[bind] (battery.east)   -- (p-energy);
+\draw[bind] (consumers.west) -- (p-power);
+\draw[bind] (p-time) -- (mission.north);
+
+% --- Legende ---
+\node[port, below=14mm of battery, xshift=-2mm] (leg1) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Parameter (Port)};
+\node[part, minimum width=6mm, minimum height=4mm, font=\tiny, right=30mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {Systemteil (\texttt{part})};
+\node[calc, minimum width=6mm, minimum height=4mm, font=\tiny, right=30mm of leg2] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] {Berechnung (\texttt{calc def})};
+\draw[bind] ([yshift=-8mm]leg1.south) -- ++(8mm,0)
+    node[right=1mm, font=\tiny] {Bindung (\texttt{bind})};
+
+\end{tikzpicture}

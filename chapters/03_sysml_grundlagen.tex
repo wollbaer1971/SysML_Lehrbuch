@@ -33,7 +33,14 @@ Wenn im Modell eine \texttt{part def PerceptionSystem} existiert, kann sie in ei
 \end{praxisbox}
 
 \section{Wichtige Konzepte in SysML v2}
-SysML v2 kennt keine festen Diagrammtypen mehr wie in v1. Stattdessen gibt es Sichten (\emph{views}) und Sichtpunkte (\emph{viewpoints}) auf ein gemeinsames Modell. Für den Einstieg konzentrieren wir uns auf diejenigen Konzepte, die für das Roboterprojekt den größten Nutzen bringen.
+SysML v2 kennt keine festen Diagrammtypen mehr wie in v1. Stattdessen gibt es Sichten (\emph{views}) und Sichtpunkte (\emph{viewpoints}) auf ein gemeinsames Modell. Ein Sichtpunkt legt fest, welche Art von Frage eine Sicht beantworten soll, zum Beispiel Struktur oder Verhalten; die Sicht selbst ist die daraus erzeugte konkrete Darstellung. Für den Einstieg konzentrieren wir uns auf diejenigen Konzepte, die für das Roboterprojekt den größten Nutzen bringen. Abbildung~\ref{fig:kap03-sysml-kernkonzepte} gibt einen Überblick über die sieben wichtigsten Konzepte, bevor wir sie einzeln vorstellen.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap03_sysml_kernkonzepte}
+  \caption{Die sieben für dieses Buch wichtigsten SysML-v2-Konzepte rund um das gemeinsame Modell.}
+  \label{fig:kap03-sysml-kernkonzepte}
+\end{figure}
 
 \subsection{Anforderungen (\texttt{requirement})}
 Anforderungen beschreiben, was das System leisten muss. In SysML v2 werden sie textuell mit \texttt{requirement} definiert. Beziehungen wie \texttt{satisfy}, \texttt{verify} und \texttt{derive} verbinden Anforderungen mit Systemteilen und Testfällen.
@@ -122,7 +129,14 @@ Beim Indoor-Roboter kann eine Modellkette so aussehen:
     \item Ein Testfall wird über \texttt{verify} mit der Anforderung verbunden.
 \end{enumerate}
 
-So entsteht ein zusammenhängendes Modell statt einer losen Sammlung schöner Bilder.
+So entsteht ein zusammenhängendes Modell statt einer losen Sammlung schöner Bilder. Abbildung~\ref{fig:kap03-struktur-verbindungssicht} zeigt beispielhaft, wie Struktur- und Verbindungssicht des \texttt{PerceptionSystem} zusammenspielen: Die Übersicht zeigt die Subsysteme von \texttt{Robot}, die Detailsicht zeigt \texttt{PerceptionSystem} mit seinen Teilen und dem Port \texttt{sensorData}.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap03_struktur_verbindungssicht}
+  \caption{Struktursicht von \texttt{Robot} mit seinen Subsystemen und Detailsicht des \texttt{PerceptionSystem} mit Port \texttt{sensorData}.}
+  \label{fig:kap03-struktur-verbindungssicht}
+\end{figure}
 
 \section{SysML v1 und SysML v2 im Vergleich}
 Einsteiger stoßen in der Literatur häufig noch auf SysML v1. Die wichtigsten Begriffsänderungen sind:

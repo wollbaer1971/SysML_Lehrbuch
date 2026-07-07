@@ -23,7 +23,7 @@ Das Beispiel ist für den Einstieg besonders geeignet, weil es mehrere Disziplin
 
 \begin{itemize}
     \item Es enthält Hardware: Sensoren, Antrieb, Batterie, Gehäuse.
-    \item Es enthält Software: ROS2-Nodes, Topics, Services und Actions.
+    \item Es enthält Software: ROS2-Nodes, Topics, Services und Actions (diese Begriffe werden in Kapitel 14 näher erklärt).
     \item Es enthält Verhalten: Navigation, Rückkehr zur Ladestation, Fehlerbehandlung.
     \item Es enthält Schnittstellen: Datenflüsse, Energiefluss, Bedienung.
     \item Es enthält KI: Personenerkennung mit einem ML-Modell.
@@ -45,7 +45,16 @@ Der Roboter interagiert mit seiner Umgebung. Zum Kontext gehören:
     \item ein Bediengerät oder eine Benutzeroberfläche
 \end{itemize}
 
-Nicht alle diese Elemente gehören automatisch zum System. Die Systemgrenze muss bewusst festgelegt werden. Für das Lehrbuch betrachten wir den Roboter als Hauptsystem. Die Ladestation kann je nach Kapitel als externes System oder als Teil der Gesamtarchitektur betrachtet werden, weil gerade diese Entscheidung ein gutes Beispiel für Schnittstellen ist.
+Nicht alle diese Elemente gehören automatisch zum System. Die Systemgrenze muss bewusst festgelegt werden. Für das Lehrbuch betrachten wir den Roboter als Hauptsystem. Die Ladestation kann je nach Kapitel als externes System oder als Teil der Gesamtarchitektur betrachtet werden, weil gerade diese Entscheidung ein gutes Beispiel für Schnittstellen ist. Eine bewusst gezogene Systemgrenze ist außerdem die Voraussetzung dafür, dass die Anforderungen (Kapitel 6) und die Struktur (Kapitel 8) des Roboters später sauber modelliert werden können.
+
+Abbildung~\ref{fig:kap05-kontextdiagramm} fasst diesen Systemkontext grafisch zusammen: Der Roboter steht im Zentrum, alle genannten Elemente umgeben ihn als externe Kontextelemente.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap05_kontextdiagramm}
+  \caption{Kontextdiagramm des Indoor-Roboters mit den wichtigsten externen Elementen seiner Betriebsumgebung.}
+  \label{fig:kap05-kontextdiagramm}
+\end{figure}
 
 \section{Hauptfunktionen}
 Die wichtigsten Funktionen des Roboters sind:
@@ -65,7 +74,7 @@ Die wichtigsten Funktionen des Roboters sind:
     \item Fehler erkennen und sicher reagieren
 \end{itemize}
 
-Diese Liste ist noch keine technische Architektur. Sie beschreibt zunächst, was das System leisten muss. Erst später entscheiden wir, welche Systemteile (\texttt{part def}), ROS2-Nodes und Schnittstellen diese Funktionen realisieren.
+Diese Liste ist noch keine technische Architektur. Sie beschreibt zunächst, was das System leisten muss. Erst später entscheiden wir, welche Systemteile (\texttt{part def}, ausführlich in Kapitel 8), ROS2-Nodes und Schnittstellen diese Funktionen realisieren.
 
 \section{Annahmen für das Lehrbuch}
 Damit das Beispiel beherrschbar bleibt, treffen wir einige Annahmen:
@@ -98,7 +107,14 @@ Eine erste grobe Struktur könnte aus folgenden Teilsystemen bestehen:
     \item \texttt{SafetyLogic}: sichere Reaktion auf kritische Situationen
 \end{itemize}
 
-Diese Struktur wird in den folgenden Kapiteln schrittweise verfeinert.
+Diese Struktur wird in den folgenden Kapiteln schrittweise verfeinert. Abbildung~\ref{fig:kap05-systemstruktur-uebersicht} zeigt diese erste, noch flache Gliederung als einfachen Baum.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap05_systemstruktur_uebersicht}
+  \caption{Erste, noch grobe Systemstruktur des Roboters mit sieben gleichrangigen Teilsystemen.}
+  \label{fig:kap05-systemstruktur-uebersicht}
+\end{figure}
 
 \section{Erste Szenarien}
 \subsection{Szenario 1: Ziel anfahren}
@@ -123,7 +139,7 @@ Das Praxisprojekt dient als roter Faden:
     \item Kapitel 10 beschreibt Schnittstellen.
     \item Kapitel 11 und 12 modellieren Verhalten.
     \item Kapitel 14 bis 18 übertragen das Modell in ROS2 und ML.
-    \item Kapitel 19 und 20 verbinden Anforderungen, Tests und Traceability.
+    \item Kapitel 19 und 20 verbinden Anforderungen, Tests und Traceability (die Nachvollziehbarkeit von Anforderungen über das gesamte Modell hinweg).
 \end{itemize}
 
 \section{Zusammenfassung}

@@ -1,0 +1,76 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    center/.style={
+        rectangle, rounded corners=2pt, draw=black!70, thick,
+        minimum width=34mm, minimum height=13mm,
+        align=center, fill=blue!12, drop shadow
+    },
+    sysmlnode/.style={
+        rectangle, rounded corners=2pt, draw=green!40!black, thick,
+        minimum width=28mm, minimum height=10mm,
+        align=center, fill=green!15, drop shadow
+    },
+    rosnode/.style={
+        rectangle, rounded corners=2pt, draw=orange!60!black, thick,
+        minimum width=28mm, minimum height=10mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    mlnode/.style={
+        rectangle, rounded corners=2pt, draw=blue!40!black, thick,
+        minimum width=28mm, minimum height=10mm,
+        align=center, fill=blue!6, drop shadow
+    },
+    neutralnode/.style={
+        rectangle, rounded corners=2pt, draw=black!50, thick,
+        minimum width=28mm, minimum height=10mm,
+        align=center, fill=black!6, drop shadow
+    },
+    subnode/.style={
+        rectangle, rounded corners=1.5pt, draw=black!40, thick,
+        minimum width=24mm, minimum height=8mm,
+        align=center, font=\tiny, fill=white, drop shadow
+    },
+    mainedge/.style={thick, black!50},
+    subedge/.style={thin, black!35}
+]
+
+% --- Zentrum ---
+\node[center] (center) at (0,0) {Nach dem\\Einstieg};
+
+% --- Hauptaeste ---
+\node[sysmlnode]   (sysml)   at (90:4)   {SysML\\vertiefen};
+\node[sysmlnode]   (sysmlv2) at (30:4)   {SysML v2};
+\node[rosnode]     (ros)     at (-30:4)  {ROS2\\vertiefen};
+\node[neutralnode] (sim)     at (-90:4)  {Simulation};
+\node[neutralnode] (safety)  at (-150:4) {Safety\\Engineering};
+\node[mlnode]      (ml)      at (150:4)  {Machine\\Learning};
+
+% --- Zentrum -> Hauptaeste ---
+\draw[mainedge] (center) -- (sysml);
+\draw[mainedge] (center) -- (sysmlv2);
+\draw[mainedge] (center) -- (ros);
+\draw[mainedge] (center) -- (sim);
+\draw[mainedge] (center) -- (safety);
+\draw[mainedge] (center) -- (ml);
+
+% --- Unteraeste: ROS2 vertiefen ---
+\node[subnode] (nav2)   at (-55:7.3) {Navigation2};
+\node[subnode] (tf2)    at (-30:7.3) {TF2};
+\node[subnode] (life)   at (-5:7.3)  {Lifecycle\\Nodes};
+\draw[subedge] (ros) -- (nav2);
+\draw[subedge] (ros) -- (tf2);
+\draw[subedge] (ros) -- (life);
+
+% --- Unteraeste: Safety Engineering ---
+\node[subnode] (fmea) at (-168:7.3) {FMEA};
+\node[subnode] (gefahr) at (-132:7.3) {Gefährdungs-\\analysen};
+\draw[subedge] (safety) -- (fmea);
+\draw[subedge] (safety) -- (gefahr);
+
+% --- Unteraeste: Machine Learning ---
+\node[subnode] (train) at (132:7.3) {Trainings-\\daten};
+\node[subnode] (valid) at (168:7.3) {Validierungs-\\datensätze};
+\draw[subedge] (ml) -- (train);
+\draw[subedge] (ml) -- (valid);
+
+\end{tikzpicture}

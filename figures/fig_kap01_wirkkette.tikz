@@ -1,0 +1,46 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=24mm, minimum height=11mm,
+        align=center, fill=green!15, drop shadow
+    },
+    ext/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
+        minimum width=24mm, minimum height=11mm,
+        align=center, fill=white, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
+    fb/.style={-{Stealth[length=2.2mm]}, thick, black!45, dashed},
+    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+]
+
+% --- Hauptwirkkette: Hinderniserkennung ---
+\node[part] (sensor) at (1.2,3)  {Kamera /\\Lidar};
+\node[part] (erkenn) at (4.2,3)  {Erkennungs-\\software};
+\node[part] (nav)    at (7.2,3)  {Navigation};
+\node[part] (motctl) at (10.2,3) {Motor-\\controller};
+\node[part] (motor)  at (13.2,3) {Motoren};
+
+\draw[flow] (sensor) -- node[lbl]{Bilder/Scan} (erkenn);
+\draw[flow] (erkenn) -- node[lbl]{Objekte} (nav);
+\draw[flow] (nav)    -- node[lbl]{Sollgeschw.} (motctl);
+\draw[flow] (motctl) -- node[lbl]{Ansteuerung} (motor);
+
+% --- Regelkreis Energieversorgung (parallel darunter) ---
+\node[part] (battmon) at (1.2,-1)  {Batterie-\\monitor};
+\node[part] (mission) at (4.2,-1)  {Missions-\\planung};
+\node[ext]  (dock)    at (7.2,-1)  {Ladestation};
+
+\draw[flow] (battmon) -- node[lbl]{Ladezustand} (mission);
+\draw[flow] (mission) -- node[lbl]{Rückkehrziel} (dock);
+\draw[fb] (dock.south) to[bend right=45]
+    node[lbl, pos=0.5]{angedockt / fertig geladen} (mission.south);
+
+% --- Legende ---
+\node[part, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (1.2,-3.6) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Systemteil (Bauteil oder Software)};
+\node[ext, minimum width=6mm, minimum height=4mm, font=\tiny, right=45mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {externes Element};
+
+\end{tikzpicture}

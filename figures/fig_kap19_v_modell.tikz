@@ -1,0 +1,80 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    reqbox/.style={
+        rectangle, rounded corners=2pt, draw=black!70, thick,
+        minimum width=32mm, minimum height=11mm,
+        align=center, fill=blue!12, drop shadow
+    },
+    archbox/.style={
+        rectangle, rounded corners=2pt, draw=green!40!black, thick,
+        minimum width=32mm, minimum height=11mm,
+        align=center, fill=green!15, drop shadow
+    },
+    implbox/.style={
+        rectangle, rounded corners=2pt, draw=orange!60!black, thick,
+        minimum width=32mm, minimum height=11mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    testbox/.style={
+        rectangle, rounded corners=2pt, draw=black!50, thick,
+        minimum width=32mm, minimum height=11mm,
+        align=center, fill=black!6, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
+    corr/.style={dashed, thick, black!50},
+    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+]
+
+% --- linker Ast: Spezifikation (absteigend) ---
+% Hinweis: Abstaende so gewaehlt, dass Boxen (Breite 32mm) auf keiner Ebene
+% ueberlappen; der horizontale Versatz zur Mittelachse (x=7) waechst pro
+% Ebene um 2cm, sodass auch die engste Ebene (comp/unit, Versatz 2cm,
+% Abstand 4cm) mehr Abstand hat als die Boxbreite.
+\node[reqbox]  (stake) at (-1, 12) {Stakeholder-\\Bedürfnisse};
+\node[reqbox]  (sysreq) at (1, 9)  {System-\\anforderungen};
+\node[archbox] (arch)  at (3, 6)  {Architektur/\\Design};
+\node[archbox] (comp)  at (5, 3)  {Komponenten-\\entwurf};
+
+% --- Spitze ---
+\node[implbox] (impl) at (7, 0) {Implementierung};
+
+% --- rechter Ast: Verifikation (aufsteigend) ---
+\node[testbox] (unit)  at (9, 3)  {Unit-Test};
+\node[testbox] (integ) at (11, 6) {Integrations-\\test};
+\node[testbox] (systest) at (13, 9) {Systemtest};
+\node[testbox] (valid) at (15, 12) {Abnahme-/\\Validierungstest};
+
+% --- absteigender Ast ---
+\draw[flow] (stake)  -- (sysreq);
+\draw[flow] (sysreq) -- (arch);
+\draw[flow] (arch)   -- (comp);
+\draw[flow] (comp)   -- (impl);
+
+% --- aufsteigender Ast ---
+\draw[flow] (impl)    -- (unit);
+\draw[flow] (unit)    -- (integ);
+\draw[flow] (integ)   -- (systest);
+\draw[flow] (systest) -- (valid);
+
+% --- horizontale Entsprechungen (gestrichelt, ohne Pfeilspitze) ---
+\draw[corr] (stake)  -- node[lbl, midway]{validiert}   (valid);
+\draw[corr] (sysreq) -- node[lbl, midway]{verifiziert} (systest);
+\draw[corr] (arch)   -- (integ);
+\draw[corr] (comp)   -- (unit);
+
+% --- Randbeschriftungen ---
+\node[font=\small, rotate=90, black!70] at (-3.4, 6) {Spezifikation};
+\node[font=\small, rotate=-90, black!70] at (17.4, 6) {Verifikation};
+\node[font=\small, black!70] at (7, -2.2) {Implementierung};
+
+% --- Legende ---
+\node[reqbox,  minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (1,-5) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Anforderung};
+\node[archbox, minimum width=6mm, minimum height=4mm, font=\tiny, right=24mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {Architektur/Entwurf};
+\node[implbox, minimum width=6mm, minimum height=4mm, font=\tiny, right=24mm of leg2] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] {Implementierung};
+\node[testbox, minimum width=6mm, minimum height=4mm, font=\tiny, right=24mm of leg3] (leg4) {};
+\node[right=1mm of leg4, font=\tiny, align=left] {Testebene};
+
+\end{tikzpicture}

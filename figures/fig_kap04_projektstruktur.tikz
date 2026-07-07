@@ -1,0 +1,63 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    root/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=48mm, minimum height=10mm,
+        align=center, fill=black!10, drop shadow, font=\small
+    },
+    folder/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!70!black, thick,
+        minimum width=26mm, minimum height=9mm,
+        align=center, fill=orange!28, drop shadow, font=\small
+    },
+    file/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=40mm, minimum height=10mm,
+        align=center, fill=orange!12, drop shadow, font=\tiny
+    },
+    edg/.style={-{Stealth[length=2mm]}, thick, black!55}
+]
+
+% --- Wurzel ---
+\node[root] (root) at (7.9,10.6) {\texttt{AutonomousIndoorRobot/}};
+
+% --- Ordner ---
+\node[folder] (model) at (3,9)   {\texttt{model/}};
+\node[folder] (code)  at (8.0,9) {\texttt{code/}};
+\node[folder] (docs)  at (12.6,9){\texttt{docs/}};
+
+\foreach \n in {model,code,docs}
+  \draw[edg] (root) -- (\n);
+
+% --- Dateien in model/ ---
+\node[file] (f00) at (3,7.6)  {\texttt{00\_overview.sysml}\\{Ziel, Umfang}};
+\node[file] (f01) at (3,6.3)  {\texttt{01\_context.sysml}\\{Stakeholder, Kontext}};
+\node[file] (f02) at (3,5.0)  {\texttt{02\_requirements.sysml}\\{Anforderungen}};
+\node[file] (f03) at (3,3.7)  {\texttt{03\_structure.sysml}\\{Systembausteine}};
+\node[file] (f04) at (3,2.4)  {\texttt{04\_behavior.sysml}\\{Abläufe, Zustände}};
+\node[file] (f05) at (3,1.1)  {\texttt{05\_interfaces.sysml}\\{Ports, Schnittstellen}};
+\node[file] (f06) at (3,-0.2) {\texttt{06\_tests.sysml}\\{Testfälle}};
+\node[file] (f07) at (3,-1.5) {\texttt{07\_ros2\_mapping.sysml}\\{ROS2-Zuordnung}};
+
+\foreach \n in {f00,f01,f02,f03,f04,f05,f06,f07}
+  \draw[edg] (model) -- (\n);
+
+% --- Dateien in code/ ---
+\node[file] (status) at (8.0,7.6) {\texttt{status\_node.py}\\{Status veröffentlichen}};
+\node[file] (batt)   at (8.0,6.3) {\texttt{battery\_monitor\_node.py}\\{Akkuüberwachung}};
+
+\foreach \n in {status,batt}
+  \draw[edg] (code) -- (\n);
+
+% --- Datei in docs/ ---
+\node[file] (dec) at (12.6,7.6) {\texttt{decisions.md}\\{Architekturentscheidungen}};
+
+\draw[edg] (docs) -- (dec);
+
+% --- Legende ---
+\node[folder, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (3,-3.2) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Ordner};
+\node[file, minimum width=6mm, minimum height=4mm, font=\tiny, right=20mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {Datei mit Kurzbeschreibung};
+
+\end{tikzpicture}
