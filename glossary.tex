@@ -3,16 +3,61 @@
 \newacronym{ros2}{ROS2}{Robot Operating System 2}
 \newacronym{bdd}{BDD}{Block Definition Diagram (SysML v1)}
 \newacronym{ibd}{IBD}{Internal Block Diagram (SysML v1)}
+\newacronym{dds}{DDS}{Data Distribution Service}
 \newacronym{slam}{SLAM}{Simultaneous Localization and Mapping}
 \newacronym{ml}{ML}{Machine Learning}
 \newacronym{ki}{KI}{Künstliche Intelligenz}
 \newacronym{onnx}{ONNX}{Open Neural Network Exchange}
 \newacronym{api}{API}{Application Programming Interface}
 \newacronym{qos}{QoS}{Quality of Service}
+\newacronym{req}{REQ}{Requirement}
+\newacronym{tc}{TC}{Test Case}
+\newacronym{fmea}{FMEA}{Failure Mode and Effects Analysis}
+\newacronym{gpu}{GPU}{Graphics Processing Unit}
 
 \newglossaryentry{requirement}{
     name=Anforderung,
     description={Beschreibung einer Fähigkeit, Eigenschaft oder Einschränkung, die ein System erfüllen muss}
+}
+\newglossaryentry{stakeholder}{
+    name=Stakeholder,
+    description={Person, Gruppe oder Organisation, die ein Interesse am System hat, Anforderungen stellt oder von den Systemwirkungen betroffen ist}
+}
+\newglossaryentry{system}{
+    name=System,
+    description={Zusammenwirken mehrerer Elemente mit einem gemeinsamen Zweck, einer Systemgrenze und Beziehungen zur Umgebung}
+}
+\newglossaryentry{systemgrenze}{
+    name=Systemgrenze,
+    description={Festlegung, welche Elemente zum betrachteten System gehören und welche Elemente zur Umgebung oder zu externen Systemen zählen}
+}
+\newglossaryentry{systemkontext}{
+    name=Systemkontext,
+    description={Umgebung eines Systems mit externen Akteuren, Nachbarsystemen, Randbedingungen und wichtigen Wechselwirkungen}
+}
+\newglossaryentry{funktion}{
+    name=Funktion,
+    description={Fähigkeit oder Aufgabe, die ein System erfüllen soll, unabhängig davon, welche konkrete Komponente sie später realisiert}
+}
+\newglossaryentry{komponente}{
+    name=Komponente,
+    description={Abgrenzbarer Teil eines Systems, zum Beispiel ein Sensor, ein Softwarebaustein, ein Teilsystem oder ein mechanisches Bauteil}
+}
+\newglossaryentry{architektur}{
+    name=Architektur,
+    description={Grundlegende Struktur eines Systems: seine wichtigsten Elemente, Verantwortlichkeiten, Schnittstellen und Beziehungen}
+}
+\newglossaryentry{schnittstelle}{
+    name=Schnittstelle,
+    description={Definierter Übergang zwischen Systemteilen oder zwischen System und Umgebung, über den Daten, Energie, Material oder Befehle ausgetauscht werden}
+}
+\newglossaryentry{datenfluss}{
+    name=Datenfluss,
+    description={Gerichteter Austausch von Informationen zwischen Systemteilen, zum Beispiel Sensordaten von einer Kamera zu einem Auswertungs-Node}
+}
+\newglossaryentry{usecase}{
+    name=Use Case,
+    description={Beschreibung eines Ziels oder Ablaufs aus Sicht eines Nutzers oder externen Akteurs, zum Beispiel \enquote{Ziel anfahren}}
 }
 \newglossaryentry{block}{
     name=Block,
@@ -22,17 +67,113 @@
     name=part def,
     description={Typdefinition in SysML v2. Entspricht dem Block aus SysML v1. Definiert, welche Eigenschaften und Teile ein Systemelement besitzen kann}
 }
+\newglossaryentry{part}{
+    name=part,
+    description={Benannte Instanz eines mit \texttt{part def} definierten Typs innerhalb eines übergeordneten Systemelements}
+}
+\newglossaryentry{port}{
+    name=Port,
+    description={Schnittstellenpunkt eines SysML-Elements, über den Flüsse oder Kommunikationsbeziehungen modelliert werden}
+}
+\newglossaryentry{connection}{
+    name=Connection,
+    description={Verbindung zwischen Ports oder Systemelementen, die zeigt, dass ein Austausch oder eine Kopplung zwischen ihnen besteht}
+}
+\newglossaryentry{action}{
+    name=Action,
+    description={In SysML v2 ein Verhaltenselement innerhalb eines Ablaufs; nicht zu verwechseln mit einer ROS2-Action als Kommunikationsmuster}
+}
+\newglossaryentry{state}{
+    name=State,
+    description={Zustand eines Systems oder Systemteils, in dem bestimmte Regeln, Ereignisse oder Übergänge gelten}
+}
+\newglossaryentry{transition}{
+    name=Transition,
+    description={Übergang von einem Zustand in einen anderen, meist ausgelöst durch ein Ereignis oder eine Bedingung}
+}
+\newglossaryentry{guard}{
+    name=Guard,
+    description={Bedingung an einer Verzweigung oder Transition, die erfüllt sein muss, damit ein bestimmter Pfad genommen wird}
+}
+\newglossaryentry{constraint}{
+    name=Constraint,
+    description={Einschränkung oder Regel, die im Modell gelten muss, zum Beispiel eine maximale Bremsdistanz oder eine zulässige Latenz}
+}
+\newglossaryentry{calcdef}{
+    name=calc def,
+    description={SysML-v2-Definition für eine Berechnung, die Eingangsgrößen, Rechenlogik und Ergebnisgrößen strukturiert beschreibt}
+}
 \newglossaryentry{node}{
-    name=ROS2-Node,
-    description={Eigenständiger Prozess in ROS2, der Daten verarbeitet und über Topics, Services oder Actions kommuniziert}
+    name=ROS2 Node,
+    description={Eigenständiger Prozess in ROS2, auch ROS2-Node geschrieben, der eine klar abgegrenzte Aufgabe übernimmt, Daten verarbeitet und über Topics, Services oder Actions mit anderen Nodes kommuniziert}
 }
 \newglossaryentry{topic}{
     name=Topic,
     description={Nachrichtenkanal in ROS2 für publish-subscribe-Kommunikation}
 }
+\newglossaryentry{message}{
+    name=Message,
+    description={Struktur einer Nachricht in ROS2, die festlegt, welche Daten über ein Topic, einen Service oder eine Action übertragen werden}
+}
+\newglossaryentry{publisher}{
+    name=Publisher,
+    description={ROS2-Rolle eines Nodes, der Nachrichten auf einem Topic veröffentlicht}
+}
+\newglossaryentry{subscriber}{
+    name=Subscriber,
+    description={ROS2-Rolle eines Nodes, der Nachrichten von einem Topic empfängt}
+}
+\newglossaryentry{service}{
+    name=Service,
+    description={ROS2-Kommunikationsmuster für kurze Anfrage-Antwort-Vorgänge}
+}
+\newglossaryentry{rosaction}{
+    name=ROS2-Action,
+    description={ROS2-Kommunikationsmuster für länger laufende Aufgaben mit Ziel, Feedback, Ergebnis und möglicher Abbruchmöglichkeit}
+}
+\newglossaryentry{parameter}{
+    name=Parameter,
+    description={Konfigurationswert eines Nodes oder Modells, zum Beispiel ein Akkuschwellwert, eine Maximalgeschwindigkeit oder ein Topic-Name}
+}
+\newglossaryentry{launchdatei}{
+    name=Launch-Datei,
+    description={Datei, mit der mehrere ROS2-Nodes gemeinsam mit Parametern und Startoptionen gestartet werden}
+}
+\newglossaryentry{workspace}{
+    name=Workspace,
+    description={Arbeitsverzeichnis für ein ROS2-Projekt, in dem Quellcode, Pakete, Build-Ergebnisse und Installationsartefakte organisiert werden}
+}
+\newglossaryentry{package}{
+    name=Package,
+    description={Organisierte Einheit in ROS2, die Code, Konfiguration, Schnittstellendefinitionen und Metadaten zusammenfasst}
+}
+\newglossaryentry{lifecycle-node}{
+    name=Lifecycle Node,
+    description={ROS2-Node mit definierten Zuständen wie \texttt{unconfigured}, \texttt{inactive}, \texttt{active} und \texttt{finalized}}
+}
 \newglossaryentry{traceability}{
     name=Traceability,
     description={Nachvollziehbare Verbindung zwischen Anforderungen, Architektur, Implementierung und Tests im Systemmodell}
+}
+\newglossaryentry{verifikation}{
+    name=Verifikation,
+    description={Prüfung, ob ein System oder Systemteil die spezifizierten Anforderungen korrekt erfüllt}
+}
+\newglossaryentry{validierung}{
+    name=Validierung,
+    description={Prüfung, ob das entwickelte System das tatsächliche Problem der Stakeholder löst und für den vorgesehenen Einsatz geeignet ist}
+}
+\newglossaryentry{testfall}{
+    name=Testfall,
+    description={Beschriebene Prüfung mit Ziel, Vorgehen und erwartbarem Ergebnis, mit der eine Anforderung oder Funktion nachgewiesen wird}
+}
+\newglossaryentry{impactanalysis}{
+    name=Impact Analysis,
+    description={Analyse, welche Anforderungen, Komponenten, Schnittstellen, Tests oder Dokumente von einer Änderung betroffen sind}
+}
+\newglossaryentry{mapping}{
+    name=Mapping,
+    description={Zuordnung zwischen Elementen unterschiedlicher Ebenen, zum Beispiel von SysML-Elementen zu ROS2-Nodes, Topics und Tests}
 }
 \newglossaryentry{middleware}{
     name=Middleware,
@@ -46,4 +187,40 @@
 \newglossaryentry{conjport}{
     name=konjugierter Port,
     description={Port, dessen Flussrichtung gegenüber der ursprünglichen Portdefinition umgekehrt ist (Kennzeichen: Tilde \textasciitilde); ein sendender Port wird dadurch zu einem empfangenden Port}
+}
+\newglossaryentry{sensor}{
+    name=Sensor,
+    description={Technisches Element, das eine physikalische Größe oder Umgebungseigenschaft erfasst und als Signal oder Datenwert bereitstellt}
+}
+\newglossaryentry{aktor}{
+    name=Aktor,
+    description={Technisches Element, das Befehle in eine physische Wirkung umsetzt, zum Beispiel ein Motor, ein Bremsmechanismus oder ein Greifer}
+}
+\newglossaryentry{lidar}{
+    name=Lidar,
+    description={Sensorprinzip zur Abstandsmessung mit Laserlicht; in der Robotik häufig zur Hinderniserkennung und Kartierung eingesetzt}
+}
+\newglossaryentry{sensorfusion}{
+    name=Sensorfusion,
+    description={Kombination mehrerer Sensordaten, um eine robustere oder vollständigere Einschätzung der Umgebung zu erhalten}
+}
+\newglossaryentry{inferenz}{
+    name=Inferenz,
+    description={Anwendung eines bereits trainierten Machine-Learning-Modells auf neue Daten, zum Beispiel auf ein aktuelles Kamerabild}
+}
+\newglossaryentry{latenz}{
+    name=Latenz,
+    description={Zeitverzögerung zwischen einem Ereignis, einer Messung oder einer Eingabe und der daraus folgenden Systemreaktion}
+}
+\newglossaryentry{simulation}{
+    name=Simulation,
+    description={Nachbildung eines Systems oder seiner Umgebung, um Verhalten, Algorithmen oder Tests ohne vollständige reale Hardware zu untersuchen}
+}
+\newglossaryentry{modell}{
+    name=Modell,
+    description={Vereinfachte, zweckgebundene Beschreibung eines Systems, die relevante Informationen, Beziehungen und Entscheidungen sichtbar macht}
+}
+\newglossaryentry{sicht}{
+    name=Sicht,
+    description={Ausschnitt aus einem Modell, der bestimmte Informationen für eine Rolle oder Fragestellung gezielt darstellt}
 }
