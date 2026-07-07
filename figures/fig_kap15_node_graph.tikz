@@ -7,7 +7,7 @@
         align=center, fill=orange!15, drop shadow
     },
     flow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black},
-    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+    lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
 ]
 
 % --- Spalte 1: Sensor-Nodes (links) ---
@@ -39,9 +39,9 @@
 \draw[flow] (state.east) -- node[lbl, midway, above] {/robot/status} (ui.south west);
 
 % --- Legende ---
-\node[ros, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0,-3.4) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {ROS2-Node};
-\draw[flow] ([xshift=4mm]leg1.east) -- ++(10mm,0)
-    node[right=1mm, font=\tiny, align=left] {Topic (Nachrichtenfluss)};
+\node[ros, minimum width=8mm, minimum height=5mm, font=\scriptsize] (leg1) at (3.2,-3.4) {};
+\node[right=2mm of leg1, font=\scriptsize, align=left] {ROS2-Node};
+\draw[flow] (8.4,-3.4) -- ++(12mm,0);
+\node[font=\scriptsize, align=left, anchor=west] at (9.8,-3.4) {Topic (Nachrichtenfluss)};
 
 \end{tikzpicture}

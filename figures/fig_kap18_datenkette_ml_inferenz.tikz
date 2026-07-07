@@ -14,10 +14,10 @@
     code/.style={
         rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
         minimum width=32mm, minimum height=10mm,
-        align=center, fill=orange!8, drop shadow, font=\tiny\ttfamily
+        align=center, fill=orange!8, drop shadow, font=\scriptsize\ttfamily
     },
     flow/.style={-{Stealth[length=2mm]}, thick, orange!70!black},
-    note/.style={font=\tiny, align=center, text width=26mm}
+    note/.style={font=\scriptsize, align=center, text width=28mm}
 ]
 
 % --- Zeile 1 ---

@@ -12,8 +12,11 @@
         align=center, fill=orange!15, drop shadow
     },
     flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
-    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+    lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
 ]
+
+\node[font=\scriptsize, align=center, text width=110mm] at (4,10.6)
+  {Vereinfachte Zuordnung als Einstieg: Die tatsächliche Softwarearchitektur kann später zusammenfassen, aufteilen oder ergänzen.};
 
 % --- Linke Spalte: SysML Part Definitions ---
 \node[sysml] (pd1) at (0, 9)  {Part Definition\\\texttt{ObjectDetector}};
@@ -40,9 +43,9 @@
 \draw[flow] (pd6.east) -- (n6.west);
 
 % --- Legende ---
-\node[sysml, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0,-9.5) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {SysML-v2-Element};
-\node[ros, minimum width=6mm, minimum height=4mm, font=\tiny, right=42mm of leg1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {ROS2-Element};
+\node[sysml, minimum width=7mm, minimum height=5mm, font=\scriptsize] (leg1) at (0,-9.5) {};
+\node[right=2mm of leg1, font=\scriptsize, align=left] {SysML-v2-Element};
+\node[ros, minimum width=7mm, minimum height=5mm, font=\scriptsize, right=44mm of leg1] (leg2) {};
+\node[right=2mm of leg2, font=\scriptsize, align=left] {ROS2-Element};
 
 \end{tikzpicture}

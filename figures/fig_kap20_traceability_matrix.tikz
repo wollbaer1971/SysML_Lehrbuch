@@ -43,19 +43,19 @@
 \node[font=\small\bfseries] at (13.7,3.3) {Testfall};
 
 % --- Zeile 1: REQ-002 ---
-\node[font=\tiny] at (1.0,2.1)  {\texttt{REQ-002}};
-\node[font=\tiny, align=center] at (3.4,2.1)  {Hindernis-\\erkennung};
-\node[font=\tiny] at (6.15,2.1) {\texttt{ObstacleDetector}};
-\node[font=\tiny, align=center] at (9.1,2.1)  {\texttt{obstacle\_}\\\texttt{detector\_node}};
-\node[font=\tiny] at (11.7,2.1) {\texttt{/scan}};
-\node[font=\tiny] at (13.7,2.1) {\texttt{TC-002}};
+\node[font=\scriptsize] at (1.0,2.1)  {\texttt{REQ-002}};
+\node[font=\scriptsize, align=center] at (3.4,2.1)  {Hindernis-\\erkennung};
+\node[font=\scriptsize] at (6.15,2.1) {\texttt{ObstacleDetector}};
+\node[font=\scriptsize, align=center] at (9.1,2.1)  {\texttt{obstacle\_}\\\texttt{detector\_node}};
+\node[font=\scriptsize] at (11.7,2.1) {\texttt{/scan}};
+\node[font=\scriptsize] at (13.7,2.1) {\texttt{TC-002}};
 
 % --- Zeile 2: REQ-006 ---
-\node[font=\tiny] at (1.0,0.7)  {\texttt{REQ-006}};
-\node[font=\tiny, align=center] at (3.4,0.7)  {Rückkehr zur\\Ladestation};
-\node[font=\tiny] at (6.15,0.7) {\texttt{ChargingController}};
-\node[font=\tiny] at (9.1,0.7)  {\texttt{navigation\_node}};
-\node[font=\tiny] at (11.7,0.7) {\texttt{/battery\_status}};
-\node[font=\tiny] at (13.7,0.7) {\texttt{TC-006}};
+\node[font=\scriptsize] at (1.0,0.7)  {\texttt{REQ-006}};
+\node[font=\scriptsize, align=center] at (3.4,0.7)  {Rückkehr zur\\Ladestation};
+\node[font=\scriptsize] at (6.15,0.7) {\texttt{ChargingController}};
+\node[font=\scriptsize] at (9.1,0.7)  {\texttt{navigation\_node}};
+\node[font=\scriptsize] at (11.7,0.7) {\texttt{/battery\_status}};
+\node[font=\scriptsize] at (13.7,0.7) {\texttt{TC-006}};
 
 \end{tikzpicture}

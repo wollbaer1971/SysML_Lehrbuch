@@ -10,6 +10,8 @@ Das SysML-v2-Modell beschreibt die Architektur. ROS2 ist die Umsetzung. Ohne Ver
 \section{Grundprinzip}
 Eine SysML-v2-Part-Definition kann einem ROS2-Node entsprechen, wenn sie eine klare softwarebezogene Verantwortung beschreibt. Ein Port oder eine Connection kann einem Topic, Service oder einer Action entsprechen. Eine Action im Modell kann durch einen Node oder eine Gruppe von Nodes realisiert werden. Ein Testfall im Modell kann einem automatisierten Test entsprechen.
 
+Dieses Mapping ist eine Architekturentscheidung und keine feste Übersetzungsregel. In diesem Kapitel beginnen wir bewusst mit einem einfachen Orientierungsmapping, weil es den Einstieg erleichtert. In realen Systemen kann ein SysML-Element mehrere ROS2-Nodes beeinflussen, und ein ROS2-Node kann mehrere modellierte Verantwortlichkeiten bündeln.
+
 \emph{Hinweis:} Der Begriff \enquote{Action} wird hier in zwei unterschiedlichen Bedeutungen verwendet – als SysML-v2-Verhaltenselement (Bestandteil einer Aktivität im Modell) und als ROS2-Action (ein asynchrones Kommunikationsmuster mit Feedback, siehe Kapitel 14). Im Mapping wird eine SysML-Action häufig durch eine ROS2-Action realisiert, die beiden Begriffe bezeichnen aber unterschiedliche Konzepte auf unterschiedlichen Ebenen.
 
 Nicht jedes Modellelement wird eins zu eins umgesetzt. Ein physisches Element wie \texttt{Camera} kann durch Hardware beschrieben werden, während die Ansteuerung über einen \texttt{camera\_node} erfolgt. Ein größeres Systemelement wie \texttt{NavigationSystem} kann aus mehreren Nodes bestehen (zum Beispiel \texttt{navigation\_node} für die Bewegungsplanung und \texttt{slam\_node} für die Kartierung, vgl. Kapitel 15).
@@ -28,12 +30,12 @@ Part Definition \texttt{UserInterface} & \texttt{user\_interface\_node} & Nimmt 
 \bottomrule
 \end{longtable}
 
-Abbildung~\ref{fig:kap16-mapping-sysml-ros2} stellt dieses 1:1-Mapping grafisch dar.
+Abbildung~\ref{fig:kap16-mapping-sysml-ros2} stellt dieses einfache Orientierungsmapping grafisch dar.
 
 \begin{figure}[H]
   \centering
   \input{figures/fig_kap16_mapping_sysml_ros2}
-  \caption{Grafische Darstellung des 1:1-Mappings zwischen SysML-v2-Part-Definitions und den zugehörigen ROS2-Nodes.}
+  \caption{Grafische Darstellung eines einfachen Orientierungsmappings zwischen SysML-v2-Part-Definitions und zugehörigen ROS2-Nodes. In realen Systemen muss dieses Mapping projektspezifisch geprüft und verfeinert werden.}
   \label{fig:kap16-mapping-sysml-ros2}
 \end{figure}
 

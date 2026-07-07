@@ -22,7 +22,7 @@ Camera
 Der ML-Node ist Teil der Wahrnehmungsarchitektur. Er sollte klar von Navigation und Sicherheitslogik getrennt werden. Die Navigation bekommt Ergebnisse, aber sie sollte nicht blind jedem Ergebnis vertrauen.
 
 \section{Inference-Node}
-Der ML-Node lädt ein trainiertes Modell, verarbeitet eingehende Sensordaten und veröffentlicht Ergebnisse. Dieser Vorgang wird als \emph{Inferenz} bezeichnet: das Anwenden eines bereits trainierten Modells auf neue Daten, im Unterschied zum vorherigen Training des Modells. In Python kann das mit PyTorch, TensorFlow oder ONNX Runtime umgesetzt werden.
+Der ML-Node lädt ein trainiertes Modell, verarbeitet eingehende Sensordaten und veröffentlicht Ergebnisse. Dieser Vorgang wird als \emph{Inferenz} bezeichnet: das Anwenden eines bereits trainierten Modells auf neue Daten, im Unterschied zum vorherigen Training des Modells. In Python kann das mit PyTorch, TensorFlow oder \gls{onnx} Runtime umgesetzt werden.
 
 \section{Pseudocode}
 \begin{lstlisting}[language=Python]
@@ -48,7 +48,7 @@ class ObjectDetectorNode(Node):
         self.publisher.publish(convert_to_ros_msg(detections))
 \end{lstlisting}
 
-Die Dateiendung \texttt{.pt} im Beispiel deutet auf ein PyTorch-Modell hin; bei TensorFlow oder ONNX Runtime als Framework sähen Modell-Dateiformat und Ladefunktion entsprechend anders aus. Auch der Nachrichtentyp \texttt{DetectionArray} ist hier vereinfacht dargestellt: In der Praxis würde man beispielsweise den Standardtyp \texttt{vision\_msgs/Detection2DArray} verwenden oder einen eigenen Nachrichtentyp definieren.
+Die Dateiendung \texttt{.pt} im Beispiel deutet auf ein PyTorch-Modell hin; bei TensorFlow oder \gls{onnx} Runtime als Framework sähen Modell-Dateiformat und Ladefunktion entsprechend anders aus. Auch der Nachrichtentyp \texttt{DetectionArray} ist hier vereinfacht dargestellt: In der Praxis würde man beispielsweise den Standardtyp \texttt{vision\_msgs/Detection2DArray} verwenden oder einen eigenen Nachrichtentyp definieren.
 
 \section{Datenkette}
 Die eigentliche Schwierigkeit liegt oft nicht im Modell, sondern in der Datenkette:
@@ -92,7 +92,7 @@ Abbildung~\ref{fig:kap18-ml-sicherheitsarchitektur} stellt diese Kontrastierung 
 \end{figure}
 
 \section{Optimierung}
-Für reale Roboter können ONNX Runtime, TensorRT oder OpenVINO sinnvoll sein – plattform- beziehungsweise hardwareoptimierte Laufzeitumgebungen, die trainierte Modelle schneller und ressourcenschonender ausführen. Ein großes PyTorch-Modell direkt auf einem kleinen Rechner kann zu langsam sein. Optimierung betrifft nicht nur Geschwindigkeit, sondern auch Speicherverbrauch, Temperatur und Energie.
+Für reale Roboter können \gls{onnx} Runtime, TensorRT oder OpenVINO sinnvoll sein – plattform- beziehungsweise hardwareoptimierte Laufzeitumgebungen, die trainierte Modelle schneller und ressourcenschonender ausführen. Ein großes PyTorch-Modell direkt auf einem kleinen Rechner kann zu langsam sein. Optimierung betrifft nicht nur Geschwindigkeit, sondern auch Speicherverbrauch, Temperatur und Energie.
 
 \section{Modellierung in SysML}
 Im SysML-Modell sollte sichtbar sein:

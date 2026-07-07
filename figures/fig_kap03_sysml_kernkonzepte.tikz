@@ -44,11 +44,11 @@
 \draw[conn] (modell) -- (trace);
 
 % --- Legende ---
-\node[req, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0.5,-1.6) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {Anforderung};
-\node[part, minimum width=6mm, minimum height=4mm, font=\tiny, right=18mm of leg1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {Struktur/Verhalten/Verbindung};
-\node[test, minimum width=6mm, minimum height=4mm, font=\tiny, right=52mm of leg1] (leg3) {};
-\node[right=1mm of leg3, font=\tiny, align=left] {Nachvollziehbarkeit};
+\node[req, minimum width=7mm, minimum height=5mm, font=\scriptsize] (leg1) at (0.5,-1.6) {};
+\node[right=2mm of leg1, font=\scriptsize, align=left] {Anforderung};
+\node[part, minimum width=7mm, minimum height=5mm, font=\scriptsize, right=22mm of leg1] (leg2) {};
+\node[right=2mm of leg2, font=\scriptsize, align=left] {Struktur/Verhalten/Verbindung};
+\node[test, minimum width=7mm, minimum height=5mm, font=\scriptsize, right=62mm of leg1] (leg3) {};
+\node[right=2mm of leg3, font=\scriptsize, align=left] {Nachvollziehbarkeit};
 
 \end{tikzpicture}
