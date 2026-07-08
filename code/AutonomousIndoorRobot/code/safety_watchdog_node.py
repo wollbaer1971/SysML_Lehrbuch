@@ -3,6 +3,10 @@
 safety_watchdog_node.py
 AutonomousIndoorRobot – SysML: SafetyWatchdog (in SafetyLogic)
 
+HINWEIS ZUR HERKUNFT: Diese Datei kommt im Lehrbuchtext an keiner
+Stelle vor (weder als Dateiname noch als Konzept). Sie ist eine
+Erweiterung ohne Buchbezug, keine Musterloesung aus dem Text.
+
 Verantwortlich für:
   REQ-002-2: Vollstopp bei Hindernis < 0,2 m; Bremsen < 0,5 m
   REQ-002-3: Geschwindigkeitsreduktion bei Person im Nahbereich

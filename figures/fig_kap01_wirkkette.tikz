@@ -2,45 +2,65 @@
     every node/.style={font=\small},
     part/.style={
         rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
-        minimum width=24mm, minimum height=11mm,
+        minimum width=26mm, minimum height=9mm,
         align=center, fill=green!15, drop shadow
     },
     ext/.style={
         rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
-        minimum width=24mm, minimum height=11mm,
+        minimum width=26mm, minimum height=9mm,
         align=center, fill=white, drop shadow
     },
-    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
-    fb/.style={-{Stealth[length=2.2mm]}, thick, black!45, dashed},
-    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+    dataflow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black},
+    energyflow/.style={-{Stealth[length=2.2mm]}, thick, blue!55!black},
+    moveflow/.style={{Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, thick, black!60},
+    lawflow/.style={-{Stealth[length=2mm]}, thin, black!40, dashed},
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
 ]
 
-% --- Hauptwirkkette: Hinderniserkennung ---
-\node[part] (sensor) at (1.2,3)  {Kamera /\\Lidar};
-\node[part] (erkenn) at (4.2,3)  {Erkennungs-\\software};
-\node[part] (nav)    at (7.2,3)  {Navigation};
-\node[part] (motctl) at (10.2,3) {Motor-\\controller};
-\node[part] (motor)  at (13.2,3) {Motoren};
+% --- Systemgrenze ---
+\draw[dashed, thick, black!60, rounded corners=2pt]
+    (-0.1,3.2) rectangle (11.3,7.7);
+\node[font=\small\itshape, anchor=north west] at (-0.05,7.65) {Autonomer Indoor-Roboter};
 
-\draw[flow] (sensor) -- node[lbl]{Bilder/Scan} (erkenn);
-\draw[flow] (erkenn) -- node[lbl]{Objekte} (nav);
-\draw[flow] (nav)    -- node[lbl]{Sollgeschw.} (motctl);
-\draw[flow] (motctl) -- node[lbl]{Ansteuerung} (motor);
+% --- Innere Systemteile (2 Zeilen x 3 Spalten) ---
+\node[part] (sensorik) at (1.8,6.5) {Sensorik};
+\node[part] (navigation) at (5.6,6.5) {Navigation};
+\node[part] (antrieb) at (9.4,6.5) {Antrieb};
 
-% --- Regelkreis Energieversorgung (parallel darunter) ---
-\node[part] (battmon) at (1.2,-1)  {Batterie-\\monitor};
-\node[part] (mission) at (4.2,-1)  {Missions-\\planung};
-\node[ext]  (dock)    at (7.2,-1)  {Ladestation};
+\node[part] (safety) at (1.8,4.2) {Sicherheits-\\logik};
+\node[part] (ui) at (5.6,4.2) {Bedien-\\oberfläche};
+\node[part] (akku) at (9.4,4.2) {Akku};
 
-\draw[flow] (battmon) -- node[lbl]{Ladezustand} (mission);
-\draw[flow] (mission) -- node[lbl]{Rückkehrziel} (dock);
-\draw[fb] (dock.south) to[bend right=45]
-    node[lbl, pos=0.5]{angedockt / fertig geladen} (mission.south);
+% --- Externe Akteure (oben) ---
+\node[ext] (menschen) at (1.8,9.3) {Menschen\\im Gebäude};
+\node[ext] (wlan) at (5.6,9.3) {WLAN /\\Netzwerk};
+\node[ext] (recht) at (9.4,9.3) {rechtliche\\Vorgaben};
+
+% --- Externe Akteure (rechts) ---
+\node[ext] (tueren) at (14,6.5) {Türen, Aufzüge,\\Flure};
+\node[ext] (ladestation) at (14,4.2) {Ladestation};
+
+% --- Externe Akteure (unten) ---
+\node[ext] (gms) at (5.6,1.0) {Gebäude-\\managementsystem};
+\node[ext] (wartung) at (1.8,1.0) {Wartungs-\\werkzeug};
+
+% --- Fluesse ueber die Systemgrenze ---
+\draw[dataflow] (menschen) -- node[lbl]{Daten} (sensorik);
+\draw[dataflow] (wlan) -- node[lbl]{Daten} (navigation);
+\draw[lawflow] (recht) -- node[lbl]{Vorgaben} ([xshift=0.3cm]9.4,7.7);
+
+\draw[moveflow] (antrieb.east) -- node[lbl]{Bewegung} (tueren.west);
+\draw[energyflow] (ladestation.west) -- node[lbl]{Energie} (akku.east);
+
+\draw[dataflow] (gms) -- node[lbl]{Daten} (ui);
+\draw[moveflow] (wartung) -- node[lbl]{Diagnose} (safety);
 
 % --- Legende ---
-\node[part, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (1.2,-3.6) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {Systemteil (Bauteil oder Software)};
-\node[ext, minimum width=6mm, minimum height=4mm, font=\tiny, right=45mm of leg1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {externes Element};
+\node[part, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (1.8,-0.6) {};
+\node[right=1mm of leg1, font=\small, align=left] {Systemteil (intern)};
+\node[ext, minimum width=6mm, minimum height=4mm, font=\tiny, right=3.87cm of leg1] (leg2) {};
+\node[right=0.25cm of leg2, font=\small, align=left] {externer Akteur / Umgebung};
+\node[draw=black!60, dashed, thick, minimum width=6mm, minimum height=4mm, right=9.97cm of leg1] (leg3) {};
+\node[right=1mm of leg3, font=\small, align=left] {Systemgrenze};
 
 \end{tikzpicture}
