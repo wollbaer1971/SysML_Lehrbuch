@@ -17,10 +17,10 @@
 \node[center] (modell) at (6,3) {MBSE-Modell\\des Roboters};
 
 % --- Vier Sichten/Rollen ---
-\node[role] (pl)  at (6,7)  {Projektleitung\\{\tiny Fortschritt, Risiken}};
-\node[role] (arch) at (11,3) {Systemarchitektur\\{\tiny Bausteine, Schnittstellen}};
-\node[role] (sw)  at (6,-1)  {Softwareentwicklung\\{\tiny Nodes, Topics}};
-\node[role] (test) at (1,3)  {Testteam\\{\tiny Anforderungen $\leftrightarrow$ Tests}};
+\node[role] (pl)  at (6,5.65)  {Projektleitung\\(Fortschritt, Risiken)};
+\node[role] (arch) at (11,3) {Systemarchitektur\\ (Bausteine, Schnittstellen)};
+\node[role] (sw)  at (5.99,0.35)  {Softwareentwicklung\\(Nodes, Topics)};
+\node[role] (test) at (1,3)  {Testteam\\(Anforderungen $\leftrightarrow$ Tests)};
 
 \draw[conn] (modell) -- (pl);
 \draw[conn] (modell) -- (arch);
@@ -28,9 +28,9 @@
 \draw[conn] (modell) -- (test);
 
 % --- Legende ---
-\node[center, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (2,-3) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {gemeinsames Modell};
-\node[role, minimum width=6mm, minimum height=4mm, font=\tiny, right=32mm of leg1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {Sicht/Rolle auf das Modell};
+\node[center, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (2.74,-1.34) {};
+\node[right=0.25cm of leg1, font=\tiny, align=left] {gemeinsames Modell};
+\node[role, minimum width=6mm, minimum height=4mm, font=\tiny, right=3.94cm of leg1] (leg2) {};
+\node[right=0.25cm of leg2, font=\tiny, align=left] {Sicht/Rolle auf das Modell};
 
 \end{tikzpicture}

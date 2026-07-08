@@ -58,7 +58,7 @@
 \node[right=1mm of leg2, font=\tiny, align=left] {Funktion / Systemelement};
 \node[tool, minimum width=6mm, minimum height=4mm, font=\tiny, right=50mm of leg1] (leg3) {};
 \node[right=1mm of leg3, font=\tiny, align=left] {ROS2-Element};
-\node[test, minimum width=6mm, minimum height=4mm, font=\tiny, right=68mm of leg1] (leg4) {};
+\node[test, minimum width=6mm, minimum height=4mm, font=\tiny, right=7.48cm of leg1] (leg4) {};
 \node[right=1mm of leg4, font=\tiny, align=left] {Testfall};
 
 \end{tikzpicture}

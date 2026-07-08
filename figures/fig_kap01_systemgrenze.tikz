@@ -1,66 +1,98 @@
 \begin{tikzpicture}[
     every node/.style={font=\small},
-    part/.style={
+    doc/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
+        minimum width=20mm, minimum height=8mm,
+        align=center, fill=white, drop shadow, font=\small
+    },
+    modellbox/.style={
         rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
-        minimum width=26mm, minimum height=9mm,
+        minimum width=26mm, minimum height=10mm,
         align=center, fill=green!15, drop shadow
     },
-    ext/.style={
-        rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
-        minimum width=26mm, minimum height=9mm,
-        align=center, fill=white, drop shadow
+    req/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=20mm, minimum height=8mm,
+        align=center, fill=blue!12, drop shadow, font=\small
     },
-    dataflow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black},
-    energyflow/.style={-{Stealth[length=2.2mm]}, thick, blue!55!black},
-    moveflow/.style={{Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, thick, black!60},
-    lawflow/.style={-{Stealth[length=2mm]}, thin, black!40, dashed},
-    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=20mm, minimum height=8mm,
+        align=center, fill=green!15, drop shadow, font=\small
+    },
+    tool/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=20mm, minimum height=8mm,
+        align=center, fill=orange!15, drop shadow, font=\small
+    },
+    test/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick,
+        minimum width=20mm, minimum height=8mm,
+        align=center, fill=black!6, drop shadow, font=\small
+    },
+    stakeholder/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
+        minimum width=20mm, minimum height=8mm,
+        align=center, fill=white, drop shadow, font=\small
+    },
+    chaos/.style={black!35, dashed, very thick},
+    clearlink/.style={-{Stealth[length=1.8mm]}, thick, black!55}
 ]
 
-% --- Systemgrenze ---
-\draw[dashed, thick, black!60, rounded corners=2pt]
-    (-0.1,3.2) rectangle (11.3,7.7);
-\node[font=\small\itshape, anchor=north west] at (-0.05,7.65) {Autonomer Indoor-Roboter};
+% --- Titel ---
+\node[font=\bfseries\small] at (2.5,8.2) {Dokumentenzentriert};
+\node[font=\bfseries\small] at (11,8.2) {Modellbasiert};
 
-% --- Innere Systemteile (2 Zeilen x 3 Spalten) ---
-\node[part] (sensorik) at (1.8,6.5) {Sensorik};
-\node[part] (navigation) at (5.6,6.5) {Navigation};
-\node[part] (antrieb) at (9.4,6.5) {Antrieb};
+% --- Trennlinie ---
+\draw[black!25, dashed] (6.55,-0.6) -- (6.55,8.0);
 
-\node[part] (safety) at (1.8,4.2) {Sicherheits-\\logik};
-\node[part] (ui) at (5.6,4.2) {Bedien-\\oberfläche};
-\node[part] (akku) at (9.4,4.2) {Akku};
+% --- Linke Seite: lose Dokumente, chaotisch verbunden ---
+\node[doc] (word) at (1,7)     {Word};
+\node[doc] (excel) at (4,6.4)  {Excel};
+\node[doc] (ppt)  at (1.8,5)   {PowerPoint};
+\node[doc] (mail) at (4.3,3.8) {E-Mail};
+\node[doc] (tmt)  at (1.3,2.6) {Testmanagement-\\Tool};
+\node[doc] (git)  at (4,1.4)   {Git};
+\node[doc] (jira) at (2,0.2)   {Jira};
 
-% --- Externe Akteure (oben) ---
-\node[ext] (menschen) at (1.8,9.3) {Menschen\\im Gebäude};
-\node[ext] (wlan) at (5.6,9.3) {WLAN /\\Netzwerk};
-\node[ext] (recht) at (9.4,9.3) {rechtliche\\Vorgaben};
+\draw[chaos] (word) -- (excel);
+\draw[chaos] (excel) -- (mail);
+\draw[chaos] (mail) -- (git);
+\draw[chaos] (git) -- (jira);
+\draw[chaos] (jira) -- (tmt);
+\draw[chaos] (tmt) -- (ppt);
+\draw[chaos] (ppt) -- (word);
+\draw[chaos] (word) -- (mail);
+\draw[chaos] (excel) -- (tmt);
+\draw[chaos] (git) -- (ppt);
 
-% --- Externe Akteure (rechts) ---
-\node[ext] (tueren) at (12.8,6.5) {Türen, Aufzüge,\\Flure};
-\node[ext] (ladestation) at (12.8,4.2) {Ladestation\\{\tiny(intern oder extern -- Entscheidung nötig)}};
+% --- Rechte Seite: zentrales Modell mit klaren Beziehungen ---
+\node[modellbox] (modell) at (11,4) {Modell};
 
-% --- Externe Akteure (unten) ---
-\node[ext] (gms) at (5.6,1.0) {Gebäude-\\managementsystem};
-\node[ext] (wartung) at (1.8,1.0) {Wartungs-\\werkzeug};
+\node[stakeholder] (stake) at (11,6.4)    {Stakeholder};
+\node[req]         (anf)   at (13,5.4) {Anforderung};
+\node[tool]        (code)  at (13.87,3.47){Code};
+\node[test]        (test)  at (12.3,2.1){Test};
+\node[part]        (schn)  at (9.7,2.1) {Schnittstelle};
+\node[part]        (strukt)at (8.14,3.47) {Struktur};
+\node[part]        (funk)  at (8.96,5.4)  {Funktion};
 
-% --- Fluesse ueber die Systemgrenze ---
-\draw[dataflow] (menschen) -- node[lbl]{Daten} (sensorik);
-\draw[dataflow] (wlan) -- node[lbl]{Daten} (navigation);
-\draw[lawflow] (recht) -- node[lbl]{Vorgaben} ([xshift=0.3cm]9.4,7.7);
-
-\draw[moveflow] (antrieb.east) -- node[lbl]{Bewegung} (tueren.west);
-\draw[energyflow] (ladestation.west) -- node[lbl]{Energie} (akku.east);
-
-\draw[dataflow] (gms) -- node[lbl]{Daten} (ui);
-\draw[moveflow] (wartung) -- node[lbl]{Diagnose} (safety);
+\draw[clearlink] (modell) -- (stake);
+\draw[clearlink] (modell) -- (anf);
+\draw[clearlink] (modell) -- (code);
+\draw[clearlink] (modell) -- (test);
+\draw[clearlink] (modell) -- (schn);
+\draw[clearlink] (modell) -- (strukt);
+\draw[clearlink] (modell) -- (funk);
 
 % --- Legende ---
-\node[part, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (1.8,-0.6) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {Systemteil (intern)};
-\node[ext, minimum width=6mm, minimum height=4mm, font=\tiny, right=32mm of leg1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {externer Akteur / Umgebung};
-\node[draw=black!60, dashed, thick, minimum width=6mm, minimum height=4mm, right=44mm of leg1] (leg3) {};
-\node[right=1mm of leg3, font=\tiny, align=left] {Systemgrenze};
+\node[req, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0.5,-2.2) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {Anforderung};
+\node[part, minimum width=6mm, minimum height=4mm, font=\tiny, right=18mm of leg1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {Struktur/Funktion/Schnittstelle};
+\node[tool, minimum width=6mm, minimum height=4mm, font=\tiny, right=5.54cm of leg1] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] {Code};
+\node[test, minimum width=6mm, minimum height=4mm, font=\tiny, right=7.57cm of leg1] (leg4) {};
+\node[right=1mm of leg4, font=\tiny, align=left] {Test};
 
 \end{tikzpicture}

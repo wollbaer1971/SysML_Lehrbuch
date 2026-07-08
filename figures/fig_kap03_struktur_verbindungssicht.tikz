@@ -11,8 +11,8 @@
     },
     port/.style={rectangle, draw=black, fill=black!75, minimum width=2.2mm,
         minimum height=2.2mm, inner sep=0pt},
-    portlbl/.style={font=\tiny},
-    reflink/.style={-{Stealth[length=2mm]}, thin, black!45, dashed}
+    portlbl/.style={font=\small},
+    reflink/.style={-{Stealth[length=4mm]}, ultra thick, red!90, dashed}
 ]
 
 % --- Aeussere Struktursicht: Robot ---
@@ -37,18 +37,18 @@
     {\texttt{sensorData} \textcolor{orange!70!black}{$\sim$}};
 
 \draw[black!55, thick] (detector.east) -- ++(1.6,0) |- (sensport.west);
-\draw[black!55, thick] (camera.east)   -- ++(0.9,0) |- (sensport.west);
+\draw[black!55, thick] (camera.east)   -- ++(1.6,0) |- (sensport.west);
 \draw[black!55, thick] (lidar.east)    -- (sensport.west);
 
 % --- Referenz zwischen Uebersicht und Detailbox ---
-\draw[reflink] (perc.east) to[bend left=15] node[midway, above, font=\tiny, fill=white, inner sep=1pt]
+\draw[reflink] (perc.east) to[bend left=15] node[above=1pt, font=\small, fill=white, inner sep=1pt, pos=0.67]
     {Detailsicht} (8.2,4.6);
 
 % --- Legende ---
 \node[part, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0.5,-1.1) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {\texttt{part} (Instanz einer \texttt{part def})};
-\node[port, right=42mm of leg1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {Port};
-\node[right=58mm of leg1, font=\tiny, align=left] {\textcolor{orange!70!black}{$\sim$} = konjugierter Port};
+\node[right=0.09cm of leg1, font=\small align=left] {\texttt{part} (Instanz einer \texttt{part def})};
+\node[port, right=5.38cm of leg1] (leg2) {};
+\node[right=0.05cm of leg2, font=\small, align=left] {Port};
+\node[right=7.27cm of leg1, font=\small, align=left] {\textcolor{orange!70!black}{$\sim$} = konjugierter Port};
 
 \end{tikzpicture}
