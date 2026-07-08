@@ -1,4 +1,32 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    hub/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=34mm, minimum height=14mm,
+        align=center, fill=black!8, drop shadow
+    },
+    req/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=30mm, minimum height=13mm,
+        align=center, fill=blue!12, drop shadow
+    },
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=30mm, minimum height=13mm,
+        align=center, fill=green!15, drop shadow
+    },
+    test/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick,
+        minimum width=30mm, minimum height=13mm,
+        align=center, fill=black!6, drop shadow
+    },
+    conn/.style={-{Stealth[length=2mm]}, thick, black!55}
+]
+
+% --- Zentrum ---
 \node[hub] (modell) at (5,4) {SysML v2\\Modell};
+
+% --- Sieben Kernkonzepte im Kreis ---
 \node[req]  (anf)   at (5,8.3)     {Anforderungen\\ \texttt{requirement}};
 \node[part] (strukt)at (8.36,6.68) {Struktur\\ \texttt{part def}, \texttt{part}};
 \node[part] (verb)  at (9.19,3.05) {Verbindungen\\ \texttt{port}, \texttt{connection}};
@@ -6,6 +34,7 @@
 \node[part] (zust)  at (3.14,0.12) {Zustände\\ \texttt{state def}, \texttt{state}};
 \node[part] (param) at (0.81,3.05) {Parametrik\\ \texttt{calc def}, \texttt{constraint}};
 \node[test] (trace) at (1.64,6.68) {Nachvollziehbarkeit\\ \texttt{satisfy}, \texttt{verify}, \texttt{derive}};
+
 \draw[conn] (modell) -- (anf);
 \draw[conn] (modell) -- (strukt);
 \draw[conn] (modell) -- (verb);
@@ -13,9 +42,13 @@
 \draw[conn] (modell) -- (zust);
 \draw[conn] (modell) -- (param);
 \draw[conn] (modell) -- (trace);
+
+% --- Legende ---
 \node[req, minimum width=7mm, minimum height=5mm, font=\scriptsize] (leg1) at (-0.35,-1.69) {};
 \node[right=2mm of leg1, font=\scriptsize, align=left] {Anforderung};
 \node[part, minimum width=7mm, minimum height=5mm, font=\scriptsize, right=2.1cm of leg1] (leg2) {};
 \node[right=2mm of leg2, font=\scriptsize, align=left] {Struktur/Verhalten/Verbindung};
 \node[test, minimum width=7mm, minimum height=5mm, font=\scriptsize, right=6.97cm of leg1] (leg3) {};
 \node[right=2mm of leg3, font=\scriptsize, align=left] {Nachvollziehbarkeit};
+
+\end{tikzpicture}
