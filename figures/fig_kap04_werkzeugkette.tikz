@@ -18,8 +18,8 @@
 % --- Hauptkette: Editor -> Versionsverwaltung -> optionale Werkzeuge ---
 \node[tool, minimum height=62pt] (vscode) at (1.8,5.25)  {VS Code\\ + Syside Editor\\ (.sysml-Dateien)};
 \node[tool, minimum height=41pt] (git)    at (1.8,2.55)  {Git\\ (Versions- \\verwaltung)};
-\node[opt]  (syson)  at (1.8,0.48)  {Eclipse SysON\\ (grafische Sicht)\\ \it optional};
-\node[opt]  (pilot)  at (1.8,-1.56) {SysML-v2-\\Pilotprojekt\\ \it optional};
+\node[opt]  (syson)  at (1.8,0.48)  {Eclipse SysON\\ (grafische Sicht)\\ \itshape optional};
+\node[opt]  (pilot)  at (1.8,-1.56) {SysML-v2-\\Pilotprojekt\\ \itshape optional};
 
 \draw[flow]    (vscode) -- node[lbl]{committen} (git);
 \draw[optflow] (git)    -- node[lbl]{optional} (syson);
