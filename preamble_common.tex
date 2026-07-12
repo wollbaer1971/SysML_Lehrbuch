@@ -1,0 +1,94 @@
+% preamble_common.tex
+% Gemeinsame Präambel für alle Druck-Editionen (main.tex, main_kdp_print.tex,
+% main_bod_print.tex). Enthaelt alles, was NICHT von der Trimgroesse abhaengt.
+% \documentclass und \geometry bleiben in der jeweiligen Wrapper-Datei, da sie
+% pro Edition unterschiedlich sind.
+
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shadows,calc,quotes,backgrounds}
+\usepackage{tcolorbox}
+\usepackage{amsmath}
+\usepackage{makeidx}
+\usepackage[acronym,toc]{glossaries}
+
+\makeindex
+\makeglossaries
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!50!black,
+    urlcolor=blue!50!black,
+    citecolor=blue!50!black,
+    pdftitle={SysML v2, MBSE und ROS2 für Einsteiger},
+    pdfauthor={Wolfgang Becker}
+}
+
+\RedeclareSectionCommand[tocnumwidth=3.8em]{section}
+\RedeclareSectionCommand[tocnumwidth=4.8em]{subsection}
+\RedeclareSectionCommand[tocnumwidth=5.8em]{subsubsection}
+
+\lstdefinestyle{code}{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    columns=fullflexible,
+    showstringspaces=false,
+    tabsize=2,
+    extendedchars=true,
+    inputencoding=utf8,
+    upquote=true,
+    literate=
+        {ä}{{\"a}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+        {Ä}{{\"A}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+        {ß}{{\ss{}}}1
+}
+\lstset{style=code}
+
+\newtcolorbox{lernziele}{
+    colback=blue!3!white,
+    colframe=blue!50!black,
+    title=Lernziele
+}
+\newtcolorbox{praxisbox}{
+    colback=green!3!white,
+    colframe=green!40!black,
+    title=Praxisbeispiel
+}
+\newtcolorbox{hinweisbox}{
+    colback=yellow!8!white,
+    colframe=yellow!50!black,
+    title=Hinweis
+}
+\newtcolorbox{uebungbox}{
+    colback=gray!5!white,
+    colframe=gray!60!black,
+    title=Übung
+}
+
+\input{glossary}
+
+\title{SysML v2, MBSE und ROS2 für Einsteiger\\
+\large Ein praxisnahes Lehrbuch am Beispiel eines autonomen Indoor-Roboters}
+\author{Wolfgang Becker}
+\date{\today}

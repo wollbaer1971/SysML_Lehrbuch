@@ -17,18 +17,41 @@ CHAPTER_FILES = [
 
 BOX_ENVIRONMENTS = ["lernziele", "praxisbox", "hinweisbox", "uebungbox"]
 
+# Verzeichnis mit den vorgerenderten 300dpi-PNGs aus render_figures_epub.sh.
+# Muss mit OUT_DIR in render_figures_epub.sh uebereinstimmen.
+FIGURES_EPUB_DIR = "figures_epub"
+
 PREAMBLE = r"""\documentclass{book}
 \usepackage[ngerman]{babel}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
+\usepackage{graphicx}
 \usepackage{hyperref}
 \lstdefinestyle{code}{basicstyle=\ttfamily\small,breaklines=true}
 \lstset{style=code}
 \begin{document}
 """
 
-TIKZ_PLACEHOLDER = "\n\\emph{[Diagramm: siehe Druckversion]}\n"
+# Erkennt \input{figures/fig_...} (mit oder ohne .tex-Endung), so wie es in
+# allen Kapiteln zur Einbindung der TikZ-Abbildungen verwendet wird. Ersetzt
+# es durch \includegraphics auf das vorgerenderte PNG, damit Pandoc ein
+# echtes Bild einbettet statt (wie bisher) beim Aufloesen von
+# \input{...fig.tikz} lautlos zu scheitern, weil Pandocs LaTeX-Reader an
+# Include-Pfade automatisch ".tex" anhaengt.
+FIGURE_INPUT_RE = re.compile(
+    r"\\input\{figures/(fig_[A-Za-z0-9_]+?)(?:\.tex)?\}")
+
+# Manche Kapitel wrappen \input{figures/...} zusaetzlich in
+# \resizebox{<b1>}{<b2>}{...}, damit die (fuers Druckformat teils sehr
+# breiten) Diagramme im Print auf Textbreite skaliert werden. Pandocs
+# LaTeX-Reader kennt \resizebox nicht und ueberspringt den kompletten
+# Aufruf samt Inhalt - das hat 4 Diagramme lautlos aus dem eBook entfernt.
+# Da \includegraphics bereits eine eigene Breite bekommt, wird der
+# resizebox-Wrapper fuers eBook einfach entfernt und nur der Inhalt
+# behalten.
+RESIZEBOX_RE = re.compile(
+    r"\\resizebox\{[^{}]*\}\{[^{}]*\}\{(\\includegraphics\[[^\]]*\]\{[^{}]*\})\}")
 
 def replace_box_env(content, env_name):
     pattern = re.compile(
@@ -38,19 +61,45 @@ def replace_box_env(content, env_name):
         return "\\begin{quote}\\textbf{" + env_name + "}\n\n" + m.group(1) + "\\end{quote}"
     return pattern.sub(repl, content)
 
-def replace_tikz(content):
-    # Mit umgebendem center-Block
-    content = re.sub(
-        r"\\begin\{center\}\s*\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}\s*\\end\{center\}",
-        lambda m: TIKZ_PLACEHOLDER, content, flags=re.DOTALL)
-    # Ohne center
-    content = re.sub(
-        r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}",
-        lambda m: TIKZ_PLACEHOLDER, content, flags=re.DOTALL)
+def replace_figure_inputs(content, source_name):
+    def repl(m):
+        fig_name = m.group(1)
+        png_path = os.path.join(FIGURES_EPUB_DIR, fig_name + ".png")
+        if not os.path.exists(os.path.join(SCRIPT_DIR, png_path)):
+            sys.stderr.write(
+                "FEHLER: " + png_path + " fehlt (referenziert in " +
+                source_name + "). Erst 'bash render_figures_epub.sh' "
+                "ausfuehren.\n")
+            sys.exit(1)
+        return r"\includegraphics[width=0.92\linewidth]{" + png_path + "}"
+    content = FIGURE_INPUT_RE.sub(repl, content)
+    content = RESIZEBOX_RE.sub(r"\1", content)
     return content
+
+def check_no_raw_tikz(content, source_name):
+    # Nach replace_figure_inputs sollte kein rohes tikzpicture mehr uebrig
+    # sein. Falls doch (z. B. neue Abbildung, die nicht dem
+    # \input{figures/...}-Muster folgt), laut scheitern statt die Abbildung
+    # still zu verlieren wie im alten Preprocessor.
+    if re.search(r"\\begin\{tikzpicture\}", content):
+        sys.stderr.write(
+            "FEHLER: " + source_name + " enthaelt noch ein rohes "
+            "tikzpicture, das nicht ueber figures/*.tikz + "
+            "\\input{figures/...} eingebunden ist. Bitte nach figures/ "
+            "auslagern (siehe figures/fig_kap02_dokumente_"
+            "modellbeziehungen.tex als Vorlage), sonst fehlt die "
+            "Abbildung im eBook.\n")
+        sys.exit(1)
+    if re.search(r"\\resizebox", content):
+        sys.stderr.write(
+            "FEHLER: " + source_name + " enthaelt noch ein \\resizebox, "
+            "das nicht auf ein bekanntes \\includegraphics-Muster passt. "
+            "Bitte pruefen, sonst fehlt die Abbildung im eBook.\n")
+        sys.exit(1)
 
 def clean_unsupported(content):
     content = re.sub(r"\\index\{[^}]*\}", "", content)
+    content = re.sub(r"\\glsdisp\{[^}]*\}\{([^}]+)\}", r"\1", content)
     content = re.sub(r"\\[Gg]ls(?:pl)?\{([^}]+)\}", r"\1", content)
     content = re.sub(r"\\glsfirst\{([^}]+)\}", r"\1", content)
     content = re.sub(r"\\(makeglossaries|makeindex|printglossary|printindex)[^\n]*\n", "\n", content)
@@ -62,7 +111,8 @@ def process_file(filepath):
     content = re.sub(r"(?<!\\)%[^\n]*", "", content)
     for env in BOX_ENVIRONMENTS:
         content = replace_box_env(content, env)
-    content = replace_tikz(content)
+    content = replace_figure_inputs(content, os.path.basename(filepath))
+    check_no_raw_tikz(content, os.path.basename(filepath))
     content = clean_unsupported(content)
     return content
 

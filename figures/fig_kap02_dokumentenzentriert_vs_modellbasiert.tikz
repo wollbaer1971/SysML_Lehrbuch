@@ -86,13 +86,17 @@
 \draw[clearlink] (modell) -- (funk);
 
 % --- Legende ---
+% Boxen und Beschriftungen werden jeweils relativ zum vorherigen Element
+% verkettet (statt fester absoluter Abstaende von leg1), damit
+% unterschiedlich lange Labels (z. B. "Struktur/Funktion/Schnittstelle")
+% sich nicht mit der naechsten Box ueberlappen.
 \node[req, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0.5,-2.2) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {Anforderung};
-\node[part, minimum width=6mm, minimum height=4mm, font=\tiny, right=18mm of leg1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {Struktur/Funktion/Schnittstelle};
-\node[tool, minimum width=6mm, minimum height=4mm, font=\tiny, right=48mm of leg1] (leg3) {};
-\node[right=1mm of leg3, font=\tiny, align=left] {Code};
-\node[test, minimum width=6mm, minimum height=4mm, font=\tiny, right=62mm of leg1] (leg4) {};
-\node[right=1mm of leg4, font=\tiny, align=left] {Test};
+\node[right=1mm of leg1, font=\tiny, align=left] (lab1) {Anforderung};
+\node[part, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] (lab2) {Struktur/Funktion/Schnittstelle};
+\node[tool, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab2] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] (lab3) {Code};
+\node[test, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab3] (leg4) {};
+\node[right=1mm of leg4, font=\tiny, align=left] (lab4) {Test};
 
 \end{tikzpicture}

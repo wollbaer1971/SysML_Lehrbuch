@@ -1,0 +1,38 @@
+% main_bod_print.tex
+% Druck-Edition fuer BoD, Softcover, Trim 17,0 x 22,0 cm.
+%
+% TODO vor Upload:
+%   - \editionimpressum unten mit finaler ISBN befuellen.
+%   - Raender gegen BoDs herunterladbare Layout-Vorlage fuer dieses Format
+%     abgleichen (bod.de/hilfe/downloads) - BoD veroeffentlicht keine
+%     oeffentliche Randtabelle nach Seitenzahl wie KDP, nur Vorlagen pro
+%     Format. Aktuell eingestellt: 20 mm innen (Bund), 16 mm aussen,
+%     18 mm oben, 22 mm unten - typografisch ueblich fuer Taschenbuch,
+%     aber ungeprueft gegen BoDs Vorlage.
+%   - BoD verlangt eine durch 2 teilbare Gesamtseitenzahl - nach dem
+%     ersten vollstaendigen Kompilierlauf pruefen und ggf. eine Leerseite
+%     ergaenzen.
+
+\documentclass[11pt,oneside]{scrbook}
+\input{preamble_common}
+
+\geometry{
+    paperwidth=17.0cm,
+    paperheight=22.0cm,
+    inner=20mm,
+    outer=16mm,
+    top=18mm,
+    bottom=22mm
+}
+
+\newcommand{\editionimpressum}{%
+    \textbf{BoD-Softcover-Ausgabe}\\[0.5em]
+    \textbf{TODO: ISBN eintragen}\\[1em]
+    \textcopyright\ Wolfgang Becker\\
+    Alle Rechte vorbehalten.\\[1em]
+    Herstellung und Verlag: BoD -- Books on Demand, Norderstedt.
+}
+
+\begin{document}
+\input{content_body}
+\end{document}

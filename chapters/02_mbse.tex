@@ -164,17 +164,7 @@ Nicht jede wichtige Information ist eine Anforderung. Viele Projektinformationen
 Der wichtigste Unterschied zwischen klassischer Dokumentation und MBSE liegt in den Beziehungen. Ein Dokument kann eine Anforderung beschreiben. Ein Modell kann zusätzlich zeigen, womit diese Anforderung zusammenhängt.
 
 \begin{center}
-\begin{tikzpicture}[node distance=1.6cm]
-\node (stakeholder) [draw, rounded corners] {Stakeholder};
-\node (req) [draw, rounded corners, right of=stakeholder, xshift=2.7cm] {Anforderung};
-\node (func) [draw, rounded corners, right of=req, xshift=3.5cm] {Funktion};
-\node (arch) [draw, rounded corners, below of=func, yshift=-0.4cm] {Systemelement};
-\node (test) [draw, rounded corners, left of=arch, xshift=-3.5cm] {Testfall};
-\draw[->] (stakeholder) -- node[above] {\small Bedarf} (req);
-\draw[->] (req) -- node[above] {\small wird erfüllt durch} (func);
-\draw[->] (func) -- node[right] {\small realisiert durch} (arch);
-\draw[->] (test) -- node[right] {\small verifiziert} (req);
-\end{tikzpicture}
+\input{figures/fig_kap02_dokumente_modellbeziehungen}
 \end{center}
 
 Dieses einfache Bild zeigt bereits den Kern von MBSE. Es geht nicht darum, viele Diagramme zu produzieren. Es geht darum, Systeminformationen so zu verknüpfen, dass Fragen beantwortbar werden.

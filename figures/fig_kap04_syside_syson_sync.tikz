@@ -1,0 +1,46 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    screen/.style={
+        rectangle, rounded corners=2pt, draw=black!60, thick,
+        minimum width=52mm, minimum height=44mm, text width=47mm,
+        align=left, fill=black!85, text=white, font=\ttfamily\tiny,
+        inner sep=2.5mm, drop shadow
+    },
+    outerbox/.style={
+        rectangle, rounded corners=2pt, draw=black!60, thick,
+        minimum width=46mm, minimum height=40mm
+    },
+    diagbox/.style={
+        rectangle, rounded corners=2pt, draw=green!40!black, thick,
+        minimum width=34mm, minimum height=9mm,
+        align=center, fill=green!15, drop shadow, font=\tiny
+    },
+    genflow/.style={-{Stealth[length=2.2mm]}, thick, black!55, dashed},
+    hl/.style={-{Stealth[length=1.6mm]}, thick, black!45}
+]
+
+\node[font=\small\bfseries, align=center, text width=50mm] (t1) at (0,6.6) {VS Code mit Syside Editor (Text)};
+\node[font=\small\bfseries, align=center, text width=44mm] (t2) at (9,6.6) {Eclipse SysON\\(generierte Sicht)};
+
+\node[screen] (code) at (0,2.6) {
+\textcolor{cyan!60!white}{part def} \textcolor{white}{Robot} \{\\
+\ \textcolor{cyan!60!white}{part} \textcolor{yellow!80!white}{perception} : \textcolor{orange!70!white}{PerceptionSystem}\textcolor{white}{;}\\
+\ \textcolor{cyan!60!white}{part} \textcolor{white}{navigation} : \textcolor{white}{NavigationSystem}\textcolor{white}{;}\\
+\ \textcolor{cyan!60!white}{part} \textcolor{white}{battery}\ \ \ : \textcolor{white}{BatterySystem}\textcolor{white}{;}\\
+\}\\[2mm]
+\textcolor{green!60!white}{// gespeichert -> Sicht}\\
+\textcolor{green!60!white}{// aktualisiert sich}
+};
+
+\node[outerbox] (outer) at (9,2.6) {};
+\node[font=\tiny, black!50] at ([xshift=6mm,yshift=-2.5mm]outer.north west) {Robot};
+
+\node[diagbox] (percbox) at (9,3.7) {PerceptionSystem};
+\node[diagbox] (batbox)  at (9,1.5) {BatterySystem};
+
+\draw[genflow] ([xshift=1.5mm]code.east) -- node[font=\tiny, above, align=center, text width=16mm, fill=white, inner sep=1pt]{automatisch generiert} ([xshift=-1.5mm]outer.west);
+
+\draw[hl] (2.1,3.4) to[bend left=20] (6.7,3.9);
+\node[font=\tiny, black!50, align=center, text width=22mm] at (4.4,4.9) {Zeile \texttt{part perception} erzeugt den grünen Kasten rechts};
+
+\end{tikzpicture}

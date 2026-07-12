@@ -27,6 +27,30 @@ h4 { font-size: 1em; font-style: italic; }
 
 p  { margin: 0.6em 0; text-align: justify; }
 
+/* ── Abbildungen (gerenderte TikZ-Diagramme) ──────────────────── */
+/* Diagramme sind bis zu ~20 cm breit im Original; ohne diese Regel
+   wuerden sie auf kleinen E-Reader-Bildschirmen abgeschnitten statt
+   skaliert. */
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+}
+
+figure {
+  margin: 1em 0;
+  text-align: center;
+}
+
+figcaption {
+  font-size: 0.85em;
+  font-style: italic;
+  color: #444;
+  margin-top: 0.4em;
+}
+
 /* ── Inline-Code ──────────────────────────────────────────────── */
 
 code {

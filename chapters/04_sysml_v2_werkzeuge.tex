@@ -381,6 +381,19 @@ Grafische Sichten sind besonders hilfreich, wenn ein Team schnell über Struktur
 
 Eclipse SysON kann für solche Sichten interessant sein. Es ist besonders dann nützlich, wenn Sie aus dem textuellen Modell heraus Struktur-, Verbindungs- oder Anforderungssichten visualisieren wollen. Für den Einstieg in diesem Buch reicht es aber, zunächst die textuelle Notation sauber zu verstehen.
 
+Wichtig ist dabei die Blickrichtung: Der Text bleibt die Quelle der Wahrheit, die Grafik ist eine automatisch erzeugte Sicht darauf. Wenn Sie im Syside Editor eine neue \texttt{part} in \texttt{Robot} ergänzen und speichern, kann SysON daraus die passende Struktursicht neu erzeugen, ohne dass Sie selbst einen Kasten zeichnen müssen. Abbildung~\ref{fig:kap04-syside-syson-sync} veranschaulicht diesen Zusammenhang am Beispiel der \texttt{part def Robot} aus dem vorherigen Abschnitt.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap04_syside_syson_sync}
+  \caption{Der SysML-v2-Text im Syside Editor (links) ist die Quelle der Wahrheit; Eclipse SysON erzeugt daraus automatisch die grafische Strukturansicht (rechts), ohne dass diese von Hand gezeichnet werden muss.}
+  \label{fig:kap04-syside-syson-sync}
+\end{figure}
+
+\begin{hinweisbox}
+Aus diesem Grund lohnt es sich bei Konflikten zwischen Text und Grafik immer, zuerst den Text zu prüfen. Ein Diagramm, das von Hand \enquote{korrigiert} wurde, weicht sonst unbemerkt vom eigentlichen Modell ab.
+\end{hinweisbox}
+
 \section{Typische Anfängerfehler}
 \subsection{Systemgrenze nicht klären}
 Viele Modelle beginnen ohne eine klare Antwort auf die Frage: Was gehört zum System? Diese Entscheidung prägt alle späteren Anforderungen und Tests. Dokumentieren Sie die Systemgrenze explizit in der Übersichtsdatei.

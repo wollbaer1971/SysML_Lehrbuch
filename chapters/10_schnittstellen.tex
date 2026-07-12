@@ -63,6 +63,19 @@ In Robotikprojekten sind Koordinatensysteme kritisch. ROS2 nutzt häufig Frames 
 
 Ein klassischer Fehler ist, dass Daten im falschen Frame interpretiert werden. Ein Hindernis wird relativ zur Kamera erkannt, die Navigation erwartet aber Positionen relativ zur Karte. Ohne klare Transformationen entstehen falsche Bewegungsentscheidungen.
 
+ROS2 verwaltet diese Umrechnungen nicht manuell, sondern über den sogenannten TF-Baum (\texttt{tf2}): Jeder Frame kennt seine Beziehung zu seinem Elternframe, und das System kann daraus jede beliebige Umrechnung zwischen zwei Frames automatisch berechnen. \texttt{map} ist dabei der Wurzelframe und bewegt sich nicht. \texttt{odom} hängt an \texttt{map}, wird aber von der Lokalisierung (z.\,B. SLAM oder AMCL) gelegentlich sprunghaft korrigiert. \texttt{base\_link} hängt an \texttt{odom} und wird kontinuierlich aus Radencodern oder einer IMU aktualisiert, driftet dabei aber langsam. \texttt{camera\_link} schließlich hängt fest an \texttt{base\_link}, weil die Kamera starr am Roboter montiert ist. Abbildung~\ref{fig:kap10-tf-baum} zeigt diese Hierarchie links als Baum und rechts als physische Ursprünge im Gebäudegrundriss und am Roboter.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap10_tf_baum}
+  \caption{Links die Hierarchie der TF-Frames vom kartenfesten \texttt{map} über \texttt{odom} und \texttt{base\_link} bis zu \texttt{camera\_link}; rechts dieselben Frames als physische Koordinatenursprünge im Gebäudegrundriss und am Roboter.}
+  \label{fig:kap10-tf-baum}
+\end{figure}
+
+\begin{hinweisbox}
+Eine der häufigsten Fehlerquellen für Einsteiger ist ein fehlender oder veralteter Zweig im TF-Baum: Fehlt die Transformation zwischen \texttt{odom} und \texttt{base\_link}, kann die Navigation die Position des Roboters nicht mehr bestimmen, selbst wenn alle Sensordaten korrekt ankommen.
+\end{hinweisbox}
+
 \section{Frequenzen und Timing}
 Sensordaten kommen nicht alle gleich schnell. Eine Kamera liefert vielleicht 30 Bilder pro Sekunde, ein Lidar 10 Scans pro Sekunde, der Akkustatus nur einmal pro Sekunde. Das Modell sollte solche Annahmen sichtbar machen, wenn sie für Architektur oder Tests wichtig sind.
 

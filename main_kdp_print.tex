@@ -1,0 +1,36 @@
+% main_kdp_print.tex
+% Druck-Edition fuer Amazon KDP, Softcover, Trim 7" x 10" (17,78 x 25,4 cm).
+%
+% TODO vor Upload:
+%   - \editionimpressum unten mit finaler ISBN befuellen.
+%   - Inside-Margin (Gutter) gegen KDPs Randtabelle pruefen, sobald die
+%     tatsaechliche Seitenzahl dieser Edition feststeht:
+%       24-150 S.  -> 9,6 mm   | 151-300 S. -> 12,7 mm
+%       301-500 S. -> 15,9 mm  | 501-700 S. -> 19,1 mm | 701-828 S. -> 22,3 mm
+%     (Quelle: kdp.amazon.com/help/topic/GVBQ3CMEQW3W2VL6, Stand 2026-07)
+%     Aktuell eingestellt: 16 mm (Annahme 301-500 Seiten) - nach erstem
+%     vollstaendigen Kompilierlauf mit echter Seitenzahl abgleichen.
+
+\documentclass[11pt,oneside]{scrbook}
+\input{preamble_common}
+
+\geometry{
+    paperwidth=17.78cm,
+    paperheight=25.4cm,
+    inner=16mm,
+    outer=18mm,
+    top=20mm,
+    bottom=22mm
+}
+
+\newcommand{\editionimpressum}{%
+    \textbf{KDP-Softcover-Ausgabe}\\[0.5em]
+    \textbf{TODO: ISBN eintragen}\\[1em]
+    \textcopyright\ Wolfgang Becker\\
+    Alle Rechte vorbehalten.\\[1em]
+    Diese Ausgabe erscheint im Vertrieb über Amazon KDP (Print on Demand).
+}
+
+\begin{document}
+\input{content_body}
+\end{document}

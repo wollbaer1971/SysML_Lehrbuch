@@ -19,9 +19,21 @@ COVER="Cover_ebook.jpg"
 FILTER="epub_filter.lua"
 CSS="epub.css"
 
+echo "── Schritt 0: TikZ-Diagramme als PNG rendern ──────────────────"
+bash render_figures_epub.sh
+
+echo ""
 echo "── Schritt 1: LaTeX-Quellen vorverarbeiten ───────────────────"
 python3 preprocess.py > "$MERGED"
 echo "   Merged: $MERGED ($(wc -l < "$MERGED") Zeilen)"
+
+# Sicherheitsnetz: preprocess.py bricht selbst mit Exit 1 ab, wenn ein PNG
+# fehlt oder ein rohes tikzpicture uebrig bleibt. Zusaetzlich hier pruefen,
+# falls die Merge-Datei trotzdem (leer/fehlerhaft) entstanden ist.
+if [ ! -s "$MERGED" ]; then
+    echo "FEHLER: $MERGED ist leer oder wurde nicht erzeugt. Abbruch." >&2
+    exit 1
+fi
 
 echo ""
 echo "── Schritt 2: EPUB mit Pandoc erzeugen ───────────────────────"

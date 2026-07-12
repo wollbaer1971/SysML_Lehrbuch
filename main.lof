@@ -1,0 +1,67 @@
+\babel@toc {nil}{}\relax 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Wirkkette der Hinderniserkennung von der Sensorik bis zu den Motoren, darunter der Regelkreis der Energieversorgung.\relax }}{6}{figure.caption.3}%
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Stakeholder des autonomen Indoor-Roboters mit jeweils einem typischen Interesse am System.\relax }}{10}{figure.caption.4}%
+\contentsline {figure}{\numberline {1.3}{\ignorespaces Systemgrenze und Kontext des autonomen Indoor-Roboters mit Energie-, Daten- und Bewegungsflüssen über die Grenze hinweg.\relax }}{12}{figure.caption.5}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Dokumentenzentrierte Entwicklung mit vielen lose verknüpften Dokumenten im Vergleich zu einem zentralen, klar verknüpften Systemmodell.\relax }}{22}{figure.caption.6}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Farbkodierte Modellkette von einem Stakeholderbedarf über Anforderung, Funktionen und Systemelemente bis zu ROS2-Node und Testfall.\relax }}{26}{figure.caption.7}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Vier Rollen betrachten dasselbe MBSE-Modell des Roboters aus unterschiedlichen Blickwinkeln.\relax }}{32}{figure.caption.8}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Die sieben für dieses Buch wichtigsten SysML-v2-Konzepte rund um das gemeinsame Modell.\relax }}{38}{figure.caption.9}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Struktursicht von \texttt {Robot} mit seinen Subsystemen und Detailsicht des \texttt {PerceptionSystem} mit Port \texttt {sensorData}.\relax }}{41}{figure.caption.10}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Empfohlene Werkzeugkette: VS Code mit Syside Editor und Git als Kern, optional ergänzt um Eclipse SysON und das SysML-v2-Pilotprojekt; parallel dazu der ROS2-Code.\relax }}{45}{figure.caption.11}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Projektstruktur \texttt {AutonomousIndoorRobot} mit den Ordnern \texttt {model/}, \texttt {code/} und \texttt {docs/} sowie den wichtigsten Dateien.\relax }}{47}{figure.caption.12}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Strukturbaum des Roboters mit \texttt {part def Robot} und seinen Subsystemen. Grün hinterlegte Kästen sind im Modell bereits weiter zerlegt, grau hinterlegte Kästen sind an dieser Stelle noch leere \texttt {part def}s.\relax }}{50}{figure.caption.13}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Kontextdiagramm des Indoor-Roboters mit den wichtigsten externen Elementen seiner Betriebsumgebung.\relax }}{59}{figure.caption.14}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Erste, noch grobe Systemstruktur des Roboters mit sieben gleichrangigen Teilsystemen.\relax }}{61}{figure.caption.15}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Traceability-Kette von REQ-002 über \texttt {satisfy} und \texttt {verify} zum \texttt {PerceptionSystem} und per \texttt {trace} weiter zum ROS2-Node.\relax }}{67}{figure.caption.16}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Use-Case-Diagramm des Indoor-Roboters mit den Akteuren Nutzer, Sicherheitsverantwortliche und Wartungspersonal.\relax }}{73}{figure.caption.17}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {8.1}{\ignorespaces Vollständige Dekomposition von \texttt {Robot} in sieben Hauptsubsysteme und deren wichtigste Teile der zweiten Ebene.\relax }}{77}{figure.caption.18}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {9.1}{\ignorespaces Verbindungsmodell des \texttt {PerceptionSystem}. Die kleinen Quadrate an den Boxrändern sind Ports. Das Tilde-Zeichen markiert einen konjugierten Port, der empfängt statt sendet.\relax }}{82}{figure.caption.19}%
+\contentsline {figure}{\numberline {9.2}{\ignorespaces Verbindungsmodell des \texttt {NavigationSystem}: Lokalisierung und Karte liefern an den Pfadplaner, dessen Pfad an die Bewegungssteuerung weitergegeben wird.\relax }}{83}{figure.caption.20}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {10.1}{\ignorespaces Schnittstellenübersicht des Indoor-Roboters: Sensordaten (orange) fließen über ObjectDetector und SLAM zur Navigation, Steuer- und Statusnachrichten (blau) verbinden Navigation, MotionControl und die Bedienoberfläche.\relax }}{87}{figure.caption.21}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {11.1}{\ignorespaces Aktivitätsdiagramm für die Zielnavigation: vom Systemstart über Pfadplanung und Hindernisbehandlung bis zur Meldung des erreichten Ziels. Bei niedrigem Akkustand wird auf den Ablauf \enquote {Rückkehr zur Ladestation} verwiesen.\relax }}{92}{figure.caption.22}%
+\contentsline {figure}{\numberline {11.2}{\ignorespaces Aktivitätsdiagramm für die Rückkehr zur Ladestation: von der Akkuüberwachung über die Bewertung des laufenden Auftrags bis zum Andocken und Start des Ladevorgangs, inklusive der Alternativen bei blockierter Ladestation oder fehlgeschlagenem Andocken.\relax }}{94}{figure.caption.23}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {12.1}{\ignorespaces Zustandsdiagramm zu \texttt {state def RobotOperation}. Jeder Pfeil entspricht einer \texttt {transition accept ... then ...}-Zeile aus dem Listing oben. Der Fehlerzustand ist rot hervorgehoben.\relax }}{98}{figure.caption.24}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {13.1}{\ignorespaces Bremsweg $s = v^2/(2a)$ in Abhängigkeit von der Geschwindigkeit $v$ (hier mit $a=1\,\text {m/s}^2$). Der Bremsweg wächst quadratisch; bei $v=0{,}5$\,m/s und $v=1{,}0$\,m/s sind die Werte markiert.\relax }}{102}{figure.caption.25}%
+\contentsline {figure}{\numberline {13.2}{\ignorespaces Parametrisches Diagramm zum Bremsweg: Geschwindigkeit und Bremsverzögerung fließen in \texttt {BrakingDistanceCalc} ein, das Ergebnis wird von der Bedingung \texttt {SafeBrakingDistance} gegen den maximal zulässigen Bremsweg geprüft.\relax }}{102}{figure.caption.26}%
+\contentsline {figure}{\numberline {13.3}{\ignorespaces Parametrisches Diagramm zur Berechnung der Betriebszeit: \texttt {OperatingTimeCalc} verbindet die Batteriekapazität und die Leistungsaufnahme der Verbraucher zur geschätzten Laufzeit der Mission.\relax }}{104}{figure.caption.27}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {14.1}{\ignorespaces Publish-Subscribe-Prinzip: Ein Publisher-Node sendet Nachrichten auf einem Topic, mehrere Subscriber-Nodes können sie gleichzeitig empfangen.\relax }}{107}{figure.caption.28}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {15.1}{\ignorespaces Node-Graph des autonomen Indoor-Roboters mit den wichtigsten Topics zwischen Sensor-, Verarbeitungs-, Navigations- und Aktuatorik-Nodes.\relax }}{112}{figure.caption.29}%
+\contentsline {figure}{\numberline {15.2}{\ignorespaces Zustandsautomat eines ROS2-Lifecycle-Nodes von \texttt {Unconfigured} über \texttt {Inactive} und \texttt {Active} bis zum Endzustand \texttt {Finalized}.\relax }}{113}{figure.caption.30}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {16.1}{\ignorespaces Grafische Darstellung eines einfachen Orientierungsmappings zwischen SysML-v2-Part-Definitions und zugehörigen ROS2-Nodes. In realen Systemen muss dieses Mapping projektspezifisch geprüft und verfeinert werden.\relax }}{118}{figure.caption.31}%
+\contentsline {figure}{\numberline {16.2}{\ignorespaces Traceability-Kette vom Requirement REQ-006 über SysML- und ROS2-Elemente bis zum Testfall TC-006.\relax }}{121}{figure.caption.32}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {17.1}{\ignorespaces Verzeichnisstruktur eines ROS2-Workspace mit dem Package \texttt {robot\_basic\_nodes} sowie den Geschwisterordnern \texttt {build/}, \texttt {install/} und \texttt {log/}.\relax }}{125}{figure.caption.33}%
+\contentsline {figure}{\numberline {17.2}{\ignorespaces Ablauf im \texttt {StatusNode}: Der Timer löst periodisch \texttt {publish\_status()} aus, das eine Nachricht erzeugt und auf dem Topic \texttt {/robot/status} veröffentlicht.\relax }}{126}{figure.caption.34}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {18.1}{\ignorespaces Datenkette der ML-Inferenz im \texttt {object\_detector\_node} vom Kamerabild bis zur Veröffentlichung der Erkennungsergebnisse.\relax }}{131}{figure.caption.35}%
+\contentsline {figure}{\numberline {18.2}{\ignorespaces Der ML-basierte \texttt {object\_detector\_node} liefert eine unsichere Zusatzinformation, während die Lidar-basierte Hinderniserkennung die zuverlässigere Sicherheitsgrundlage bleibt.\relax }}{132}{figure.caption.36}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {19.1}{\ignorespaces Das V-Modell verbindet den absteigenden Spezifikationsast mit dem aufsteigenden Verifikationsast.\relax }}{135}{figure.caption.37}%
+\contentsline {figure}{\numberline {19.2}{\ignorespaces Der Testfall TC-006 verifiziert die Anforderung REQ-006 über eine \texttt {verify}-Beziehung.\relax }}{137}{figure.caption.38}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {20.1}{\ignorespaces Traceability-Kette von REQ-002 über SysML-Systemelemente und ROS2-Node/Topic bis zum Testfall TC-002.\relax }}{141}{figure.caption.39}%
+\contentsline {figure}{\numberline {20.2}{\ignorespaces Auszug aus einer Traceability-Matrix: Jede Zeile verbindet eine Anforderung über Funktion, Systemelement und ROS2-Node bis zum Testfall.\relax }}{142}{figure.caption.40}%
+\contentsline {figure}{\numberline {20.3}{\ignorespaces Ablauf des Änderungsmanagements von der Beschreibung des Änderungswunschs bis zur dokumentierten Entscheidung.\relax }}{143}{figure.caption.41}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {21.1}{\ignorespaces Checkliste mit den zwölf Inhalten, die das Abschlussmodell enthalten sollte.\relax }}{146}{figure.caption.42}%
+\contentsline {figure}{\numberline {21.2}{\ignorespaces Zehn Schritte des Abschlussprojekts, gruppiert in vier Phasen von den Anforderungen bis zur Verifikation.\relax }}{147}{figure.caption.43}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {22.1}{\ignorespaces Mögliche Vertiefungsrichtungen nach dem Einstieg, gegliedert in sechs Themenfelder mit ausgewählten Unterpunkten.\relax }}{150}{figure.caption.44}%
+\contentsline {figure}{\numberline {22.2}{\ignorespaces Der Übergang vom Lernprojekt zum echten Projekt bringt komplexere Anforderungen und Schnittstellen sowie neue, organisatorische Themen mit sich.\relax }}{153}{figure.caption.45}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
