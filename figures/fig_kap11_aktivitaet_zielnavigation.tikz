@@ -92,18 +92,18 @@
 
 % --- Legende ---
 \node[startnode] (leg1) at (-8,-29.8) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {Start};
-\node[endouter, right=18mm of leg1] (leg2) {};
+\node[right=1mm of leg1, font=\tiny, align=left] (lab1){Start};
+\node[endouter, right=6mm of lab1] (leg2) {};
 \node[endinner] at (leg2.center) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {Ende};
-\node[decide, minimum width=6mm, minimum height=6mm, font=\tiny, right=18mm of leg2] (leg3) {};
+\node[right=1mm of leg2, font=\tiny, align=left] (lab2){Ende};
+\node[decide, minimum width=6mm, minimum height=6mm, font=\tiny, right=6mm of lab2] (leg3) {};
 \filldraw[fill=white, draw=black!70, thick] (leg3.north) -- (leg3.east) -- (leg3.south) -- (leg3.west) -- cycle;
-\node[right=1mm of leg3, font=\tiny, align=left] {Entscheidung};
-\node[act, minimum width=6mm, minimum height=4mm, font=\tiny, right=18mm of leg3] (leg4) {};
-\node[right=1mm of leg4, font=\tiny, align=left] {Aktion};
-\node[forkbar, minimum width=6mm, right=18mm of leg4] (leg5) {};
-\node[right=1mm of leg5, font=\tiny, align=left] {Fork/Join};
-\node[ref, minimum width=6mm, minimum height=4mm, font=\tiny, right=18mm of leg5] (leg6) {};
-\node[right=1mm of leg6, font=\tiny, align=left] {Verweis auf anderes Diagramm};
+\node[right=1mm of leg3, font=\tiny, align=left] (lab3){Entscheidung};
+\node[act, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab3] (leg4) {};
+\node[right=1mm of leg4, font=\tiny, align=left] (lab4){Aktion};
+\node[forkbar, minimum width=6mm, right=6mm of lab4] (leg5) {};
+\node[right=1mm of leg5, font=\tiny, align=left] (lab5){Fork/Join};
+\node[ref, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab5] (leg6) {};
+\node[right=1mm of leg6, font=\tiny, align=left] (lab6){Verweis auf anderes Diagramm};
 
 \end{tikzpicture}

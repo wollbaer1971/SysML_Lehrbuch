@@ -46,9 +46,9 @@
 
 % --- Legende ---
 \node[part, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0.5,-1.1) {};
-\node[right=0.09cm of leg1, font=\small align=left] {\texttt{part} (Instanz einer \texttt{part def})};
-\node[port, right=5.38cm of leg1] (leg2) {};
-\node[right=0.05cm of leg2, font=\small, align=left] {Port};
-\node[right=7.27cm of leg1, font=\small, align=left] {\textcolor{orange!70!black}{$\sim$} = konjugierter Port};
+\node[right=1mm of leg1, font=\small, align=left] (lab1) {\texttt{part} (Instanz einer \texttt{part def})};
+\node[port, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\small, align=left] (lab2) {Port};
+\node[right=6mm of lab2, font=\small, align=left] (lab3) {\textcolor{orange!70!black}{$\sim$} = konjugierter Port};
 
 \end{tikzpicture}

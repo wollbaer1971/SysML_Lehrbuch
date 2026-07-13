@@ -34,8 +34,8 @@
 
 % --- Legende ---
 \node[tool, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (5.09,-1.9) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {Werkzeug/Datei (verbindlich)};
-\node[opt, minimum width=6mm, minimum height=4mm, font=\tiny, right=3.3cm of leg1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {optionales Werkzeug};
+\node[right=1mm of leg1, font=\tiny, align=left] (lab1){Werkzeug/Datei (verbindlich)};
+\node[opt, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] (lab2){optionales Werkzeug};
 
 \end{tikzpicture}

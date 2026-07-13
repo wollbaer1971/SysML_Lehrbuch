@@ -56,8 +56,8 @@
 
 % --- Legende ---
 \node[folder, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (3,-3.2) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {Ordner};
-\node[file, minimum width=6mm, minimum height=4mm, font=\tiny, right=20mm of leg1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {Datei mit Kurzbeschreibung};
+\node[right=1mm of leg1, font=\tiny, align=left] (lab1){Ordner};
+\node[file, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] (lab2){Datei mit Kurzbeschreibung};
 
 \end{tikzpicture}

@@ -69,12 +69,12 @@
 
 % --- Legende ---
 \node[reqbox,  minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (1,-5) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {Anforderung};
-\node[archbox, minimum width=6mm, minimum height=4mm, font=\tiny, right=24mm of leg1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {Architektur/Entwurf};
-\node[implbox, minimum width=6mm, minimum height=4mm, font=\tiny, right=24mm of leg2] (leg3) {};
-\node[right=1mm of leg3, font=\tiny, align=left] {Implementierung};
-\node[testbox, minimum width=6mm, minimum height=4mm, font=\tiny, right=24mm of leg3] (leg4) {};
-\node[right=1mm of leg4, font=\tiny, align=left] {Testebene};
+\node[right=1mm of leg1, font=\tiny, align=left] (lab1){Anforderung};
+\node[archbox, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] (lab2){Architektur/Entwurf};
+\node[implbox, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab2] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] (lab3){Implementierung};
+\node[testbox, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab3] (leg4) {};
+\node[right=1mm of leg4, font=\tiny, align=left] (lab4){Testebene};
 
 \end{tikzpicture}

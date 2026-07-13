@@ -100,17 +100,17 @@
 
 % --- Legende ---
 \node[startnode] (leg1) at (-5,-20.8) {};
-\node[right=1mm of leg1, font=\scriptsize, align=left] {Start};
-\node[endouter, right=16mm of leg1] (leg2) {};
+\node[right=1mm of leg1, font=\scriptsize, align=left] (lab1){Start};
+\node[endouter, right=6mm of lab1] (leg2) {};
 \node[endinner] at (leg2.center) {};
-\node[right=1mm of leg2, font=\scriptsize, align=left] {Ende};
-\node[decide, minimum width=6mm, minimum height=6mm, font=\scriptsize, right=16mm of leg2] (leg3) {};
+\node[right=1mm of leg2, font=\scriptsize, align=left] (lab2){Ende};
+\node[decide, minimum width=6mm, minimum height=6mm, font=\scriptsize, right=6mm of lab2] (leg3) {};
 \filldraw[fill=white, draw=black!70, thick] (leg3.north) -- (leg3.east) -- (leg3.south) -- (leg3.west) -- cycle;
-\node[right=1mm of leg3, font=\scriptsize, align=left] {Entscheidung};
-\node[act, minimum width=6mm, minimum height=4mm, font=\scriptsize, right=16mm of leg3] (leg4) {};
-\node[right=1mm of leg4, font=\scriptsize, align=left] {Aktion};
-\node[merge, right=16mm of leg4] (leg5) {};
+\node[right=1mm of leg3, font=\scriptsize, align=left] (lab3){Entscheidung};
+\node[act, minimum width=6mm, minimum height=4mm, font=\scriptsize, right=6mm of lab3] (leg4) {};
+\node[right=1mm of leg4, font=\scriptsize, align=left] (lab4){Aktion};
+\node[merge, right=6mm of lab4] (leg5) {};
 \filldraw[fill=white, draw=black!70, thick] (leg5.north) -- (leg5.east) -- (leg5.south) -- (leg5.west) -- cycle;
-\node[right=1mm of leg5, font=\scriptsize, align=left] {Zusammenführung};
+\node[right=1mm of leg5, font=\scriptsize, align=left] (lab5){Zusammenführung};
 
 \end{tikzpicture}

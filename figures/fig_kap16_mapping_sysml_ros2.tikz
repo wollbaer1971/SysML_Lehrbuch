@@ -44,8 +44,8 @@
 
 % --- Legende ---
 \node[sysml, minimum width=7mm, minimum height=5mm, font=\scriptsize] (leg1) at (0,-9.5) {};
-\node[right=2mm of leg1, font=\scriptsize, align=left] {SysML-v2-Element};
-\node[ros, minimum width=7mm, minimum height=5mm, font=\scriptsize, right=44mm of leg1] (leg2) {};
-\node[right=2mm of leg2, font=\scriptsize, align=left] {ROS2-Element};
+\node[right=1mm of leg1, font=\scriptsize, align=left] (lab1){SysML-v2-Element};
+\node[ros, minimum width=7mm, minimum height=5mm, font=\scriptsize, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\scriptsize, align=left] (lab2){ROS2-Element};
 
 \end{tikzpicture}

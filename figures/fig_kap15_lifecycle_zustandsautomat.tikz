@@ -33,10 +33,10 @@
 
 % --- Legende ---
 \node[state, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0,-8) {};
-\node[right=1mm of leg1, font=\tiny, align=left] {Normalzustand};
-\node[finalstate, minimum width=6mm, minimum height=4mm, font=\tiny, right=28mm of leg1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] {Endzustand (\texttt{Finalized})};
-\node[initial, right=40mm of leg2] (leg3) {};
-\node[right=1mm of leg3, font=\tiny, align=left] {Startzustand};
+\node[right=1mm of leg1, font=\tiny, align=left] (lab1){Normalzustand};
+\node[finalstate, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] (lab2){Endzustand (\texttt{Finalized})};
+\node[initial, right=6mm of lab2] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] (lab3){Startzustand};
 
 \end{tikzpicture}
