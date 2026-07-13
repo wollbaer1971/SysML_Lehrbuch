@@ -1,4 +1,5 @@
 \begin{tikzpicture}[
+    scale=0.73, transform shape,
     every node/.style={font=\small},
     part/.style={
         rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
@@ -17,18 +18,18 @@
     },
     port/.style={rectangle, draw=black, fill=black!75, minimum width=2.2mm,
         minimum height=2.2mm, inner sep=0pt},
-    portlbl/.style={font=\tiny},
+    portlbl/.style={font=\small},
     bind/.style={dashed, thick, black!55}
 ]
 
 % --- Systemteile (links) ---
 \node[part] (robot) at (0,0.7)
-    {\texttt{robot :}\\\texttt{Robot}\\{\tiny currentSpeed : Real [m/s]}};
+    {\texttt{robot :}\\\texttt{Robot}\\{\small currentSpeed : Real [m/s]}};
 \node[part] (brake) at (0,-0.7)
-    {\texttt{brakeSystem :}\\\texttt{BrakeSystem}\\{\tiny deceleration : Real [m/s$^2$]}};
+    {\texttt{brakeSystem :}\\\texttt{BrakeSystem}\\{\small deceleration : Real [m/s$^2$]}};
 
 % --- Berechnungsblock ---
-\node[calc] (calc) at (6.5,0) {\texttt{BrakingDistanceCalc}\\{\tiny(calc def)}};
+\node[calc] (calc) at (6.5,0) {\texttt{BrakingDistanceCalc}\\{\small(calc def)}};
 
 \node[port] (p-v) at ($(calc.west)+(0,0.7)$) {};
 \node[port] (p-a) at ($(calc.west)+(0,-0.7)$) {};
@@ -42,8 +43,8 @@
 \draw[bind] (brake.east) -- (p-a);
 
 % --- Constraint-Block (rechts) ---
-\node[constr] (safe) at (14,0)
-    {\texttt{SafeBrakingDistance}\\{\tiny(constraint)}\\[1mm]{\footnotesize prüft: $s \le s_{\max}$}};
+\node[constr] (safe) at (15,0)
+    {\texttt{SafeBrakingDistance}\\{\small(constraint)}\\[1mm]{\footnotesize prüft: $s \le s_{\max}$}};
 
 \node[port] (p-sin)    at ($(safe.west)+(0,0.7)$) {};
 \node[port] (p-smaxin) at ($(safe.west)+(0,-0.7)$) {};
@@ -52,17 +53,17 @@
 \node[portlbl, below=0.5mm of p-smaxin] {\texttt{sMax}};
 
 \draw[bind] (p-s) -- (p-sin);
-\draw[bind] (p-smaxin) -- ++(-2.4,0)
-    node[left, font=\tiny, align=right] {\texttt{sMax}\\(Vorgabe, z.\,B.\\aus Anforderung)};
+\draw[bind] (p-smaxin) -- ++(-1.3,0)
+    node[left, font=\footnotesize, align=right] {\texttt{sMax}\\(Vorgabe)};
 
 % --- Legende ---
 \node[port, below=10mm of brake, xshift=-2mm] (leg1) {};
-\node[right=1mm of leg1, font=\tiny, align=left] (lab1){Parameter (Port)};
-\node[part, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] (lab2){Systemteil (\texttt{part})};
-\node[calc, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab2] (leg3) {};
-\node[right=1mm of leg3, font=\tiny, align=left] (lab3){Berechnung (\texttt{calc def})};
-\node[constr, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab3] (leg4) {};
-\node[right=1mm of leg4, font=\tiny, align=left] (lab4){Bedingung (\texttt{constraint})};
+\node[right=1mm of leg1, font=\small, align=left] (lab1){Parameter (Port)};
+\node[part, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\small, align=left] (lab2){Systemteil (\texttt{part})};
+\node[calc, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab2] (leg3) {};
+\node[right=1mm of leg3, font=\small, align=left] (lab3){Berechnung (\texttt{calc def})};
+\node[constr, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab3] (leg4) {};
+\node[right=1mm of leg4, font=\small, align=left] (lab4){Bedingung (\texttt{constraint})};
 
 \end{tikzpicture}

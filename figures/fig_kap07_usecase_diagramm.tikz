@@ -1,5 +1,5 @@
 \begin{tikzpicture}[
-    scale=0.78, transform shape,
+    scale=0.62, transform shape,
     every node/.style={font=\small},
     uc/.style={
         rectangle, rounded corners=5mm, draw=green!40!black, thick, fill=green!10,

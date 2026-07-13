@@ -1,4 +1,5 @@
 \begin{tikzpicture}[
+    scale=0.67, transform shape,
     every node/.style={font=\small},
     node distance=6mm and 6mm,
     ext/.style={
@@ -14,10 +15,10 @@
     code/.style={
         rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
         minimum width=32mm, minimum height=10mm,
-        align=center, fill=orange!8, drop shadow, font=\scriptsize\ttfamily
+        align=center, fill=orange!8, drop shadow, font=\small\ttfamily
     },
     flow/.style={-{Stealth[length=2mm]}, thick, orange!70!black},
-    note/.style={font=\scriptsize, align=center, text width=28mm}
+    note/.style={font=\footnotesize, align=center, text width=26mm}
 ]
 
 % --- Zeile 1 ---
@@ -37,7 +38,7 @@
 \node[ros] (ui)  at (2.6, -7)  {user\_interface\_node};
 
 % --- Pfeile Zeile 1 ---
-\draw[flow] (camera.east) -- node[note, above]{Bildformat,\\Auflösung,\\Kalibrierung} (topic1.west);
+\draw[flow] (camera.east) -- node[note, above, text width=20mm, xshift=-3mm]{Bildformat,\\Auflösung,\\Kalibrierung} (topic1.west);
 \draw[flow] (topic1.east) -- (conv1.west);
 \draw[flow] (conv1.east)  -- (tensor.west);
 

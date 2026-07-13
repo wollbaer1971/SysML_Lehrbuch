@@ -1,4 +1,5 @@
 \begin{tikzpicture}[
+    scale=0.62, transform shape,
     every node/.style={font=\small},
     reqbox/.style={
         rectangle, rounded corners=2pt, draw=black!70, thick,
@@ -22,7 +23,7 @@
     },
     flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
     corr/.style={dashed, thick, black!50},
-    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
 ]
 
 % --- linker Ast: Spezifikation (absteigend) ---
@@ -68,13 +69,13 @@
 \node[font=\small, black!70] at (7, -2.2) {Implementierung};
 
 % --- Legende ---
-\node[reqbox,  minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (1,-5) {};
-\node[right=1mm of leg1, font=\tiny, align=left] (lab1){Anforderung};
-\node[archbox, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] (lab2){Architektur/Entwurf};
-\node[implbox, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab2] (leg3) {};
-\node[right=1mm of leg3, font=\tiny, align=left] (lab3){Implementierung};
-\node[testbox, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab3] (leg4) {};
-\node[right=1mm of leg4, font=\tiny, align=left] (lab4){Testebene};
+\node[reqbox,  minimum width=6mm, minimum height=4mm, font=\small] (leg1) at (1,-5) {};
+\node[right=1mm of leg1, font=\small, align=left] (lab1){Anforderung};
+\node[archbox, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\small, align=left] (lab2){Architektur/Entwurf};
+\node[implbox, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab2] (leg3) {};
+\node[right=1mm of leg3, font=\small, align=left] (lab3){Implementierung};
+\node[testbox, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab3] (leg4) {};
+\node[right=1mm of leg4, font=\small, align=left] (lab4){Testebene};
 
 \end{tikzpicture}

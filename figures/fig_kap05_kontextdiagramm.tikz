@@ -2,13 +2,13 @@
     every node/.style={font=\small},
     center/.style={
         rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
-        minimum width=32mm, minimum height=12mm,
+        minimum width=24mm, minimum height=10mm,
         align=center, fill=green!15, drop shadow
     },
     ext/.style={
         rectangle, rounded corners=1.5pt, draw=black!50, dashed,
-        minimum width=30mm, minimum height=10mm,
-        align=center, fill=white, drop shadow
+        minimum width=26mm, minimum height=9mm,
+        align=center, fill=white, drop shadow, font=\footnotesize
     },
     edg/.style={black!50, thick}
 ]
@@ -16,14 +16,14 @@
 % --- Zentrales System ---
 \node[center] (robot) at (0,0) {\textbf{Indoor-Roboter}};
 
-% --- Umgebende Elemente (in etwa kreisfoermig angeordnet, 7 Elemente) ---
-\node[ext] (nutzer)   at (-6.4, 3.2)  {Nutzer};
-\node[ext] (personen) at ( 0.0, 4.4)  {Personen im\\Gebäude};
-\node[ext] (raeume)   at ( 6.4, 3.2)  {Räume, Flure,\\Türen,\\Hindernisse};
-\node[ext] (lade)     at ( 7.2,-1.2)  {Ladestation};
-\node[ext] (wartung)  at ( 3.2,-4.2)  {Wartungs-\\personal};
-\node[ext] (netz)     at (-3.2,-4.2)  {WLAN /\\Gebäudenetz};
-\node[ext] (ui)       at (-7.2,-1.2)  {Bediengerät /\\Benutzer-\\oberfläche};
+% --- Umgebende Elemente (in etwa kreisfoermig angeordnet, 7 Elemente, kompakter Radius) ---
+\node[ext] (nutzer)   at (-4.35, 2.18)  {Nutzer};
+\node[ext] (personen) at ( 0.0, 2.99)   {Personen im\\Gebäude};
+\node[ext] (raeume)   at ( 4.35, 2.18)  {Räume, Flure,\\Türen,\\Hindernisse};
+\node[ext] (lade)     at ( 4.90,-0.82)  {Ladestation};
+\node[ext] (wartung)  at ( 2.18,-2.86)  {Wartungs-\\personal};
+\node[ext] (netz)     at (-2.18,-2.86)  {WLAN /\\Gebäudenetz};
+\node[ext] (ui)       at (-4.90,-0.82)  {Bediengerät /\\Benutzer-\\oberfläche};
 
 % --- Verbindungslinien (ohne Pfeilrichtung, reine Assoziation) ---
 \draw[edg] (robot) -- (nutzer);
@@ -35,7 +35,7 @@
 \draw[edg] (robot) -- (ui);
 
 % --- Legende ---
-\node[center, minimum width=6mm, minimum height=4mm, below=16mm of wartung, xshift=-14mm, font=\tiny] (leg1) {};
+\node[center, minimum width=6mm, minimum height=4mm, below=14mm of wartung, xshift=-11mm, font=\tiny] (leg1) {};
 \node[right=1mm of leg1, font=\tiny, align=left] {Betrachtetes System};
 \node[ext, minimum width=6mm, minimum height=4mm, below=6mm of leg1, font=\tiny] (leg2) {};
 \node[right=1mm of leg2, font=\tiny, align=left] {Externes Kontextelement};

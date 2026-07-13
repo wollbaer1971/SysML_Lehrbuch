@@ -1,4 +1,5 @@
 \begin{tikzpicture}[
+    scale=0.78, transform shape,
     every node/.style={font=\small},
     state/.style={
         rectangle, rounded corners=2pt, draw=black!70, thick,
@@ -8,7 +9,7 @@
     finalstate/.style={state, fill=black!10, draw=black!60, double, double distance=1.2pt},
     initial/.style={circle, fill=black, minimum size=3mm, inner sep=0pt},
     trans/.style={-{Stealth[length=2.2mm]}, thick, black!70},
-    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
 ]
 
 % --- Zustaende ---
@@ -32,11 +33,11 @@
 \draw[trans] (inact.south) -- node[lbl, right]{shutdown} (fin.north);
 
 % --- Legende ---
-\node[state, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0,-8) {};
-\node[right=1mm of leg1, font=\tiny, align=left] (lab1){Normalzustand};
-\node[finalstate, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] (lab2){Endzustand (\texttt{Finalized})};
+\node[state, minimum width=6mm, minimum height=4mm, font=\small] (leg1) at (0,-8) {};
+\node[right=1mm of leg1, font=\small, align=left] (lab1){Normalzustand};
+\node[finalstate, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\small, align=left] (lab2){Endzustand (\texttt{Finalized})};
 \node[initial, right=6mm of lab2] (leg3) {};
-\node[right=1mm of leg3, font=\tiny, align=left] (lab3){Startzustand};
+\node[right=1mm of leg3, font=\small, align=left] (lab3){Startzustand};
 
 \end{tikzpicture}

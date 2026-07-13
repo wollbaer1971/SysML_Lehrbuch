@@ -1,4 +1,5 @@
 \begin{tikzpicture}[
+    scale=0.75, transform shape,
     every node/.style={font=\small},
     center/.style={
         rectangle, rounded corners=2pt, draw=black!70, thick,
@@ -28,7 +29,7 @@
     subnode/.style={
         rectangle, rounded corners=1.5pt, draw=black!40, thick,
         minimum width=24mm, minimum height=8mm,
-        align=center, font=\tiny, fill=white, drop shadow
+        align=center, font=\footnotesize, fill=white, drop shadow
     },
     mainedge/.style={thick, black!50},
     subedge/.style={thin, black!35}

@@ -21,6 +21,6 @@
 \node[test] (tc006)  at (0, -1.5) {\texttt{«test case»}\\TC-006: Zur Ladestation\\fahren};
 
 % --- verify-Beziehung (gestrichelt, offene Pfeilspitze, von Test zu Anforderung) ---
-\draw[dependency] (tc006) -- node[midway, fill=white, inner sep=1pt, font=\tiny\itshape]{«verify»} (req006);
+\draw[dependency] (tc006) -- node[midway, fill=white, inner sep=1pt, font=\small\itshape]{«verify»} (req006);
 
 \end{tikzpicture}

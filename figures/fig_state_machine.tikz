@@ -1,4 +1,5 @@
 \begin{tikzpicture}[
+    scale=0.72, transform shape,
     every node/.style={font=\small},
     state/.style={
         rectangle, rounded corners=2pt, draw=black!70, thick,
@@ -8,7 +9,7 @@
     errstate/.style={state, fill=red!12, draw=red!60!black},
     initial/.style={circle, fill=black, minimum size=3mm, inner sep=0pt},
     trans/.style={-{Stealth[length=2.2mm]}, thick, black!70},
-    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
 ]
 
 % --- Zustaende (Koordinaten in cm) ---
@@ -38,11 +39,11 @@
 \draw[trans] (error.west) -| node[lbl, pos=0.9, above]{Reset} ([xshift=3mm]idle.south);
 
 % --- Legende ---
-\node[state, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (0,-9) {};
-\node[right=1mm of leg1, font=\tiny, align=left] (lab1){Normalzustand};
-\node[errstate, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] (lab2){Fehlerzustand};
+\node[state, minimum width=6mm, minimum height=4mm, font=\small] (leg1) at (0,-9) {};
+\node[right=1mm of leg1, font=\small, align=left] (lab1){Normalzustand};
+\node[errstate, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\small, align=left] (lab2){Fehlerzustand};
 \node[initial, right=6mm of lab2] (leg3) {};
-\node[right=1mm of leg3, font=\tiny, align=left] (lab3){Startpunkt (\texttt{entry})};
+\node[right=1mm of leg3, font=\small, align=left] (lab3){Startpunkt (\texttt{entry})};
 
 \end{tikzpicture}

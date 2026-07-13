@@ -1,4 +1,5 @@
 \begin{tikzpicture}[
+    scale=0.82, transform shape,
     every node/.style={font=\small},
     tf/.style={
         rectangle, rounded corners=2pt, draw=violet!55!black, thick,
@@ -6,7 +7,7 @@
         align=center, fill=violet!12, drop shadow
     },
     flow/.style={-{Stealth[length=2mm]}, thick, violet!55!black},
-    lbl/.style={font=\tiny, align=left, text width=21mm},
+    lbl/.style={font=\small, align=left, text width=21mm},
     room/.style={draw=black!50, thick},
     axis/.style={-{Stealth[length=1.4mm]}, thick},
     origin/.style={circle, fill=black, minimum size=1.2mm, inner sep=0pt}
@@ -36,32 +37,32 @@
 \node[font=\small\bfseries, align=left, text width=55mm] (title2) at (10.5,10.6) {Physische Bedeutung\\(Draufsicht)};
 
 \draw[room] (7,-0.8) rectangle (14.5,9.3);
-\node[font=\tiny, black!50] at (8.4,8.9) {Gebäudegrundriss};
+\node[font=\small, black!50] at (8.4,8.9) {Gebäudegrundriss};
 
 % map-Ursprung: fest, z. B. Kartenursprung/Startpunkt
 \node[origin] (mo) at (7.9,0.4) {};
-\draw[axis, red!70!black]   (mo) -- ++(0.8,0)  node[right, font=\tiny]{x};
-\draw[axis, green!50!black] (mo) -- ++(0,0.8)  node[above, font=\tiny]{y};
-\node[font=\tiny, align=left, text width=20mm] at (7.9,-1.6) {\texttt{map} (fest, Ursprung der Karte)};
+\draw[axis, red!70!black]   (mo) -- ++(0.8,0)  node[right, font=\small]{x};
+\draw[axis, green!50!black] (mo) -- ++(0,0.8)  node[above, font=\small]{y};
+\node[font=\small, align=left, text width=20mm] at (7.9,-1.6) {\texttt{map} (fest, Ursprung der Karte)};
 
 % odom-Ursprung: nahe map, aber mit Drift (gestrichelter Kreis)
 \node[origin, fill=violet!55!black] (oo) at (8.5,1.0) {};
 \draw[dashed, violet!45] (8.5,1.0) circle (3.5mm);
-\node[font=\tiny, violet!55!black, align=left, text width=20mm] at (11.3,0.3) {\texttt{odom} (driftet mit der Zeit gegenüber \texttt{map})};
+\node[font=\small, violet!55!black, align=left, text width=20mm] at (11.3,0.3) {\texttt{odom} (driftet mit der Zeit gegenüber \texttt{map})};
 
 % Roboter = base_link
 \node[tf, minimum width=18mm, minimum height=13mm] (robot) at (11.3,5.2) {};
-\node[font=\tiny\bfseries, black!70] at (11.3,6.9) {Roboter};
+\node[font=\small\bfseries, black!70] at (11.3,6.9) {Roboter};
 \node[origin] at (robot.center) {};
 \draw[axis, red!70!black]   (robot.center) -- ++(0.55,0);
 \draw[axis, green!50!black] (robot.center) -- ++(0,0.55);
-\node[font=\tiny, align=center, text width=20mm] at (11.3,3.3) {\texttt{base\_link} (Robotermitte)};
+\node[font=\small, align=center, text width=20mm] at (11.3,3.3) {\texttt{base\_link} (Robotermitte)};
 
 % Kamera = camera_link, vorne am Roboter versetzt
 \node[fill=orange!15, draw=orange!60!black, thick, rounded corners=1pt,
       minimum width=7mm, minimum height=5mm] (camnode) at (13.6,6.6) {};
 \node[origin] at (camnode.center) {};
 \draw[black!40, thick] (robot.north east) -- (camnode.south west);
-\node[font=\tiny, align=left, text width=19mm] at (13.0,8.3) {\texttt{camera\_link} (Halterung, ca. 15\,cm vor Mitte)};
+\node[font=\small, align=left, text width=19mm] at (13.0,8.3) {\texttt{camera\_link} (Halterung, ca. 15\,cm vor Mitte)};
 
 \end{tikzpicture}

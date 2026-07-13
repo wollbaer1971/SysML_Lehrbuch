@@ -7,7 +7,7 @@
     },
     port/.style={rectangle, draw=black, fill=black!75, minimum width=2.2mm,
         minimum height=2.2mm, inner sep=0pt},
-    portlbl/.style={font=\tiny},
+    portlbl/.style={font=\small},
     flow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black}
 ]
 
@@ -25,22 +25,22 @@
 \node[port] (p-plan-out) at ($(plan.east)$) {};
 \node[port] (p-foll-in)  at ($(foll.west)$) {};
 
-\node[portlbl, above=0.5mm of p-loc-out]  {\texttt{poseOut}};
-\node[portlbl, above=0.5mm of p-map-out]  {\texttt{mapOut}};
-\node[portlbl, above=0.5mm of p-plan-posein] {\texttt{poseIn}};
-\node[portlbl, below=0.5mm of p-plan-mapin]  {\texttt{mapIn}};
-\node[portlbl, above=0.5mm of p-plan-out] {\texttt{pathOut}};
-\node[portlbl, above=0.5mm of p-foll-in]  {\texttt{pathIn}};
+\node[portlbl, anchor=south west] at ([yshift=0.7mm]p-loc-out.north)  {\texttt{poseOut}};
+\node[portlbl, anchor=south west] at ([yshift=0.7mm]p-map-out.north)  {\texttt{mapOut}};
+\node[portlbl, anchor=south east] at ([yshift=0.7mm]p-plan-posein.north) {\texttt{poseIn}};
+\node[portlbl, anchor=north east] at ([yshift=-0.7mm]p-plan-mapin.south)  {\texttt{mapIn}};
+\node[portlbl, anchor=south west] at ([yshift=0.7mm]p-plan-out.north) {\texttt{pathOut}};
+\node[portlbl, anchor=north east] at ([yshift=-0.7mm]p-foll-in.south)  {\texttt{pathIn}};
 
 % --- Verbindungen (connection c1 / c2 / c3) ---
-\draw[flow] (p-loc-out) -- node[above, midway, font=\tiny, sloped]{c1} (p-plan-posein);
-\draw[flow] (p-map-out) -- node[below, midway, font=\tiny, sloped]{c2} (p-plan-mapin);
-\draw[flow] (p-plan-out) -- node[above, midway, font=\tiny]{c3} (p-foll-in);
+\draw[flow] (p-loc-out) -- node[above, midway, font=\small, sloped]{c1} (p-plan-posein);
+\draw[flow] (p-map-out) -- node[below, midway, font=\small, sloped]{c2} (p-plan-mapin);
+\draw[flow] (p-plan-out) -- node[above, midway, font=\small]{c3} (p-foll-in);
 
 % --- Legende ---
 \node[port, below=14mm of map, xshift=-4mm] (leg1) {};
 \node[portlbl, right=1mm of leg1] {Port};
 \draw[flow] ([yshift=-8mm]leg1.south) -- ++(6mm,0)
-    node[right=1mm, font=\tiny] {Verbindung (\texttt{connection})};
+    node[right=1mm, font=\small] {Verbindung (\texttt{connection})};
 
 \end{tikzpicture}

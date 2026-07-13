@@ -1,65 +1,91 @@
 \begin{tikzpicture}[
-    every node/.style={font=\scriptsize},
-    box/.style={
-      rectangle, rounded corners=1.5pt, draw=black!70, thick,
-      align=center, drop shadow
+    every node/.style={font=\small},
+    root/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=36mm, minimum height=11mm,
+        align=center, fill=blue!12, drop shadow
     },
-    root/.style={box, fill=blue!12, minimum width=30mm, minimum height=9mm,
-      text width=26mm, font=\footnotesize},
-    l1/.style={box, fill=green!20, draw=green!40!black, minimum width=22mm,
-      minimum height=8mm, text width=21mm},
-    l2/.style={box, fill=green!8, draw=green!40!black, minimum width=20mm,
-      minimum height=7mm, text width=19mm},
-    edg/.style={-{Stealth[length=1.6mm]}, thick, black!60}
+    l1/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=44mm, minimum height=11mm,
+        align=center, fill=green!18, drop shadow, font=\small
+    },
+    l2/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=32mm, minimum height=9mm,
+        align=center, fill=green!7, drop shadow, font=\footnotesize
+    },
+    trunkline/.style={thick, black!55},
+    edg/.style={-{Stealth[length=1.8mm]}, thick, black!60}
   ]
 
-  % --- Ebene 0: Wurzel ---
-  \node[root] (robot) at (11.0, 2.0) {\texttt{part def Robot}};
+  % --- Wurzel ---
+  \node[root] (robot) at (0, 0) {\texttt{part def Robot}};
 
-  % --- Ebene 1: sieben Subsysteme (feste Koordinaten, kollisionsfrei) ---
-  \node[l1] (perception) at (0.0, 0)  {\texttt{perceptionSystem :}\\\texttt{PerceptionSystem}};
-  \node[l1] (navigation) at (4.5, 0)  {\texttt{navigationSystem :}\\\texttt{NavigationSystem}};
-  \node[l1] (motion)     at (8.0, 0)  {\texttt{motionControl :}\\\texttt{MotionControl}};
-  \node[l1] (battery)    at (11.5, 0) {\texttt{batterySystem :}\\\texttt{BatterySystem}};
-  \node[l1] (ui)         at (15.0, 0) {\texttt{userInterface :}\\\texttt{UserInterface}};
-  \node[l1] (comm)       at (17.5, 0) {\texttt{communicationSystem :}\\\texttt{CommunicationSystem}};
-  \node[l1] (safety)     at (20.0, 0) {\texttt{safetyLogic :}\\\texttt{SafetyLogic}};
+  % --- Ebene 1: sieben Subsysteme, von oben nach unten gestapelt ---
+  \node[l1] (perception) at (0, -2.0)   {\texttt{perceptionSystem :}\\\texttt{PerceptionSystem}};
+  \node[l1] (navigation) at (0, -4.5)   {\texttt{navigationSystem :}\\\texttt{NavigationSystem}};
+  \node[l1] (motion)     at (0, -6.5)   {\texttt{motionControl :}\\\texttt{MotionControl}};
+  \node[l1] (battery)    at (0, -8.5)   {\texttt{batterySystem :}\\\texttt{BatterySystem}};
+  \node[l1] (ui)         at (0, -10.5)  {\texttt{userInterface :}\\\texttt{UserInterface}};
+  \node[l1] (comm)       at (0, -12.0)  {\texttt{communicationSystem :}\\\texttt{CommunicationSystem}};
+  \node[l1] (safety)     at (0, -13.5)  {\texttt{safetyLogic :}\\\texttt{SafetyLogic}};
 
+  % Baumverbindung Wurzel -> Ebene 1 ueber seitlichen Stamm, damit keine
+  % Linie durch eine der dazwischenliegenden Boxen verlaeuft.
+  \draw[trunkline] (robot.south) -- (-3.0,0 |- robot.south);
+  \draw[trunkline] (-3.0,0 |- robot.south) -- (-3.0,0 |- safety.west);
   \foreach \n in {perception,navigation,motion,battery,ui,comm,safety}
-    \draw[edg] (robot) -- (\n);
+    \draw[edg] (-3.0,0 |- \n.west) -- (\n.west);
 
-  % --- Ebene 2: Zerlegung von PerceptionSystem (2x2-Raster) ---
-  \node[l2] (camera)   at (-1.1, -1.6) {\texttt{camera :}\\\texttt{Camera}};
-  \node[l2] (lidar)    at ( 1.1, -1.6) {\texttt{lidar :}\\\texttt{Lidar}};
-  \node[l2] (objdet)   at (-1.1, -2.6) {\texttt{objectDetector :}\\\texttt{ObjectDetector}};
-  \node[l2] (obstdet)  at ( 1.1, -2.6) {\texttt{obstacleDetector :}\\\texttt{ObstacleDetector}};
+  % --- Ebene 2: Zerlegung von PerceptionSystem (2 Spalten rechts von perception) ---
+  \node[l2] (camera)  at (4.25,-1.4) {\texttt{camera :}\\\texttt{Camera}};
+  \node[l2] (objdet)  at (4.25,-2.6) {\texttt{objectDetector :}\\\texttt{ObjectDetector}};
+  \node[l2] (lidar)   at (8.0,-1.4) {\texttt{lidar :}\\\texttt{Lidar}};
+  \node[l2] (obstdet) at (8.0,-2.6) {\texttt{obstacleDetector :}\\\texttt{ObstacleDetector}};
 
-  \foreach \n in {camera,lidar,objdet,obstdet}
-    \draw[edg] (perception) -- (\n);
+  \draw[trunkline] (perception.east) -- (2.5,0 |- perception.east);
+  \draw[trunkline] (2.5,0 |- camera.west) -- (2.5,0 |- objdet.west);
+  \draw[edg] (2.5,0 |- camera.west) -- (camera.west);
+  \draw[edg] (2.5,0 |- objdet.west) -- (objdet.west);
+  \draw[trunkline] (2.5,0 |- perception.east) -- (6.25,0 |- perception.east);
+  \draw[trunkline] (6.25,0 |- lidar.west) -- (6.25,0 |- obstdet.west);
+  \draw[edg] (6.25,0 |- lidar.west) -- (lidar.west);
+  \draw[edg] (6.25,0 |- obstdet.west) -- (obstdet.west);
 
-  % --- Ebene 2: Zerlegung von NavigationSystem (2x2-Raster) ---
-  \node[l2] (loc)      at (3.4, -1.6) {\texttt{localization :}\\\texttt{Localization}};
-  \node[l2] (map)      at (5.6, -1.6) {\texttt{mapProvider :}\\\texttt{Mapping}};
-  \node[l2] (planner)  at (3.4, -2.6) {\texttt{pathPlanner :}\\\texttt{PathPlanner}};
-  \node[l2] (follower) at (5.6, -2.6) {\texttt{pathFollower :}\\\texttt{PathFollower}};
+  % --- Ebene 2: Zerlegung von NavigationSystem (2 Spalten rechts von navigation) ---
+  \node[l2] (loc)      at (4.25,-3.9) {\texttt{localization :}\\\texttt{Localization}};
+  \node[l2] (planner)  at (4.25,-5.1) {\texttt{pathPlanner :}\\\texttt{PathPlanner}};
+  \node[l2] (map)      at (8.0,-3.9) {\texttt{mapProvider :}\\\texttt{Mapping}};
+  \node[l2] (follower) at (8.0,-5.1) {\texttt{pathFollower :}\\\texttt{PathFollower}};
 
-  \foreach \n in {loc,map,planner,follower}
-    \draw[edg] (navigation) -- (\n);
+  \draw[trunkline] (navigation.east) -- (2.5,0 |- navigation.east);
+  \draw[trunkline] (2.5,0 |- loc.west) -- (2.5,0 |- planner.west);
+  \draw[edg] (2.5,0 |- loc.west) -- (loc.west);
+  \draw[edg] (2.5,0 |- planner.west) -- (planner.west);
+  \draw[trunkline] (2.5,0 |- navigation.east) -- (6.25,0 |- navigation.east);
+  \draw[trunkline] (6.25,0 |- map.west) -- (6.25,0 |- follower.west);
+  \draw[edg] (6.25,0 |- map.west) -- (map.west);
+  \draw[edg] (6.25,0 |- follower.west) -- (follower.west);
 
   % --- Ebene 2: Zerlegung von BatterySystem (2 oben, 1 zentriert unten) ---
-  \node[l2] (cell)    at (10.4, -1.6) {\texttt{battery :}\\\texttt{Battery}};
-  \node[l2] (monitor) at (12.6, -1.6) {\texttt{batteryMonitor :}\\\texttt{BatteryMonitor}};
-  \node[l2] (charger) at (11.5, -2.6) {\texttt{chargingInterface :}\\\texttt{ChargingInterface}};
+  \node[l2] (cell)    at (4.25,-7.9) {\texttt{battery :}\\\texttt{Battery}};
+  \node[l2] (monitor) at (8.0,-7.9) {\texttt{batteryMonitor :}\\\texttt{BatteryMonitor}};
+  \node[l2] (charger) at (6.125,-9.1) {\texttt{chargingInterface :}\\\texttt{ChargingInterface}};
 
-  \foreach \n in {cell,monitor,charger}
-    \draw[edg] (battery) -- (\n);
+  \draw[trunkline] (battery.east) -- (2.5,0 |- battery.east);
+  \draw[edg] (2.5,0 |- cell.west) -- (cell.west);
+  \draw[trunkline] (2.5,0 |- battery.east) -- (6.25,0 |- battery.east);
+  \draw[edg] (6.25,0 |- monitor.west) -- (monitor.west);
+  \draw[trunkline] (2.5,0 |- battery.east) -- (2.5,0 |- charger.west);
+  \draw[edg] (2.5,0 |- charger.west) -- (charger.west);
 
   % --- Legende ---
-  \node[root, minimum width=7mm, minimum height=5mm, text width=7mm, below=10mm of charger, xshift=-6mm, font=\scriptsize] (leg1) {};
+  \node[root, minimum width=7mm, minimum height=5mm, font=\scriptsize] (leg1) at (-3.0,-14.85) {};
   \node[right=2mm of leg1, font=\scriptsize, align=left] {Wurzel (\texttt{part def Robot})};
-  \node[l1, minimum width=7mm, minimum height=5mm, text width=7mm, below=6mm of leg1, font=\scriptsize] (leg2) {};
+  \node[l1, minimum width=7mm, minimum height=5mm, font=\scriptsize, below=6mm of leg1, xshift=-0mm] (leg2) {};
   \node[right=2mm of leg2, font=\scriptsize, align=left] {Ebene 1: Hauptsubsysteme};
-  \node[l2, minimum width=7mm, minimum height=5mm, text width=7mm, below=6mm of leg2, font=\scriptsize] (leg3) {};
+  \node[l2, minimum width=7mm, minimum height=5mm, font=\scriptsize, below=6mm of leg2, xshift=-0mm] (leg3) {};
   \node[right=2mm of leg3, font=\scriptsize, align=left] {Ebene 2: weitere Zerlegung (Auswahl)};
 
 \end{tikzpicture}

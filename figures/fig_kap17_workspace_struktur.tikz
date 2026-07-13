@@ -1,45 +1,50 @@
 \begin{tikzpicture}[
+    scale=0.85, transform shape,
     every node/.style={font=\small},
-    node distance=6mm and 8mm,
     folder/.style={
         rectangle, rounded corners=1.5pt, draw=black!70, thick,
         minimum width=34mm, minimum height=9mm,
         align=center, fill=blue!8, drop shadow
     },
     subfolder/.style={folder, minimum width=44mm, fill=green!12, draw=green!40!black},
-    filenode/.style={folder, minimum width=52mm, minimum height=8mm, fill=orange!12,
-        draw=orange!60!black, font=\tiny},
+    filenode/.style={folder, minimum width=48mm, minimum height=8mm, fill=orange!12,
+        draw=orange!60!black, font=\small},
     sibling/.style={folder, fill=black!6, draw=black!50},
+    trunkline/.style={thick, black!55},
     flow/.style={-{Stealth[length=2mm]}, thick, black!60},
-    lbl/.style={font=\tiny}
+    lbl/.style={font=\small}
 ]
 
 % --- Wurzel ---
 \node[folder] (ws) at (0, 0) {\texttt{robot\_ws/}};
 
-% --- Ebene 1 ---
-\node[subfolder] (src)     at (7, 2)   {\texttt{src/robot\_basic\_nodes/}};
-\node[sibling]    (build)   at (7, -1) {\texttt{build/}};
-\node[sibling]    (install) at (7, -3) {\texttt{install/}};
-\node[sibling]    (log)     at (7, -5) {\texttt{log/}};
+% --- Ebene 1 (kompakte Spalte, Baumverbindung ueber seitlichen Stamm) ---
+\node[subfolder] (src)     at (5.0, 1.95)  {\texttt{src/robot\_basic\_nodes/}};
+\node[sibling]   (build)   at (5.0, 0.65)  {\texttt{build/}};
+\node[sibling]   (install) at (5.0, -0.65) {\texttt{install/}};
+\node[sibling]   (log)     at (5.0, -1.95) {\texttt{log/}};
 
-\draw[flow] (ws.east) -- (src.west);
-\draw[flow] (ws.east) -- (build.west);
-\draw[flow] (ws.east) -- (install.west);
-\draw[flow] (ws.east) -- (log.west);
+\draw[trunkline] (ws.east) -- (2.2,0 |- ws.east);
+\draw[trunkline] (2.2,0 |- src.west) -- (2.2,0 |- log.west);
+\draw[flow] (2.2,0 |- src.west) -- (src.west);
+\draw[flow] (2.2,0 |- build.west) -- (build.west);
+\draw[flow] (2.2,0 |- install.west) -- (install.west);
+\draw[flow] (2.2,0 |- log.west) -- (log.west);
 
-% --- Ebene 2: Inhalt von src/robot_basic_nodes ---
-\node[filenode] (setup)   at (15, 4)   {\texttt{setup.py}};
-\node[filenode] (pkgxml)  at (15, 2)   {\texttt{package.xml}};
-\node[filenode] (statuspy) at (15, 0)  {\texttt{robot\_basic\_nodes/}\\\texttt{status\_node.py}};
+% --- Ebene 2: Inhalt von src/robot_basic_nodes (eigener Stamm) ---
+\node[filenode] (setup)    at (10.6, 1.3)  {\texttt{setup.py}};
+\node[filenode] (pkgxml)   at (10.6, 0)    {\texttt{package.xml}};
+\node[filenode] (statuspy) at (10.6, -1.3) {\texttt{robot\_basic\_nodes/}\\\texttt{status\_node.py}};
 
-\draw[flow] (src.east) -- (setup.west);
-\draw[flow] (src.east) -- (pkgxml.west);
-\draw[flow] (src.east) -- (statuspy.west);
+\draw[trunkline] (src.east) -- (7.7,0 |- src.east);
+\draw[trunkline] (7.7,0 |- setup.west) -- (7.7,0 |- statuspy.west);
+\draw[flow] (7.7,0 |- setup.west) -- (setup.west);
+\draw[flow] (7.7,0 |- pkgxml.west) -- (pkgxml.west);
+\draw[flow] (7.7,0 |- statuspy.west) -- (statuspy.west);
 
 % --- Anmerkung install/setup.bash ---
-\node[lbl, align=left, right=3mm of install, xshift=8mm, text width=48mm]
+\node[lbl, align=left, below=10mm of log, xshift=18mm, text width=48mm]
     (note) {wird mit \texttt{source} geladen, damit \texttt{ros2 run} das Package findet};
-\draw[flow, dashed] (install.east) -- (note.west);
+\draw[flow, dashed] (install.south) -- ++(0,-0.6) -| (note.north);
 
 \end{tikzpicture}

@@ -1,30 +1,29 @@
 \begin{tikzpicture}[
     every node/.style={font=\small},
-    node distance=8mm and 6mm,
     ros/.style={
         rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
-        minimum width=30mm, minimum height=11mm,
+        minimum width=42mm, minimum height=11mm,
         align=center, fill=orange!15, drop shadow
     },
     ext/.style={
         rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
-        minimum width=32mm, minimum height=11mm,
+        minimum width=42mm, minimum height=13mm,
         align=center, fill=white, drop shadow
     },
     flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
     dflow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black, dashed},
-    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
 ]
 
 \node[ros] (timer) at (0, 0)     {Timer\\(Periode 1.0 s)};
-\node[ros] (pub)    at (4.6, 0)  {\texttt{publish\_status()}};
-\node[ros] (msg)    at (9.2, 0)  {String-Message\\\texttt{'Robot is running'}};
-\node[ros] (topic)  at (13.8, 0) {Topic\\\texttt{/robot/status}};
-\node[ext] (sub)    at (13.8, -3.5) {Subscriber-Node\\(z.\,B. \texttt{user\_interface\_}\\\texttt{node})};
+\node[ros] (pub)   at (0, -2.0)  {\texttt{publish\_status()}};
+\node[ros] (msg)   at (0, -4.0)  {String-Message\\\texttt{'Robot is running'}};
+\node[ros] (topic) at (0, -6.0)  {Topic\\\texttt{/robot/status}};
+\node[ext] (sub)   at (0, -8.3)  {Subscriber-Node\\(z.\,B. \texttt{user\_interface\_}\\\texttt{node})};
 
-\draw[flow] (timer.east) -- node[lbl, above]{löst aus} (pub.west);
-\draw[flow] (pub.east)   -- node[lbl, above]{erzeugt}  (msg.west);
-\draw[flow] (msg.east)   -- node[lbl, above]{\texttt{publisher.publish()}} (topic.west);
+\draw[flow] (timer.south) -- node[lbl, right]{löst aus} (pub.north);
+\draw[flow] (pub.south)   -- node[lbl, right]{erzeugt}  (msg.north);
+\draw[flow] (msg.south)   -- node[lbl, right]{\texttt{publisher.publish()}} (topic.north);
 \draw[dflow] (topic.south) -- (sub.north);
 
 \end{tikzpicture}

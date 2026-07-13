@@ -21,7 +21,7 @@
         align=center, fill=orange!15, drop shadow
     },
     flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
-    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
 ]
 
 % --- Knoten ---

@@ -1,4 +1,5 @@
 \begin{tikzpicture}[
+    scale=0.71, transform shape,
     every node/.style={font=\small},
     proc/.style={
         rectangle, rounded corners=2pt, draw=black!60, thick,
@@ -20,7 +21,7 @@
         align=center, fill=black!6, drop shadow
     },
     flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
-    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
 ]
 
 % --- Reihe 1 (links nach rechts) ---

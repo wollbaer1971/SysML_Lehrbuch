@@ -7,7 +7,7 @@
         align=center, fill=orange!15, drop shadow
     },
     flow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black},
-    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
 ]
 
 % --- Knoten ---
@@ -22,7 +22,7 @@
 \draw[flow] (pub.east) -- ++(1.4,-1.7) -- (sub2.west);
 
 % --- Anmerkung ---
-\node[font=\tiny, align=center, below=8mm of pub, xshift=15mm]
+\node[font=\small, align=center, below=8mm of pub, xshift=15mm]
     {1 Publisher $\rightarrow$ n Subscriber};
 
 \end{tikzpicture}

@@ -1,4 +1,5 @@
 \begin{tikzpicture}[
+    scale=0.85, transform shape,
     every node/.style={font=\small},
     req/.style={
         rectangle, rounded corners=1.5pt, draw=black!70, thick,
@@ -21,7 +22,7 @@
         align=center, fill=black!6, drop shadow
     },
     flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
-    lbl/.style={font=\tiny, fill=white, inner sep=1pt}
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
 ]
 
 % --- Reihe 1: REQ -> Systemelemente ---
@@ -46,13 +47,13 @@
 \draw[flow] (topic) -- node[lbl, midway]{\texttt{verify}} (tc002);
 
 % --- Legende ---
-\node[req,  minimum width=6mm, minimum height=4mm, below=14mm of node, xshift=-6mm, font=\tiny] (leg1) {};
-\node[right=1mm of leg1, font=\tiny, align=left] (lab1){Anforderung};
-\node[part, minimum width=6mm, minimum height=4mm, right=6mm of lab1, font=\tiny] (leg2) {};
-\node[right=1mm of leg2, font=\tiny, align=left] (lab2){SysML-Systemelement};
-\node[code, minimum width=6mm, minimum height=4mm, right=6mm of lab2, font=\tiny] (leg3) {};
-\node[right=1mm of leg3, font=\tiny, align=left] (lab3){ROS2-Node/Topic};
-\node[test, minimum width=6mm, minimum height=4mm, right=6mm of lab3, font=\tiny] (leg4) {};
-\node[right=1mm of leg4, font=\tiny, align=left] (lab4){Testfall};
+\node[req,  minimum width=6mm, minimum height=4mm, below=14mm of node, xshift=-6mm, font=\small] (leg1) {};
+\node[right=1mm of leg1, font=\small, align=left] (lab1){Anforderung};
+\node[part, minimum width=6mm, minimum height=4mm, right=6mm of lab1, font=\small] (leg2) {};
+\node[right=1mm of leg2, font=\small, align=left] (lab2){SysML-Systemelement};
+\node[code, minimum width=6mm, minimum height=4mm, right=6mm of lab2, font=\small] (leg3) {};
+\node[right=1mm of leg3, font=\small, align=left] (lab3){ROS2-Node/Topic};
+\node[test, minimum width=6mm, minimum height=4mm, right=6mm of lab3, font=\small] (leg4) {};
+\node[right=1mm of leg4, font=\small, align=left] (lab4){Testfall};
 
 \end{tikzpicture}

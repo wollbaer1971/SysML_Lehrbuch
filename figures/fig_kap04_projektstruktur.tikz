@@ -15,7 +15,8 @@
         minimum width=40mm, minimum height=10mm,
         align=center, fill=orange!12, drop shadow, font=\tiny
     },
-    edg/.style={-{Stealth[length=2mm]}, thick, black!55}
+    edg/.style={-{Stealth[length=2mm]}, thick, black!55},
+    treeline/.style={thick, black!55}
 ]
 
 % --- Wurzel ---
@@ -39,15 +40,22 @@
 \node[file] (f06) at (3,-0.2) {\texttt{06\_tests.sysml}\\{Testfälle}};
 \node[file] (f07) at (3,-1.5) {\texttt{07\_ros2\_mapping.sysml}\\{ROS2-Zuordnung}};
 
+% Baumverbindung ueber einen seitlichen Stamm, damit die Linien zu den
+% weiter unten liegenden Dateien nicht durch die dazwischenliegenden
+% Dateiboxen verlaufen.
+\draw[treeline] (model.south) -- (0.3,0 |- model.south);
+\draw[treeline] (0.3,0 |- model.south) -- (0.3,0 |- f07.west);
 \foreach \n in {f00,f01,f02,f03,f04,f05,f06,f07}
-  \draw[edg] (model) -- (\n);
+  \draw[edg] (0.3,0 |- \n.west) -- (\n.west);
 
 % --- Dateien in code/ ---
 \node[file] (status) at (8.0,7.6) {\texttt{status\_node.py}\\{Status veröffentlichen}};
 \node[file] (batt)   at (8.0,6.3) {\texttt{battery\_monitor\_node.py}\\{Akkuüberwachung}};
 
+\draw[treeline] (code.south) -- (5.3,0 |- code.south);
+\draw[treeline] (5.3,0 |- code.south) -- (5.3,0 |- batt.west);
 \foreach \n in {status,batt}
-  \draw[edg] (code) -- (\n);
+  \draw[edg] (5.3,0 |- \n.west) -- (\n.west);
 
 % --- Datei in docs/ ---
 \node[file] (dec) at (12.6,7.6) {\texttt{decisions.md}\\{Architekturentscheidungen}};
