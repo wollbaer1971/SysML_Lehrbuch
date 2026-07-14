@@ -55,7 +55,6 @@
 \node[decide] (dec2) at (0,-21.0) {};
 \filldraw[fill=white, draw=black!70, thick] (dec2.north) -- (dec2.east) -- (dec2.south) -- (dec2.west) -- cycle;
 \node[align=center] at (dec2) {Hindernis\\erkannt?};
-\node[act] (n7) at (8,-21.0) {Neu planen};
 \node[merge] (mrg) at (0,-23.4) {};
 \filldraw[fill=white, draw=black!70, thick] (mrg.north) -- (mrg.east) -- (mrg.south) -- (mrg.west) -- cycle;
 \node[act] (n8) at (0,-25.2) {Ziel erreicht\\melden};
@@ -85,8 +84,7 @@
 \draw[trans] (join1.south) -- (dec2.north);
 
 % --- Entscheidung Hinderniserkennung ---
-\draw[trans] (dec2.east) -- node[lbl, above]{[Hindernis erkannt]} (n7.west);
-\draw[trans] (n7.north) -- ++(0,1.2) -| node[lbl, pos=0.85, above]{Neu\\planen} (n6.east);
+\draw[trans] (dec2.east) node[lbl, above right]{[Hindernis erkannt]}-- (8.82,-21) -- (8.82,-13.24) -- (n6.east);
 \draw[trans] (dec2.south) -- node[lbl, right]{[Fahrweg frei]} (mrg.north);
 \draw[trans] (mrg.south) -- (n8.north);
 \draw[trans] (n8.south) -- (endo.north);

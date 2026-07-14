@@ -3,13 +3,20 @@
 % Passend zu Kapitel 11, Abschnitt "Praxisbeispiel: Rueckkehr zur
 % Ladestation"
 %
-% Das Diagramm ist zweispaltig angelegt (Ueberwachung/Entscheidung links,
-% Anfahrt/Andocken rechts) und daher recht breit. Im Buch sollte es beim
-% Einbinden mit \resizebox auf \textwidth skaliert werden:
+% Am 2026-07-14 von einer zweispaltigen (breiten) auf eine durchgehend
+% senkrechte Hauptlinie umgestellt: Die Kette Start -> Akkuueberwachung
+% -> ... -> Ladevorgang starten/Ende verlaeuft jetzt in einer einzigen
+% Spalte von oben nach unten; Alternativen (blockierte Ladestation,
+% fehlgeschlagenes Andocken) haengen als seitliche Zweige an der
+% Hauptlinie. Das Diagramm ist dadurch hoch statt breit. Im Buch daher
+% mit \adjustbox auf eine maximale Gesamthoehe skaliert (siehe
+% chapters/11_activity_diagrams.tex) statt mit \resizebox, weil
+% \resizebox{\textwidth}{!} bei so einem hohen Diagramm ueber die Seite
+% hinauslaufen wuerde:
 %
 %   \begin{figure}[H]
 %     \centering
-%     \resizebox{\textwidth}{!}{\input{figures/fig_kap11_aktivitaet_rueckkehr_ladestation}}
+%     \adjustbox{max width=\textwidth,max totalheight=16.3cm}{\input{figures/fig_kap11_aktivitaet_rueckkehr_ladestation}}
 %     \caption{Aktivitaetsdiagramm fuer die Rueckkehr zur Ladestation: von
 %       der Akkuueberwachung ueber die Bewertung des laufenden Auftrags
 %       bis zum Andocken und Start des Ladevorgangs, inklusive der
@@ -18,8 +25,8 @@
 %     \label{fig:kap11-aktivitaet-rueckkehr-ladestation}
 %   \end{figure}
 %
-% Benoetigte Pakete (im Buch bereits in main.tex geladen): tikz, graphicx
-%   (fuer \resizebox; graphicx ist in main.tex bereits geladen)
+% Benoetigte Pakete (im Buch bereits in main.tex geladen): tikz, graphicx,
+%   adjustbox
 % Benoetigte TikZ-Bibliotheken: positioning, arrows.meta, shadows, calc
 % =====================================================================
 

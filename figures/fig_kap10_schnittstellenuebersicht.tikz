@@ -45,7 +45,8 @@
 % --- Datenfluesse (orange) ---
 \draw[flow] (camera.east)  -- node[lbl, above]{\texttt{sensor\_msgs/}\\\texttt{Image} (30\,Hz)} (detect.west);
 \draw[flow] (lidar.east)   -- node[lbl, above]{\texttt{sensor\_msgs/}\\\texttt{LaserScan} (10\,Hz)} (slam.west);
-\draw[flow] (battery.east) -| node[lbl, pos=0.97, right]{\texttt{BatteryState}} ([xshift=-3mm]nav.south);
+\draw[flow] (battery.east) -- (7.5,0) -- (7.5,4.5) -- node[lbl, at start, left]{\texttt{BatteryState}} (nav.west);
+
 \draw[flow] (detect.east)  -| node[lbl, pos=0.25, right]{Detection-\\Liste} ([xshift=3mm]nav.north);
 
 % --- Steuer- und Statusnachrichten (blau/grau) ---

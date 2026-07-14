@@ -26,21 +26,25 @@
 ]
 
 % =====================================================================
-% Spalte 1: Akkuueberwachung bis Entscheidung ueber laufenden Auftrag
+% Hauptkette: durchgehend von oben (Start) nach unten (Ende), mit
+% seitlichen Zweigen fuer Alternativen, die auf die Hauptlinie
+% zurueckfuehren oder in einem eigenen Endknoten muenden.
 % =====================================================================
+
+% --- Akkuueberwachung bis Entscheidung ueber laufenden Auftrag ---
 \node[startnode] (start) at (0,0)    {};
-\node[act] (L1) at (0,-1.8)   {Akkustand\\überwachen};
-\node[decide] (decA) at (0,-4.1) {};
+\node[act] (L1) at (0,-1.4)   {Akkustand\\überwachen};
+\node[decide] (decA) at (0,-3.2) {};
 \filldraw[fill=white, draw=black!70, thick] (decA.north) -- (decA.east) -- (decA.south) -- (decA.west) -- cycle;
 \node[align=center] at (decA) {Akku\\niedrig?};
-\node[act] (L2) at (0,-6.4)   {Nutzer\\informieren};
-\node[act] (L3) at (0,-8.2)   {Aktuellen Auftrag\\bewerten};
-\node[decide] (decB) at (0,-10.5) {};
+\node[act] (L2) at (0,-5.0)   {Nutzer\\informieren};
+\node[act] (L3) at (0,-6.4)   {Aktuellen Auftrag\\bewerten};
+\node[decide] (decB) at (0,-8.2) {};
 \filldraw[fill=white, draw=black!70, thick] (decB.north) -- (decB.east) -- (decB.south) -- (decB.west) -- cycle;
 \node[align=center] at (decB) {kritischer\\Auftrag läuft?};
-\node[act] (L4a) at (-3.5,-10.5) {Auftrag\\abschließen lassen};
-\node[act] (L4b) at (3.5,-10.5)  {Auftrag\\abbrechen};
-\node[merge] (mrg1) at (0,-12.8) {};
+\node[act] (L4a) at (-3.5,-8.2) {Auftrag\\abschließen lassen};
+\node[act] (L4b) at (3.5,-8.2)  {Auftrag\\abbrechen};
+\node[merge] (mrg1) at (0,-10.0) {};
 \filldraw[fill=white, draw=black!70, thick] (mrg1.north) -- (mrg1.east) -- (mrg1.south) -- (mrg1.west) -- cycle;
 
 \draw[trans] (start) -- (L1);
@@ -54,30 +58,26 @@
 \draw[trans] (L4a.south) -| (mrg1.north);
 \draw[trans] (L4b.south) -| (mrg1.north);
 
-% =====================================================================
-% Uebergang Spalte 1 -> Spalte 2
-% =====================================================================
-\node[act] (L5) at (8,0) {Rückkehrziel\\setzen};
-\draw[trans] (mrg1.east) -- (5.5,-12.8) -- (5.5,0) -- node[lbl, midway, above]{weiter} (L5.west);
+% --- Hauptlinie geht direkt senkrecht weiter (kein Spaltenwechsel mehr) ---
+\node[act] (L5) at (0,-11.8) {Rückkehrziel\\setzen};
+\draw[trans] (mrg1) -- (L5);
 
-% =====================================================================
-% Spalte 2: Anfahrt bis Andocken, inkl. Alternativen bei Blockade
-% =====================================================================
-\node[act] (L6) at (8,-1.8) {Pfad zur Ladestation\\planen};
-\node[act] (L7) at (8,-3.6) {Zur Ladestation\\fahren};
-\node[decide] (decC) at (8,-5.9) {};
+% --- Anfahrt bis Andocken, inkl. Alternativen bei Blockade ---
+\node[act] (L6) at (0,-13.2) {Pfad zur Ladestation\\planen};
+\node[act] (L7) at (0,-14.6) {Zur Ladestation\\fahren};
+\node[decide] (decC) at (0,-16.4) {};
 \filldraw[fill=white, draw=black!70, thick] (decC.north) -- (decC.east) -- (decC.south) -- (decC.west) -- cycle;
 \node[align=center] at (decC) {Ladestation\\blockiert?};
 
-\node[act] (R4) at (8,-10.5)    {Andocken};
-\node[decide] (decD) at (8,-12.8) {};
+\node[act] (R4) at (0,-19.6)    {Andocken};
+\node[decide] (decD) at (0,-21.4) {};
 \filldraw[fill=white, draw=black!70, thick] (decD.north) -- (decD.east) -- (decD.south) -- (decD.west) -- cycle;
 \node[align=center] at (decD) {Andocken\\erfolgreich?};
-\node[act] (R5) at (11.4,-12.8) {Fehler\\melden};
-\node[act] (R6) at (8,-15.1) {Ladevorgang\\starten};
-\node[endouter] (endErr) at (11.4,-15.1) {};
+\node[act] (R5) at (3.4,-21.4) {Fehler\\melden};
+\node[act] (R6) at (0,-23.2) {Ladevorgang\\starten};
+\node[endouter] (endErr) at (3.4,-23.2) {};
 \node[endinner] at (endErr.center) {};
-\node[endouter] (endOk) at (8,-16.9) {};
+\node[endouter] (endOk) at (0,-24.6) {};
 \node[endinner] at (endOk.center) {};
 
 \draw[trans] (L5) -- (L6);
@@ -93,10 +93,10 @@
 \draw[trans] (R6.south) -- (endOk.north);
 
 % --- Alternativen bei "blockiert": kompakte Gruppe rechts neben decC ---
-\node[actS] (R1) at (10.6,-4.2) {Warten};
-\node[actS] (R2) at (13.0,-5.9) {Alternativen\\Platz anfahren};
-\node[actS] (R3) at (10.6,-7.6) {Fehler\\melden};
-\node[merge] (mrgC) at (13.0,-9.4) {};
+\node[actS] (R1) at (2.6,-15.22) {Warten};
+\node[actS] (R2) at (5.0,-16.4) {Alternativen\\Platz anfahren};
+\node[actS] (R3) at (2.6,-17.58) {Fehler\\melden};
+\node[merge] (mrgC) at (5.0,-18.84) {};
 \filldraw[fill=white, draw=black!70, thick] (mrgC.north) -- (mrgC.east) -- (mrgC.south) -- (mrgC.west) -- cycle;
 
 \draw[trans] (decC.east) -- node[lbl, pos=0.3, above]{[blockiert]} (R1.west);
@@ -105,13 +105,13 @@
 \draw[trans] (R1.east) -| (mrgC.north);
 \draw[trans] (R2.south) -- (mrgC.north);
 \draw[trans] (R3.east) -| (mrgC.south);
-\draw[trans] (mrgC.south) -- (13.0,-10.2) -- (5.6,-10.2) -- (5.6,-6.7) -- (decC.south)
+\draw[trans] (mrgC.south) -- (5.0,-19.39) -- (-2.4,-19.39) -- (-2.4,-16.96) -- (decC.south)
     node[lbl, pos=0.85, above]{erneut prüfen};
 
 % =====================================================================
 % Legende
 % =====================================================================
-\node[startnode] (leg1) at (0,-18.7) {};
+\node[startnode] (leg1) at (-3.5,-26.4) {};
 \node[right=1mm of leg1, font=\small, align=left] (lab1){Start};
 \node[endouter, right=6mm of lab1] (leg2) {};
 \node[endinner] at (leg2.center) {};
