@@ -161,11 +161,14 @@ Ein Modell sollte zeigen, wie Anforderungen überprüft werden. Eine Sicherheits
 Nicht jede wichtige Information ist eine Anforderung. Viele Projektinformationen sind Annahmen oder Entscheidungen. Beispiel: \enquote{Der Roboter wird nur in Innenräumen mit ebenem Boden eingesetzt.} Oder: \enquote{Kamerabilder werden lokal verarbeitet und nicht dauerhaft gespeichert.} Solche Informationen sollten sichtbar bleiben, weil spätere Änderungen große Auswirkungen haben können.
 
 \section{Von Dokumenten zu Modellbeziehungen}
-Der wichtigste Unterschied zwischen klassischer Dokumentation und MBSE liegt in den Beziehungen. Ein Dokument kann eine Anforderung beschreiben. Ein Modell kann zusätzlich zeigen, womit diese Anforderung zusammenhängt.
+Der wichtigste Unterschied zwischen klassischer Dokumentation und MBSE liegt in den Beziehungen. Ein Dokument kann eine Anforderung beschreiben. Ein Modell kann zusätzlich zeigen, womit diese Anforderung zusammenhängt. Abbildung~\ref{fig:kap02-dokumente-modellbeziehungen} zeigt dies am Beispiel von Stakeholderbedarf, Anforderung, Funktion, Systemelement und Testfall.
 
-\begin{center}
-\input{figures/fig_kap02_dokumente_modellbeziehungen}
-\end{center}
+\begin{figure}[H]
+  \centering
+  \input{figures/fig_kap02_dokumente_modellbeziehungen}
+  \caption{Vom Dokument zur Modellbeziehung: Ein Stakeholderbedarf führt zu einer Anforderung, die durch eine Funktion erfüllt und durch ein Systemelement realisiert wird; ein Testfall verifiziert die Anforderung.}
+  \label{fig:kap02-dokumente-modellbeziehungen}
+\end{figure}
 
 Dieses einfache Bild zeigt bereits den Kern von MBSE. Es geht nicht darum, viele Diagramme zu produzieren. Es geht darum, Systeminformationen so zu verknüpfen, dass Fragen beantwortbar werden.
 

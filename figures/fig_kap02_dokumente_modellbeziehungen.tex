@@ -5,17 +5,20 @@
 %
 % Einbindung im Buch, in chapters/02_mbse.tex:
 %
-%   \begin{center}
+%   \begin{figure}[H]
+%     \centering
 %     \input{figures/fig_kap02_dokumente_modellbeziehungen}
-%   \end{center}
+%     \caption{...}
+%     \label{fig:kap02-dokumente-modellbeziehungen}
+%   \end{figure}
 %
 % Vormals als direktes \begin{tikzpicture} in chapters/02_mbse.tex
 % eingebettet; am 2026-07-12 in eine eigene Datei ausgelagert, damit
 % ALLE Abbildungen im Buch demselben \input{figures/...}-Muster folgen
 % und automatisiert fuers eBook nach PNG gerendert werden koennen.
-%
-% Benoetigte Pakete (im Buch bereits in main.tex geladen): tikz, graphicx
-% Benoetigte TikZ-Bibliotheken: positioning, arrows.meta, shadows, calc
+% Am 2026-07-14 von \begin{center}...\end{center} auf ein reguläres
+% figure-Environment mit Caption und Label umgestellt, damit die
+% Abbildung im Abbildungsverzeichnis erscheint und referenzierbar ist.
 % =====================================================================
 
 \input{figures/fig_kap02_dokumente_modellbeziehungen.tikz}
