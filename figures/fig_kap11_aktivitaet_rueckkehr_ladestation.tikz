@@ -43,7 +43,7 @@
 \filldraw[fill=white, draw=black!70, thick] (decB.north) -- (decB.east) -- (decB.south) -- (decB.west) -- cycle;
 \node[align=center] at (decB) {kritischer\\Auftrag läuft?};
 \node[act] (L4a) at (-3.5,-8.2) {Auftrag\\abschließen lassen};
-\node[act] (L4b) at (3.5,-8.2)  {Auftrag\\abbrechen};
+\node[act] (L4b) at (3.8,-8.2)  {Auftrag\\abbrechen};
 \node[merge] (mrg1) at (0,-10.0) {};
 \filldraw[fill=white, draw=black!70, thick] (mrg1.north) -- (mrg1.east) -- (mrg1.south) -- (mrg1.west) -- cycle;
 
@@ -53,31 +53,31 @@
 \draw[trans] (decA.south) -- node[lbl, right]{Ja} (L2);
 \draw[trans] (L2) -- (L3);
 \draw[trans] (L3) -- (decB);
-\draw[trans] (decB.west) -- node[lbl, font=\footnotesize, above]{[kritisch]} (L4a.east);
-\draw[trans] (decB.east) -- node[lbl, font=\footnotesize, above]{[nicht kritisch]} (L4b.west);
-\draw[trans] (L4a.south) -| (mrg1.north);
-\draw[trans] (L4b.south) -| (mrg1.north);
+\draw[trans] (decB.west) -- node[lbl, font=\footnotesize, above=14pt, near start]{[kritisch]} (L4a.east);
+\draw[trans] (decB.east) -- node[lbl, font=\footnotesize, above=13pt, pos=0.35]{[nicht kritisch]} (L4b.west);
+\draw[trans] (L4a.south) -- (-3.5,-9.7) -- (mrg1.north);
+\draw[trans] (L4b.south) -- (3.8,-9.7) -- (mrg1.north);
 
 % --- Hauptlinie geht direkt senkrecht weiter (kein Spaltenwechsel mehr) ---
-\node[act] (L5) at (0,-11.8) {Rückkehrziel\\setzen};
+\node[act] (L5) at (0,-11.22) {Rückkehrziel\\setzen};
 \draw[trans] (mrg1) -- (L5);
 
 % --- Anfahrt bis Andocken, inkl. Alternativen bei Blockade ---
-\node[act] (L6) at (0,-13.2) {Pfad zur Ladestation\\planen};
-\node[act] (L7) at (0,-14.6) {Zur Ladestation\\fahren};
+\node[act] (L6) at (0,-12.55) {Pfad zur Ladestation\\planen};
+\node[act] (L7) at (0,-14.02) {Zur Ladestation\\fahren};
 \node[decide] (decC) at (0,-16.4) {};
 \filldraw[fill=white, draw=black!70, thick] (decC.north) -- (decC.east) -- (decC.south) -- (decC.west) -- cycle;
 \node[align=center] at (decC) {Ladestation\\blockiert?};
 
-\node[act] (R4) at (0,-19.6)    {Andocken};
-\node[decide] (decD) at (0,-21.4) {};
+\node[act] (R4) at (0.01,-21.35)    {Andocken};
+\node[decide] (decD) at (0,-23) {};
 \filldraw[fill=white, draw=black!70, thick] (decD.north) -- (decD.east) -- (decD.south) -- (decD.west) -- cycle;
 \node[align=center] at (decD) {Andocken\\erfolgreich?};
-\node[act] (R5) at (3.4,-21.4) {Fehler\\melden};
-\node[act] (R6) at (0,-23.2) {Ladevorgang\\starten};
-\node[endouter] (endErr) at (3.4,-23.2) {};
+\node[act] (R5) at (3.8,-23) {Fehler\\melden};
+\node[act] (R6) at (0.01,-24.66) {Ladevorgang\\starten};
+\node[endouter] (endErr) at (3.9,-24.3) {};
 \node[endinner] at (endErr.center) {};
-\node[endouter] (endOk) at (0,-24.6) {};
+\node[endouter] (endOk) at (0.01,-25.84) {};
 \node[endinner] at (endOk.center) {};
 
 \draw[trans] (L5) -- (L6);
@@ -85,7 +85,7 @@
 \draw[trans] (L7) -- (decC);
 
 % --- "frei": Hauptfluss geht links an der Alternativen-Gruppe vorbei weiter ---
-\draw[trans] (decC.west) -- ++(-1.9,0) node[lbl, pos=0.05, above]{[frei]} |- (R4.west);
+\draw[trans] (decC.west) -- ++(-1.9,0) node[lbl,above left of]{[frei]} |- (R4.west);
 \draw[trans] (R4) -- (decD);
 \draw[trans] (decD.east) -- node[lbl, above]{Nein} (R5.west);
 \draw[trans] (decD.south) -- node[lbl, right]{Ja} (R6);
@@ -93,20 +93,20 @@
 \draw[trans] (R6.south) -- (endOk.north);
 
 % --- Alternativen bei "blockiert": kompakte Gruppe rechts neben decC ---
-\node[actS] (R1) at (2.6,-15.22) {Warten};
-\node[actS] (R2) at (5.0,-16.4) {Alternativen\\Platz anfahren};
-\node[actS] (R3) at (2.6,-17.58) {Fehler\\melden};
-\node[merge] (mrgC) at (5.0,-18.84) {};
+\node[actS] (R1) at (3.4,-16.15) {Warten};
+\node[actS] (R2) at (3.3,-19.2) {Alternativen\\Platz anfahren};
+\node[actS] (R3) at (3.3,-17.6) {Fehler\\melden};
+\node[merge] (mrgC) at (5.0,-20) {};
 \filldraw[fill=white, draw=black!70, thick] (mrgC.north) -- (mrgC.east) -- (mrgC.south) -- (mrgC.west) -- cycle;
 
 \draw[trans] (decC.east) -- node[lbl, pos=0.3, above]{[blockiert]} (R1.west);
 \draw[trans] (decC.east) -- (R2.west);
 \draw[trans] (decC.east) -- (R3.west);
 \draw[trans] (R1.east) -| (mrgC.north);
-\draw[trans] (R2.south) -- (mrgC.north);
-\draw[trans] (R3.east) -| (mrgC.south);
-\draw[trans] (mrgC.south) -- (5.0,-19.39) -- (-2.4,-19.39) -- (-2.4,-16.96) -- (decC.south)
-    node[lbl, pos=0.85, above]{erneut prüfen};
+\draw[trans] (R2.east) -| (mrgC.north);
+\draw[trans] (R3.east) -| (mrgC.north);
+\draw[trans] (mrgC.south) -- (5,-20.6) -- (5.6,-20.6) -- (5.6,-15.59) -- (0,-15.59)
+    node[lbl, above=4pt, pos=0.79]{erneut prüfen};
 
 % =====================================================================
 % Legende
