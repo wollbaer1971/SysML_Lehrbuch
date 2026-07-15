@@ -104,23 +104,21 @@
 \node[endouter] (endCrit) at (3.0,-20.0) {};
 \node[endinner] at (endCrit.center) {};
 
-\node[decide] (decF) at (5.8,-18.2) {};
+\node[decide] (decF) at (6.8,-16.4) {};
 \filldraw[fill=white, draw=black!70, thick] (decF.north) -- (decF.east) -- (decF.south) -- (decF.west) -- cycle;
 \node[align=center] at (decF) {Alternative\\bekannt?};
-\node[actS] (R2) at (4.6,-20.0) {Alternativen\\Platz anfahren};
-\node[actS] (R1) at (7.0,-20.0) {Warten};
+\node[actS] (R2) at (5.42,-18.41) {Alternativen\\Platz anfahren};
+\node[actS] (R1) at (8.29,-18.41) {Warten};
 \node[merge] (mrgC) at (5.8,-21.8) {};
-\filldraw[fill=white, draw=black!70, thick] (mrgC.north) -- (mrgC.east) -- (mrgC.south) -- (mrgC.west) -- cycle;
 
 \draw[trans] (decC.east) -- node[lbl, pos=0.3, above]{[blockiert]} (decE.west);
 \draw[trans] (decE.south) -- node[lbl, font=\footnotesize, right]{[kritisch]} (R3);
 \draw[trans] (R3) -- (endCrit);
 \draw[trans] (decE.east) -- node[lbl, font=\footnotesize, above, pos=0.35]{[nicht kritisch]} (decF.north);
-\draw[trans] (decF.west) -- node[lbl, font=\footnotesize, above, pos=0.4]{[Alternative bekannt]} (R2.east);
-\draw[trans] (decF.east) -- node[lbl, font=\footnotesize, above, pos=0.4]{[keine Alternative]} (R1.west);
-\draw[trans] (R2.south) -| (mrgC.north);
-\draw[trans] (R1.south) -| (mrgC.north);
-\draw[trans] (mrgC.west) -- (5.5,-20.6) -- (-1.8,-20.6) -- (-1.8,-17.2) -- (decC.south)
+\draw[trans] (decF.west) -- node[lbl, font=\footnotesize, above, pos=0.4]{[Alternative bekannt]} (R2.north);
+\draw[trans] (decF.east) -- node[lbl, font=\footnotesize, above, pos=0.4]{[keine Alternative]} (R1.north);
+\draw[trans] (R2.south) -- (5.5,-20.9) -- (10,-20.9) -- (10,-10) -- (mrg1.east);
+\draw[trans] (R1.south) -- (8.29,-19.5) -- (9.73,-19.5) -- (9.75,-15.37) -- (0,-15.59)
     node[lbl, above=4pt, pos=0.82]{erneut prüfen};
 
 % =====================================================================
