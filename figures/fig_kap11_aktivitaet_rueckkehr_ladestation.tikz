@@ -1,141 +1,216 @@
 \begin{tikzpicture}[
     every node/.style={font=\small},
     act/.style={
-        rectangle, rounded corners=2pt, draw=black!70, thick,
-        minimum width=30mm, minimum height=9mm,
-        align=center, fill=blue!8, drop shadow
+      rectangle, rounded corners=2pt, draw=black!70, thick,
+      minimum width=30mm, minimum height=9mm,
+      align=center, fill=blue!8, drop shadow
     },
     actS/.style={
-        rectangle, rounded corners=2pt, draw=black!70, thick,
-        minimum width=22mm, minimum height=9mm, text width=18mm,
-        align=center, fill=blue!8, drop shadow, font=\footnotesize
+      rectangle, rounded corners=2pt, draw=black!70, thick,
+      minimum width=24mm, minimum height=9mm, text width=20mm,
+      align=center, fill=blue!8, drop shadow, font=\footnotesize
     },
     decide/.style={
-        rectangle, draw=none, fill=none,
-        minimum width=28mm, minimum height=16mm,
-        align=center, inner sep=1pt
+      rectangle, draw=none, fill=none,
+      minimum width=28mm, minimum height=16mm,
+      align=center, inner sep=1pt
     },
     merge/.style={rectangle, draw=none, fill=none,
-        minimum width=6mm, minimum height=6mm, inner sep=0pt},
+    minimum width=6mm, minimum height=6mm, inner sep=0pt},
     startnode/.style={circle, fill=black, minimum size=3mm, inner sep=0pt},
     endouter/.style={circle, draw=black!70, thick, fill=white,
-        minimum size=6mm, inner sep=0pt},
+    minimum size=6mm, inner sep=0pt},
     endinner/.style={circle, fill=black, minimum size=3mm, inner sep=0pt},
     trans/.style={-{Stealth[length=2.2mm]}, thick, black!60},
     lbl/.style={font=\small, fill=white, inner sep=1pt, align=center}
-]
+  ]
 
-% =====================================================================
-% Hauptkette: durchgehend von oben (Start) nach unten (Ende), mit
-% seitlichen Zweigen fuer Alternativen, die auf die Hauptlinie
-% zurueckfuehren oder in einem eigenen Endknoten muenden.
-% =====================================================================
+  % =====================================================================
+  % Ueberarbeitet am 2026-07-17: Die Alternative "Ladestation blockiert"
+  % (decE/decF/R1/R2/R3/mrgC) haengt jetzt als vollstaendig
+  % abgeschlossener Block rechts neben der Hauptlinie, statt wie zuvor
+  % mit einer langen, kreuzenden Rueckfuehrung unten quer durchs
+  % Diagramm zu laufen. Die Rueckfuehrung "erneut pruefen" verlaeuft in
+  % einem eigenen Kanal ganz aussen rechts und kreuzt dadurch keinen
+  % anderen Pfeil. Ziel: der Hauptablauf (Mittelspalte, x=0) bleibt von
+  % oben bis unten ohne Unterbrechung sichtbar, jede Alternative ist ein
+  % klar umrissener Seitenzweig mit genau einem Rueckkehr- oder
+  % Endpunkt.
+  % =====================================================================
 
-% --- Akkuueberwachung bis Entscheidung ueber laufenden Auftrag ---
-\node[startnode] (start) at (0,0)    {};
-\node[act] (L1) at (0,-1.4)   {Akkustand\\überwachen};
-\node[decide] (decA) at (0,-3.2) {};
-\filldraw[fill=white, draw=black!70, thick] (decA.north) -- (decA.east) -- (decA.south) -- (decA.west) -- cycle;
-\node[align=center] at (decA) {Akku\\niedrig?};
-\node[act] (L2) at (0,-5.0)   {Nutzer\\informieren};
-\node[act] (L3) at (0,-6.4)   {Aktuellen Auftrag\\bewerten};
-\node[decide] (decB) at (0,-8.2) {};
-\filldraw[fill=white, draw=black!70, thick] (decB.north) -- (decB.east) -- (decB.south) -- (decB.west) -- cycle;
-\node[align=center] at (decB) {kritischer\\Auftrag läuft?};
-\node[act] (L4a) at (-3.5,-8.2) {Auftrag\\abschließen lassen};
-\node[act] (L4b) at (3.8,-8.2)  {Auftrag\\abbrechen};
-\node[merge] (mrg1) at (0,-10.0) {};
-\filldraw[fill=white, draw=black!70, thick] (mrg1.north) -- (mrg1.east) -- (mrg1.south) -- (mrg1.west) -- cycle;
+  % --- Akkuueberwachung bis Entscheidung ueber laufenden Auftrag ---
+  \node[startnode] (start) at (0,0)    {};
+  \node[act] (L1) at (0,-1.4)   {Akkustand\\überwachen};
+  \node[decide] (decA) at (0,-3.2) {};
+  \filldraw[
+    fill=white,
+    draw=black!70,
+    thick
+  ] (decA.north) -- (decA.east) -- (decA.south) -- (decA.west) -- cycle;
+  \node[align=center] at (decA) {Akku\\niedrig?};
+  \node[act] (L2) at (0,-5.0)   {Nutzer\\informieren};
+  \node[act] (L3) at (0,-6.4)   {Aktuellen Auftrag\\bewerten};
+  \node[decide] (decB) at (0,-8.2) {};
+  \filldraw[
+    fill=white,
+    draw=black!70,
+    thick
+  ] (decB.north) -- (decB.east) -- (decB.south) -- (decB.west) -- cycle;
+  \node[align=center] at (decB) {kritischer\\Auftrag läuft?};
+  \node[act] (L4a) at (-3.5,-8.2) {Auftrag\\abschließen lassen};
+  \node[act] (L4b) at (3.5,-8.2)  {Auftrag\\abbrechen};
+  \node[merge] (mrg1) at (0,-10.0) {};
+  \filldraw[
+    fill=white,
+    draw=black!70,
+    thick
+  ] (mrg1.north) -- (mrg1.east) -- (mrg1.south) -- (mrg1.west) -- cycle;
 
-\draw[trans] (start) -- (L1);
-\draw[trans] (L1) -- (decA);
-\draw[trans] (decA.west) -- ++(-1.5,0) |- node[lbl, pos=0.5, left]{Nein} (L1.west);
-\draw[trans] (decA.south) -- node[lbl, right]{Ja} (L2);
-\draw[trans] (L2) -- (L3);
-\draw[trans] (L3) -- (decB);
-\draw[trans] (decB.west) -- node[lbl, font=\footnotesize, above=14pt, near start]{[kritisch]} (L4a.east);
-\draw[trans] (decB.east) -- node[lbl, font=\footnotesize, above=13pt, pos=0.35]{[nicht kritisch]} (L4b.west);
-\draw[trans] (L4a.south) -- (-3.5,-9.7) -- (mrg1.north);
-\draw[trans] (L4b.south) -- (3.8,-9.7) -- (mrg1.north);
+  \draw[trans] (start) -- (L1);
+  \draw[trans] (L1) -- (decA);
+  \draw[trans] (decA.west) -- ++(-1.5,0) |- node[lbl, pos=0.5, left]{Nein} (L1.west);
+  \draw[trans] (decA.south) -- node[lbl, right]{Ja} (L2);
+  \draw[trans] (L2) -- (L3);
+  \draw[trans] (L3) -- (decB);
+  \draw[trans] (decB.west) -- node[
+    lbl,
+    font=\footnotesize,
+    above=14pt,
+    near start
+  ]{[kritisch]} (L4a.east);
+  \draw[trans] (decB.east) -- node[
+    lbl,
+    font=\footnotesize,
+    above=13pt,
+    pos=0.35
+  ]{[nicht kritisch]} (L4b.west);
+  \draw[trans] (L4a.south) -- (-3.5,-10) -- (mrg1.west);
+  \draw[trans] (L4b.south) -- (3.5,-10) -- (mrg1.east);
 
-% --- Hauptlinie geht direkt senkrecht weiter (kein Spaltenwechsel mehr) ---
-\node[act] (L5) at (0,-11.22) {Rückkehrziel\\setzen};
-\draw[trans] (mrg1) -- (L5);
+  % --- Anfahrt zur Ladestation: Hauptlinie geht senkrecht weiter ---
+  \node[act] (L5) at (0,-11.3) {Rückkehrziel\\setzen};
+  \draw[trans] (mrg1) -- (L5);
+  \node[act] (L6) at (0,-12.6) {Pfad zur Ladestation\\planen};
+  \node[act] (L7) at (0,-13.9) {Zur Ladestation\\fahren};
+  \draw[trans] (L5) -- (L6);
+  \draw[trans] (L6) -- (L7);
 
-% --- Anfahrt bis Andocken, inkl. Alternativen bei Blockade ---
-\node[act] (L6) at (0,-12.55) {Pfad zur Ladestation\\planen};
-\node[act] (L7) at (0,-14.02) {Zur Ladestation\\fahren};
-\node[decide] (decC) at (0,-16.4) {};
-\filldraw[fill=white, draw=black!70, thick] (decC.north) -- (decC.east) -- (decC.south) -- (decC.west) -- cycle;
-\node[align=center] at (decC) {Ladestation\\blockiert?};
+ \node[merge] (mrgD) at (0,-15) {};
+  \filldraw[
+    fill=white,
+    draw=black!70,
+    thick
+  ] (mrgD.north) -- (mrgD.east) -- (mrgD.south) -- (mrgD.west) -- cycle;
 
-\node[act] (R4) at (0.01,-21.35)    {Andocken};
-\node[decide] (decD) at (0,-23) {};
-\filldraw[fill=white, draw=black!70, thick] (decD.north) -- (decD.east) -- (decD.south) -- (decD.west) -- cycle;
-\node[align=center] at (decD) {Andocken\\erfolgreich?};
-\node[act] (R5) at (3.8,-23) {Fehler\\melden};
-\node[act] (R6) at (0.01,-24.66) {Ladevorgang\\starten};
-\node[endouter] (endErr) at (3.9,-24.3) {};
-\node[endinner] at (endErr.center) {};
-\node[endouter] (endOk) at (0.01,-25.84) {};
-\node[endinner] at (endOk.center) {};
 
-\draw[trans] (L5) -- (L6);
-\draw[trans] (L6) -- (L7);
-\draw[trans] (L7) -- (decC);
+  \node[decide] (decC) at (0,-16.5) {};
+  \filldraw[
+    fill=white,
+    draw=black!70,
+    thick
+  ] (decC.north) -- (decC.east) -- (decC.south) -- (decC.west) -- cycle;
+  \node[align=center] at (decC) {Ladestation\\blockiert?};
+  \draw[trans] (L7) -- (mrgD.north);
+\draw[trans] (mrgD.south) -- (decC.north);
 
-% --- "frei": Hauptfluss geht links an der Alternativen-Gruppe vorbei weiter ---
-\draw[trans] (decC.west) -- ++(-1.9,0) node[lbl,above left of]{[frei]} |- (R4.west);
-\draw[trans] (R4) -- (decD);
-\draw[trans] (decD.east) -- node[lbl, above]{Nein} (R5.west);
-\draw[trans] (decD.south) -- node[lbl, right]{Ja} (R6);
-\draw[trans] (R5.south) -- (endErr.north);
-\draw[trans] (R6.south) -- (endOk.north);
+  % --- Hauptfluss bei "frei": Andocken bis Ende, bleibt auf der
+  % Mittellinie x=0 ---
+  \node[act] (R4) at (0,-18.25) {Andocken};
+  \draw[trans] (decC.south) -- node[lbl, right=11pt]{[frei]} (R4);
 
-% --- Alternativen bei "blockiert": zwei genestete, vollstaendig
-% guardete Entscheidungen statt einer Verzweigung mit drei Pfaden,
-% von denen nur einer beschriftet war. decC hat dadurch genau zwei
-% sich gegenseitig ausschliessende Ausgaenge ([frei]/[blockiert]);
-% jede weitere Entscheidung (decE, decF) ebenso.
-\node[decide] (decE) at (3.0,-16.4) {};
-\filldraw[fill=white, draw=black!70, thick] (decE.north) -- (decE.east) -- (decE.south) -- (decE.west) -- cycle;
-\node[align=center] at (decE) {Akku\\kritisch?};
-\node[actS] (R3) at (3.0,-18.2) {Fehler\\melden};
-\node[endouter] (endCrit) at (3.0,-20.0) {};
-\node[endinner] at (endCrit.center) {};
+  \node[decide] (decD) at (0,-19.9) {};
+  \filldraw[
+    fill=white,
+    draw=black!70,
+    thick
+  ] (decD.north) -- (decD.east) -- (decD.south) -- (decD.west) -- cycle;
+  \node[align=center] at (decD) {Andocken\\erfolgreich?};
+  \node[act] (R5) at (3.55,-21.61) {Fehler\\melden};
+  \node[act] (R6) at (0,-21.6) {Ladevorgang\\starten};
+  \node[endouter] (endErr) at (3.55,-23) {};
+  \node[endinner] at (endErr.center) {};
+  \node[endouter] (endOk) at (0,-23.0) {};
+  \node[endinner] at (endOk.center) {};
 
-\node[decide] (decF) at (6.8,-16.4) {};
-\filldraw[fill=white, draw=black!70, thick] (decF.north) -- (decF.east) -- (decF.south) -- (decF.west) -- cycle;
-\node[align=center] at (decF) {Alternative\\bekannt?};
-\node[actS] (R2) at (5.42,-18.41) {Alternativen\\Platz anfahren};
-\node[actS] (R1) at (8.29,-18.41) {Warten};
-\node[merge] (mrgC) at (5.8,-21.8) {};
+  \draw[trans] (R4) -- (decD);
+  \draw[trans] (decD.east) -- (3.55,-19.9) -- node[lbl, above]{Nein} (R5.north);
+  \draw[trans] (decD.south) -- node[lbl, right=7pt]{Ja} (R6);
+  \draw[trans] (R5.south) -- (endErr.north);
+  \draw[trans] (R6.south) -- (endOk.north);
 
-\draw[trans] (decC.east) -- node[lbl, pos=0.3, above]{[blockiert]} (decE.west);
-\draw[trans] (decE.south) -- node[lbl, font=\footnotesize, right]{[kritisch]} (R3);
-\draw[trans] (R3) -- (endCrit);
-\draw[trans] (decE.east) -- node[lbl, font=\footnotesize, above, pos=0.35]{[nicht kritisch]} (decF.north);
-\draw[trans] (decF.west) -- node[lbl, font=\footnotesize, above, pos=0.4]{[Alternative bekannt]} (R2.north);
-\draw[trans] (decF.east) -- node[lbl, font=\footnotesize, above, pos=0.4]{[keine Alternative]} (R1.north);
-\draw[trans] (R2.south) -- (5.5,-20.9) -- (10,-20.9) -- (10,-10) -- (mrg1.east);
-\draw[trans] (R1.south) -- (8.29,-19.5) -- (9.73,-19.5) -- (9.75,-15.37) -- (0,-15.59)
-    node[lbl, above=4pt, pos=0.82]{erneut prüfen};
+  % =====================================================================
+  % Block "Ladestation blockiert": eigenstaendiger Zweig rechts, deutlich
+  % ausserhalb der Kontur des Hauptflusses (der bis x=5.0 reicht). decC
+  % hat genau zwei sich gegenseitig ausschliessende Ausgaenge
+  % ([frei]/[blockiert]); decE und decF ebenso. Die Rueckfuehrung zu decC
+  % laeuft ueber einen eigenen Kanal ganz aussen rechts und kreuzt
+  % dadurch nichts vom Hauptfluss.
+  % =====================================================================
+  \node[decide] (decE) at (7.2,-16.5) {};
+  \filldraw[
+    fill=white,
+    draw=black!70,
+    thick
+  ] (decE.north) -- (decE.east) -- (decE.south) -- (decE.west) -- cycle;
+  \node[align=center] at (decE) {Akku\\kritisch?};
+  \draw[trans] (decC.east) -- node[lbl, pos=0.4, above]{[blockiert]} (decE.west);
 
-% =====================================================================
-% Legende
-% =====================================================================
-\node[startnode] (leg1) at (-3.5,-26.4) {};
-\node[right=1mm of leg1, font=\small, align=left] (lab1){Start};
-\node[endouter, right=6mm of lab1] (leg2) {};
-\node[endinner] at (leg2.center) {};
-\node[right=1mm of leg2, font=\small, align=left] (lab2){Ende};
-\node[decide, minimum width=6mm, minimum height=6mm, font=\small, right=6mm of lab2] (leg3) {};
-\filldraw[fill=white, draw=black!70, thick] (leg3.north) -- (leg3.east) -- (leg3.south) -- (leg3.west) -- cycle;
-\node[right=1mm of leg3, font=\small, align=left] (lab3){Entscheidung};
-\node[act, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab3] (leg4) {};
-\node[right=1mm of leg4, font=\small, align=left] (lab4){Aktion};
-\node[merge, right=6mm of lab4] (leg5) {};
-\filldraw[fill=white, draw=black!70, thick] (leg5.north) -- (leg5.east) -- (leg5.south) -- (leg5.west) -- cycle;
-\node[right=1mm of leg5, font=\small, align=left] (lab5){Zusammenführung};
+  \node[actS] (R3) at (11.2,-16.5) {Fehler\\melden};
+  \node[endouter] (endCrit) at (11.2,-17.6) {};
+  \node[endinner] at (endCrit.center) {};
+  \draw[trans] (decE.east) -- node[lbl, font=\footnotesize, above]{[kritisch]} (R3.west);
+  \draw[trans] (R3.south) -- (endCrit.north);
+
+  \node[decide] (decF) at (7.2,-18.7) {};
+  \filldraw[
+    fill=white,
+    draw=black!70,
+    thick
+  ] (decF.north) -- (decF.east) -- (decF.south) -- (decF.west) -- cycle;
+  \node[align=center] at (decF) {Alternative\\bekannt?};
+  \draw[trans] (decE.south) -- node[lbl, font=\footnotesize, right]{[nicht kritisch]} (decF.north);
+
+  \node[actS] (R2) at (4,-18.7) {Alternativen\\Platz anfahren};
+  \node[actS] (R1) at (11.3,-18.7) {Warten};
+  \draw[trans] (decF.west) -- node[lbl, above]{Ja} (R2.east);
+  \draw[trans] (decF.east) -- node[lbl, above]{Nein} (R1.west);
+
+  \node[merge] (mrgC) at (7.2,-20) {};
+  \filldraw[
+    fill=white,
+    draw=black!70,
+    thick
+  ] (mrgC.north) -- (mrgC.east) -- (mrgC.south) -- (mrgC.west) -- cycle;
+  \draw[trans] (R2.south) -- (4,-20) -- (mrgC.west);
+  \draw[trans] (R1.south) -- (11.3,-20) -- (mrgC.east);
+
+  % Rueckfuehrungskanal ganz aussen rechts, kreuzungsfrei zurueck zu decC
+  \draw[trans] (mrgC.south) -- (7.2,-22.0) -- (13.5,-22.0) -- (13.5,-14.95) -- (mrgD.east)
+    node[lbl, below=186pt, pos=0.38]{erneut prüfen};
+
+  % =====================================================================
+  % Legende
+  % =====================================================================
+  \node[startnode] (leg1) at (-3.5,-24.9) {};
+  \node[right=1mm of leg1, font=\small, align=left] (lab1){Start};
+  \node[endouter, right=6mm of lab1] (leg2) {};
+  \node[endinner] at (leg2.center) {};
+  \node[right=1mm of leg2, font=\small, align=left] (lab2){Ende};
+  \node[decide, minimum width=10mm, minimum height=6mm, font=\small, right=6mm of lab2] (leg3) {};
+  \filldraw[
+    fill=white,
+    draw=black!70,
+    thick
+  ] (leg3.north) -- (leg3.east) -- (leg3.south) -- (leg3.west) -- cycle;
+  \node[right=1mm of leg3, font=\small, align=left] (lab3){Entscheidung};
+  \node[act, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab3] (leg4) {};
+  \node[right=1mm of leg4, font=\small, align=left] (lab4){Aktion};
+  \node[merge, right=6mm of lab4] (leg5) {};
+  \filldraw[
+    fill=white,
+    draw=black!70,
+    thick
+  ] (leg5.north) -- (leg5.east) -- (leg5.south) -- (leg5.west) -- cycle;
+  \node[right=1mm of leg5, font=\small, align=left] (lab5){Zusammenführung};
 
 \end{tikzpicture}
