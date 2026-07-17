@@ -186,7 +186,7 @@
 
   % Rueckfuehrungskanal ganz aussen rechts, kreuzungsfrei zurueck zu decC
   \draw[trans] (mrgC.south) -- (7.2,-22.0) -- (13.5,-22.0) -- (13.5,-14.95) -- (mrgD.east)
-    node[lbl, below=186pt, pos=0.38]{erneut prüfen};
+    node[lbl, pos=0.76, above]{erneut prüfen};
 
   % =====================================================================
   % Legende

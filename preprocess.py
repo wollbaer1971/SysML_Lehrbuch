@@ -53,6 +53,15 @@ FIGURE_INPUT_RE = re.compile(
 RESIZEBOX_RE = re.compile(
     r"\\resizebox\{[^{}]*\}\{[^{}]*\}\{(\\includegraphics\[[^\]]*\]\{[^{}]*\})\}")
 
+# Seit 2026-07-17 nutzt Kapitel 11 statt \resizebox einen \adjustbox-Wrapper
+# (max width=..., max totalheight=...) fuer ein sehr hohes Diagramm, siehe
+# figures/fig_kap11_aktivitaet_rueckkehr_ladestation.tikz. Gleiches Problem
+# wie bei \resizebox: Pandocs LaTeX-Reader kennt \adjustbox nicht und wuerde
+# den kompletten Aufruf samt Inhalt stillschweigend verschlucken. Deshalb
+# hier analog entfernen und nur das \includegraphics behalten.
+ADJUSTBOX_RE = re.compile(
+    r"\\adjustbox\{[^{}]*\}\{(\\includegraphics\[[^\]]*\]\{[^{}]*\})\}")
+
 def replace_box_env(content, env_name):
     pattern = re.compile(
         r"\\begin\{" + re.escape(env_name) + r"\}(.*?)\\end\{" + re.escape(env_name) + r"\}",
@@ -74,6 +83,7 @@ def replace_figure_inputs(content, source_name):
         return r"\includegraphics[width=0.92\linewidth]{" + png_path + "}"
     content = FIGURE_INPUT_RE.sub(repl, content)
     content = RESIZEBOX_RE.sub(r"\1", content)
+    content = ADJUSTBOX_RE.sub(r"\1", content)
     return content
 
 def check_no_raw_tikz(content, source_name):
@@ -93,6 +103,12 @@ def check_no_raw_tikz(content, source_name):
     if re.search(r"\\resizebox", content):
         sys.stderr.write(
             "FEHLER: " + source_name + " enthaelt noch ein \\resizebox, "
+            "das nicht auf ein bekanntes \\includegraphics-Muster passt. "
+            "Bitte pruefen, sonst fehlt die Abbildung im eBook.\n")
+        sys.exit(1)
+    if re.search(r"\\adjustbox", content):
+        sys.stderr.write(
+            "FEHLER: " + source_name + " enthaelt noch ein \\adjustbox, "
             "das nicht auf ein bekanntes \\includegraphics-Muster passt. "
             "Bitte pruefen, sonst fehlt die Abbildung im eBook.\n")
         sys.exit(1)

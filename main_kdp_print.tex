@@ -2,7 +2,6 @@
 % Druck-Edition fuer Amazon KDP, Softcover, Trim 7" x 10" (17,78 x 25,4 cm).
 %
 % TODO vor Upload:
-%   - \editionimpressum unten mit finaler ISBN befuellen.
 %   - Inside-Margin (Gutter) gegen KDPs Randtabelle pruefen, sobald die
 %     tatsaechliche Seitenzahl dieser Edition feststeht:
 %       24-150 S.  -> 9,6 mm   | 151-300 S. -> 12,7 mm
@@ -25,11 +24,17 @@
 
 \newcommand{\editionimpressum}{%
     \textbf{KDP-Softcover-Ausgabe}\\[0.5em]
-    \textbf{TODO: ISBN eintragen}\\[1em]
+    ISBN: 9798187781393\\
+    Imprint: Independently published\\[1em]
     \textcopyright\ Wolfgang Becker\\
     Alle Rechte vorbehalten.\\[1em]
     Diese Ausgabe erscheint im Vertrieb über Amazon KDP (Print on Demand).
 }
+
+% Titelseite ohne Kompilierdatum: \date{\today} aus preamble_common.tex
+% wuerde bei jedem Neukompilieren ein anderes Datum auf der ersten Seite
+% zeigen, das nicht dem tatsaechlichen Veroeffentlichungsdatum entspricht.
+\date{}
 
 \begin{document}
 \input{content_body}

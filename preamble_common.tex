@@ -4,10 +4,13 @@
 % \documentclass und \geometry bleiben in der jeweiligen Wrapper-Datei, da sie
 % pro Edition unterschiedlich sind.
 
+\usepackage{iftex}
 \usepackage[ngerman]{babel}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
-\usepackage[utf8]{inputenc}
+\ifPDFTeX
+    \usepackage[utf8]{inputenc}
+\fi
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{geometry}
