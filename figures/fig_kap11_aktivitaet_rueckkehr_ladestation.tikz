@@ -68,7 +68,7 @@
 
   \draw[trans] (start) -- (L1);
   \draw[trans] (L1) -- (decA);
-  \draw[trans] (decA.west) -- ++(-1.5,0) |- node[lbl, pos=0.5, left]{Nein} (L1.west);
+  \draw[trans] (decA.west) -- ++(-0.88,0) |- node[lbl, right=4pt, pos=0.08]{Nein} (L1.west);
   \draw[trans] (decA.south) -- node[lbl, right]{Ja} (L2);
   \draw[trans] (L2) -- (L3);
   \draw[trans] (L3) -- (decB);
