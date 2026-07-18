@@ -36,7 +36,7 @@ Eine gute Schnittstellenbeschreibung enthält:
 \end{itemize}
 
 \section{Beispieltabelle}
-\begin{longtable}{p{30mm}p{30mm}p{30mm}p{45mm}}
+\begin{longtable}{p{0.19\textwidth}p{0.19\textwidth}p{0.19\textwidth}p{0.28\textwidth}}
 \toprule
 Schnittstelle & Sender & Empfänger & Datentyp\\
 \midrule
@@ -53,7 +53,7 @@ Abbildung~\ref{fig:kap10-schnittstellenuebersicht} zeigt dieselben Schnittstelle
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap10_schnittstellenuebersicht}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap10_schnittstellenuebersicht}}
   \caption{Schnittstellenübersicht des Indoor-Roboters: Sensordaten (orange) fließen über ObjectDetector und SLAM zur Navigation, Steuer- und Statusnachrichten (blau) verbinden Navigation, MotionControl und die Bedienoberfläche.}
   \label{fig:kap10-schnittstellenuebersicht}
 \end{figure}
@@ -67,7 +67,7 @@ ROS2 verwaltet diese Umrechnungen nicht manuell, sondern über den sogenannten T
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap10_tf_baum}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap10_tf_baum}}
   \caption{Links die Hierarchie der TF-Frames vom kartenfesten \texttt{map} über \texttt{odom} und \texttt{base\_link} bis zu \texttt{camera\_link}; rechts dieselben Frames als physische Koordinatenursprünge im Gebäudegrundriss und am Roboter.}
   \label{fig:kap10-tf-baum}
 \end{figure}

@@ -30,20 +30,20 @@ Topics sind Nachrichtenkanäle. Ein Node veröffentlicht Nachrichten (er handelt
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap14_publish_subscribe}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap14_publish_subscribe}}
   \caption{Publish-Subscribe-Prinzip: Ein Publisher-Node sendet Nachrichten auf einem Topic, mehrere Subscriber-Nodes können sie gleichzeitig empfangen.}
   \label{fig:kap14-publish-subscribe}
 \end{figure}
 
 Beispiele:
 
-\begin{verbatim}
+\begin{lstlisting}[style=plaintext]
 /camera/image_raw       Kamerabild
 /scan                   Laserscan
 /cmd_vel                Bewegungsbefehl
 /battery_state          Akkustatus
 /detected_objects       erkannte Objekte
-\end{verbatim}
+\end{lstlisting}
 
 Diese Namen sind keine ROS2-Vorgabe, sondern eine in diesem Buch verwendete Projektkonvention; in eigenen Projekten können Sie andere Topic-Namen wählen, sollten dabei aber konsistent bleiben.
 

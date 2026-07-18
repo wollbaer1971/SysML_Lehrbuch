@@ -37,7 +37,7 @@ SysML v2 kennt keine festen Diagrammtypen mehr wie in v1. Stattdessen gibt es Si
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap03_sysml_kernkonzepte}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap03_sysml_kernkonzepte}}
   \caption{Die sieben für dieses Buch wichtigsten SysML-v2-Konzepte rund um das gemeinsame Modell.}
   \label{fig:kap03-sysml-kernkonzepte}
 \end{figure}
@@ -133,7 +133,7 @@ So entsteht ein zusammenhängendes Modell statt einer losen Sammlung schöner Bi
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap03_struktur_verbindungssicht}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap03_struktur_verbindungssicht}}
   \caption{Struktursicht von \texttt{Robot} mit seinen Subsystemen und Detailsicht des \texttt{PerceptionSystem} mit Port \texttt{sensorData}.}
   \label{fig:kap03-struktur-verbindungssicht}
 \end{figure}
@@ -142,6 +142,7 @@ So entsteht ein zusammenhängendes Modell statt einer losen Sammlung schöner Bi
 Einsteiger stoßen in der Literatur häufig noch auf SysML v1. Die wichtigsten Begriffsänderungen sind:
 
 \begin{center}
+\adjustbox{max width=\linewidth}{%
 \begin{tabular}{ll}
 \toprule
 \textbf{SysML v1} & \textbf{SysML v2} \\
@@ -154,7 +155,8 @@ State Machine Diagram & \texttt{state def}, \texttt{state} \\
 Parametric Diagram & \texttt{calc def}, \texttt{constraint} \\
 \texttt{deriveRqt} & \texttt{derive} \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{center}
 
 Dieses Buch verwendet durchgehend SysML v2. Wo alte Begriffe aus Kompatibilitätsgründen erwähnt werden, ist das explizit gekennzeichnet.

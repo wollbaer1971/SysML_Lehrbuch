@@ -15,6 +15,14 @@
 \usepackage{microtype}
 \usepackage{geometry}
 
+% Zusaetzlicher Justier-Spielraum: faengt Faelle auf, die microtype allein
+% nicht mehr ausgleichen kann (lange deutsche Komposita, schmale Spalten bei
+% kleineren Trims). Ohne diese Werte erzeugt LaTeX in solchen Faellen einen
+% sichtbar ueber den Satzspiegel hinausragenden Overfull-hbox, statt die
+% Zeile mit minimal mehr Wortabstand sauber zu brechen.
+\tolerance=1000
+\emergencystretch=3em
+
 \usepackage{graphicx}
 \usepackage{adjustbox}
 \usepackage{booktabs}
@@ -68,6 +76,16 @@
         {ß}{{\ss{}}}1
 }
 \lstset{style=code}
+
+% Stil fuer reine Text-/Baumdarstellungen (Verzeichnisbaeume, Ablaufskizzen),
+% die wie \verbatim aussehen sollen, aber - anders als \verbatim - lange
+% Zeilen umbrechen muessen, damit sie auf schmalen Trims (z. B. 6x9in)
+% nicht ueber den Satzspiegel hinauslaufen.
+\lstdefinestyle{plaintext}{
+    style=code,
+    numbers=none,
+    frame=single,
+}
 
 \newtcolorbox{lernziele}{
     colback=blue!3!white,

@@ -44,7 +44,7 @@ Diese Auswahl ist bewusst pragmatisch. Sie ist kostenlos zugänglich, passt zu t
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap04_werkzeugkette}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap04_werkzeugkette}}
   \caption{Empfohlene Werkzeugkette: VS Code mit Syside Editor und Git als Kern, optional ergänzt um Eclipse SysON und das SysML-v2-Pilotprojekt; parallel dazu der ROS2-Code.}
   \label{fig:kap04-werkzeugkette}
 \end{figure}
@@ -54,7 +54,7 @@ Für das Lehrbuch verwenden wir ein Projekt mit dem Namen \texttt{AutonomousIndo
 
 Eine einfache Projektstruktur kann so aussehen:
 
-\begin{verbatim}
+\begin{lstlisting}[style=plaintext]
 AutonomousIndoorRobot/
   model/
     00_overview.sysml
@@ -70,13 +70,13 @@ AutonomousIndoorRobot/
     battery_monitor_node.py
   docs/
     decisions.md
-\end{verbatim}
+\end{lstlisting}
 
 Die Dateien im Ordner \texttt{model} enthalten das SysML-v2-Modell. Der Ordner \texttt{code} enthält spätere ROS2-Beispiele. Der Ordner \texttt{docs} kann kurze Architekturentscheidungen aufnehmen. Abbildung~\ref{fig:kap04-projektstruktur} stellt diese Projektstruktur grafisch dar und ordnet jeder Modell-Datei ein kurzes Stichwort zu.
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap04_projektstruktur}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap04_projektstruktur}}
   \caption{Projektstruktur \texttt{AutonomousIndoorRobot} mit den Ordnern \texttt{model/}, \texttt{code/} und \texttt{docs/} sowie den wichtigsten Dateien.}
   \label{fig:kap04-projektstruktur}
 \end{figure}
@@ -225,7 +225,7 @@ Abbildung~\ref{fig:struktur-robot} stellt diesen Strukturbaum grafisch dar.
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_struktur_robot}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_struktur_robot}}
   \caption{Strukturbaum des Roboters mit \texttt{part def Robot} und seinen
     Subsystemen. Grün hinterlegte Kästen sind im Modell bereits weiter
     zerlegt, grau hinterlegte Kästen sind an dieser Stelle noch leere
@@ -332,6 +332,7 @@ Diese Datei wird im Laufe des Projekts wachsen. Beginnen Sie mit den Nodes, die 
 Nach den ersten Schritten sieht ein Minimalmodell für den Indoor-Roboter so aus:
 
 \begin{center}
+\adjustbox{max width=\linewidth}{%
 \begin{tabular}{lll}
 \toprule
 \textbf{Datei} & \textbf{Inhalt} & \textbf{Schlüsselwörter} \\
@@ -342,7 +343,8 @@ Nach den ersten Schritten sieht ein Minimalmodell für den Indoor-Roboter so aus
 \texttt{06\_tests.sysml} & Testfälle & \texttt{verification def}, \texttt{verify} \\
 \texttt{07\_ros2\_mapping.sysml} & ROS2-Zuordnung & \texttt{attribute}, \texttt{doc} \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{center}
 
 Dieses Minimalmodell ist kein perfektes Systemmodell. Es ist ein Ausgangspunkt. Jede Datei kann mit wenigen Zeilen begonnen und schrittweise erweitert werden.
@@ -387,7 +389,7 @@ Wichtig ist dabei die Blickrichtung: Der Text bleibt die Quelle der Wahrheit, di
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap04_syside_syson_sync}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap04_syside_syson_sync}}
   \caption{Der SysML-v2-Text im Syside Editor (links) ist die Quelle der Wahrheit; Eclipse SysON erzeugt daraus automatisch die grafische Strukturansicht (rechts), ohne dass diese von Hand gezeichnet werden muss.}
   \label{fig:kap04-syside-syson-sync}
 \end{figure}
@@ -457,4 +459,4 @@ Erstellen Sie die Datei \texttt{07\_ros2\_mapping.sysml}. Ordnen Sie dem \texttt
 \end{uebungbox}
 
 \section{Literaturhinweise}
-Für die praktische Arbeit mit SysML v2 sind die Dokumentation des Syside Editors, das Eclipse-SysON-Projekt und das SysML-v2-Pilotprojekt hilfreich \cite{syside,syson,sysmlv2pilot}. Für die fachliche Einordnung bleiben klassische SysML- und MBSE-Grundlagen nützlich, müssen aber bewusst auf SysML v2 übertragen werden.
+Für die praktische Arbeit mit SysML v2 sind die Dokumentation des Syside Editors, das Eclipse-SysON-Projekt und das SysML-v2-Pilotprojekt hilfreich \cite{syside,syson,sysmlv2pilot}. Für die fachliche Einordnung bleiben klassische SysML- und MBSE-Grundlagen nützlich, müssen aber bew

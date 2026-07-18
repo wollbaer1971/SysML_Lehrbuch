@@ -19,14 +19,14 @@ Traceability beantwortet Fragen wie:
 \end{itemize}
 
 \section{Kette im Roboterprojekt}
-\begin{verbatim}
+\begin{lstlisting}[style=plaintext]
 REQ-002 Hindernisse erkennen
 -> PerceptionSystem
 -> ObstacleDetector
 -> obstacle_detector_node
 -> /scan
 -> TC-002 Hinderniserkennung
-\end{verbatim}
+\end{lstlisting}
 
 Diese Kette zeigt, wie eine Anforderung bis zu Implementierung und Test verfolgt werden kann. In SysML v2 lassen sich solche Verbindungen über die Beziehungen \texttt{satisfy}, \texttt{derive} und \texttt{trace} konkret im Modell verankern, zum Beispiel:
 
@@ -40,7 +40,7 @@ Abbildung~\ref{fig:kap20-traceability-kette-req002} stellt dieselbe Kette grafis
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap20_traceability_kette_req002}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap20_traceability_kette_req002}}
   \caption{Traceability-Kette von REQ-002 über SysML-Systemelemente und ROS2-Node/Topic bis zum Testfall TC-002.}
   \label{fig:kap20-traceability-kette-req002}
 \end{figure}
@@ -81,7 +81,7 @@ Diese Matrix ist kein Ersatz für das Modell, aber eine nützliche Sicht. Abbild
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap20_traceability_matrix}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap20_traceability_matrix}}
   \caption{Auszug aus einer Traceability-Matrix: Jede Zeile verbindet eine Anforderung über Funktion, Systemelement und ROS2-Node bis zum Testfall.}
   \label{fig:kap20-traceability-matrix}
 \end{figure}
@@ -104,7 +104,7 @@ Abbildung~\ref{fig:kap20-aenderungsmanagement-ablauf} zeigt diesen Ablauf inklus
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap20_aenderungsmanagement_ablauf}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap20_aenderungsmanagement_ablauf}}
   \caption{Ablauf des Änderungsmanagements von der Beschreibung des Änderungswunschs bis zur dokumentierten Entscheidung.}
   \label{fig:kap20-aenderungsmanagement-ablauf}
 \end{figure}

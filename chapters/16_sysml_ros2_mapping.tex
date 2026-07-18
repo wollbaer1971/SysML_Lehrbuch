@@ -17,7 +17,7 @@ Dieses Mapping ist eine Architekturentscheidung und keine feste Übersetzungsreg
 Nicht jedes Modellelement wird eins zu eins umgesetzt. Ein physisches Element wie \texttt{Camera} kann durch Hardware beschrieben werden, während die Ansteuerung über einen \texttt{camera\_node} erfolgt. Ein größeres Systemelement wie \texttt{NavigationSystem} kann aus mehreren Nodes bestehen (zum Beispiel \texttt{navigation\_node} für die Bewegungsplanung und \texttt{slam\_node} für die Kartierung, vgl. Kapitel 15).
 
 \section{Beispieltabelle}
-\begin{longtable}{p{45mm}p{45mm}p{45mm}}
+\begin{longtable}{p{0.28\textwidth}p{0.28\textwidth}p{0.28\textwidth}}
 \toprule
 SysML-v2-Element & ROS2-Element & Bemerkung\\
 \midrule
@@ -34,7 +34,7 @@ Abbildung~\ref{fig:kap16-mapping-sysml-ros2} stellt dieses einfache Orientierung
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap16_mapping_sysml_ros2}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap16_mapping_sysml_ros2}}
   \caption{Grafische Darstellung eines einfachen Orientierungsmappings zwischen SysML-v2-Part-Definitions und zugehörigen ROS2-Nodes. In realen Systemen muss dieses Mapping projektspezifisch geprüft und verfeinert werden.}
   \label{fig:kap16-mapping-sysml-ros2}
 \end{figure}
@@ -84,7 +84,7 @@ REQ-004 \enquote{Personen erkennen} wird durch die Part Definition \texttt{Objec
 \section{Von Anforderungen bis Code}
 Eine vollständige Kette kann so aussehen:
 
-\begin{verbatim}
+\begin{lstlisting}[style=plaintext]
 REQ-006 Zur Ladestation zurückkehren
 -> Action: Akkustand überwachen
 -> Part Definition: BatterySystem
@@ -93,13 +93,13 @@ REQ-006 Zur Ladestation zurückkehren
 -> Node: navigation_node
 -> Action: NavigateToDock
 -> Test: TC-006 Rückkehr bei niedrigem Akkustand
-\end{verbatim}
+\end{lstlisting}
 
 Abbildung~\ref{fig:kap16-traceability-batteriemanagement} zeigt diese Traceability-Kette grafisch, von der Anforderung über SysML- und ROS2-Elemente bis zum Testfall.
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap16_traceability_batteriemanagement}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap16_traceability_batteriemanagement}}
   \caption{Traceability-Kette vom Requirement REQ-006 über SysML- und ROS2-Elemente bis zum Testfall TC-006.}
   \label{fig:kap16-traceability-batteriemanagement}
 \end{figure}
@@ -157,4 +157,4 @@ Erstellen Sie eine Kette von einer Anforderung über Part Definition, Node, Topi
 \end{uebungbox}
 
 \section{Literaturhinweise}
-Das Mapping verbindet SysML-v2-Modellierung \cite{sysmlv2spec,sysmlv2pilot} mit ROS2-Kommunikation \cite{ros2docs}. In realen Projekten wird diese Verbindung oft projektspezifisch definiert.
+Das Mapping verbindet SysML-v2-Modellierung \cite{sysmlv2spec,sysmlv2pilot} mit ROS2-Kommunikation \cite{ros2docs}. In realen Projekten wird diese Verbindung oft

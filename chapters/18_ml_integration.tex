@@ -11,13 +11,13 @@ Machine Learning wird in der Robotik häufig für Wahrnehmung eingesetzt: Objekt
 Klassische Software arbeitet mit expliziten Regeln. ML-Modelle lernen Muster aus Daten. Für Personenerkennung ist das nützlich, weil Personen in Bildern sehr unterschiedlich aussehen können. Gleichzeitig bringt ML neue Herausforderungen: Trainingsdaten, Fehlklassifikationen, Latenz und schwer erklärbares Verhalten.
 
 \section{Architektur}
-\begin{verbatim}
+\begin{lstlisting}[style=plaintext]
 Camera
   -> /camera/image_raw
   -> object_detector_node
   -> /detected_objects
   -> navigation_node oder user_interface_node
-\end{verbatim}
+\end{lstlisting}
 
 Der ML-Node ist Teil der Wahrnehmungsarchitektur. Er sollte klar von Navigation und Sicherheitslogik getrennt werden. Die Navigation bekommt Ergebnisse, aber sie sollte nicht blind jedem Ergebnis vertrauen.
 
@@ -86,7 +86,7 @@ Abbildung~\ref{fig:kap18-ml-sicherheitsarchitektur} stellt diese Kontrastierung 
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap18_ml_sicherheitsarchitektur}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap18_ml_sicherheitsarchitektur}}
   \caption{Der ML-basierte \texttt{object\_detector\_node} liefert eine unsichere Zusatzinformation, während die Lidar-basierte Hinderniserkennung die zuverlässigere Sicherheitsgrundlage bleibt.}
   \label{fig:kap18-ml-sicherheitsarchitektur}
 \end{figure}

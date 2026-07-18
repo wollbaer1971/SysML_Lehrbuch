@@ -23,7 +23,7 @@ Eine sinnvolle erste Architektur besteht aus folgenden Nodes:
 \end{itemize}
 
 \section{Kommunikationsstruktur}
-\begin{verbatim}
+\begin{lstlisting}[style=plaintext]
 camera_node -> /camera/image_raw -> object_detector_node
 lidar_node  -> /scan             -> slam_node
 slam_node   -> /map              -> navigation_node
@@ -31,13 +31,13 @@ navigation_node -> /cmd_vel      -> motion_control_node
 battery_monitor_node -> /battery_state -> navigation_node
 object_detector_node -> /detected_objects -> navigation_node
 robot_state_node -> /robot/status -> user_interface_node
-\end{verbatim}
+\end{lstlisting}
 
 Der vollständige Node-Graph mit allen neun Nodes und ihren Topic-Verbindungen ist in Abbildung~\ref{fig:kap15-node-graph} dargestellt.
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap15_node_graph}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap15_node_graph}}
   \caption{Node-Graph des autonomen Indoor-Roboters mit den wichtigsten Topics zwischen Sensor-, Verarbeitungs-, Navigations- und Aktuatorik-Nodes.}
   \label{fig:kap15-node-graph}
 \end{figure}
@@ -72,7 +72,7 @@ ROS2 unterstützt Lifecycle Nodes, also Nodes mit einem definierten Zustandsauto
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap15_lifecycle_zustandsautomat}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap15_lifecycle_zustandsautomat}}
   \caption{Zustandsautomat eines ROS2-Lifecycle-Nodes von \texttt{Unconfigured} über \texttt{Inactive} und \texttt{Active} bis zum Endzustand \texttt{Finalized}.}
   \label{fig:kap15-lifecycle}
 \end{figure}

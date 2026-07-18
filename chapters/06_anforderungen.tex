@@ -46,7 +46,7 @@ Wartung soll einfach sein. & Der Roboter muss Sensorstatus, Akkustatus und Fehle
 \end{center}
 
 \section{Beispielanforderungen}
-\begin{longtable}{p{25mm}p{110mm}}
+\begin{longtable}{p{0.16\textwidth}p{0.69\textwidth}}
 \toprule
 ID & Anforderung\\
 \midrule
@@ -103,7 +103,7 @@ Abbildung~\ref{fig:kap06-traceability-req002} stellt diese Traceability-Kette gr
 
 \begin{figure}[H]
   \centering
-  \input{figures/fig_kap06_traceability_req002}
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures/fig_kap06_traceability_req002}}
   \caption{Traceability-Kette von REQ-002 über \texttt{satisfy} und \texttt{verify} zum \texttt{PerceptionSystem} und per \texttt{trace} weiter zum ROS2-Node.}
   \label{fig:kap06-traceability-req002}
 \end{figure}
