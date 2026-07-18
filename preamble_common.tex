@@ -29,7 +29,25 @@
 \usepackage{longtable}
 \usepackage{array}
 \usepackage{xcolor}
-\usepackage{hyperref}
+
+% Druckausgaben (KDP, BoD) setzen \druckausgabetrue VOR \input{preamble_common}.
+% KDPs Pruefung markiert Seiten mit klickbaren Hyperlink-Annotationen
+% (Querverweise, Glossarbegriffe, das komplette verlinkte Inhaltsverzeichnis)
+% offenbar unabhaengig von deren Farbe als auffaellig - schwarze Linkfarbe
+% allein hat die Meldungen nicht beseitigt. Fuer Druckausgaben laedt
+% hyperref deshalb im draft-Modus: alle \href/\ref/\gls-Befehle bleiben
+% nutzbar und setzen ihren Text normal, erzeugen aber keine PDF-Link-
+% Annotation mehr. Die Arbeitsausgabe (main.tex) behaelt volle, klickbare
+% Verlinkung fuer die Bildschirmnutzung.
+\makeatletter
+\@ifundefined{ifdruckausgabe}{\newif\ifdruckausgabe\druckausgabefalse}{}
+\makeatother
+\ifdruckausgabe
+    \usepackage[draft]{hyperref}
+\else
+    \usepackage{hyperref}
+\fi
+
 \usepackage{listings}
 \usepackage{enumitem}
 \usepackage{csquotes}

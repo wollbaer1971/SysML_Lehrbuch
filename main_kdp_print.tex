@@ -12,22 +12,16 @@
 %     falls die 204 Seiten in ein anderes Bracket rutschen - dann diesen
 %     Puffer von 2 mm auf den neuen Bracket-Wert aufschlagen.
 
+% Vor \input{preamble_common} setzen: laedt hyperref dort im draft-Modus,
+% siehe Kommentar in preamble_common.tex. Schwarze Linkfarbe allein hatte
+% KDPs Fehlermeldungen NICHT beseitigt - offenbar stoert die reine Praesenz
+% von Link-Annotationen, nicht deren Farbe. draft unterdrueckt die
+% Annotationen komplett, \gls/\ref/\href setzen weiterhin normalen Text.
+\newif\ifdruckausgabe
+\druckausgabetrue
+
 \documentclass[11pt,oneside]{scrbook}
 \input{preamble_common}
-
-% preamble_common.tex faerbt Querverweise/Glossarbegriffe blau (fuer die
-% Bildschirm-/eBook-Ausgabe gedacht). In einem Schwarzweiss-Druckinnenteil
-% wirkt farbiger Text falsch (graue Halbtoene statt Schwarz) und wird von
-% KDPs Pruefung als Element markiert. colorlinks bleibt an (keine sichtbaren
-% Kaesten um Verweise wie bei colorlinks=false), die Linkfarben werden aber
-% auf Schwarz gesetzt, sodass Verweise im Druck wie normaler Fliesstext
-% aussehen, digital aber weiterhin klickbar bleiben.
-\hypersetup{
-    colorlinks=true,
-    linkcolor=black,
-    urlcolor=black,
-    citecolor=black
-}
 
 \geometry{
     paperwidth=15.24cm,
