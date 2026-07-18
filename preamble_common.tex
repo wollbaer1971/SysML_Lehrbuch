@@ -58,6 +58,14 @@
 \RedeclareSectionCommand[tocnumwidth=4.8em]{subsection}
 \RedeclareSectionCommand[tocnumwidth=5.8em]{subsubsection}
 
+% Inhaltsverzeichnis nur bis Subsection-Ebene. Subsubsection-Eintraege
+% (3-stellige Nummern wie 2.12.3 + tief eingerueckter Titel) sprengen auf dem
+% schmaleren 6x9in-Trim die Zeilenbreite des TOC und laufen ueber den rechten
+% Rand. Nummerierung im Fliesstext bleibt unveraendert (nur \tocdepth, nicht
+% \secnumdepth), Subsubsections werden weiterhin nummeriert, erscheinen nur
+% nicht mehr im Verzeichnis.
+\setcounter{tocdepth}{2}
+
 \lstdefinestyle{code}{
     basicstyle=\ttfamily\small,
     breaklines=true,
