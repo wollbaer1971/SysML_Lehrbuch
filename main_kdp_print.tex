@@ -15,6 +15,20 @@
 \documentclass[11pt,oneside]{scrbook}
 \input{preamble_common}
 
+% preamble_common.tex faerbt Querverweise/Glossarbegriffe blau (fuer die
+% Bildschirm-/eBook-Ausgabe gedacht). In einem Schwarzweiss-Druckinnenteil
+% wirkt farbiger Text falsch (graue Halbtoene statt Schwarz) und wird von
+% KDPs Pruefung als Element markiert. colorlinks bleibt an (keine sichtbaren
+% Kaesten um Verweise wie bei colorlinks=false), die Linkfarben werden aber
+% auf Schwarz gesetzt, sodass Verweise im Druck wie normaler Fliesstext
+% aussehen, digital aber weiterhin klickbar bleiben.
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=black,
+    citecolor=black
+}
+
 \geometry{
     paperwidth=15.24cm,
     paperheight=22.86cm,

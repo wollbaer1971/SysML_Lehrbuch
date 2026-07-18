@@ -16,6 +16,17 @@
 \documentclass[11pt,oneside]{scrbook}
 \input{preamble_common}
 
+% Siehe main_kdp_print.tex: preamble_common.tex faerbt Querverweise blau
+% (fuer die Bildschirmausgabe). Fuer den Schwarzweiss-Druckinnenteil hier
+% ebenfalls auf Schwarz umgestellt, damit Verweise wie normaler Fliesstext
+% aussehen statt als graue Halbtoene gedruckt zu werden.
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=black,
+    citecolor=black
+}
+
 \geometry{
     paperwidth=17.0cm,
     paperheight=22.0cm,
