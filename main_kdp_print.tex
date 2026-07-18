@@ -1,22 +1,22 @@
 % main_kdp_print.tex
-% Druck-Edition fuer Amazon KDP, Softcover, Trim 7" x 10" (17,78 x 25,4 cm).
+% Druck-Edition fuer Amazon KDP, Softcover, Trim 6" x 9" (15,24 x 22,86 cm).
 %
-% TODO vor Upload:
-%   - Inside-Margin (Gutter) gegen KDPs Randtabelle pruefen, sobald die
-%     tatsaechliche Seitenzahl dieser Edition feststeht:
+% Seitenzahl dieser Edition: 204 Seiten -> Bracket 151-300 S.
+% Inside-Margin (Gutter) laut KDP-Randtabelle:
 %       24-150 S.  -> 9,6 mm   | 151-300 S. -> 12,7 mm
 %       301-500 S. -> 15,9 mm  | 501-700 S. -> 19,1 mm | 701-828 S. -> 22,3 mm
 %     (Quelle: kdp.amazon.com/help/topic/GVBQ3CMEQW3W2VL6, Stand 2026-07)
-%     Aktuell eingestellt: 16 mm (Annahme 301-500 Seiten) - nach erstem
-%     vollstaendigen Kompilierlauf mit echter Seitenzahl abgleichen.
+%     Aktuell eingestellt: 12,7 mm (Bracket 151-300 Seiten, 204 S.) - nach
+%     jeder Aenderung der Seitenzahl gegen die Tabelle oben neu abgleichen,
+%     falls die 204 Seiten in ein anderes Bracket rutschen.
 
 \documentclass[11pt,oneside]{scrbook}
 \input{preamble_common}
 
 \geometry{
-    paperwidth=17.78cm,
-    paperheight=25.4cm,
-    inner=16mm,
+    paperwidth=15.24cm,
+    paperheight=22.86cm,
+    inner=12.7mm,
     outer=18mm,
     top=20mm,
     bottom=22mm
