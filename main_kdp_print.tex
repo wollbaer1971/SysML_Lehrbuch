@@ -1,7 +1,7 @@
 % main_kdp_print.tex
 % Druck-Edition fuer Amazon KDP, Softcover, Trim 6" x 9" (15,24 x 22,86 cm).
 %
-% Seitenzahl dieser Edition: 204 Seiten -> Bracket 151-300 S.
+% Seitenzahl dieser Edition: 233 Seiten -> Bracket 151-300 S.
 % Inside-Margin (Gutter) laut KDP-Randtabelle:
 %       24-150 S.  -> 9,6 mm   | 151-300 S. -> 12,7 mm
 %       301-500 S. -> 15,9 mm  | 501-700 S. -> 19,1 mm | 701-828 S. -> 22,3 mm
@@ -9,7 +9,7 @@
 %     Aktuell eingestellt: 12,7 mm KDP-Minimum + 2 mm zusaetzlicher Puffer
 %     (linker Rand insgesamt etwas nach rechts gerueckt) = 14,7 mm. Nach
 %     jeder Aenderung der Seitenzahl gegen die Tabelle oben neu abgleichen,
-%     falls die 204 Seiten in ein anderes Bracket rutschen - dann diesen
+%     falls die 233 Seiten in ein anderes Bracket rutschen - dann diesen
 %     Puffer von 2 mm auf den neuen Bracket-Wert aufschlagen.
 
 % Vor \input{preamble_common} setzen: laedt hyperref dort im draft-Modus,
@@ -29,7 +29,11 @@
     inner=14.7mm,
     outer=18mm,
     top=20mm,
-    bottom=22mm
+    bottom=22mm,
+    % KDP meldet auch Fusszeilentext ausserhalb der Raender. Mit KOMA-Scripts
+    % Standard-\footskip von 47.6pt lag die Seitenzahl nur ca. 4.5-5 mm ueber
+    % der Schnittkante. 11 mm hebt die Fusszeile in den sicheren Bereich.
+    footskip=11mm
 }
 
 \newcommand{\editionimpressum}{%
