@@ -36,18 +36,22 @@ Eine gute Schnittstellenbeschreibung enthält:
 \end{itemize}
 
 \section{Beispieltabelle}
-\begin{longtable}{p{0.19\textwidth}p{0.19\textwidth}p{0.19\textwidth}p{0.28\textwidth}}
+\begingroup
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}p{0.19\textwidth}p{0.18\textwidth}p{0.20\textwidth}p{0.30\textwidth}@{}}
 \toprule
 Schnittstelle & Sender & Empfänger & Datentyp\\
 \midrule
-Kamerabild & Camera & ObjectDetector & \texttt{sensor\_msgs/Image}\\
-Laserscan & Lidar & SLAM & \texttt{sensor\_msgs/LaserScan}\\
-Bewegungsbefehl & Navigation & MotionControl & \texttt{geometry\_msgs/Twist}\\
-Akkustatus & BatterySystem & Navigation & \texttt{sensor\_msgs/BatteryState}\\
+Kamerabild & Camera & ObjectDetector & \texttt{sensor\_msgs/}\newline\texttt{Image}\\
+Laserscan & Lidar & SLAM & \texttt{sensor\_msgs/}\newline\texttt{LaserScan}\\
+Bewegungsbefehl & Navigation & MotionControl & \texttt{geometry\_msgs/}\newline\texttt{Twist}\\
+Akkustatus & BatterySystem & Navigation & \texttt{sensor\_msgs/}\newline\texttt{BatteryState}\\
 Objektliste & ObjectDetector & Navigation & Detection-Liste\\
 Roboterstatus & Robot & UserInterface & Statusnachricht\\
 \bottomrule
 \end{longtable}
+\endgroup
 
 Abbildung~\ref{fig:kap10-schnittstellenuebersicht} zeigt dieselben Schnittstellen im Zusammenhang: Sensordaten fließen von Camera, Lidar und BatterySystem über ObjectDetector und SLAM zur Navigation, während Steuer- und Statusnachrichten Navigation, MotionControl und die Bedienoberfläche verbinden.
 
