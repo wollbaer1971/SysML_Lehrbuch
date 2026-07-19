@@ -63,6 +63,8 @@
 \fi
 
 \usepackage{listings}
+\usepackage{etoolbox}
+\usepackage{needspace}
 \usepackage{enumitem}
 \usepackage{csquotes}
 \usepackage{caption}
@@ -120,6 +122,11 @@
         {ß}{{\ss{}}}1
 }
 \lstset{style=code}
+
+% Codebloecke sollen nicht mit nur wenigen Zeilen am Seitenende beginnen.
+% Bei weniger als ca. acht Codezeilen Restplatz wird der ganze Block auf die
+% naechste Seite geschoben; laengere Listings duerfen weiterhin umbrechen.
+\BeforeBeginEnvironment{lstlisting}{\Needspace{10\baselineskip}}
 
 % Stil fuer reine Text-/Baumdarstellungen (Verzeichnisbaeume, Ablaufskizzen),
 % die wie \verbatim aussehen sollen, aber - anders als \verbatim - lange
