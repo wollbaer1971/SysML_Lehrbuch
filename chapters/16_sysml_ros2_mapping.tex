@@ -17,18 +17,29 @@ Dieses Mapping ist eine Architekturentscheidung und keine feste Übersetzungsreg
 Nicht jedes Modellelement wird eins zu eins umgesetzt. Ein physisches Element wie \texttt{Camera} kann durch Hardware beschrieben werden, während die Ansteuerung über einen \texttt{camera\_node} erfolgt. Ein größeres Systemelement wie \texttt{NavigationSystem} kann aus mehreren Nodes bestehen (zum Beispiel \texttt{navigation\_node} für die Bewegungsplanung und \texttt{slam\_node} für die Kartierung, vgl. Kapitel 15).
 
 \section{Beispieltabelle}
-\begin{longtable}{p{0.28\textwidth}p{0.28\textwidth}p{0.28\textwidth}}
+\begingroup
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{@{}p{0.42\textwidth}p{0.50\textwidth}@{}}
 \toprule
-SysML-v2-Element & ROS2-Element & Bemerkung\\
+Mapping & Bemerkung\\
 \midrule
-Part Definition \texttt{ObjectDetector} & \texttt{object\_detector\_node} & Führt ML-Inferenz aus\\
-Part Definition \texttt{Camera} & \texttt{camera\_node} & Liefert Bilddaten\\
-Part Definition \texttt{NavigationSystem} & \texttt{navigation\_node} & Plant und überwacht Bewegung\\
-Part Definition \texttt{BatterySystem} & \texttt{battery\_monitor\_node} & Überwacht Akkustatus\\
-Part Definition \texttt{MotionControl} & \texttt{motion\_control\_node} & Setzt Geschwindigkeitsbefehle um\\
-Part Definition \texttt{UserInterface} & \texttt{user\_interface\_node} & Nimmt Aufträge entgegen\\
+\textbf{SysML:} Part Definition \texttt{ObjectDetector}\newline
+\textbf{ROS2:} \texttt{object\_detector\_node} & Führt ML-Inferenz aus\\
+\textbf{SysML:} Part Definition \texttt{Camera}\newline
+\textbf{ROS2:} \texttt{camera\_node} & Liefert Bilddaten\\
+\textbf{SysML:} Part Definition \texttt{NavigationSystem}\newline
+\textbf{ROS2:} \texttt{navigation\_node} & Plant und überwacht Bewegung\\
+\textbf{SysML:} Part Definition \texttt{BatterySystem}\newline
+\textbf{ROS2:} \texttt{battery\_monitor\_node} & Überwacht Akkustatus\\
+\textbf{SysML:} Part Definition \texttt{MotionControl}\newline
+\textbf{ROS2:} \texttt{motion\_control\_node} & Setzt Geschwindigkeitsbefehle um\\
+\textbf{SysML:} Part Definition \texttt{UserInterface}\newline
+\textbf{ROS2:} \texttt{user\_interface\_node} & Nimmt Aufträge entgegen\\
 \bottomrule
 \end{longtable}
+\endgroup
 
 Abbildung~\ref{fig:kap16-mapping-sysml-ros2} stellt dieses einfache Orientierungsmapping grafisch dar.
 
