@@ -12,7 +12,21 @@
     \usepackage[utf8]{inputenc}
 \fi
 \usepackage{lmodern}
-\usepackage{microtype}
+
+% protrusion=false: microtype laesst standardmaessig einzelne Zeichen
+% (Anfuehrungszeichen, Punkte, Bindestriche, oft auch kursive Glyphen wie bei
+% \emph) ein winziges Stueck (Bruchteile eines Punkts) UEBER den eigentlichen
+% Satzspiegelrand hinausragen ("hanging punctuation", optischer Randausgleich
+% - gewolltes, uebliches Feature). KDPs automatische Pruefung meldet aber
+% offenbar jeden erkannten Inhalt jenseits der Textbox als "außerhalb der
+% Ränder", unabhaengig davon, wie viel Sicherheitsabstand zum Blattschnitt
+% real noch uebrig ist. KDP selbst dokumentiert genau diesen Fehlerfall fuer
+% kursive Schrift (Quelle: kdpcommunity.com, Thread "Continued formatting
+% error/text outside margins", Stand 2026-07). protrusion betrifft nur
+% Bruchteile eines Punkts und aendert den Zeilenumbruch praktisch nicht -
+% expansion (Schriftweitenanpassung) bleibt aktiv und liefert weiterhin einen
+% GroSSteil des microtype-Nutzens fuer den Blocksatz.
+\usepackage[protrusion=false]{microtype}
 \usepackage{geometry}
 
 % Zusaetzlicher Justier-Spielraum: faengt Faelle auf, die microtype allein
