@@ -50,17 +50,70 @@ FIGURE_INPUT_RE = re.compile(
 # Da \includegraphics bereits eine eigene Breite bekommt, wird der
 # resizebox-Wrapper fuers eBook einfach entfernt und nur der Inhalt
 # behalten.
-RESIZEBOX_RE = re.compile(
-    r"\\resizebox\{[^{}]*\}\{[^{}]*\}\{(\\includegraphics\[[^\]]*\]\{[^{}]*\})\}")
-
+#
 # Seit 2026-07-17 nutzt Kapitel 11 statt \resizebox einen \adjustbox-Wrapper
 # (max width=..., max totalheight=...) fuer ein sehr hohes Diagramm, siehe
-# figures/fig_kap11_aktivitaet_rueckkehr_ladestation.tikz. Gleiches Problem
-# wie bei \resizebox: Pandocs LaTeX-Reader kennt \adjustbox nicht und wuerde
-# den kompletten Aufruf samt Inhalt stillschweigend verschlucken. Deshalb
-# hier analog entfernen und nur das \includegraphics behalten.
-ADJUSTBOX_RE = re.compile(
-    r"\\adjustbox\{[^{}]*\}\{(\\includegraphics\[[^\]]*\]\{[^{}]*\})\}")
+# figures/fig_kap11_aktivitaet_rueckkehr_ladestation.tikz. Seit 2026-07-19
+# wrappt Kapitel 3 zusaetzlich eine Tabelle (nicht nur eine Abbildung) in
+# \adjustbox{max width=\linewidth}{...\begin{tabular}...\end{tabular}}. Eine
+# feste Regex, die nur \includegraphics als Inhalt kennt, erkennt diesen
+# Fall nicht und preprocess.py bricht (bewusst laut, siehe
+# check_no_raw_tikz) mit "enthaelt noch ein \adjustbox" ab. Deshalb hier
+# generisch mit Klammer-Balancierung: findet \resizebox/\adjustbox, ueber-
+# springt die Dimensions-/Options-Gruppe(n) und behaelt nur den Inhalt der
+# letzten Gruppe - unabhaengig davon, ob darin \includegraphics, eine
+# Tabelle oder sonstiger LaTeX-Inhalt mit eigenen geschweiften Klammern
+# steht.
+
+def find_matching_brace(s, open_pos):
+    """Gibt den Index der zu s[open_pos] ('{') passenden schliessenden
+    Klammer zurueck (Klammer-balanciert, verschachtelungssicher)."""
+    assert s[open_pos] == "{"
+    depth = 0
+    for k in range(open_pos, len(s)):
+        if s[k] == "{":
+            depth += 1
+        elif s[k] == "}":
+            depth -= 1
+            if depth == 0:
+                return k
+    raise ValueError("Unbalancierte geschweifte Klammern ab Position %d" % open_pos)
+
+def strip_scaling_wrapper(content, macro, skip_groups=1):
+    """Entfernt \\macro{...}{...}...{inhalt} und behaelt nur 'inhalt'.
+    skip_groups gibt an, wie viele Gruppen vor der Inhaltsgruppe stehen
+    (\\adjustbox: 1 Options-Gruppe, \\resizebox: 2 Dimensions-Gruppen)."""
+    pattern = "\\" + macro + "{"
+    result = []
+    i = 0
+    while True:
+        idx = content.find(pattern, i)
+        if idx == -1:
+            result.append(content[i:])
+            break
+        result.append(content[i:idx])
+        pos = idx + len(pattern) - 1
+        end = find_matching_brace(content, pos)
+        for _ in range(skip_groups - 1):
+            j = end + 1
+            while j < len(content) and content[j] in " \t\n":
+                j += 1
+            if j >= len(content) or content[j] != "{":
+                break
+            end = find_matching_brace(content, j)
+        j = end + 1
+        while j < len(content) and content[j] in " \t\n":
+            j += 1
+        if j < len(content) and content[j] == "{":
+            end2 = find_matching_brace(content, j)
+            result.append(content[j + 1:end2])
+            i = end2 + 1
+        else:
+            # Unerwartetes Muster: unveraendert stehen lassen, damit
+            # check_no_raw_tikz() das laut meldet statt still zu verlieren.
+            result.append(content[idx:end + 1])
+            i = end + 1
+    return "".join(result)
 
 def replace_box_env(content, env_name):
     pattern = re.compile(
@@ -82,8 +135,8 @@ def replace_figure_inputs(content, source_name):
             sys.exit(1)
         return r"\includegraphics[width=0.92\linewidth]{" + png_path + "}"
     content = FIGURE_INPUT_RE.sub(repl, content)
-    content = RESIZEBOX_RE.sub(r"\1", content)
-    content = ADJUSTBOX_RE.sub(r"\1", content)
+    content = strip_scaling_wrapper(content, "resizebox", skip_groups=2)
+    content = strip_scaling_wrapper(content, "adjustbox", skip_groups=1)
     return content
 
 def check_no_raw_tikz(content, source_name):
