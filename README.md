@@ -62,6 +62,18 @@ Beide Projekte gliedern sich in `model/00_overview.sysml` bis `07_ros2_mapping.s
 
 Alle SysML-v2-Codebeispiele wurden mit dem Syside Editor geprüft (Version 0.10.2, Stand 07.07.2026).
 
+## Vertiefungsbeispiel: Batteriemanagement mit abgesicherter Rückkehr
+
+Das Beispiel erweitert die einfache Akkuschwelle um eine verbrauchsabhängige Entscheidung: Ein Auftrag darf nur fortgesetzt werden, wenn Abschluss, anschließende Rückkehr und Reserve energetisch gedeckt sind und die Rückkehr vom aktuellen Standort abgesichert bleibt. Fehlen belastbare Schätzungen, etwa wegen fehlender Kartendaten, wird der Auftrag unterbrochen und eine unabhängig abgesicherte Rückkehr genutzt.
+
+- [Kapitel 6: Anforderungen](chapters/06_anforderungen.tex) – Systemgrenze, Entwurfsannahmen, BM-01 bis BM-13 und offene Parameter.
+- [Kapitel 11: Ablauf](chapters/11_activity_diagrams.tex) – Fortsetzung, Rückkehr, fehlende Karte und Fehlerfälle.
+- [Kapitel 13: Energiebilanz](chapters/13_parametrik.tex) – Restauftrag, Rückkehrbedarf, Reserve und Schätzgültigkeit.
+- [Kapitel 19: Verifikation](chapters/19_tests_verifikation.tex) – zwölf Testentwürfe mit Anforderungszuordnung und ein detaillierter Testfall.
+- [Kapitel 20: Traceability](chapters/20_traceability.tex) – Verbindung der Entwürfe und Auswirkungen einer geänderten Rückkehrstrategie.
+
+Status: fachlicher Entwurf. Die zugehörigen SysML-/ROS2-Erweiterungen und Hardwaretests stehen aus. Die vorhandenen Codebeispiele realisieren diese Erweiterung noch nicht. Bereits eingecheckte PDF-, EPUB- und KPF-Ausgaben können einen älteren Quellenstand enthalten; die ergänzten Kapitel werden beim nächsten Build aus den LaTeX-Quellen übernommen.
+
 ## Nutzung in Overleaf
 
 1. ZIP-Datei in Overleaf hochladen.

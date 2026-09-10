@@ -116,6 +116,25 @@ Ein parametrisches Modell kann solche Auswirkungen sichtbar machen. Wenn die res
 
 Das Modell trifft die Entscheidung nicht automatisch. Es zeigt aber, welche Fragen diskutiert werden müssen: Ist die bessere Erkennung die kürzere Laufzeit wert? Kann ein größerer Akku eingebaut werden? Wird das System zu schwer? Reicht ein optimiertes Modell auf Rechner A?
 
+\subsection{Energiebilanz für eine abgesicherte Rückkehr}
+\label{sec:bm-energie}
+Das Batteriemanagement aus Abschnitt~\ref{sec:bm-anforderungen} verwendet die bisher gemessenen Verbräuche, um den zukünftigen Bedarf abzuschätzen. Fahrstrecke, Nutzlast, Untergrund und Wartezeit können den Verbrauch verändern. Der Durchschnitt des Hinwegs ist deshalb nur eine Eingangsgröße, keine Zusicherung für den Rückweg.
+
+Wir bezeichnen die konservativ geschätzte nutzbare Restenergie mit \(E_{\mathrm{nutz}}\), den Bedarf des Restauftrags mit \(E_{\mathrm{Auftrag}}\), den Rückkehrbedarf nach dessen Ende mit \(E_{\mathrm{danach}}\) und die Reserve mit \(E_{\mathrm{Reserve}}\). Alle Größen verwenden dieselbe Energieeinheit, beispielsweise Wh. Für die Fortsetzung gilt:
+\[
+E_{\mathrm{nutz}} \geq E_{\mathrm{Auftrag}} + E_{\mathrm{danach}} + E_{\mathrm{Reserve}}.
+\]
+Zusätzlich muss die unmittelbare Rückkehr vom aktuellen Standort energetisch gedeckt bleiben. Mit ihrem Bedarf \(E_{\mathrm{jetzt}}\) gilt:
+\[
+E_{\mathrm{nutz}} \geq E_{\mathrm{jetzt}} + E_{\mathrm{Reserve}}.
+\]
+
+Die Bedarfsschätzungen berücksichtigen Unsicherheit sowie Fahrt, Warten und Andocken. Die Reserve deckt zusätzlich festgelegte Abweichungen ab; ihre Abgrenzung zur bereits eingerechneten Unsicherheit muss dokumentiert werden. Die Rückkehrgrenze berücksichtigt auch den Verbrauch bis zur nächsten Prüfung und bis zur kontrollierten Unterbrechung des Auftrags. Eine Entscheidung darf daher nicht erst erfolgen, wenn die zweite Ungleichung bereits verletzt ist.
+
+Beide Ungleichungen sind nur bei gültigen, belastbaren Schätzungen auswertbar. Ist der Restauftrag oder sein anschließender Rückweg unbekannt, ist die Fortsetzung nicht freigegeben, selbst wenn noch viel Energie vorhanden ist. Die unmittelbare Rückkehr kann dennoch über einen separat bewerteten aufgezeichneten Weg möglich sein. Ohne gültige Rückwegdaten genügt auch eine rechnerisch positive Energiebilanz nicht: Die Route muss tatsächlich verfolgbar und befahrbar sein.
+
+Dieses Beispiel bleibt eine fachliche Berechnungsgrundlage. Es legt weder einen universellen Reservewert noch ein bestimmtes Schätzverfahren fest. Die Grenzfalltests in Abschnitt~\ref{sec:bm-tests} prüfen später die Entscheidung mit ausdrücklich festgelegten Parametern.
+
 \section{Zusammenfassung}
 Parametrische Modellierung ergänzt qualitative Modelle um quantitative Zusammenhänge. Für den Indoor-Roboter sind Akkulaufzeit, Leistungsaufnahme und Bremsweg gute Einstiegsthemen. Parametrik hilft, Trade-offs zwischen Leistung, Gewicht, Sicherheit und Kosten zu verstehen.
 

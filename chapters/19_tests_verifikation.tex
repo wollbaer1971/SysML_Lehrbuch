@@ -130,6 +130,40 @@ Sinnvoll ist außerdem, bestehende Tests nach jeder Änderung erneut auszuführe
 
 Ein gutes Testmodell macht auch Lücken sichtbar. Wenn eine Anforderung keinen Testfall besitzt, ist das nicht automatisch falsch, aber es ist eine offene Frage. Vielleicht wird sie durch Analyse, Review oder Inspektion nachgewiesen. Test, Analyse, Inspektion und Demonstration gelten dabei als die vier klassischen Verifikationsmethoden. Auch das sollte dokumentiert werden.
 
+\section{Vertiefungsbeispiel: Rückkehrabsicherung prüfen}
+\label{sec:bm-tests}
+Die Anforderungen BM-01 bis BM-13 aus Abschnitt~\ref{sec:bm-anforderungen} werden durch die folgenden Testentwürfe konkretisiert. Sie erweitern TC-005 und TC-006. Die Tests sind geplant, noch nicht durchgeführt; eine Zuordnung ist kein bestandener Nachweis. Die Kennung T-01 bis T-12 gilt innerhalb dieses Batteriemanagement-Beispiels.
+
+\subsection{Gemeinsamer Testaufbau und Messdaten}
+Für die ersten Entscheidungstests werden Akkudaten, Verbrauchsverlauf, Restauftrag, Wegdaten und Stationsstatus kontrolliert vorgegeben, beispielsweise in einer Simulation. Jede Prüfung dokumentiert die verwendeten Reserven, Unsicherheitsgrenzen und Zeitvorgaben. Aufzuzeichnen sind Eingangsdaten mit Zeitstempel und Gültigkeit, Bedarfsschätzungen, Entscheidungsgrund, freigegebene Route, Auftragsstatus sowie Andock- und Ladebestätigung.
+
+Die Prüfung der Entscheidung wird von der Prüfung der Schätzqualität getrennt: Ein korrekter Vergleich vorgegebener Energiewerte beweist nicht, dass die Werte für den realen Roboter stimmen. Wegverfolgung, Energieverbrauch und Andocken benötigen ergänzende Integrations- und Systemtests. Solange die offenen Parameter aus Abschnitt~\ref{sec:bm-anforderungen} fehlen, sind insbesondere Aussagen wie \enquote{rechtzeitig} noch nicht abschließend quantitativ prüfbar.
+
+\subsection{Szenarien und erwartete Ergebnisse}
+\begin{description}[style=nextline]
+    \item[T-01: Auftrag energetisch gedeckt] Alle Startvoraussetzungen sind erfüllt; Restauftrag, anschließende Rückkehr und Reserve sind gedeckt. Auch die aktuelle Rückkehr ist abgesichert. Erwartung: Start und Fortsetzung werden freigegeben; Schätzwerte und Grund sind nachvollziehbar. Prüft BM-01 bis BM-04 und BM-12.
+    \item[T-02: Energie nur für die Rückkehr] Die aktuelle Rückkehr einschließlich Reserve ist gedeckt, der Restauftrag jedoch nicht. Erwartung: Auftrag kontrolliert unterbrechen und Rückkehr beginnen; keine weitere Auftragsfortsetzung. Prüft BM-03, BM-04 und BM-08.
+    \item[T-03: Fehlende Karte, aufgezeichneter Rückweg] Karte und Restauftragsschätzung fehlen. Der aufgezeichnete Rückweg ist verfolgbar, befahrbar und energetisch gedeckt. Erwartung: Auch bei hohem Akkustand keine Auftragsfortsetzung; Rückkehr über den aufgezeichneten Weg. Prüft BM-05 bis BM-07.
+    \item[T-04: Rückweg nach Auftragsende unbekannt] Der Restauftrag ist bekannt, sein anschließender Rückweg nicht. Vom aktuellen Standort ist eine Rückkehr abgesichert. Erwartung: Auftrag unterbrechen und unmittelbar zurückkehren; unbekannten Bedarf nicht als null behandeln. Prüft BM-03 bis BM-05.
+    \item[T-05: Verbrauch oder Rückwegbedarf steigt] Während des Auftrags steigen Verbrauch beziehungsweise Rückwegbedarf. Erwartung: Schätzung bei relevanter Änderung und innerhalb des festgelegten Prüfabstands aktualisieren; Rückkehr vor Verlust der Absicherung einleiten. Danach eine günstigere Schätzung vorgeben: Der Auftrag bleibt während der Rückkehr unterbrochen. Prüft BM-02 bis BM-04, BM-08 und den Ablauf aus Abschnitt~\ref{sec:bm-ablauf}.
+    \item[T-06: Wegaufzeichnung fällt aus] Variante A: Eine unabhängig abgesicherte Route bleibt verfügbar. Variante B: Keine solche Route bleibt verfügbar. Erwartung: A führt zur Rückkehr über die gültige Route; B zum kontrollierten Anhalten und zur Unterstützungsanforderung. Lücken dürfen nicht als gültiger Rückweg behandelt werden. Prüft BM-06, BM-07 und BM-10 bis BM-12.
+    \item[T-07: Akkudaten ungültig] Es ist keine belastbare Restenergiebewertung mehr möglich. Erwartung: Keine weitere autonome Fahrt freigeben; kontrolliert anhalten und Unterstützung anfordern. Prüft BM-03, BM-04 und BM-10 bis BM-12.
+    \item[T-08: Blockade mit tragfähiger Alternative] Der Rückweg wird blockiert. Eine verfolg- und befahrbare Alternative einschließlich Warte-, Planungs- und Andockenergie ist gedeckt. Erwartung: Nur diese geprüfte Alternative freigeben und die Rückkehr darüber fortsetzen. Prüft BM-07 bis BM-09.
+    \item[T-09: Blockade ohne tragfähige Alternative] Es gibt keinen abgesicherten alternativen Rückweg oder die Ladestation ist unerreichbar. Erwartung: Kontrolliert anhalten, Auftrag unterbrochen lassen, Unterstützung anfordern und autonome Rückkehr als nicht erfüllt melden. Prüft BM-09 bis BM-12.
+    \item[T-10: Ladebeginn fehlt] Die Stationsposition wird erreicht, aber Andocken oder Ladebeginn schlägt fehl. Erwartung: Keine Erfolgsmeldung. Wenn keine abgesicherte Fortsetzung möglich ist, Fehlerstatus und Unterstützung anfordern. Im erfolgreichen Vergleichslauf müssen Andock- und Ladebestätigung beide vorliegen. Prüft BM-10, BM-12 und BM-13.
+    \item[T-11: Startvoraussetzung fehlt] Vor Fahrtbeginn fehlen Akkudaten, Verbrauchserfassung oder Rückkehrstrategie; jede Voraussetzung separat ausfallen lassen. Erwartung: Kein Transportauftrag startet; fehlende Voraussetzung wird gemeldet. Prüft BM-01 und BM-12.
+    \item[T-12: Entscheidungsgrenze] Gültige Testwerte unmittelbar oberhalb, auf und unterhalb der festgelegten Fortsetzungsgrenze vorgeben. Erwartung: Oberhalb und auf der Grenze darf nur bei erfüllten übrigen Bedingungen fortgesetzt werden; unterhalb wird zurückgekehrt. Die aktuelle Rückkehrgrenze gesondert prüfen: Rechtzeitige Rückkehr hat Vorrang vor Fortsetzung. Prüft BM-03, BM-04 und BM-08.
+\end{description}
+
+\subsection{Ein Testfall im Detail: T-03}
+\begin{description}[style=nextline]
+    \item[Ziel und Vorbedingungen] BM-05 bis BM-07 prüfen. Der Roboter hat einen laufenden Auftrag, gültige Akkudaten und einen unabhängig von der Karte aufgezeichneten, freigegebenen Rückweg. Seine Energie reicht für diesen Weg einschließlich Reserve.
+    \item[Testaufbau und Ablauf] In einer kontrollierten Umgebung die Kartendaten und Restauftragsschätzung als nicht verfügbar kennzeichnen; Wegaufzeichnung und ihre Rückkehrbewertung gültig lassen. Anschließend die nächste Auftragsentscheidung auslösen.
+    \item[Erwartetes Ergebnis] Der Roboter unterbricht den Auftrag, nennt die fehlende Abschätzbarkeit als Grund und gibt die abgesicherte Rückkehr frei.
+    \item[Bewertungskriterium] Nach Verarbeitung der ungültigen Schätzung wird keine weitere Auftragsfortsetzung freigegeben. Die Rückkehr beginnt innerhalb der zuvor festgelegten Reaktionszeit. Kontrolliertes Abbremsen oder eine notwendige Unterbrechungsaktion ist von weiterer Auftragsausführung zu unterscheiden.
+    \item[Messdaten] Gültigkeitskennzeichen und Zeitstempel, Energiebedarf und Reserve, ausgewählte Rückwegkennung, Freigaben, Auftragsstatus und Entscheidungsgrund aufzeichnen.
+\end{description}
+
 \section{Zusammenfassung}
 Tests und Verifikation schließen den Kreis von Anforderungen zur Umsetzung. Ein gutes Modell zeigt nicht nur, was gebaut werden soll, sondern auch, wie die Erfüllung geprüft wird.
 

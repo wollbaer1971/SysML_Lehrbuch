@@ -95,6 +95,27 @@ Wichtig sind die Alternativen. Wenn die Ladestation blockiert ist, muss der Robo
   \label{fig:kap11-aktivitaet-rueckkehr-ladestation}
 \end{figure}
 
+\subsection{Erweiterung: Verbrauchsabhängige Entscheidung und Rückkehrabsicherung}
+\label{sec:bm-ablauf}
+Der vorangehende Ablauf und seine Abbildung zeigen den einfachen Einstieg über eine Akkuschwelle. Für das Vertiefungsbeispiel aus Abschnitt~\ref{sec:bm-anforderungen} erweitern wir die Entscheidung: Maßgeblich sind der bisherige Verbrauch, der Restauftrag und die Rückkehrfähigkeit. Die Absicherung beginnt bereits beim Start und läuft parallel zur Auftragsausführung.
+
+\begin{enumerate}
+    \item \textbf{Start prüfen:} Sind Ladestation, gültige Akkudaten, Verbrauchserfassung und Rückkehrstrategie verfügbar? Wenn nicht, keinen Transportauftrag starten (BM-01).
+    \item \textbf{Daten aktualisieren:} Verbrauch, nutzbare Restenergie und Wegaufzeichnung erfassen. Bei Änderungen von Last, Verbrauch oder Route sowie nach festgelegtem Prüfabstand neu bewerten (BM-02, BM-06, BM-08).
+    \item \textbf{Rückkehr vom aktuellen Standort absichern:} Verfolgbarkeit, Befahrbarkeit und Energiebedarf prüfen. Droht die Absicherung verloren zu gehen, den Auftrag kontrolliert unterbrechen und rechtzeitig zurückkehren (BM-07, BM-08).
+    \item \textbf{Auftrag bewerten:} Sind Restauftrag und anschließender Rückweg belastbar abschätzbar und energetisch einschließlich Reserve gedeckt? Nur dann den Auftrag fortsetzen und zur laufenden Überwachung zurückkehren (BM-03, BM-04). Die Energiebilanz erläutert Abschnitt~\ref{sec:bm-energie}.
+    \item \textbf{Unterbrechen und zurückkehren:} Bei nicht ausreichender Energie oder fehlender Abschätzbarkeit den Auftrag unterbrechen, den Grund melden und den abgesicherten Rückweg nutzen (BM-05, BM-12). Eine kurzfristig günstigere Schätzung darf den unterbrochenen Auftrag während der Rückkehr nicht automatisch wieder aufnehmen.
+    \item \textbf{Blockaden behandeln:} Vor einer Blockade kontrolliert anhalten und eine Alternative prüfen. Nur einen befahrbaren, energetisch gedeckten Rückweg freigeben. Wartezeit, Planung und gegebenenfalls weitere Andockversuche verbrauchen ebenfalls Energie (BM-09).
+    \item \textbf{Absicherung nicht verfügbar:} Gibt es keinen abgesicherten Rückweg oder lässt ein Datenausfall keine belastbare Rückkehrentscheidung mehr zu, kontrolliert anhalten und Unterstützung anfordern. Die autonome Rückkehr ist dann nicht erfüllt (BM-10, BM-11).
+    \item \textbf{Rückkehr abschließen:} Andocken und Ladebeginn bestätigen. Erst dann den Rückkehrstatus auf erfolgreich setzen. Bleibt die Bestätigung aus und ist keine abgesicherte Fortsetzung möglich, Unterstützung anfordern (BM-12, BM-13).
+\end{enumerate}
+
+\paragraph{Beispiel ohne Kartendaten.}
+Der Roboter besitzt keine ausreichende Karte, um den Restauftrag oder dessen anschließenden Rückweg zu bewerten. Er hat jedoch den bisher gefahrenen Weg aufgezeichnet. Ist dieser Weg verfolgbar, in Rückrichtung befahrbar und energetisch gedeckt, unterbricht er den Auftrag und kehrt darüber zurück. Die fehlende Karte führt somit nicht zwangsläufig zum Stillstand; entscheidend ist die unabhängig abgesicherte Rückkehrmöglichkeit. Fehlt auch diese, greift der Fehlerablauf aus BM-10.
+
+\paragraph{Entscheidungen im Aktivitätsdiagramm.}
+Die Verzweigung \enquote{Auftrag fortsetzen?} benötigt sowohl gültige Schätzungen als auch eine erfüllte Energiebilanz und eine abgesicherte aktuelle Rückkehr. Der Gegenpfad führt zur Rückkehrentscheidung, nicht zum normalen Auftragsende. Ein eigener Fehlerpfad endet mit \enquote{Unterstützung angefordert}; er darf nicht mit \enquote{Ladevorgang bestätigt} zusammenfallen. So bleiben erfolgreicher Abschluss und fehlgeschlagene autonome Rückkehr unterscheidbar.
+
 \section{Zusammenfassung}
 Activity Diagrams beschreiben Abläufe und Entscheidungen. Im Roboterprojekt helfen sie, Use Cases wie Zielnavigation, Rückkehr zur Ladestation und Hindernisbehandlung in nachvollziehbare Prozesse zu übersetzen. Sie bilden eine Brücke zwischen Anforderungen und späterer Softwarelogik.
 

@@ -131,6 +131,23 @@ Für den Indoor-Roboter sind besonders traceability-würdig:
 
 Diese Ketten liefern viel Nutzen, ohne dass das Modell sofort überladen wird.
 
+\subsection{Beispiel: Änderung der Rückkehrstrategie}
+Das Vertiefungsbeispiel zur Batterie zeigt eine konkrete Änderung gegenüber dem einfachen Akkuschwellwert: REQ-005 und REQ-006 werden durch BM-01 bis BM-13 präzisiert (Abschnitt~\ref{sec:bm-anforderungen}). Der Ablauf in Abschnitt~\ref{sec:bm-ablauf}, die Energiebilanz in Abschnitt~\ref{sec:bm-energie} und die Tests in Abschnitt~\ref{sec:bm-tests} bilden gemeinsam den fachlichen Entwurf.
+
+Eine exemplarische Kette lautet:
+\begin{quote}
+REQ-006: Zur Ladestation zurückkehren\\
+BM-05: Bei fehlender Abschätzbarkeit Auftrag unterbrechen\\
+Funktionen: Schätzgültigkeit bewerten und Rückkehr absichern\\
+Vorgesehene Verantwortung: Batteriemanagement und Navigation\\
+Benötigte Informationen: Energiebedarf, Wegdaten und deren Gültigkeit\\
+T-03/T-04: Fehlende Karte beziehungsweise unbekannter Rückweg
+\end{quote}
+
+Die Verantwortung ist hier eine Architekturzuordnung im Entwurf. Eine konkrete SysML-Beziehung oder ROS2-Implementierung ist damit noch nicht erstellt oder geprüft. Insbesondere setzt der bisherige Batteriemonitor allein die neue Rückkehrabsicherung nicht um.
+
+Wird später die Wegaufzeichnung durch eine andere Rückkehrstrategie ersetzt, betrifft das mindestens BM-01, BM-06, BM-07 und BM-11, die Schnittstellen für Wegdaten, die Rückkehrentscheidung sowie T-03, T-06 und T-11. Vor einer solchen Änderung sind auch die Energieannahmen und weitere betroffene Tests zu prüfen. Der Status jeder Beziehung muss erkennen lassen, ob sie nur geplant, implementiert oder durch einen bestandenen Nachweis belegt ist.
+
 \section{Zusammenfassung}
 Traceability verbindet Anforderungen, Architektur, Umsetzung und Tests. Sie macht Änderungen beherrschbar und hilft, Lücken im Modell zu finden. Für den Indoor-Roboter ist sie besonders wertvoll, weil Sensorik, Software, Energie und Sicherheit eng zusammenhängen.
 

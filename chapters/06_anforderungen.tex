@@ -148,6 +148,47 @@ Eine Anforderung sollte erkennen lassen, wie sie später geprüft wird. Ein Akze
 \subsection{Keine Pflege}
 Anforderungen ändern sich. Wichtig ist, Änderungen nachvollziehbar zu halten und betroffene Modellelemente zu prüfen.
 
+\section{Vertiefungsbeispiel: Batteriemanagement mit abgesicherter Rückkehr}
+\label{sec:bm-anforderungen}
+Die Anforderungen REQ-005 und REQ-006 beschreiben zunächst Akkustandsüberwachung und Rückkehr bei niedrigem Akkustand. Wir verfeinern diese Ausgangslage: Der Roboter soll anhand des bisherigen Verbrauchs abschätzen, ob er den laufenden Transportauftrag noch abschließen und anschließend zur Ladestation zurückkehren kann. Ein fester Akkuschwellwert allein beantwortet diese Frage nicht.
+
+Dieses Beispiel ist ein fachlicher Entwurf. Die folgenden BM-Anforderungen ergänzen die bisherigen Lehrbuchbeispiele; ihre Umsetzung in SysML und ROS2 sowie der Nachweis am Roboter stehen noch aus. Der Entscheidungsablauf folgt in Abschnitt~\ref{sec:bm-ablauf}, die Energiebilanz in Abschnitt~\ref{sec:bm-energie} und die Testzuordnung in Abschnitt~\ref{sec:bm-tests}.
+
+\subsection{Systemgrenze und Annahmen}
+Betrachtet werden Akkuzustand, Verbrauchserfassung, Energiebedarfsschätzung, Rückwegabsicherung, Auftragsentscheidung, Navigation und Statusmeldungen. Die Ladestation ist ein externes System. Die Rückkehr endet erst mit bestätigtem Andocken und Ladebeginn.
+
+Als Entwurfsannahme beginnt die Fahrt an einer bekannten Ladestation. Der Roboter zeichnet den gefahrenen Weg und dessen Energieverbrauch auf und kann dem Weg zurück folgen. Diese vorgeschlagenen Fähigkeiten müssen technisch geprüft werden. Ein bereits gefahrener Weg ist weder automatisch in Gegenrichtung befahrbar noch dauerhaft frei. Auch der Rückwegverbrauch darf nicht ungeprüft mit dem Hinwegverbrauch gleichgesetzt werden.
+
+Ein \emph{abgesicherter Rückweg} besitzt einen bekannten Verlauf, ist ausreichend zuverlässig verfolgbar und wurde hinsichtlich Befahrbarkeit und Energiebedarf einschließlich Andocken bewertet. Eine \emph{belastbare Schätzung} verwendet gültige Eingangsdaten und berücksichtigt ihre Unsicherheit. Welche Qualität hierfür genügt, bleibt ein offener Projektparameter.
+
+\begin{hinweisbox}
+Sind Restauftrag oder vorgesehener Rückweg nicht abschätzbar, etwa wegen fehlender Kartendaten, darf der Auftrag nicht fortgesetzt werden. Die Rückkehr muss dann durch eine unabhängig abgesicherte Möglichkeit gewährleistet werden, beispielsweise durch eine geeignete Wegaufzeichnung. Eine fehlende Schätzung ist kein geringer Energiebedarf.
+\end{hinweisbox}
+
+\subsection{Anforderungen des Vertiefungsbeispiels}
+Die IDs BM-01 bis BM-13 bleiben über Anforderungen, Ablauf und Tests hinweg stabil. BM-06 legt bewusst eine Entwurfsentscheidung für dieses Beispiel fest; eine andere technische Rückkehrstrategie wäre gesondert zu bewerten.
+
+\begin{description}[style=nextline]
+    \item[BM-01: Startfreigabe] Vor Fahrtbeginn muss der Roboter gültige Akkudaten, Verbrauchserfassung und eine verfügbare Rückkehrstrategie prüfen. Fehlt eine Voraussetzung, darf kein Transportauftrag starten.
+    \item[BM-02: Verbrauchsbasierte Schätzung] Der Roboter muss den bisherigen Energieverbrauch erfassen und damit den geschätzten Bedarf aktualisieren. Veränderungen von Last, Fahrprofil oder Umgebung müssen in die Bewertung eingehen.
+    \item[BM-03: Entscheidungsgrundlage] Für jede Auftragsentscheidung muss der Roboter nutzbare Restenergie, Bedarf des Restauftrags, anschließenden Rückkehrbedarf und Reserve mit Gültigkeit und Unsicherheit bewerten. Unbekannte Werte dürfen nicht als null gelten.
+    \item[BM-04: Auftrag fortsetzen] Der Roboter darf den Auftrag nur fortsetzen, wenn Restauftrag, anschließende Rückkehr und Reserve durch eine belastbare Energieschätzung gedeckt sind. Zusätzlich muss eine Rückkehr vom aktuellen Standort abgesichert bleiben.
+    \item[BM-05: Fehlende Abschätzbarkeit] Sind Restauftrag oder anschließender Rückweg nicht abschätzbar, muss der Roboter den Auftrag kontrolliert unterbrechen und eine abgesicherte Rückkehr beginnen. Ein hoher Akkustand hebt diese Regel nicht auf.
+    \item[BM-06: Wegaufzeichnung] Der Roboter muss den gefahrenen Weg und zugehörige Verbrauchsdaten für die Rückkehrbewertung aufzeichnen. Lücken und ungültige Abschnitte müssen erkannt und berücksichtigt werden.
+    \item[BM-07: Rückwegfreigabe] Ein aufgezeichneter Weg darf nur bei bewerteter Verfolgbarkeit, Befahrbarkeit und ausreichender Energie einschließlich Reserve als abgesicherter Rückweg verwendet werden. Die Aufzeichnung allein genügt nicht.
+    \item[BM-08: Laufende Absicherung] Der Roboter muss die Rückkehrabsicherung regelmäßig und bei relevanten Änderungen erneut bewerten. Droht sie verloren zu gehen, muss er die Rückkehr vor Unterschreiten der festgelegten Rückkehrgrenze einleiten. Reaktions- und Unterbrechungszeit sind zu berücksichtigen.
+    \item[BM-09: Blockierter Rückweg] Bei einer Blockade muss der Roboter einen alternativen Rückweg bewerten. Er darf ihn nur bei abgesicherter Befahrbarkeit und ausreichender Energie nutzen. Auch Warte- und Planungsenergie müssen berücksichtigt werden.
+    \item[BM-10: Keine abgesicherte Rückkehr] Ist kein abgesicherter Rückweg verfügbar, muss der Roboter kontrolliert anhalten und Unterstützung anfordern. Der Auftrag bleibt unterbrochen; die autonome Rückkehr muss als nicht erfüllt gemeldet werden.
+    \item[BM-11: Datenausfall] Bei Ausfall von Akkudaten oder Wegaufzeichnung muss der Roboter die verbleibende Rückkehrabsicherung neu bewerten. Nur eine weiterhin belastbar abgesicherte Rückkehr darf fortgesetzt werden; andernfalls gilt BM-10.
+    \item[BM-12: Nachvollziehbarer Status] Der Roboter muss Entscheidung, Entscheidungsgrund, Auftragsstatus und Rückkehrstatus nachvollziehbar melden. Fortsetzung, Unterbrechung, Rückkehr und Unterstützungsbedarf müssen unterscheidbar sein.
+    \item[BM-13: Rückkehr erfolgreich] Der Roboter darf die Rückkehr erst nach bestätigtem Andocken und Ladebeginn als erfolgreich melden. Das Erreichen der Stationsposition allein genügt nicht.
+\end{description}
+
+\subsection{Offene Parameter und Nachweisgrenzen}
+Vor einer Implementierung müssen das Verfahren zur Restenergieschätzung, Energiereserve, zulässige Schätzunsicherheit, Rückkehrgrenze, Prüfabstände und Kriterien für gültige Wegdaten festgelegt werden. Ebenso ist zu klären, wie ein kontrolliertes Anhalten bei der vorgesehenen Ladung und Umgebung aussieht. Konkrete Werte werden hier bewusst nicht erfunden.
+
+Damit liegt noch keine technische Rückkehrgarantie vor. Insbesondere die Rückkehr ohne Karte, die Verbrauchsschätzung und unerwartete Wegblockaden benötigen einen Nachweis. Kontrolliertes Anhalten mit Unterstützungsanforderung begrenzt die Folgen eines Fehlers, erfüllt aber nicht die geforderte autonome Rückkehr.
+
 \section{Zusammenfassung}
 Anforderungen verbinden Stakeholderbedürfnisse mit Architektur und Tests. Gute Anforderungen sind verständlich, eindeutig und prüfbar. In SysML v2 werden Anforderungen nicht nur gesammelt, sondern über Beziehungen mit Systemteilen, Aktionen, Schnittstellen und Testfällen verbunden.
 
