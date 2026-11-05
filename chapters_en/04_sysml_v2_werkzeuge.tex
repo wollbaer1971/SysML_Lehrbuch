@@ -27,7 +27,7 @@ Textual modeling has several advantages:
     \item ROS2 code and the SysML v2 model can live in the same project.
 \end{itemize}
 
-This does not make diagrams unimportant. Diagrams remain valuable views. The difference is: the model does not come only from drawing, but from precisely defined model elements.
+This does not make diagrams unimportant. Diagrams remain valuable views. The difference is this: you do not create the model only by drawing; you create it from precisely defined model elements.
 
 \section{Recommended Toolchain}
 For this textbook, we use a simple toolchain:
@@ -115,7 +115,7 @@ package AutonomousIndoorRobot {
 }
 \end{lstlisting}
 
-The \texttt{part def Robot} shows: the system is the robot. \texttt{ChargingStation} appears as an external component, because the robot must drive to it, but it is not part of the robot. You must make this decision deliberately and document it.
+The \texttt{part def Robot} shows that the system is the robot. \texttt{ChargingStation} appears as an external component, because the robot must drive to it, but it is not part of the robot. You must make this decision deliberately and document it.
 
 \begin{praxisbox}
 A common beginner mistake: leaving the system boundary unclear. If you do not decide whether the charging station is \enquote{inside the system} or \enquote{outside it}, contradictions in requirements and tests will show up later. A short \texttt{doc} note at the start prevents this.
@@ -167,7 +167,7 @@ package Requirements {
 }
 \end{lstlisting}
 
-At first, this nesting is just a namespace grouping: it groups related requirements thematically under a parent requirement, but it does not create an automatic \texttt{derive} relationship between the parent and the child requirement; you would have to model such a derivation relationship explicitly with \texttt{derive} if you need one.
+At first, this nesting is just a namespace grouping: it groups related requirements thematically under a parent requirement. It does not create an automatic \texttt{derive} relationship between the parent and the child requirement. If you need that relationship, you must model it explicitly with \texttt{derive}.
 
 Read each requirement out loud and ask: can I test this? If not, it is too vague. \enquote{The robot must navigate} is not testable. \enquote{The robot must drive to the charging station at 20 percent battery level} is testable.
 
@@ -322,9 +322,9 @@ package ROS2Mapping {
 }
 \end{lstlisting}
 
-Simplified for beginners: combining several topics into one string is convenient, but not clean. A separate attribute per topic (e.g., \texttt{topicScan}, \texttt{topicMap}) would be cleaner, so that you can type and trace each topic on its own.
+For beginners, we simplify this: you can combine several topics into one string, which is convenient but not clean. A separate attribute per topic (e.g., \texttt{topicScan}, \texttt{topicMap}) is cleaner, because it lets you type and trace each topic on its own.
 
-This file grows as the project progresses. Start with the nodes you implement first. The link between a SysML system element and a ROS2 node should always be documented explicitly.
+This file grows as the project progresses. Start with the nodes you implement first. Always document explicitly how a SysML system element links to a ROS2 node.
 
 \section{Putting It All Together: A Minimal Model}
 
@@ -377,7 +377,7 @@ Clear names make models readable. For this textbook, we use simple rules:
     \item ROS2 topics: \texttt{/battery\_state}, \texttt{/cmd\_vel}, \texttt{/robot\_status}
 \end{itemize}
 
-Avoid changing the name of the same element. If an element is called \texttt{BatterySystem} once, do not call it \texttt{PowerModule} somewhere else, unless you are deliberately modeling a different thing.
+Avoid renaming the same element later. If you call an element \texttt{BatterySystem} once, do not call it \texttt{PowerModule} somewhere else, unless you are deliberately modeling a different thing.
 
 \section{Graphical Views}
 Graphical views help most when a team wants to discuss structure or interfaces quickly. In SysML v2, you should treat them as a representation of the model, not as a replacement for it.
@@ -394,30 +394,30 @@ Edit the SysML v2 text to change the model. Use the diagram to view the model's 
 \end{figure}
 
 \begin{hinweisbox}
-That is why, when text and graphics conflict, it always pays to check the text first. A diagram that someone \enquote{fixed} by hand will otherwise drift away from the actual model without anyone noticing.
+That is why you should always check the text first when text and graphics conflict. Otherwise, a diagram that someone \enquote{fixed} by hand can drift away from the actual model without anyone noticing.
 \end{hinweisbox}
 
 \section{Typical Beginner Mistakes}
-\subsection{Not Clarifying the System Boundary}
-Many models start without a clear answer to the question: what belongs to the system? This decision shapes every later requirement and test. Document the system boundary explicitly in the overview file.
+\subsection{Clarify the System Boundary Early}
+Document the system boundary explicitly in the overview file, right from the start. This decision shapes every later requirement and test, yet many models start without a clear answer to the question: what belongs to the system?
 
-\subsection{Writing Requirements That Are Not Testable}
-Requirements such as \enquote{The robot should navigate well} are not checkable. Always state concrete conditions and measurable expectations.
+\subsection{Write Testable Requirements}
+Always state concrete conditions and measurable expectations in a requirement. A requirement such as \enquote{The robot should navigate well} is not checkable.
 
-\subsection{Part Definitions Without Responsibility}
-A \texttt{part def} without a \texttt{doc} block leaves open what that building block is for. Write at least one sentence about each building block's job.
+\subsection{Give Each Part Definition a Clear Responsibility}
+Write at least one sentence about each building block's job in its \texttt{doc} block. A \texttt{part def} without this block leaves open what that building block is for.
 
-\subsection{Test Cases Without a Link to Requirements}
-A test case that checks no requirement is useless for traceability. Every \texttt{verification def} should have at least one \texttt{verify} relationship.
+\subsection{Link Every Test Case to a Requirement}
+Give every \texttt{verification def} at least one \texttt{verify} relationship. A test case that checks no requirement is useless for traceability.
 
-\subsection{Not Documenting ROS2 Topics}
-The name of a topic alone is not enough. Which node sends it? Which node receives it? What message format does it use? This information belongs in the mapping file.
+\subsection{Document Every ROS2 Topic}
+Document the sender, the receiver, and the message format for every topic in the mapping file. The name of a topic alone is not enough: which node sends it, which node receives it, and what message format does it use?
 
-\subsection{Writing Text Like Program Code, Without Meaning}
-SysML v2 text sometimes looks like code. Even so, you are modeling a system, not a program. For every element, ask: what subject-matter statement is behind it?
+\subsection{Give Your SysML Text Subject-Matter Meaning}
+For every element, ask: what subject-matter statement is behind it? SysML v2 text sometimes looks like code, but you are modeling a system, not a program.
 
 \section{Summary}
-This chapter showed how to structure a SysML v2 project from the start. You record goal, scope, and system boundary as \texttt{doc} blocks in the overview package. You write requirements as \texttt{requirement} with testable text. Part definitions describe the system's building blocks with \texttt{part def}. Test cases link to requirements through \texttt{verify}. You map ROS2 topics in a mapping file as \texttt{attribute}s and documentation. VS Code with the Syside Editor is the recommended free working environment. What matters in the end is not the tool, but an understandable, consistent, and traceable model.
+This chapter showed how to structure a SysML v2 project from the start. You record goal, scope, and system boundary as \texttt{doc} blocks in the overview package. You write requirements as \texttt{requirement} with testable text. Part definitions describe the system's building blocks with \texttt{part def}. Test cases link to requirements through \texttt{verify}. You map ROS2 topics in a mapping file as \texttt{attribute}s and documentation. VS Code with the Syside Editor is the recommended free working environment. In the end, the tool matters less than an understandable, consistent, and traceable model.
 
 \section{Review Questions}
 \begin{enumerate}

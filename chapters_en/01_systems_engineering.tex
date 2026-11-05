@@ -16,7 +16,7 @@ This is exactly where systems engineering begins. Systems engineering is a way o
     \item Who has expectations of the system?
     \item What belongs to the system, and what belongs to its environment?
     \item Which functions must the system provide?
-    \item Which requirements must be met in a way that can be checked?
+    \item Which requirements must the system meet, in a way we can check?
     \item Which components, interfaces, and sequences does this require?
     \item How do we prove that the finished system really works?
 \end{itemize}
@@ -28,7 +28,7 @@ A system is a set of elements that work together to serve a purpose. This defini
 
 First, a system consists of several elements. For the indoor robot, these are, for example, sensors, a computer, software components, a battery, motors, wheels, a housing, charging contacts, and user interfaces. People, too, can belong to a system in a broader sense -- for example, operators, maintenance staff, or people in the robot's driving area.
 
-Second, these elements work together. A single lidar sensor (a sensor that measures distance with a laser) does not by itself make an autonomous robot. The desired behavior only appears once the sensor delivers measurement data, that data is processed, a map is built from it, navigation plans a path, and the motor controller executes matching drive commands.
+Second, these elements work together. A single lidar sensor (a sensor that measures distance with a laser) does not by itself make an autonomous robot. The desired behavior only appears once the sensor delivers measurement data, software processes that data and builds a map from it, navigation plans a path, and the motor controller executes matching drive commands.
 
 Third, a system has a purpose. The purpose of our robot could be: \enquote{The robot transports small items on its own inside an office building.} A different purpose would be: \enquote{The robot monitors corridors at night and reports unusual events.} Both systems might look similar on the outside, but they would have different requirements, different stakeholders, and different technical priorities.
 
@@ -50,12 +50,12 @@ A common beginner mistake is to treat a system as nothing more than a list of pa
 
 This list is useful, but it is not enough. What matters is the relationships between the parts. The camera sends images to recognition software. The recognition software reports detected people to navigation. Navigation takes obstacles into account and produces target speeds. The motor controller turns these target speeds into electrical signals for the motors. The battery monitor reports a low charge level, which triggers mission planning to start a return to the charging station.
 
-System behavior, then, grows out of this interplay. This is often called emergent behavior: the behavior of the whole system is more than the sum of its parts. A motor can turn, a sensor can measure, and a computer can run programs. Autonomous navigation, however, only appears once these abilities are connected in a meaningful way.
+System behavior, then, grows out of this interplay. Engineers often call this emergent behavior: the behavior of the whole system is more than the sum of its parts. A motor can turn, a sensor can measure, and a computer can run programs. Autonomous navigation, however, only appears once these abilities are connected in a meaningful way.
 
 \subsection{Open and Closed Systems}
 Many technical systems are open systems. They constantly exchange something with their environment. The indoor robot senses its environment through sensors, puts movement into that environment, draws energy from the charging station, and may communicate with users or a building management system.
 
-This matters because open systems cannot be fully understood in a lab. A robot that works well in a test hall can run into trouble in a real office building: reflective glass surfaces, narrow passages, changing light, people with rolling suitcases, open doors, carpet edges, or Wi-Fi dropouts. Systems engineering therefore forces us to think about the environment early on.
+This matters because engineers cannot fully understand open systems in a lab. A robot that works well in a test hall can run into trouble in a real office building: reflective glass surfaces, narrow passages, changing light, people with rolling suitcases, open doors, carpet edges, or Wi-Fi dropouts. Systems engineering therefore forces us to think about the environment early on.
 
 \section{Why Systems Engineering?}
 In small projects, a team can often just start building. Someone writing a simple Python script can keep requirements, design, implementation, and testing in their head at once. This stops working reliably once a product grows more complex. Too many decisions depend on each other.
@@ -78,17 +78,17 @@ Systems engineering helps make such dependencies visible. It looks not just at o
 \subsection{Making Complexity Manageable}
 Complexity does not just mean that a system has many parts. A system becomes complex mainly through many interactions, unclear expectations, and changes during development. A robot project becomes complex because hardware, software, and environment all play a role at the same time.
 
-Here is an example. Navigation should choose the shortest path. The safety requirement, however, says that the robot must slow down near people. The battery requirement says that the robot must return to the charging station in time. The user requirement says that deliveries must not take too long. These requirements can conflict with each other. Systems engineering makes such conflicts visible before they only show up when the finished robot is tested.
+Here is an example. Navigation should choose the shortest path. The safety requirement, however, says that the robot must slow down near people. The battery requirement says that the robot must return to the charging station in time. The user requirement says that deliveries must not take too long. These requirements can conflict with each other. Systems engineering makes such conflicts visible before they only show up once someone tests the finished robot.
 
 \subsection{Improving Communication}
-Technical projects are teamwork. Mechanical engineering, electronics, software, testing, project management, purchasing, operations, and the customer side often use different terms. What a software developer calls a \enquote{node} may, to a systems engineer, be a functional unit. What a user calls \enquote{fast} must be translated into measurable requirements for development.
+Technical projects are teamwork. Mechanical engineering, electronics, software, testing, project management, purchasing, operations, and the customer side often use different terms. What a software developer calls a \enquote{node} may, to a systems engineer, be a functional unit. The development team must translate what a user calls \enquote{fast} into measurable requirements.
 
 Systems engineering creates shared descriptions. These descriptions can be texts, tables, diagrams, and models. Later in this book, we use SysML for this. At first, though, the point is the way of thinking: we want to clarify terms, make connections visible, and document decisions so that others can follow them.
 
 \subsection{Finding Errors Earlier}
 The later an error is found, the more expensive it becomes to fix. If a team only realizes shortly before delivery that the battery is too small for the planned drive time, it may need to change the housing, re-evaluate the center of gravity, and adjust the charging electronics. If this question is examined early, through requirements and simple calculations, the fix is far easier.
 
-Systems engineering moves thinking and checking earlier in the project. This does not mean a team must know everything perfectly in advance. It means making assumptions explicit and checking them deliberately.
+Systems engineering moves thinking and checking earlier in the project. This does not mean a team must know everything perfectly in advance. It means that the team makes assumptions explicit and checks them deliberately.
 
 \section{A Short History of Systems Engineering}
 Systems engineering did not come from a single invention. It grew out of practical problems in large technical undertakings. Whenever many disciplines had to work together, an overarching view became necessary.
@@ -104,7 +104,7 @@ In aerospace, the consequences of errors are especially severe. A satellite, a r
 Such projects shaped many of the core ideas of systems engineering: clear requirements, controlled interfaces, configuration management (the orderly handling of changes and versions), verification (explained in more detail later in this chapter), validation (checking whether the system actually solves the right problem), and traceability. The central idea is this: a team does not just develop parts, it develops a complete system with a demonstrable ability to fulfil its tasks.
 
 \subsection{Software and Networked Systems}
-Later, software became increasingly important. Modern systems are often \glspl{cyberphysical}: physical components are controlled by software and connected through networks. An autonomous robot is a typical example. It moves physically through the world, but it makes decisions with the help of software, sensor fusion, and algorithms.
+Later, software became increasingly important. Modern systems are often \glspl{cyberphysical}: software controls physical components and connects them through networks. An autonomous robot is a typical example. It moves physically through the world, but it makes decisions with the help of software, sensor fusion, and algorithms.
 
 This shifts the challenge. Mechanical parts usually change more slowly than software. Software can be updated often, but this also introduces new risks: version conflicts, unexpected runtime errors, incomplete tests, or decisions made by machine learning components that are hard to trace. Systems engineering must therefore now consider hardware, software, data, \gls{ki} models, and operating processes together.
 

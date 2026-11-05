@@ -5,7 +5,7 @@ After this chapter, you can write requirements that are clear, unambiguous, and 
 \end{lernziele}
 
 \section{Introduction}
-Requirements are one of the most important foundations of a system model. They describe what the system must deliver, and under which conditions it must deliver it. Without good requirements, it stays unclear which architecture makes sense, and what measures project success.
+Requirements are one of the most important foundations of a system model. They describe what the system must deliver, and under which conditions it must deliver it. Without good requirements, you cannot tell which architecture makes sense, or how to measure project success.
 
 For the autonomous indoor robot, many wishes sound simple at first: the robot should drive safely, detect obstacles, recognize people, run long enough, and be easy to operate. For development, that is not enough. You must translate such wishes into requirements that are unambiguous and later testable.
 
@@ -136,28 +136,28 @@ Create your first requirement elements in the file \texttt{02\_requirements.sysm
 Use description fields (\texttt{doc /* ... */}) to document assumptions, rationale, or open questions. If a requirement is still unclear, mark it deliberately instead of treating it as finished by default -- for example, with a short \texttt{doc /* TBD: ... */} note on the affected requirement element.
 
 \section{Common Mistakes}
-\subsection{Overly General Requirements}
-\enquote{The robot should be reliable} is not testable. Concrete criteria work better.
+\subsection{Write Specific, Testable Criteria}
+Give every requirement a concrete, testable criterion. \enquote{The robot should be reliable} fails this test: it names no criterion you can check.
 
-\subsection{Solutions Disguised as Requirements}
-\enquote{The robot must use sensor X} is often already a design decision. A solution-neutral capability is usually better, unless a specific sensor really is mandated.
+\subsection{Keep Requirements Solution-Neutral}
+State the capability the system needs, not the solution that provides it, unless a specific solution is truly mandated. \enquote{The robot must use sensor X} is often already a design decision, not a requirement.
 
-\subsection{No Acceptance Criteria}
-A requirement should show how you will test it later. An acceptance criterion states exactly what proves the requirement is met, for example: \enquote{Test case: with a simulated obstacle at a distance of 0.5 m, speed must drop within 1 s.} Without such criteria, you end up arguing about this at the end of the project.
+\subsection{Define Acceptance Criteria}
+Give every requirement an acceptance criterion: a statement of exactly what proves the requirement is met, for example \enquote{Test case: with a simulated obstacle at a distance of 0.5 m, speed must drop within 1 s.} Without such criteria, you end up arguing about this at the end of the project.
 
-\subsection{No Maintenance}
-Requirements change. It matters that you keep changes traceable and check the affected model elements.
+\subsection{Maintain Requirements as They Change}
+Requirements change throughout a project. Keep each change traceable, and check which model elements it affects.
 
 \section{Deep-Dive Example: Battery Management with a Safeguarded Return}
 \label{sec:bm-anforderungen}
 Requirements REQ-005 and REQ-006 first describe battery monitoring and return on low battery. We now refine this starting point: based on energy used so far, the robot should estimate whether it can still finish the current transport order and then return to the charging station. A fixed battery threshold alone does not answer this question.
 
-This example is a domain-level design sketch. The following BM requirements extend the textbook's earlier examples; their implementation in SysML and ROS2, and their verification on the robot, are still open. The decision procedure follows in section~\ref{sec:bm-ablauf}, the energy balance in section~\ref{sec:bm-energie}, and the test mapping in section~\ref{sec:bm-tests}.
+This example is a domain-level design sketch. The following BM requirements extend the textbook's earlier examples; we have not yet implemented them in SysML and ROS2, or verified them on the robot. The decision procedure follows in section~\ref{sec:bm-ablauf}, the energy balance in section~\ref{sec:bm-energie}, and the test mapping in section~\ref{sec:bm-tests}.
 
 \subsection{System Boundary and Assumptions}
-In scope are battery state, consumption tracking, energy-demand estimation, return-path safeguarding, order decisions, navigation, and status reporting. The charging station is an external system. The return trip ends only once docking and charging start are confirmed.
+This example covers battery state, consumption tracking, energy-demand estimation, return-path safeguarding, order decisions, navigation, and status reporting. The charging station is an external system. The return trip ends only once the robot confirms docking and the start of charging.
 
-As a design assumption, each trip starts at a known charging station. The robot records the path it drives and the energy it uses along the way, and can follow that path back. These proposed capabilities still need technical verification. A path already driven is neither automatically drivable in reverse, nor permanently clear. Nor may you equate return-trip consumption with outbound consumption without checking it.
+As a design assumption, each trip starts at a known charging station. The robot records the path it drives and the energy it uses along the way, and can follow that path back. These proposed capabilities still need technical verification. Driving a path once does not mean the robot can drive it in reverse, or that the path stays clear later. Nor may you equate return-trip consumption with outbound consumption without checking it.
 
 A \emph{safeguarded return path} has a known course, can be tracked reliably enough, and has been assessed for drivability and energy demand, including docking. A \emph{robust estimate} uses valid input data and accounts for its own uncertainty. What quality level is sufficient here remains an open project parameter.
 
@@ -173,15 +173,15 @@ IDs BM-01 through BM-13 stay stable across requirements, procedure, and tests. B
     \item[BM-02: Consumption-based estimate] The robot must track energy used so far and use it to update its estimated demand. Changes in load, driving profile, or environment must feed into this assessment.
     \item[BM-03: Decision basis] For every order decision, the robot must assess usable remaining energy, demand for the remaining order, subsequent return demand, and reserve, together with their validity and uncertainty. Unknown values must not count as zero.
     \item[BM-04: Continue the order] The robot may continue the order only if a robust energy estimate covers the remaining order, the following return trip, and the reserve. In addition, a return from the current location must stay safeguarded.
-    \item[BM-05: Estimate unavailable] If the remaining order or the following return path cannot be estimated, the robot must suspend the order in a controlled way and start a safeguarded return. A high battery level does not override this rule.
-    \item[BM-06: Path recording] The robot must record the path driven and the related consumption data for return-trip assessment. Gaps and invalid segments must be detected and accounted for.
-    \item[BM-07: Return-path clearance] A recorded path may serve as a safeguarded return path only once its trackability, drivability, and sufficient energy, including reserve, have been assessed. Recording it alone is not enough.
+    \item[BM-05: Estimate unavailable] If the robot cannot estimate the remaining order or the following return path, it must suspend the order in a controlled way and start a safeguarded return. A high battery level does not override this rule.
+    \item[BM-06: Path recording] The robot must record the path driven and the related consumption data for return-trip assessment. It must detect and account for gaps and invalid segments.
+    \item[BM-07: Return-path clearance] The robot may use a recorded path as a safeguarded return path only after it has assessed the path's trackability, drivability, and sufficient energy, including reserve. Recording the path alone is not enough.
     \item[BM-08: Ongoing safeguarding] The robot must reassess return safeguarding regularly and after relevant changes. If safeguarding is at risk of being lost, the robot must start the return before falling below the defined return threshold. It must account for reaction time and interruption time.
     \item[BM-09: Blocked return path] On a blockage, the robot must assess an alternative return path. It may use it only if drivability is safeguarded and energy is sufficient. It must also account for waiting and planning energy.
     \item[BM-10: No safeguarded return] If no safeguarded return path is available, the robot must stop in a controlled way and request support. The order stays suspended; the robot must report that autonomous return was not achieved.
     \item[BM-11: Data loss] On loss of battery data or path recording, the robot must reassess the remaining return safeguarding. Only a return that is still robustly safeguarded may continue; otherwise BM-10 applies.
     \item[BM-12: Traceable status] The robot must report its decision, the reason for it, order status, and return status in a traceable way. Continuation, suspension, return, and the need for support must be distinguishable from each other.
-    \item[BM-13: Return successful] The robot may report the return as successful only after confirmed docking and the start of charging. Reaching the station position alone is not enough.
+    \item[BM-13: Return successful] The robot may report the return as successful only after it confirms docking and the start of charging. Reaching the station position alone is not enough.
 \end{description}
 
 \subsection{Open Parameters and Limits of This Proof}

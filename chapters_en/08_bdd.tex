@@ -120,14 +120,14 @@ part def PerceptionSystem {
 If the definition of \texttt{Camera} changes, that change automatically applies to both instances.
 
 \section{Common Mistakes}
-\subsection{Decomposing Too Deeply}
+\subsection{Decompose Only as Deep as You Need}
 A structural model does not need to include every cable and every screw. Model as deeply as you need for understanding, interfaces, and decisions. A simple rule of thumb: keep decomposing until you can name every relevant interface -- a beginner model usually does not need to go deeper than that.
 
-\subsection{Unclear Names}
-\texttt{System1} or \texttt{ModuleA} are poor names. Names should express the system part's responsibility.
+\subsection{Give System Parts Clear Names}
+Choose names that express the system part's responsibility. \texttt{System1} or \texttt{ModuleA} are poor names because they say nothing about what the part does.
 
-\subsection{Modeling Functions as Hardware}
-\texttt{ObstacleDetector} can be a software component, but \enquote{detect obstacle} is, at first, a function. Clear naming prevents confusion.
+\subsection{Name Functions and Hardware Separately}
+Keep a function's name distinct from the hardware or software that might implement it. \texttt{ObstacleDetector} can be a software component, but \enquote{detect obstacle} is, at first, just a function. Clear naming prevents confusion.
 
 \section{A Modeling Strategy for Beginners}
 A good structural model grows step by step. Start with a single \texttt{part def Robot}. Under it, model five to seven main systems. The first level should not contain more than that.
@@ -144,7 +144,7 @@ part def BatterySystem {
 }
 \end{lstlisting}
 
-This makes visible that the battery cell, its monitoring, and the charging interface have different responsibilities. This distinction helps later, both for mapping onto ROS2 and for testing.
+This shows that the battery cell, its monitoring, and the charging interface have different responsibilities. This distinction helps later, both for mapping onto ROS2 and for testing.
 
 \section{Summary}
 Structural modeling with \texttt{part def} and \texttt{part} describes the structural view of the system. It shows the main system parts, part-whole relationships, and decomposition. For the indoor robot, it is the entry point into the architecture: perception, navigation, drive, power supply, operation, and safety become visible as system parts.

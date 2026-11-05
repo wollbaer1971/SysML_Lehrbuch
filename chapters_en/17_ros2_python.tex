@@ -53,13 +53,13 @@ if __name__ == '__main__':
     main()
 \end{lstlisting}
 
-For \texttt{ros2 run robot\_basic\_nodes status\_node} to find this code later, you must also add a matching entry to the \texttt{entry\_points} of the package's \texttt{setup.py}; we do not go into that in detail here.
+You must also add a matching entry to the \texttt{entry\_points} of the package's \texttt{setup.py}, so that \texttt{ros2 run robot\_basic\_nodes status\_node} can find this code later; we do not go into that in detail here.
 
 \section{Publisher}
 A publisher publishes messages on a topic. In the example, the node regularly sends a status on \texttt{/robot/status}. A battery monitor would publish \texttt{/battery\_state} in a similarly regular way.
 
 \section{Subscriber}
-A subscriber receives messages from a topic. The ObjectDetector, for example, would subscribe to \texttt{/camera/image\_raw}. A callback function (a method that is called automatically as soon as a new message arrives) processes incoming messages.
+A subscriber receives messages from a topic. The ObjectDetector, for example, would subscribe to \texttt{/camera/image\_raw}. A callback function (a method that ROS2 calls automatically as soon as a new message arrives) processes incoming messages.
 
 \section{Timer}
 Timers trigger functions on a regular schedule. They suit status messages, simulated sensor data, or periodic checks. Figure~\ref{fig:kap17-ablauf-publisher-timer} shows the sequence inside \texttt{StatusNode}, from the timer to the message on the topic.
@@ -88,21 +88,21 @@ The code here is deliberately minimal. Real projects add error handling, paramet
 \end{hinweisbox}
 
 \section{Common Mistakes}
-\subsection{No Clear Responsibility}
-A node should have an understandable task.
+\subsection{Give Each Node a Clear Responsibility}
+Give each node an understandable task.
 
-\subsection{Hard-Coding Topic Names}
-Topic names should stay consistent, and be configurable through parameters where needed.
+\subsection{Make Topic Names Configurable}
+Keep topic names consistent, and make them configurable through parameters where needed.
 
-\subsection{No Error Handling}
-Even simple nodes should not ignore invalid data and exceptions.
+\subsection{Handle Errors, Even in Simple Nodes}
+Even simple nodes should handle invalid data and exceptions, not ignore them.
 
 \section{From a Minimal Example to Project Code}
 The example shown here is deliberately small. In a real project, a node should do more: read parameters, use logging, detect invalid data, and shut down cleanly. For \texttt{battery\_monitor\_node}, parameters could define the percentage at which the node publishes a warning.
 
 A sensible next step is a simulated battery node. It regularly publishes a battery level that slowly drops. A second node can subscribe to this value, and issue a warning when the level is low. This produces a small, testable ROS2 system that connects directly to requirements and model relationships.
 
-The link back to the model matters. Code should not grow in isolation. Every node should have a purpose in the model, belong to a function, and communicate over defined topics.
+The link back to the model matters. Connect every node to the model instead of letting the code grow in isolation: give the node a purpose, assign it to a function, and have it communicate over defined topics.
 
 \section{Summary}
 ROS2 Python nodes implement parts of the modeled architecture. Publishers, subscribers, and timers form the basic building blocks. For a start, a small node is enough, as long as its role in the model is clear.
