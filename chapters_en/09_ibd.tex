@@ -1,0 +1,172 @@
+\chapter{Connection Modeling with \texttt{port} and \texttt{connection}}
+
+\begin{lernziele}
+After this chapter, you can describe internal connections between system parts in SysML v2. You understand \texttt{port}, \texttt{connection}, and data flows, and you can carry these concepts over to ROS2-style communication in the robot project.
+\end{lernziele}
+
+\section{Introduction}
+The structural modeling from the previous chapter shows which system parts exist. Connection modeling shows how these parts work together. It is the next step from structure to collaboration.
+
+In SysML v2, you model connections with \texttt{port} and \texttt{connection}. Ports describe a system part's interfaces to the outside. Connections link ports of different parts to each other.
+
+\begin{hinweisbox}
+SysML v1 used the Internal Block Diagram (IBD) for this view. In SysML v2, ports and connections are direct model elements inside \texttt{part def}. The concept stays similar; the textual notation is more precise.
+\end{hinweisbox}
+
+\section{Purpose of Connection Modeling}
+A connection view answers questions such as:
+
+\begin{itemize}
+    \item Which parts work together inside a system?
+    \item Which data or signals flow between them?
+    \item Which ports do the parts have?
+    \item Which interfaces must be described?
+    \item Where do integration risks arise?
+\end{itemize}
+
+\section{Ports}
+A port describes an input or output of a system part. Ports make interfaces explicit and force you to name data or signal flows.
+
+\begin{lstlisting}
+port def ImagePort;
+port def ScanPort;
+port def ObjectListPort;
+
+part def Camera {
+  port imageOut : ImagePort;
+}
+
+part def Lidar {
+  port scanOut : ScanPort;
+}
+
+part def ObjectDetector {
+  port imageIn  : ~ImagePort;
+  port objectsOut : ObjectListPort;
+}
+
+part def ObstacleDetector {
+  port scanIn : ~ScanPort;
+}
+\end{lstlisting}
+
+The tilde \texttt{\textasciitilde} marks a \glsdisp{conjport}{conjugated port}, which receives instead of sends.
+
+\section{Connections}
+\texttt{connection} links compatible ports to each other. A connection should always document what flows across it. The basic form is: \texttt{connection <name> connect <part1>.<port1> to <part2>.<port2>;}
+
+\begin{lstlisting}
+part def PerceptionSystem {
+  part camera          : Camera;
+  part lidar           : Lidar;
+  part objectDetector  : ObjectDetector;
+  part obstacleDetector : ObstacleDetector;
+
+  connection c1 connect camera.imageOut
+                      to objectDetector.imageIn;
+  connection c2 connect lidar.scanOut
+                      to obstacleDetector.scanIn;
+}
+\end{lstlisting}
+
+Figure~\ref{fig:ports-connections} shows the resulting connection model with the ports involved.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_ports_connections}}
+  \caption{Connection model of the \texttt{PerceptionSystem}. The small
+    squares on the box edges are ports. The tilde marks a conjugated
+    port, which receives instead of sends.}
+  \label{fig:ports-connections}
+\end{figure}
+
+\section{Data Flows and ROS2}
+Connection modeling fits ROS2 communication well. You can model ROS2 topics as data flows. A topic \texttt{/camera/image\_raw} connects \texttt{camera\_node} and \texttt{object\_detector\_node}. A topic \texttt{/cmd\_vel} connects navigation and motion control.
+
+\begin{praxisbox}
+A connection view for the \texttt{PerceptionSystem} shows: the camera delivers image data to the \texttt{ObjectDetector}, while the lidar delivers laser scan data to the \texttt{ObstacleDetector}. Both results go on to navigation. You can later derive ROS2 topics directly from this.
+\end{praxisbox}
+
+\section{A Connection Model for Navigation}
+A connection view for navigation makes it visible that localization, map, path planning, and motion control work together:
+
+\begin{lstlisting}
+part def NavigationSystem {
+  part localization : Localization;
+  part mapProvider  : MapProvider;
+  part pathPlanner  : PathPlanner;
+  part pathFollower : PathFollower;
+
+  connection c1 connect localization.poseOut
+                      to pathPlanner.poseIn;
+  connection c2 connect mapProvider.mapOut
+                      to pathPlanner.mapIn;
+  connection c3 connect pathPlanner.pathOut
+                      to pathFollower.pathIn;
+}
+\end{lstlisting}
+
+Here, \texttt{c1} delivers the current pose from localization to the path planner, \texttt{c2} delivers the map to that same path planner, and \texttt{c3} passes the planned path on to motion control.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap09_verbindungsmodell_navigation}}
+  \caption{Connection model of the \texttt{NavigationSystem}: localization and map feed the path planner, whose path is passed on to motion control.}
+  \label{fig:kap09-verbindungsmodell-navigation}
+\end{figure}
+
+Navigation emerges from several parts working together (see figure~\ref{fig:kap09-verbindungsmodell-navigation}). At the same time, this makes visible the interfaces that you can later implement in ROS2.
+
+\section{Documenting Assumptions}
+A good connection model should also document assumptions. Is the map loaded beforehand, or updated while driving? Does localization work relative to \texttt{map} or \texttt{odom} (two common ROS2 coordinate frames, explained in more detail in chapter 10)? Such questions belong in the model element as documentation (\texttt{doc /* ... */}).
+
+\begin{lstlisting}
+part def NavigationSystem {
+  doc /* Precondition: an initial map is available.
+         Localization works relative to the map frame. */
+  ...
+}
+\end{lstlisting}
+
+\section{Common Mistakes}
+\subsection{Connecting Parts Without Ports}
+Connections should always run through named ports. Direct connections without ports leave open what exactly gets transmitted.
+
+\subsection{Ports Without Data Types}
+A port only becomes useful once you know what data flows across it. Define \texttt{port def} with descriptive names.
+
+\subsection{Too Much Detail in One Model Section}
+A connection view should answer one clear question. For large systems, several focused sections work better than one overloaded model.
+
+\section{Summary}
+Connection modeling with \texttt{port} and \texttt{connection} shows how system parts work together internally. It is especially useful for interfaces and data flows. In the robot project, it bridges the SysML v2 structure and ROS2 communication.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What does a connection view show that a structural view does not?
+    \item What does a \texttt{port} describe?
+    \item What does the tilde do on a port?
+    \item What is \texttt{connection} used for?
+    \item Why is connection modeling helpful for ROS2?
+    \item Which topic could sit between the camera and the ObjectDetector?
+    \item Why should a connection model document its assumptions?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Connection model for PerceptionSystem}\\
+Create a \texttt{part def PerceptionSystem} with a camera, lidar, ObjectDetector, and ObstacleDetector. Define ports and connect them with \texttt{connection}.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Name ports}\\
+Define at least two ports with descriptive names for each of \texttt{BatterySystem}, \texttt{NavigationSystem}, and \texttt{MotionControl}.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 3: Prepare ROS2 mapping}\\
+Pick three connections from your model and assign each one a possible ROS2 topic.
+\end{uebungbox}
+
+\section{Further Reading}
+Ports and connections in SysML v2 are documented in the SysML v2 pilot project \cite{sysmlv2pilot}. The Syside Editor offers concrete examples of connection modeling \cite{syside}. For implementation in ROS2, the ROS2 documentation and relevant introductions are helpful \cite{ros2docs}.
