@@ -1,0 +1,51 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    node distance=6mm and 40mm,
+    sysml/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=44mm, minimum height=9mm,
+        align=center, fill=green!15, drop shadow
+    },
+    ros/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=40mm, minimum height=9mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
+]
+
+\node[font=\small, align=center, text width=110mm] at (4,10.6)
+  {Simplified mapping as a starting point: the actual software architecture can later combine, split, or extend this.};
+
+% --- Left column: SysML part definitions ---
+\node[sysml] (pd1) at (0, 9)  {Part Definition\\\texttt{ObjectDetector}};
+\node[sysml] (pd2) at (0, 6)  {Part Definition\\\texttt{Camera}};
+\node[sysml] (pd3) at (0, 3)  {Part Definition\\\texttt{NavigationSystem}};
+\node[sysml] (pd4) at (0, 0)  {Part Definition\\\texttt{BatterySystem}};
+\node[sysml] (pd5) at (0, -3) {Part Definition\\\texttt{MotionControl}};
+\node[sysml] (pd6) at (0, -6) {Part Definition\\\texttt{UserInterface}};
+
+% --- Right column: ROS2 nodes ---
+\node[ros] (n1) at (8, 9)  {\texttt{object\_detector\_}\\\texttt{node}};
+\node[ros] (n2) at (8, 6)  {\texttt{camera\_node}};
+\node[ros] (n3) at (8, 3)  {\texttt{navigation\_node}};
+\node[ros] (n4) at (8, 0)  {\texttt{battery\_monitor\_}\\\texttt{node}};
+\node[ros] (n5) at (8, -3) {\texttt{motion\_control\_}\\\texttt{node}};
+\node[ros] (n6) at (8, -6) {\texttt{user\_interface\_}\\\texttt{node}};
+
+% --- Connections ---
+\draw[flow] (pd1.east) -- node[lbl, above, align=center]{runs ML inference} (n1.west);
+\draw[flow] (pd2.east) -- (n2.west);
+\draw[flow] (pd3.east) -- (n3.west);
+\draw[flow] (pd4.east) -- (n4.west);
+\draw[flow] (pd5.east) -- (n5.west);
+\draw[flow] (pd6.east) -- (n6.west);
+
+% --- Legend ---
+\node[sysml, minimum width=7mm, minimum height=5mm, font=\small] (leg1) at (0,-9.5) {};
+\node[right=1mm of leg1, font=\small, align=left] (lab1){SysML v2 element};
+\node[ros, minimum width=7mm, minimum height=5mm, font=\small, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\small, align=left] (lab2){ROS2 element};
+
+\end{tikzpicture}

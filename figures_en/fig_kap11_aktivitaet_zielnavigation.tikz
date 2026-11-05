@@ -1,0 +1,108 @@
+\begin{tikzpicture}[
+    scale=0.68, transform shape,
+    every node/.style={font=\small},
+    act/.style={
+        rectangle, rounded corners=2pt, draw=black!70, thick,
+        minimum width=30mm, minimum height=9mm,
+        align=center, fill=blue!8, drop shadow
+    },
+    ref/.style={
+        rectangle, rounded corners=2pt, draw=black!60, thick, dashed,
+        minimum width=32mm, minimum height=13mm,
+        align=center, fill=black!4, drop shadow
+    },
+    decide/.style={
+        rectangle, draw=none, fill=none,
+        minimum width=28mm, minimum height=16mm,
+        align=center, inner sep=1pt
+    },
+    merge/.style={rectangle, draw=none, fill=none,
+        minimum width=6mm, minimum height=6mm, inner sep=0pt},
+    startnode/.style={circle, fill=black, minimum size=3mm, inner sep=0pt},
+    endouter/.style={circle, draw=black!70, thick, fill=white,
+        minimum size=6mm, inner sep=0pt},
+    endinner/.style={circle, fill=black, minimum size=3mm, inner sep=0pt},
+    forkbar/.style={rectangle, fill=black, minimum width=100mm,
+        minimum height=1.4mm, inner sep=0pt},
+    trans/.style={-{Stealth[length=2.2mm]}, thick, black!60},
+    lbl/.style={font=\small, fill=white, inner sep=1pt, align=center}
+]
+
+% --- Main chain ---
+\node[startnode] (start) at (0,0)     {};
+\node[act] (n1) at (0,-1.7)  {Start the\\system};
+\node[act] (n2) at (0,-3.4)  {Initialize\\sensors};
+\node[act] (n3) at (0,-5.1)  {Load the map};
+\node[act] (n4) at (0,-6.8)  {Receive\\a target};
+\node[act] (n5) at (0,-8.5)  {Check battery\\level};
+\node[decide] (dec1) at (0,-10.8) {};
+\filldraw[fill=white, draw=black!70, thick] (dec1.north) -- (dec1.east) -- (dec1.south) -- (dec1.west) -- cycle;
+\node[align=center] at (dec1) {Battery\\low?};
+
+% --- Reference to the return-to-charging-station diagram ---
+\node[ref] (refbox) at (-6.2,-10.8)
+    {Return to\\charging station\\{\small(see Fig.~\ref{fig:kap11-aktivitaet-rueckkehr-ladestation})}};
+
+\node[act] (n6) at (0,-13.3) {Plan a path};
+
+% --- Parallel region (fork/join) ---
+\node[forkbar] (fork1) at (0,-15.0) {};
+\node[act] (sensmon) at (-5,-16.8) {Monitor\\sensors};
+\node[act] (moveact) at (0,-16.8)  {Execute\\motion};
+\node[act] (commmon) at (5,-16.8)  {Monitor\\communication};
+\node[forkbar] (join1) at (0,-18.6) {};
+
+\node[decide] (dec2) at (0,-21.0) {};
+\filldraw[fill=white, draw=black!70, thick] (dec2.north) -- (dec2.east) -- (dec2.south) -- (dec2.west) -- cycle;
+\node[align=center] at (dec2) {Obstacle\\detected?};
+\node[merge] (mrg) at (0,-23.4) {};
+\filldraw[fill=white, draw=black!70, thick] (mrg.north) -- (mrg.east) -- (mrg.south) -- (mrg.west) -- cycle;
+\node[act] (n8) at (0,-25.2) {Report target\\reached};
+\node[endouter] (endo) at (0,-27.0) {};
+\node[endinner] at (endo.center) {};
+
+% --- Main flow ---
+\draw[trans] (start) -- (n1);
+\draw[trans] (n1) -- (n2);
+\draw[trans] (n2) -- (n3);
+\draw[trans] (n3) -- (n4);
+\draw[trans] (n4) -- (n5);
+\draw[trans] (n5) -- (dec1);
+\draw[trans] (dec1.west) -- node[lbl, above]{[Battery low]} (refbox.east);
+\draw[trans] (dec1.south) -- node[lbl, right]{[Battery sufficient]} (n6);
+\draw[trans] (n6.south) -- (fork1.north);
+
+% --- Fork ---
+\draw[trans] (-5,-15.0) -- (sensmon.north);
+\draw[trans] (0,-15.0)  -- (moveact.north);
+\draw[trans] (5,-15.0)  -- (commmon.north);
+
+% --- Join ---
+\draw[trans] (sensmon.south) -- (-5,-18.6);
+\draw[trans] (moveact.south) -- (0,-18.6);
+\draw[trans] (commmon.south) -- (5,-18.6);
+\draw[trans] (join1.south) -- (dec2.north);
+
+% --- Decision: obstacle detection ---
+\draw[trans] (dec2.east) node[lbl, above right]{[Obstacle detected]}-- (8.82,-21) -- (8.82,-13.24) -- (n6.east);
+\draw[trans] (dec2.south) -- node[lbl, right]{[Path clear]} (mrg.north);
+\draw[trans] (mrg.south) -- (n8.north);
+\draw[trans] (n8.south) -- (endo.north);
+
+% --- Legend ---
+\node[startnode] (leg1) at (-8,-29.8) {};
+\node[right=1mm of leg1, font=\small, align=left] (lab1){Start};
+\node[endouter, right=6mm of lab1] (leg2) {};
+\node[endinner] at (leg2.center) {};
+\node[right=1mm of leg2, font=\small, align=left] (lab2){End};
+\node[decide, minimum width=6mm, minimum height=6mm, font=\small, right=6mm of lab2] (leg3) {};
+\filldraw[fill=white, draw=black!70, thick] (leg3.north) -- (leg3.east) -- (leg3.south) -- (leg3.west) -- cycle;
+\node[right=1mm of leg3, font=\small, align=left] (lab3){Decision};
+\node[act, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab3] (leg4) {};
+\node[right=1mm of leg4, font=\small, align=left] (lab4){Action};
+\node[forkbar, minimum width=6mm, right=6mm of lab4] (leg5) {};
+\node[right=1mm of leg5, font=\small, align=left] (lab5){Fork/Join};
+\node[ref, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab5] (leg6) {};
+\node[right=1mm of leg6, font=\small, align=left] (lab6){Reference to another diagram};
+
+\end{tikzpicture}

@@ -1,0 +1,126 @@
+\chapter{Outlook}
+
+\begin{lernziele}
+After this chapter, you know sensible next steps for going deeper. You can place the topics that follow this beginner's book: advanced SysML modeling, SysML v2, ROS2 in practice, simulation, safety engineering, machine learning, and professional application.
+\end{lernziele}
+
+\section{Introduction}
+This book offers a starting point. It shows how SysML v2, MBSE, and ROS2 work together, using an autonomous indoor robot as the example. After this start, there are many paths to go deeper. This chapter maps out the most important next steps. Figure~\ref{fig:kap22-vertiefungs-roadmap} gives an overview of the six topic areas covered in the following sections.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap22_vertiefungs_roadmap}}
+  \caption{Possible directions to go deeper after this book, grouped into six topic areas with selected subtopics.}
+  \label{fig:kap22-vertiefungs-roadmap}
+\end{figure}
+
+\section{Going Deeper into SysML}
+After this start, it is worth learning SysML in more depth. These topics matter especially:
+
+\begin{itemize}
+    \item clean model organization
+    \item reuse of model elements
+    \item variant modeling
+    \item interface concepts
+    \item formal requirements
+    \item parametrics and engineering analysis
+    \item model review and model quality
+\end{itemize}
+
+\section{SysML v2}
+SysML v2 modernizes the language and brings more precise textual and graphical modeling. For beginners, SysML v1.x is still widespread, but SysML v2 will matter more in the long run.
+
+Important topics for later:
+
+\begin{itemize}
+    \item textual modeling
+    \item more precise semantics
+    \item better tool support
+    \item migrating existing models
+    \item connecting to modern MBSE methods
+\end{itemize}
+
+\section{Going Deeper into ROS2}
+For robotics, the following ROS2 topics are important next steps:
+
+\begin{itemize}
+    \item Navigation2 (the navigation stack for path planning and obstacle avoidance)
+    \item TF2 (a library for managing coordinate transforms)
+    \item lifecycle nodes (nodes with defined, managed state transitions)
+    \item launch files
+    \item parameters
+    \item rosbag (a tool for recording and replaying messages)
+    \item simulation
+    \item testing with launch testing
+\end{itemize}
+
+\section{Simulation}
+Gazebo and other simulators let you test without real hardware. This is especially valuable when you want to try out algorithms quickly. Simulation can help you check navigation, sensing, obstacles, and failure cases early.
+
+\section{Safety Engineering}
+As soon as robots interact with people in real environments, safety questions become important. At that point, simple function models are no longer enough. You must account for risk analyses, safety requirements, FMEA (Failure Mode and Effects Analysis), hazard analyses, and standards. For a service robot like the indoor robot, for example, the standard ISO 13482 for personal care robots is relevant.
+
+\section{Going Deeper into Machine Learning}
+ML integration (Machine Learning) does not end once you load a model. Important areas to deepen:
+
+\begin{itemize}
+    \item training data
+    \item validation datasets
+    \item misclassifications
+    \item runtime optimization
+    \item edge AI hardware
+    \item monitoring in operation
+    \item handling uncertainty
+\end{itemize}
+
+\section{Professional Relevance}
+The combination of systems engineering, SysML, ROS2, and AI matters in robotics, automotive, industrial automation, and research. If you understand this connection, you can mediate between architecture, software, and tests. This cross-cutting skill is valuable in many projects.
+
+\section{Possible Next Projects}
+\begin{itemize}
+    \item a SysML v2 modeling workshop with a complete model build
+    \item a small ROS2 workspace with simulated nodes
+    \item a Navigation2 demo in simulation
+    \item an object detection node with an example model
+    \item a SysML v2 comparison chapter
+    \item full traceability from requirements to test code
+\end{itemize}
+
+\section{From a Learning Project to a Real Project}
+The most important step after this book is moving from a didactic model to a real project. In a real project, requirements become more contradictory, interfaces become more technical, and tests become more demanding. Organizational topics also appear: versioning, reviews, responsibilities, change management, and acceptance. Figure~\ref{fig:kap22-lernprojekt-vs-echtes-projekt} contrasts this transition.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap22_lernprojekt_vs_echtes_projekt}}
+  \caption{The move from a learning project to a real project brings more complex requirements and interfaces, plus new organizational topics.}
+  \label{fig:kap22-lernprojekt-vs-echtes-projekt}
+\end{figure}
+
+The learning project gives you a foundation for this. Once you understand how a requirement leads to an architecture, and on to ROS2 nodes and tests, you can apply this thinking to larger systems. The scale grows, but the principle stays the same: understand the problem, build a model, clarify interfaces, derive the implementation, and plan proof.
+
+\section{Summary}
+You have made a good start once you can think about requirements, structure, behavior, interfaces, ROS2 architecture, and tests together. The next step is to practice these concepts in tools and code. MBSE only comes alive through use.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item Which SysML topics are worth going deeper into?
+    \item Why is SysML v2 becoming more important?
+    \item Which ROS2 topics should you learn after this start?
+    \item Why is simulation valuable for robotics?
+    \item Why does safety engineering matter for robots?
+    \item Which professional role can the combination of SysML and ROS2 strengthen?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Personal learning plan}\\
+Define your personal next learning step: going deeper into SysML, implementing ROS2, building a simulation, or trying out ML integration.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Project idea}\\
+Describe a small robotics or automation project of your own where you could apply the methods from this book.
+\end{uebungbox}
+
+\section{Further Reading}
+To go deeper, see the SysML v2 specification, current tool documentation, the SysML v2 pilot project, and the ROS2 documentation \cite{sysmlv2spec,sysmlv2pilot,ros2docs}. Classic SysML literature \cite{delligatti2014,friedenthal2014} is still useful as background, but you must consciously map it onto SysML v2.

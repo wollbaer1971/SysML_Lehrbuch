@@ -1,0 +1,149 @@
+\chapter{Integrating Machine Learning into ROS2}
+
+\begin{lernziele}
+After this chapter, you understand how an ML model gets integrated into a robot architecture as a ROS2 node. You can describe data flow, inference, result messages, latency, model quality, and typical integration problems.
+\end{lernziele}
+
+\section{Introduction}
+Robotics often uses machine learning for perception: object detection, person detection, segmentation, or classification. In the example project, we use ML for person detection.
+
+\section{The Role of Machine Learning}
+Classic software works with explicit rules. ML models learn patterns from data. For person detection, this is useful, because people can look very different in images. At the same time, ML brings new challenges: training data, misclassifications, latency, and behavior that is hard to explain.
+
+\section{Architecture}
+\begin{lstlisting}[style=plaintext]
+Camera
+  -> /camera/image_raw
+  -> object_detector_node
+  -> /detected_objects
+  -> navigation_node or user_interface_node
+\end{lstlisting}
+
+The ML node is part of the perception architecture. Keep it clearly separate from navigation and safety logic. Navigation receives results, but it should not blindly trust every result.
+
+\section{Inference Node}
+The ML node loads a trained model, processes incoming sensor data, and publishes results. This step is called \emph{inference}: applying an already-trained model to new data, as opposed to the earlier step of training the model. In Python, you can implement this with PyTorch, TensorFlow, or \gls{onnx} Runtime.
+
+\section{Pseudocode}
+\begin{lstlisting}[language=Python]
+class ObjectDetectorNode(Node):
+    def __init__(self):
+        super().__init__('object_detector_node')
+        self.model = load_model('model.pt')
+        self.subscription = self.create_subscription(
+            Image,
+            '/camera/image_raw',
+            self.image_callback,
+            10
+        )
+        self.publisher = self.create_publisher(
+            DetectionArray,
+            '/detected_objects',
+            10
+        )
+
+    def image_callback(self, msg):
+        image = convert_ros_image_to_tensor(msg)
+        detections = self.model(image)
+        self.publisher.publish(convert_to_ros_msg(detections))
+\end{lstlisting}
+
+The file extension \texttt{.pt} in the example points to a PyTorch model; with TensorFlow or \gls{onnx} Runtime as the framework, the model file format and the loading function would look different. The message type \texttt{DetectionArray} is also simplified here: in practice, you would typically use the standard type \texttt{vision\_msgs/Detection2DArray}, or define your own message type.
+
+\section{Data Chain}
+The real difficulty often lies not in the model, but in the data chain:
+
+\begin{itemize}
+    \item Image format
+    \item Resolution
+    \item Color space
+    \item Camera calibration
+    \item Latency
+    \item GPU usage (graphics processor)
+    \item Synchronization
+    \item Result format
+\end{itemize}
+
+Each of these points can cause errors in practice: a wrong color space or a wrong resolution feeds the model unusable data, and latency that is too high can produce stale detection results.
+
+Figure~\ref{fig:kap18-datenkette-ml-inferenz} illustrates this data chain, from the camera image through tensor conversion and model inference to the publication and further processing of the detection results.
+
+\begin{figure}[H]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures_en/fig_kap18_datenkette_ml_inferenz}}
+  \caption{Data chain of ML inference in \texttt{object\_detector\_node}, from the camera image to the publication of the detection results.}
+  \label{fig:kap18-datenkette-ml-inferenz}
+\end{figure}
+
+\section{Quality and Safety}
+ML results are not perfect. A model can miss a person, or wrongly flag an object as a person. Write requirements and tests in realistic terms because of this. For safety-critical functions, do not use ML without further safety mechanisms.
+
+\begin{praxisbox}
+If the ML node detects a person, navigation can drive more carefully. But if the ML node detects no person, that does not automatically mean the area is safe. Lidar-based obstacle detection stays important regardless.
+\end{praxisbox}
+
+Figure~\ref{fig:kap18-ml-sicherheitsarchitektur} contrasts the uncertain ML detection with the more reliable lidar-based distance measurement.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap18_ml_sicherheitsarchitektur}}
+  \caption{The ML-based \texttt{object\_detector\_node} provides an uncertain extra signal, while lidar-based obstacle detection remains the more reliable safety basis.}
+  \label{fig:kap18-ml-sicherheitsarchitektur}
+\end{figure}
+
+\section{Optimization}
+For real robots, \gls{onnx} Runtime, TensorRT, or OpenVINO can be useful -- platform- or hardware-optimized runtimes that run trained models faster and with fewer resources. A large PyTorch model run directly on a small computer can be too slow. Optimization affects not only speed, but also memory use, temperature, and power.
+
+\section{Modeling in SysML}
+The SysML model should make visible:
+
+\begin{itemize}
+    \item which requirement the ML node supports
+    \item which data it needs
+    \item which result it delivers
+    \item which latency is acceptable
+    \item which test checks the detection
+    \item which failure cases it accounts for
+\end{itemize}
+
+\section{Test Strategy for ML Functions}
+You must test ML functions differently from classic rules. A single test with one image is not enough. A small test dataset with different lighting conditions, perspectives, and situations works better. This dataset can be small for a start, but you should build it deliberately.
+
+Possible test questions:
+
+\begin{itemize}
+    \item Does the model detect people under normal lighting?
+    \item How does it behave against backlight?
+    \item Are there many false detections?
+    \item How long does inference take per image?
+    \item What happens when no camera message arrives?
+\end{itemize}
+
+In the SysML model, a test case \texttt{TC-004 Person Detection} can point to several concrete test datasets. This keeps it visible that the requirement is checked not only by code, but by data and evaluation criteria.
+
+\section{Summary}
+ML can improve the robot's perception, but it brings new integration and quality questions. Integrate an ML node cleanly into the ROS2 architecture, describe it traceably in the SysML model, and check it through tests.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What is ML used for in the robot project?
+    \item Which data does the ObjectDetector need?
+    \item Which topic could publish detection results?
+    \item Why does latency matter?
+    \item Why should ML not be treated blindly as a safety function?
+    \item Which optimization paths exist for ML inference?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Model Link}\\
+Describe, in the SysML model, which requirement the ML node meets, and which topic publishes the results.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Failure Cases}\\
+Name three possible failure cases for person detection, and describe a reasonable system response for each.
+\end{uebungbox}
+
+\section{Further Reading}
+The ROS2 documentation \cite{ros2docs} matters for ROS2 integration. For ML models, also use sources on PyTorch, YOLO, ONNX, and embedded AI optimization.

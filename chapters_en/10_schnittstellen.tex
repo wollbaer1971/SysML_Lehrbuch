@@ -1,0 +1,138 @@
+\chapter{Interface Modeling}
+
+\begin{lernziele}
+After this chapter, you can describe interfaces systematically and explain why clear interfaces are critical in robotics projects. You can document data flows, senders, receivers, data types, frequencies, quality requirements, and error cases.
+\end{lernziele}
+
+\section{Introduction}
+Many technical problems do not come from individual components. They come from the interfaces between them. A camera delivers images in a format the recognition algorithm does not expect. A navigation node expects coordinates in a different reference frame. A battery module reports values more slowly than mission planning assumes. These kinds of errors are common.
+
+\section{Why Interfaces Matter}
+Interfaces are the points where parts of a system work together. The more complex a system becomes, the more important clear interfaces become. For the indoor robot, interfaces involve sensors, software, power, mechanics, operation, and the environment.
+
+An unclear interface leads to questions such as:
+
+\begin{itemize}
+    \item Who sends which data?
+    \item What format is the data in?
+    \item How often is the data sent?
+    \item What happens when data is missing or faulty?
+    \item Which unit and which coordinate system apply?
+\end{itemize}
+
+\section{Describing an Interface}
+A good interface description includes:
+
+\begin{itemize}
+    \item Name of the interface
+    \item Sender and receiver
+    \item Data type
+    \item Direction
+    \item Frequency or triggering event
+    \item Unit and coordinate system
+    \item Quality requirements
+    \item Error cases
+    \item Link to requirements
+\end{itemize}
+
+\section{Example Table}
+\begingroup
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}p{0.19\textwidth}p{0.18\textwidth}p{0.20\textwidth}p{0.30\textwidth}@{}}
+\toprule
+Interface & Sender & Receiver & Data type\\
+\midrule
+Camera image & Camera & ObjectDetector & \texttt{sensor\_msgs/}\newline\texttt{Image}\\
+Laser scan & Lidar & SLAM & \texttt{sensor\_msgs/}\newline\texttt{LaserScan}\\
+Motion command & Navigation & MotionControl & \texttt{geometry\_msgs/}\newline\texttt{Twist}\\
+Battery status & BatterySystem & Navigation & \texttt{sensor\_msgs/}\newline\texttt{BatteryState}\\
+Object list & ObjectDetector & Navigation & Detection list\\
+Robot status & Robot & UserInterface & Status message\\
+\bottomrule
+\end{longtable}
+\endgroup
+
+Figure~\ref{fig:kap10-schnittstellenuebersicht} shows these interfaces together: sensor data flows from Camera, Lidar, and BatterySystem through ObjectDetector and SLAM to Navigation, while control and status messages connect Navigation, MotionControl, and the user interface.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap10_schnittstellenuebersicht}}
+  \caption{Interface overview of the indoor robot: sensor data (orange) flows through ObjectDetector and SLAM to Navigation; control and status messages (blue) connect Navigation, MotionControl, and the user interface.}
+  \label{fig:kap10-schnittstellenuebersicht}
+\end{figure}
+
+\section{Coordinate Systems}
+In robotics projects, coordinate systems are critical. ROS2 commonly uses frames such as \texttt{map}, \texttt{odom}, \texttt{base\_link}, and \texttt{camera\_link}. Document these frames in the model.
+
+A classic mistake is interpreting data in the wrong frame. An obstacle is detected relative to the camera, but navigation expects positions relative to the map. Without clear transformations, the system makes wrong motion decisions.
+
+ROS2 does not manage these conversions manually. It uses the so-called TF tree (\texttt{tf2}): each frame knows its relationship to its parent frame, so the system can compute any conversion between two frames automatically. \texttt{map} is the root frame and does not move. \texttt{odom} attaches to \texttt{map}, but localization (e.g., SLAM or AMCL) occasionally corrects it with a jump. \texttt{base\_link} attaches to \texttt{odom} and is updated continuously from wheel encoders or an IMU, but it drifts slowly. \texttt{camera\_link} is attached rigidly to \texttt{base\_link}, because the camera is mounted fixed on the robot. Figure~\ref{fig:kap10-tf-baum} shows this hierarchy on the left as a tree, and on the right as physical origins in the building floor plan and on the robot.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap10_tf_baum}}
+  \caption{Left: the hierarchy of TF frames from the map-fixed \texttt{map} frame, through \texttt{odom} and \texttt{base\_link}, to \texttt{camera\_link}. Right: the same frames as physical coordinate origins in the building floor plan and on the robot.}
+  \label{fig:kap10-tf-baum}
+\end{figure}
+
+\begin{hinweisbox}
+One of the most common sources of error for beginners is a missing or outdated branch in the TF tree: if the transform between \texttt{odom} and \texttt{base\_link} is missing, navigation can no longer determine the robot's position, even if every sensor reading arrives correctly.
+\end{hinweisbox}
+
+\section{Frequencies and Timing}
+Sensor data does not all arrive at the same rate. A camera might deliver 30 frames per second, a lidar 10 scans per second, and the battery status only once per second. The model should make such assumptions visible whenever they matter for the architecture or for tests.
+
+\section{Error Cases}
+An interface description should not only cover the normal case. What happens if no camera images arrive? What happens if the laser scan is stale? What happens if the battery status is invalid?
+
+\begin{praxisbox}
+If \texttt{battery\_monitor\_node} stops delivering valid data, navigation must not simply keep driving as if nothing were wrong. One possible requirement: if the battery status is missing for more than five seconds, the robot must enter a safe state or raise a warning.
+\end{praxisbox}
+
+\section{Interfaces in SysML}
+In this simplified introductory version of SysML v2, interfaces are represented with \texttt{port def}, \texttt{port}, and \texttt{connection}; a \texttt{port} marks the connection point of a block through which data enters or leaves, for example \texttt{port def CameraPort \{ out image: Image; \}} for a camera output. You will meet the actual SysML v2 construct for interface contracts, \texttt{interface def} and \texttt{interface}, as a concept in the next section. For a first step, it is enough to name ports and data flows clearly and document them in tables. Later, the model can become more formal.
+
+\section{Interfaces as a Contract}
+An interface is a contract between a sender and a receiver. This contract is not a legal one, but a technical one: the sender promises to provide certain data in a certain form. The receiver may rely on that promise as long as the interface stays valid. SysML v2 formally captures this contract concept through \texttt{interface def} and \texttt{interface}; here, however, we stay with the simpler port notation from the previous section to keep things easier for beginners.
+
+On the topic \texttt{/cmd\_vel} (a ROS2 communication channel for messages), the motion controller expects velocity commands, for example. If navigation suddenly uses different units or sends values outside the allowed range, the system can react dangerously. An interface description should therefore include limits: maximum speed, allowed value ranges, and the expected behavior for invalid messages. In ROS2, you can additionally enforce such quality requirements through so-called QoS profiles (Quality of Service), for example for the reliability or the freshness of a message.
+
+A short interface checklist is worth keeping for the robot:
+
+\begin{itemize}
+    \item Is the direction clear?
+    \item Is the data type known?
+    \item Are the unit and the frame documented?
+    \item Is there a timeout (a maximum wait time after which missing data counts as an error)?
+    \item Is the behavior for invalid data known?
+    \item Is there a test for the interface?
+\end{itemize}
+
+\section{Summary}
+Interfaces are critical for integration. A good interface description includes sender, receiver, data type, frequency, units, coordinate systems, and error cases. In the robot project, interfaces form the bridge between the SysML model and ROS2 communication.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item Why do many errors occur at interfaces?
+    \item Which information belongs in an interface description?
+    \item Why are coordinate systems important in robotics?
+    \item What does \texttt{base\_link} mean?
+    \item Why should frequencies be documented?
+    \item What error cases can the camera interface have?
+    \item How are the IBD (Internal Block Diagram) and interface modeling connected?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Interface table}\\
+Create an interface table for at least six data flows of the robot. For each one, add the sender, the receiver, the data type, the frequency, and an error case.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Coordinate systems}\\
+Describe what the frames \texttt{map}, \texttt{odom}, \texttt{base\_link}, and \texttt{camera\_link} could represent in the robot project.
+\end{uebungbox}
+
+\section{Further Reading}
+Interface modeling is a central topic in SysML \cite{friedenthal2014}. For ROS2 data types and communication patterns, the ROS2 documentation \cite{ros2docs} is the most important practical source.

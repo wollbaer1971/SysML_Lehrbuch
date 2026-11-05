@@ -1,0 +1,41 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    tool/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=27mm, minimum height=13mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    opt/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick, dashed,
+        minimum width=27mm, minimum height=13mm,
+        align=center, fill=orange!6, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
+    optflow/.style={{Stealth[length=2mm]}-{Stealth[length=2mm]}, thick, black!45, dashed},
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
+]
+
+% --- Main chain: editor -> version control -> optional tools ---
+\node[tool, minimum height=62pt] (vscode) at (1.8,5.25)  {VS Code\\ + Syside Editor\\ (.sysml files)};
+\node[tool, minimum height=41pt] (git)    at (1.8,2.55)  {Git\\ (version\\ control)};
+\node[opt]  (syson)  at (1.8,0.48)  {Eclipse SysON\\ (graphical view)\\ \itshape optional};
+\node[opt]  (pilot)  at (1.8,-1.56) {SysML v2\\pilot project\\ \itshape optional};
+
+\draw[flow]    (vscode) -- node[lbl]{commit} (git);
+\draw[optflow] (git)    -- node[lbl]{optional} (syson);
+\draw[flow, dashed, black!45] (syson) -- node[lbl]{optional, reference} (pilot);
+
+% --- Parallel path: ROS2 code ---
+\node[tool] (code)  at (8.53,2.55) {\texttt{code/}\\ (ROS2 Python)};
+\node[tool, minimum width=88pt, minimum height=39pt] (mapfile) at (8.53,5.18) {\texttt{model/}\\\texttt{07\_ros2\_}\\\texttt{mapping.sysml}};
+
+\draw[flow] (code) -- node[lbl]{mapping} (mapfile);
+\draw[flow] (mapfile.west) -- node[lbl]{part of the model} (vscode.east);
+
+% --- Legend ---
+\node[tool, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (5.09,-1.9) {};
+\node[right=1mm of leg1, font=\tiny, align=left] (lab1){Tool/file (required)};
+\node[opt, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] (lab2){optional tool};
+
+\end{tikzpicture}

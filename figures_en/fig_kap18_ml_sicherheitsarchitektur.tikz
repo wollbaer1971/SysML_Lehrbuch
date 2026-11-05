@@ -1,0 +1,33 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    node distance=10mm and 20mm,
+    ros/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=42mm, minimum height=11mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    navnode/.style={ros, minimum width=36mm},
+    flowunsafe/.style={-{Stealth[length=2.2mm]}, thick, black!60, dashed},
+    flowsafe/.style={-{Stealth[length=2.2mm]}, thick, black!60},
+    lbl/.style={font=\small, fill=white, inner sep=1pt, align=center}
+]
+
+% --- Path 1 (top): ML ---
+\node[ros] (mldet) at (0, 3) {\texttt{object\_detector\_node}\\(ML, camera)};
+
+% --- Path 2 (bottom): lidar ---
+\node[ros] (lidar) at (0, -3) {\texttt{lidar\_node} $\rightarrow$\\obstacle detection};
+
+% --- Shared target ---
+\node[navnode] (nav) at (8.5, 0) {\texttt{navigation\_node}};
+
+\draw[flowunsafe] (mldet.east) -- node[lbl, sloped, above, text width=32mm]
+    {Person detected?\\(uncertain)} (nav.north west);
+\draw[flowsafe] (lidar.east) -- node[lbl, sloped, below, text width=40mm]
+    {physical distance measurement\\(more reliable)} (nav.south west);
+
+% --- Note text (below both paths, with spacing) ---
+\node[font=\small, align=center, text width=100mm] at (4.2,-5.4)
+    {ML adds information, but does not replace the lidar-based safety check.};
+
+\end{tikzpicture}

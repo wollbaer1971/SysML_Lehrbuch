@@ -1,0 +1,26 @@
+% =====================================================================
+% Figure: part-def tree of the overall Robot system
+% Belongs to chapter 8, section "Main Structure of the Robot" /
+% "Decomposition"
+%
+% Used in the book, e.g. in chapters_en/08_bdd.tex:
+%
+%   \begin{figure}[H]
+%     \centering
+%     \input{figures_en/fig_kap08_part_def_baum}
+%     \caption{Complete decomposition of \texttt{Robot} into seven main
+%       subsystems and their most important second-level parts.}
+%     \label{fig:kap08-part-def-baum}
+%   \end{figure}
+%
+% The diagram is very wide because of the complete decomposition
+% (about 20 cm in the original TikZ coordinates). It is therefore scaled
+% to the text width with \resizebox.
+%
+% Required packages (already loaded in main_en.tex): tikz, graphicx
+% Required TikZ libraries: positioning, arrows.meta, shadows, calc
+% =====================================================================
+
+\adjustbox{max width=\textwidth,max totalheight=16.3cm}{%
+\input{figures_en/fig_kap08_part_def_baum.tikz}%
+}

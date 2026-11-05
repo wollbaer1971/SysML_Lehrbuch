@@ -1,0 +1,59 @@
+\begin{tikzpicture}[
+    scale=0.85, transform shape,
+    every node/.style={font=\small},
+    req/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=30mm, minimum height=11mm,
+        align=center, fill=blue!12, drop shadow
+    },
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=30mm, minimum height=11mm,
+        align=center, fill=green!15, drop shadow
+    },
+    code/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=30mm, minimum height=11mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    test/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick,
+        minimum width=30mm, minimum height=11mm,
+        align=center, fill=black!6, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
+]
+
+% --- row 1: REQ -> system elements ---
+\node[req]  (req002) at (0, 3)  {\texttt{REQ-002}\\Detect\\Obstacles};
+\node[part] (percept) at (5, 3) {\texttt{Perception-}\\\texttt{System}};
+\node[part] (detect)  at (10, 3) {\texttt{Obstacle-}\\\texttt{Detector}};
+
+% --- row 2: implementation -> test (continuation of the chain) ---
+\node[code] (node)  at (0, 0) {\texttt{obstacle\_}\\\texttt{detector\_node}};
+\node[code] (topic) at (5, 0) {\texttt{/scan}};
+\node[test] (tc002) at (10, 0) {\texttt{TC-002}\\Obstacle Detection};
+
+% --- chain row 1 ---
+\draw[flow] (req002)  -- node[lbl, midway]{\texttt{satisfy}}  (percept);
+\draw[flow] (percept) -- node[lbl, midway]{\texttt{allocate}} (detect);
+
+% --- transition row 1 -> row 2 ---
+\draw[flow] (detect.south) -- node[lbl, midway]{\texttt{realize}} (node.north);
+
+% --- chain row 2 ---
+\draw[flow] (node)  -- node[lbl, midway]{publishes} (topic);
+\draw[flow] (topic) -- node[lbl, midway]{\texttt{verify}} (tc002);
+
+% --- legend ---
+\node[req,  minimum width=6mm, minimum height=4mm, below=14mm of node, xshift=-6mm, font=\small] (leg1) {};
+\node[right=1mm of leg1, font=\small, align=left] (lab1){Requirement};
+\node[part, minimum width=6mm, minimum height=4mm, right=6mm of lab1, font=\small] (leg2) {};
+\node[right=1mm of leg2, font=\small, align=left] (lab2){SysML system element};
+\node[code, minimum width=6mm, minimum height=4mm, right=6mm of lab2, font=\small] (leg3) {};
+\node[right=1mm of leg3, font=\small, align=left] (lab3){ROS2 node/topic};
+\node[test, minimum width=6mm, minimum height=4mm, right=6mm of lab3, font=\small] (leg4) {};
+\node[right=1mm of leg4, font=\small, align=left] (lab4){Test case};
+
+\end{tikzpicture}

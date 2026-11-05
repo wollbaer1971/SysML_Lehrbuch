@@ -1,0 +1,42 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    center/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=32mm, minimum height=12mm,
+        align=center, fill=green!15, drop shadow
+    },
+    stake/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
+        minimum width=30mm, minimum height=11mm,
+        align=center, fill=white, drop shadow, font=\small
+    },
+    conn/.style={black!45, dashed, thick}
+]
+
+% --- Center ---
+\node[center] (robot) at (0,0) {Autonomous\\Indoor Robot};
+
+% --- Stakeholders in a circle (radius 5.2cm, polar coordinates) ---
+\node[stake] (nutzer)      at (90:5.2)  {User\\{\tiny reach the goal}};
+\node[stake] (personen)    at (126:5.2) {People in the\\Building\\{\tiny stay safe}};
+\node[stake] (betreiber)   at (162:5.2) {Operator\\{\tiny cost-effective operation}};
+\node[stake] (wartung)     at (198:5.2) {Maintenance Staff\\{\tiny detect faults}};
+\node[stake] (entwickler)  at (234:5.2) {Developer\\{\tiny understand the system}};
+\node[stake] (sicherheit)  at (270:5.2) {Safety\\Officer\\{\tiny assess risks}};
+\node[stake] (datenschutz) at (306:5.2) {Data Protection\\Officer\\{\tiny protect data}};
+\node[stake] (einkauf)     at (342:5.2) {Purchasing /\\Management\\{\tiny control costs}};
+\node[stake] (reinigung)   at (18:5.2)  {Cleaning Staff\\{\tiny not be obstructed}};
+\node[stake] (it)          at (54:5.2)  {IT Administration\\{\tiny secure the network}};
+
+% --- Connections to the center ---
+\foreach \n in {nutzer,personen,betreiber,wartung,entwickler,sicherheit,
+                datenschutz,einkauf,reinigung,it}
+  \draw[conn] (robot) -- (\n);
+
+% --- Legend ---
+\node[stake, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (-3.2,-7.4) {};
+\node[right=1mm of leg1, font=\tiny, align=left] (lab1){Stakeholder (external actor)};
+\node[center, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] (lab2){system under consideration};
+
+\end{tikzpicture}

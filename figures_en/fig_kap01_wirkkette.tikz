@@ -1,0 +1,66 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=26mm, minimum height=9mm,
+        align=center, fill=green!15, drop shadow
+    },
+    ext/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
+        minimum width=26mm, minimum height=9mm,
+        align=center, fill=white, drop shadow
+    },
+    dataflow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black},
+    energyflow/.style={-{Stealth[length=2.2mm]}, thick, blue!55!black},
+    moveflow/.style={{Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, thick, black!60},
+    lawflow/.style={-{Stealth[length=2mm]}, thin, black!40, dashed},
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
+]
+
+% --- System boundary ---
+\draw[dashed, thick, black!60, rounded corners=2pt]
+    (-0.1,3.2) rectangle (11.3,7.7);
+\node[font=\small\itshape, anchor=north west] at (-0.05,7.65) {Autonomous Indoor Robot};
+
+% --- Internal system parts (2 rows x 3 columns) ---
+\node[part] (sensorik) at (1.8,6.5) {Sensors};
+\node[part] (navigation) at (5.6,6.5) {Navigation};
+\node[part] (antrieb) at (9.4,6.5) {Propulsion};
+
+\node[part] (safety) at (1.8,4.2) {Safety\\Logic};
+\node[part] (ui) at (5.6,4.2) {User\\Interface};
+\node[part] (akku) at (9.4,4.2) {Battery};
+
+% --- External actors (top) ---
+\node[ext] (menschen) at (1.8,9.3) {People\\in the Building};
+\node[ext] (wlan) at (5.6,9.3) {Wi-Fi /\\Network};
+\node[ext] (recht) at (9.4,9.3) {Legal\\Rules};
+
+% --- External actors (right) ---
+\node[ext] (tueren) at (14,6.5) {Doors, Elevators,\\Corridors};
+\node[ext] (ladestation) at (14,4.2) {Charging Station};
+
+% --- External actors (bottom) ---
+\node[ext] (gms) at (5.6,1.0) {Building\\Management System};
+\node[ext] (wartung) at (1.8,1.0) {Maintenance\\Tool};
+
+% --- Flows across the system boundary ---
+\draw[dataflow] (menschen) -- node[lbl]{data} (sensorik);
+\draw[dataflow] (wlan) -- node[lbl]{data} (navigation);
+\draw[lawflow] (recht) -- node[lbl]{rules} ([xshift=0.3cm]9.4,7.7);
+
+\draw[moveflow] (antrieb.east) -- node[lbl]{movement} (tueren.west);
+\draw[energyflow] (ladestation.west) -- node[lbl]{energy} (akku.east);
+
+\draw[dataflow] (gms) -- node[lbl]{data} (ui);
+\draw[moveflow] (wartung) -- node[lbl]{diagnostics} (safety);
+
+% --- Legend ---
+\node[part, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (1.8,-0.6) {};
+\node[right=1mm of leg1, font=\small, align=left] (lab1){system part (internal)};
+\node[ext, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\small, align=left] (lab2){external actor / environment};
+\node[draw=black!60, dashed, thick, minimum width=6mm, minimum height=4mm, right=6mm of lab2] (leg3) {};
+\node[right=1mm of leg3, font=\small, align=left] (lab3){system boundary};
+
+\end{tikzpicture}

@@ -1,0 +1,144 @@
+\chapter{Behavior Modeling with Activity Diagrams}
+
+\begin{lernziele}
+After this chapter, you can describe the robot's processes as an activity diagram. You understand actions, control flows, decisions, parallelism, and object flows, and you can model typical robot processes such as target navigation, obstacle handling, and returning to the charging station.
+\end{lernziele}
+
+\section{Introduction}
+Structure diagrams show what a system consists of. For a working system, that is not enough. We also need to describe what happens during operation. An autonomous robot is a good example: it accepts orders, plans routes, drives, reacts to obstacles, monitors its battery, and reports its status.
+
+Activity diagrams describe these kinds of processes. They work especially well for processes, workflows, and algorithms at an understandable level.
+
+\section{What Does an Activity Diagram Describe?}
+An activity diagram describes a process made of actions, decisions, and branches. It shows which steps run one after another, and which run in parallel. In this chapter, we deliberately present activity diagrams through prose and diagrams instead of through the SysML v2 text notation (\texttt{action def}, \texttt{action}, \texttt{then}, \texttt{decide}, \texttt{fork}/\texttt{join}); that notation follows the same principles as \texttt{state def} in Chapter 12 and \texttt{calc def} in Chapter 13, but we leave it out here to keep things easier for beginners.
+
+Typical elements are:
+
+\begin{itemize}
+    \item Actions
+    \item Control flows
+    \item Decision nodes
+    \item Merge nodes (bring several alternative paths back together into a single path after a decision)
+    \item Start and end nodes
+    \item Parallel splits and synchronization
+    \item Object flows (show how a data object, for example a planned path, passes from one action to the next, as opposed to a plain control flow)
+\end{itemize}
+
+\section{Example Process: Navigation}
+\begin{enumerate}
+    \item Start the system
+    \item Initialize sensors
+    \item Load the map
+    \item Receive a target
+    \item Check the battery level
+    \item Plan a path
+    \item Execute motion
+    \item Check for obstacles
+    \item Report that the target was reached
+\end{enumerate}
+
+You can model this process as an activity diagram. Decisions arise, for example, from a low battery level or a blocked path. Figure~\ref{fig:kap11-aktivitaet-zielnavigation} shows the full process, with the start and end nodes, the two decisions, and the parallel monitoring that runs during motion.
+
+\begin{figure}[H]
+  \centering
+  \input{figures_en/fig_kap11_aktivitaet_zielnavigation}
+  \caption{Activity diagram for target navigation: from system start, through path planning and obstacle handling, to reporting the reached target. On a low battery level, the diagram refers to the \enquote{Return to charging station} process.}
+  \label{fig:kap11-aktivitaet-zielnavigation}
+\end{figure}
+
+\section{Decisions}
+Decision nodes model alternatives. Example: if the robot detects an obstacle, it either replans or stops. Decisions should have clear conditions, such as \texttt{[Obstacle detected]} and \texttt{[Path clear]}; Chapter~12.5 introduces these bracketed conditions as \emph{guards} and covers them in more depth.
+
+\section{Parallelism}
+A robot often runs several activities in parallel. While it drives, it also monitors sensors, battery, and communication. Activity diagrams can represent such parallel processes: a fork node splits the process, and a join node brings the parallel branches back together, for example when the actions \enquote{Monitor sensors} and \enquote{Monitor communication} run alongside driving. For beginners, though, it is important not to overload a diagram.
+
+\begin{praxisbox}
+The process \enquote{Drive to charging station} contains several decisions: Is the battery level low? Is the charging station reachable? Does docking succeed? If not, the robot must report an error or try again.
+\end{praxisbox}
+
+\section{Activities and Requirements}
+Activity diagrams can refine requirements. A requirement such as \enquote{The robot must reach a target autonomously} becomes concrete through a process. This, in turn, produces further requirements, interfaces, and tests.
+
+\section{Common Mistakes}
+\subsection{Too much implementation detail}
+An activity diagram is not a substitute for program code. It should make the process understandable, not model every line of code.
+
+\subsection{Unclear conditions}
+Decisions need conditions. A node without an understandable condition is not very useful.
+
+\subsection{Forgetting error cases}
+Good activity diagrams do not only cover the normal case. For robots especially, aborts, blockages, and sensor failures matter.
+
+\section{Practical Example: Returning to the Charging Station}
+The process \enquote{Return to charging station} is a particularly good fit for an activity diagram. It does not start with driving to the charging station; it starts with a decision: Is the battery level below a threshold? If so, the system must check whether a critical order is currently running. Then it sets a \enquote{charging station} target, plans a path, and starts docking.
+
+A possible process:
+
+\begin{enumerate}
+    \item Monitor the battery level.
+    \item Detect a low battery level.
+    \item Inform the user.
+    \item Evaluate the current order.
+    \item Set the return target.
+    \item Plan a path to the charging station.
+    \item Drive to the charging station.
+    \item Dock.
+    \item Start charging.
+\end{enumerate}
+
+The alternatives matter. If the charging station is blocked, the robot must wait, drive to an alternative spot, or report an error. If the battery is critically low, it can no longer attempt long detours. Figure~\ref{fig:kap11-aktivitaet-rueckkehr-ladestation} shows this entire process, including the alternatives for a blocked charging station and a failed docking attempt.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\textwidth,max totalheight=16.3cm}{\input{figures_en/fig_kap11_aktivitaet_rueckkehr_ladestation}}
+  \caption{Activity diagram for returning to the charging station: from battery monitoring, through evaluating the current order, to docking and starting the charge, including the alternatives for a blocked charging station or a failed docking attempt.}
+  \label{fig:kap11-aktivitaet-rueckkehr-ladestation}
+\end{figure}
+
+\subsection{Extension: Consumption-Based Decision and Return-Path Safeguard}
+\label{sec:bm-ablauf}
+The process above and its figure show the simple approach using a single battery threshold. For the deeper example in Section~\ref{sec:bm-anforderungen}, we extend the decision: what matters now is consumption so far, the remaining order, and the ability to return. The safeguard starts right at launch and runs in parallel with order execution.
+
+\begin{enumerate}
+    \item \textbf{Check at start:} Are the charging station, valid battery data, consumption tracking, and a return strategy all available? If not, do not start a transport order (BM-01).
+    \item \textbf{Update data:} Record consumption, usable remaining energy, and the traveled route. Re-evaluate on changes in load, consumption, or route, and after a defined check interval (BM-02, BM-06, BM-08).
+    \item \textbf{Safeguard the return from the current location:} Check traceability, drivability, and energy need. If the safeguard is at risk of being lost, interrupt the order in a controlled way and return in time (BM-07, BM-08).
+    \item \textbf{Evaluate the order:} Can the remaining order and the following return trip both be reliably estimated, and are they covered energetically, including reserve? Only then continue the order and return to ongoing monitoring (BM-03, BM-04). Section~\ref{sec:bm-energie} explains the energy balance.
+    \item \textbf{Interrupt and return:} On insufficient energy or when a reliable estimate is not possible, interrupt the order, report the reason, and use the safeguarded return path (BM-05, BM-12). A short-term, more favorable estimate must not automatically resume the interrupted order during the return.
+    \item \textbf{Handle blockages:} Stop in a controlled way before a blockage and check an alternative. Release only a drivable return path that is covered energetically. Waiting, planning, and any further docking attempts also consume energy (BM-09).
+    \item \textbf{Safeguard not available:} If there is no safeguarded return path, or a data failure no longer allows a reliable return decision, stop in a controlled way and request support. The autonomous return is then not met (BM-10, BM-11).
+    \item \textbf{Complete the return:} Confirm docking and the start of charging. Only then set the return status to successful. If confirmation does not arrive and no safeguarded continuation is possible, request support (BM-12, BM-13).
+\end{enumerate}
+
+\paragraph{Example without map data.}
+The robot does not have an adequate map to evaluate the remaining order or its following return trip. It has, however, recorded the path driven so far. If this path is traceable, drivable in reverse, and covered energetically, the robot interrupts the order and returns along it. A missing map therefore does not necessarily mean a standstill; what matters is an independently safeguarded way back. If that is also missing, the error process from BM-10 applies.
+
+\paragraph{Decisions in the activity diagram.}
+The branch \enquote{Continue order?} needs valid estimates, a satisfied energy balance, and a safeguarded current return, all at once. The other path leads to the return decision, not to the normal end of the order. A separate error path ends with \enquote{Support requested}; it must not coincide with \enquote{Charging confirmed}. This way, a successful completion and a failed autonomous return stay distinguishable.
+
+\section{Summary}
+Activity diagrams describe processes and decisions. In the robot project, they help translate use cases such as target navigation, returning to the charging station, and obstacle handling into traceable processes. They form a bridge between requirements and later software logic.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What is an activity diagram used for?
+    \item What is an action?
+    \item What are decision nodes used for?
+    \item Why does parallelism matter for robots?
+    \item Why should an activity diagram not be too detailed?
+    \item How can an activity diagram refine requirements?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Drive to a target}\\
+Model the process \enquote{Drive to a target}. Add at least one decision for obstacle detection and one for a low battery level.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Add an error case}\\
+Extend the process to cover the case where no map is available. Describe the expected system response.
+\end{uebungbox}
+
+\section{Further Reading}
+Activity diagrams are used similarly in SysML and UML. SysML introductions \cite{delligatti2014,friedenthal2014} offer practical examples.

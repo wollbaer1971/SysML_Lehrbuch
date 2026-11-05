@@ -1,0 +1,36 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    center/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=34mm, minimum height=14mm,
+        align=center, fill=green!15, drop shadow
+    },
+    role/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
+        minimum width=32mm, minimum height=13mm,
+        align=center, fill=white, drop shadow
+    },
+    conn/.style={black!45, dashed, thick}
+]
+
+% --- Center ---
+\node[center] (modell) at (6,3) {MBSE Model\\of the Robot};
+
+% --- Four views/roles ---
+\node[role] (pl)  at (6,5.65)  {Project Management\\(progress, risks)};
+\node[role] (arch) at (11,3) {System Architecture\\(building blocks, interfaces)};
+\node[role] (sw)  at (5.99,0.35)  {Software Development\\(nodes, topics)};
+\node[role] (test) at (1,3)  {Test Team\\(requirements $\leftrightarrow$ tests)};
+
+\draw[conn] (modell) -- (pl);
+\draw[conn] (modell) -- (arch);
+\draw[conn] (modell) -- (sw);
+\draw[conn] (modell) -- (test);
+
+% --- Legend ---
+\node[center, minimum width=6mm, minimum height=4mm, font=\tiny] (leg1) at (2.74,-1.34) {};
+\node[right=1mm of leg1, font=\tiny, align=left] (lab1){shared model};
+\node[role, minimum width=6mm, minimum height=4mm, font=\tiny, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] (lab2){view/role on the model};
+
+\end{tikzpicture}

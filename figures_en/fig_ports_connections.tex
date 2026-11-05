@@ -1,0 +1,21 @@
+% =====================================================================
+% Figure: Connection model with ports "part def PerceptionSystem"
+% Belongs to chapter 9.4/9.6 (listings "port def ...", "part def
+% PerceptionSystem { ... connection c1 ... connection c2 ... }")
+%
+% Used in the book, e.g. in chapters_en/09_ibd.tex:
+%
+%   \begin{figure}[H]
+%     \centering
+%     \input{figures_en/fig_ports_connections}
+%     \caption{Connection model of the \texttt{PerceptionSystem}. The small
+%       squares on the box edges are ports. The tilde marks a conjugated
+%       port, which receives instead of sends.}
+%     \label{fig:ports-connections}
+%   \end{figure}
+%
+% Required packages (already loaded in main_en.tex): tikz
+% Required TikZ libraries: positioning, arrows.meta, shadows, calc
+% =====================================================================
+
+\adjustbox{max width=\textwidth,max totalheight=15.5cm}{\input{figures_en/fig_ports_connections.tikz}}

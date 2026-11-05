@@ -1,0 +1,48 @@
+\begin{tikzpicture}[
+    scale=0.74, transform shape,
+    every node/.style={font=\small},
+    node distance=10mm and 14mm,
+    ros/.style={
+        rectangle, rounded corners=2pt, draw=orange!60!black, thick,
+        minimum width=32mm, minimum height=10mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black},
+    lbl/.style={font=\footnotesize, fill=white, inner sep=1pt}
+]
+
+% --- Column 1: sensor nodes (left) ---
+\node[ros] (camera)  at (0, 6)  {\texttt{camera\_node}};
+\node[ros] (lidar)   at (0, 3)  {\texttt{lidar\_node}};
+\node[ros] (battery) at (0, 0)  {\texttt{battery\_monitor\_}\\\texttt{node}};
+
+% --- Column 2: processing ---
+\node[ros] (detector) at (5.6, 6) {\texttt{object\_detector\_}\\\texttt{node}};
+\node[ros] (slam)     at (5.6, 3) {\texttt{slam\_node}};
+
+% --- Column 3: central ---
+\node[ros] (nav) at (10.2, 3.5) {\texttt{navigation\_node}};
+
+% --- Column 4: right ---
+\node[ros] (motion) at (14.8, 5)   {\texttt{motion\_control\_}\\\texttt{node}};
+\node[ros] (ui)      at (14.8, 0.5) {\texttt{user\_interface\_}\\\texttt{node}};
+
+% --- additional node (status) ---
+\node[ros] (state) at (10.2, -1.5) {\texttt{robot\_state\_node}};
+
+% --- Edges ---
+\draw[flow] (camera.east)  -- node[lbl, midway, above] {/camera/image\_raw} (detector.west);
+\draw[flow] (lidar.east)   -- node[lbl, midway, above] {/scan}              (slam.west);
+\draw[flow] (slam.east)    -- node[lbl, midway, above] {/map}               (nav.north west);
+\draw[flow] (nav.east)     -- node[lbl, midway, above] {/cmd\_vel}          (motion.west);
+\draw[flow] (battery.east) .. controls (5,0) and (7,2) .. node[lbl, pos=0.55, below] {/battery\_state} (nav.south west);
+\draw[flow] (detector.east) -- node[lbl, midway, above] {/detected\_objects} (nav.north east);
+\draw[flow] (state.east) -- node[lbl, midway, above] {/robot/status} (ui.south west);
+
+% --- Legend ---
+\node[ros, minimum width=8mm, minimum height=5mm, font=\small] (leg1) at (3.2,-3.4) {};
+\node[right=2mm of leg1, font=\small, align=left] {ROS2 node};
+\draw[flow] (8.4,-3.4) -- ++(12mm,0);
+\node[font=\small, align=left, anchor=west] at (9.8,-3.4) {Topic (message flow)};
+
+\end{tikzpicture}

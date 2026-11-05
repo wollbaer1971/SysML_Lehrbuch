@@ -1,0 +1,134 @@
+\chapter{Capstone Project}
+
+\begin{lernziele}
+After this chapter, you can structure a small but complete MBSE project for a ROS2 robot. You can connect requirements, structure, behavior, interfaces, ROS2 mapping, tests, and traceability into one coherent model.
+\end{lernziele}
+
+\section{Introduction}
+The capstone project ties the previous chapters together. You build a complete model of the autonomous indoor robot. It does not need to be industrially perfect. But it must show that requirements, architecture, and tests fit together.
+
+\section{The Task}
+Build a complete model of the autonomous indoor robot. The model must include requirements, structure, behavior, interfaces, ROS2 mapping, and tests.
+
+\section{What the Model Must Contain}
+The model should contain the following:
+
+\begin{itemize}
+    \item a context description
+    \item a stakeholder list
+    \item at least ten requirements
+    \item a requirement diagram
+    \item a BDD with the main systems (see Chapter 8)
+    \item an IBD for perception or navigation (see Chapter 9)
+    \item an activity diagram for target navigation
+    \item a state diagram for operating modes
+    \item an interface table
+    \item a ROS2 mapping table
+    \item at least five test cases
+    \item a traceability matrix
+\end{itemize}
+
+Figure~\ref{fig:kap21-checkliste-abschlussmodell} summarizes these items as a checklist you can use to review your model before submitting it.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap21_checkliste_abschlussmodell}}
+  \caption{A checklist with the twelve items the capstone model should contain.}
+  \label{fig:kap21-checkliste-abschlussmodell}
+\end{figure}
+
+\section{Recommended Approach}
+\begin{enumerate}
+    \item State the system goal and the system boundary.
+    \item Gather stakeholders and their needs.
+    \item Write and number the requirements.
+    \item Model the main structure in a BDD.
+    \item Show one important subsystem in an IBD.
+    \item Describe behavior with an activity diagram and a state diagram.
+    \item Document interfaces in a table.
+    \item Map SysML elements to ROS2 elements.
+    \item Create test cases and link them to requirements.
+    \item Check the traceability matrix.
+\end{enumerate}
+
+Figure~\ref{fig:kap21-projektfahrplan} summarizes these ten steps as a roadmap in four phases.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap21_projektfahrplan}}
+  \caption{Ten steps of the capstone project, grouped into four phases from requirements to verification.}
+  \label{fig:kap21-projektfahrplan}
+\end{figure}
+
+\section{Evaluation Criteria}
+A good model is clear, consistent, and easy to follow. It does not need to be maximally detailed. It must show that the architecture was derived from the requirements.
+
+Important criteria:
+
+\begin{itemize}
+    \item a clear system boundary
+    \item understandable requirements
+    \item consistent names
+    \item a sensible structure
+    \item documented interfaces
+    \item a traceable ROS2 mapping
+    \item test cases with \texttt{verify} relationships
+    \item no isolated, unexplained diagrams
+\end{itemize}
+
+These criteria also work as a short checklist you can go through, point by point, before submitting your model.
+
+\section{Going Further}
+If you want to go further, add a simple ROS2 simulation. You can add a simulated battery node, a status node, and a dummy object detector, based on the node examples from Chapter 17. What matters is that the implementation stays tied back to the model. Chapter 22 shows, with Gazebo, one way to extend such a simulation further.
+
+\section{Common Project Pitfalls}
+\subsection{Too Much Detail}
+A capstone model does not need to cover every detail. The focus is the end-to-end connection.
+
+\subsection{No Traceability}
+If requirements, system parts, and tests are not connected, the project stays a collection of separate diagrams.
+
+\subsection{An Unclear Submission}
+Document which diagrams and tables are part of your submission. A start page in the model helps.
+
+\section{Recommended Final Documentation}
+Alongside the model, write a short final write-up. It does not need to be long, but it should guide the reader through the model. A sensible structure:
+
+\begin{itemize}
+    \item the system's goal and scope
+    \item the key stakeholders
+    \item the key requirements
+    \item an architecture overview
+    \item the central interfaces
+    \item the ROS2 mapping
+    \item the test and verification concept
+    \item open assumptions and limits
+\end{itemize}
+
+This write-up is not a repeat of every diagram. It explains how the diagrams connect. That is what turns the model into a traceable project result.
+
+\section{Summary}
+The capstone project shows whether you have understood the core idea of this book: going from a problem, through requirements and SysML modeling, to a ROS2-oriented architecture and verification. The autonomous indoor robot serves as the running, hands-on example throughout.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What must the capstone model contain?
+    \item Why does a traceability matrix matter?
+    \item What sets a good model apart from a collection of diagrams?
+    \item Which evaluation criteria matter most?
+    \item How can you usefully add a ROS2 extension?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Traceability matrix}\\
+Build a traceability matrix with the columns requirement, system element (\texttt{part def}), ROS2 node, and test case.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Model review}\\
+Review your model: Are there requirements with no test? System parts with no purpose? Interfaces with no data type? Note at least five improvements.
+\end{uebungbox}
+
+\section{Further Reading}
+For the capstone project, revisit the previous chapters along with the SysML and ROS2 sources \cite{delligatti2014,friedenthal2014,ros2docs}.

@@ -1,0 +1,211 @@
+\chapter{SysML Fundamentals}
+
+\begin{lernziele}
+After this chapter, you know the basic idea of \gls{sysml} v2, the key modeling concepts, and their role in an MBSE project. You can explain why a SysML diagram is only one view of a model, which concepts matter most for getting started, and how these concepts work together in the autonomous indoor robot.
+\end{lernziele}
+
+\section{Introduction}
+In the first two chapters, we explained why Systems Engineering and MBSE are useful. Now we need a language that lets us describe requirements, structure, behavior, interfaces, and tests precisely. In this book, that language is \gls{sysml} v2.
+
+\gls{sysml} stands for Systems Modeling Language. Engineers designed it to model technical systems. SysML v2 is a complete redesign of SysML v1, with a precise textual notation and clear, modern semantics. It focuses more strongly than UML on systems that combine hardware, software, people, processes, data, and physical relationships. That fits our autonomous indoor robot well: it consists not only of software, but also of sensors, a drive system, a battery, a housing, a charging station, a user interface, and a real physical environment.
+
+For beginners, one point matters most: SysML is not a drawing program. SysML is a modeling language. A diagram is only a visible representation of model elements. The real value lies in the model itself: requirements link to system parts, system parts have interfaces, behavior describes sequences of steps, and tests verify requirements.
+
+\section{Why a Modeling Language?}
+Without a shared language, projects quickly run into misunderstandings. One team member draws boxes for functions, another for software modules, a third for hardware components. All the diagrams look similar, but they mean different things. SysML helps clarify such meanings.
+
+SysML v2 provides predefined concepts:
+
+\begin{itemize}
+    \item \texttt{requirement} for requirements
+    \item \texttt{part def} and \texttt{part} for system elements and their instances
+    \item \texttt{port} and \texttt{connection} for interfaces
+    \item \texttt{action def} and \texttt{action} for sequences of steps
+    \item \texttt{state def} and \texttt{state} for states
+    \item \texttt{calc def} and \texttt{constraint} for mathematical relationships
+    \item \texttt{satisfy}, \texttt{verify}, \texttt{derive} for traceability
+\end{itemize}
+
+With these concepts, a team can talk about the same system without re-explaining every symbol.
+
+\begin{praxisbox}
+Suppose the model contains a \texttt{part def PerceptionSystem}. In a structure view, it can appear as part of the robot. In a connection view, it can link to the camera and the lidar. Through a \texttt{satisfy} relationship, it can fulfill requirements for obstacle detection. It is the same model content, just seen from different angles.
+\end{praxisbox}
+
+\section{Key Concepts in SysML v2}
+SysML v2 no longer has fixed diagram types like SysML v1. Instead, it offers views (\emph{views}) and viewpoints (\emph{viewpoints}) onto one shared model. A viewpoint defines the kind of question a view should answer, for example structure or behavior; the view itself is the concrete representation generated from it. To get started, we focus on the concepts that bring the most value to the robot project. Figure~\ref{fig:kap03-sysml-kernkonzepte} gives an overview of the seven most important concepts before we introduce them one by one.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap03_sysml_kernkonzepte}}
+  \caption{The seven SysML v2 concepts that matter most for this book, built around the shared model.}
+  \label{fig:kap03-sysml-kernkonzepte}
+\end{figure}
+
+\subsection{Requirements (\texttt{requirement})}
+Requirements describe what the system must do. In SysML v2, you define them as text with \texttt{requirement}. Relationships such as \texttt{satisfy}, \texttt{verify}, and \texttt{derive} connect requirements to system parts and test cases.
+
+Typical questions:
+
+\begin{itemize}
+    \item What must the system do?
+    \item Which requirements relate to each other?
+    \item Which requirement was derived from which higher-level requirement?
+    \item Which parts satisfy a requirement?
+    \item Which tests check a requirement?
+\end{itemize}
+
+\subsection{Structure Modeling (\texttt{part def}, \texttt{part})}
+In SysML v2, \texttt{part def} describes the type of a system element. \texttt{part} creates an instance of it. Together, they replace the block concept from SysML v1.
+
+\begin{lstlisting}
+package RobotStructure {
+  part def Robot {
+    part perceptionSystem : PerceptionSystem;
+    part navigationSystem : NavigationSystem;
+    part batterySystem    : BatterySystem;
+    part motionControl    : MotionControl;
+  }
+  part def PerceptionSystem;
+  part def NavigationSystem;
+  part def BatterySystem;
+  part def MotionControl;
+}
+\end{lstlisting}
+
+This view answers the question: what are the system's main building blocks?
+
+\subsection{Connection Modeling (\texttt{port}, \texttt{connection})}
+A \texttt{port} describes how a system part connects to the outside. A \texttt{connection} links ports of different parts to each other. This makes visible how the parts of a system work together internally.
+
+\begin{lstlisting}
+part def PerceptionSystem {
+  port sensorData : ~SensorDataPort;
+  part camera  : Camera;
+  part lidar   : Lidar;
+  part detector : ObjectDetector;
+}
+\end{lstlisting}
+
+\begin{hinweisbox}
+The tilde character (\texttt{\textasciitilde}) marks a so-called conjugated port; we explain exactly what that means in chapter 9.
+\end{hinweisbox}
+
+\subsection{Behavior Modeling (\texttt{action def}, \texttt{action})}
+Activities describe sequences of steps. They suit processes such as \enquote{Execute transport order}, \enquote{Return to charging station}, or \enquote{Handle obstacle}. In SysML v2, you model these sequences with \texttt{action def} and \texttt{action}.
+
+\subsection{State Modeling (\texttt{state def}, \texttt{state})}
+State models describe states and transitions. A robot has operating states such as \texttt{Idle}, \texttt{Navigating}, \texttt{AvoidingObstacle}, and \texttt{Charging}. In SysML v2, you define these with \texttt{state def}.
+
+\subsection{Parametric Modeling (\texttt{calc def}, \texttt{constraint})}
+Parametric models describe mathematical relationships. They help you check technical decisions early. In SysML v2, you express calculations with \texttt{calc def} and conditions with \texttt{constraint}.
+
+You will learn behavior, states, and parametrics in detail starting in chapter 11. For the first steps in chapter 4, requirements and structure are enough.
+
+\section{Model, Not Picture}
+A SysML diagram is only one view of a model. This distinction is central. If you draw three boxes named \texttt{NavigationSystem} in a drawing program, they are three independent graphical objects. In a modeling tool such as the Syside Editor, \texttt{NavigationSystem} is a single model element that you can display in several views.
+
+This has practical advantages:
+
+\begin{itemize}
+    \item Names stay consistent.
+    \item You can evaluate relationships.
+    \item Changes are easier to track.
+    \item Different views show the same content.
+    \item Traceability becomes possible.
+\end{itemize}
+
+\section{How the Concepts Work Together}
+SysML v2 model elements should not stand alone. They complement each other.
+
+For the indoor robot, a chain of models might look like this:
+
+\begin{enumerate}
+    \item The requirements model states: \enquote{The robot must detect obstacles.}
+    \item You define \texttt{part def PerceptionSystem} as a system part.
+    \item Ports and connections show how the camera and the lidar deliver data.
+    \item An \texttt{action def} describes how the robot handles an obstacle while driving.
+    \item A \texttt{state def} models that the robot switches to a stop or avoidance state when it detects danger.
+    \item A test case connects to the requirement through \texttt{verify}.
+\end{enumerate}
+
+This builds a connected model instead of a loose collection of nice pictures. Figure~\ref{fig:kap03-struktur-verbindungssicht} shows, as an example, how the structure view and the connection view of \texttt{PerceptionSystem} work together: the overview shows the subsystems of \texttt{Robot}, and the detail view shows \texttt{PerceptionSystem} with its parts and the port \texttt{sensorData}.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap03_struktur_verbindungssicht}}
+  \caption{Structure view of \texttt{Robot} with its subsystems, and a detail view of \texttt{PerceptionSystem} with the port \texttt{sensorData}.}
+  \label{fig:kap03-struktur-verbindungssicht}
+\end{figure}
+
+\section{SysML v1 and SysML v2 Compared}
+Beginners often still run into SysML v1 in the literature. The most important terminology changes are:
+
+\begin{center}
+\adjustbox{max width=\linewidth}{%
+\begin{tabular}{ll}
+\toprule
+\textbf{SysML v1} & \textbf{SysML v2} \\
+\midrule
+Block (block) & \texttt{part def} \\
+Block Definition Diagram (BDD) & structure view (\texttt{part def}, \texttt{part}) \\
+Internal Block Diagram (IBD) & connection view (\texttt{port}, \texttt{connection}) \\
+Activity Diagram & \texttt{action def}, \texttt{action} \\
+State Machine Diagram & \texttt{state def}, \texttt{state} \\
+Parametric Diagram & \texttt{calc def}, \texttt{constraint} \\
+\texttt{deriveRqt} & \texttt{derive} \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+
+This book uses SysML v2 throughout. Where it mentions old terms for compatibility reasons, it marks them explicitly.
+
+\section{Typical Beginner Mistakes}
+\subsection{Too Many Elements Too Soon}
+Beginners often want to use every concept right away. That quickly leads to overload. Start with requirements, \texttt{part def}, and simple connections. Behavior and parametrics can follow later.
+
+\subsection{Unclear Meaning of System Parts}
+Sometimes functions, software modules, hardware parts, and roles get mixed together freely. That is not forbidden in principle, but it must happen on purpose. A \texttt{part def Camera} is a physical element. A \texttt{part def ObjectDetector} is more of a software or function component.
+
+\subsection{Diagrams Without Text}
+A diagram without a description is often hard to understand. Use documentation fields (\texttt{doc /* ... */}). Briefly state the purpose of each model element.
+
+\subsection{No Reuse}
+If you recreate the same element over and over, the model loses its value. Define types once with \texttt{part def}, and create instances with \texttt{part}.
+
+\section{Summary}
+SysML v2 is a modeling language for technical systems. It helps you describe requirements, structure, behavior, interfaces, and verification in one consistent way. For this book, \texttt{requirement}, \texttt{part def}, \texttt{port}, \texttt{connection}, \texttt{action def}, \texttt{state def}, and \texttt{calc def} matter most. What counts is not drawing individual diagrams, but building one connected model.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What does SysML stand for?
+    \item What distinguishes SysML v2 from SysML v1?
+    \item What is the difference between a diagram and a model?
+    \item Which questions does a requirements model answer?
+    \item What is the difference between \texttt{part def} and \texttt{part}?
+    \item What do \texttt{port} and \texttt{connection} do?
+    \item When do you use \texttt{action def}?
+    \item When do you use \texttt{state def}?
+    \item Why should you reuse model elements?
+    \item Name one typical beginner mistake in SysML.
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Match the Concept}\\
+Match each question below to a SysML v2 concept: What must the system do? What parts does it consist of? What data flows between components? What states can the robot have? How does a transport order proceed?
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: First Chain of Models}\\
+Pick the function \enquote{Monitor battery level}. For it, describe a requirement, a \texttt{part def}, a port, a possible state, and a test case.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 3: v1 vs. v2}\\
+For BDD, IBD, and Constraint Block, name the corresponding SysML v2 concept, and explain the difference in one sentence.
+\end{uebungbox}
+
+\section{Further Reading}
+To get started with SysML v2, the official specification and the SysML v2 pilot project are essential \cite{sysmlv2pilot}. The Syside Editor has its own documentation and examples \cite{syside}. Older introductions such as Delligatti \cite{delligatti2014} and Friedenthal et al. \cite{friedenthal2014} describe SysML v1 and are useful only as background reading now.

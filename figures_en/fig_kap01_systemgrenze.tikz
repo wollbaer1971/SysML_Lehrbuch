@@ -1,0 +1,60 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    center/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=24mm, minimum height=11mm,
+        align=center, fill=green!15, drop shadow, font=\small
+    },
+    ext/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, dashed,
+        minimum width=24mm, minimum height=9mm,
+        align=center, fill=white, drop shadow, font=\tiny
+    },
+    energie/.style={-{Stealth[length=2mm]}, thick, orange!70!black},
+    daten/.style={{Stealth[length=1.8mm]}-{Stealth[length=1.8mm]}, thick, blue!55!black},
+    bewegung/.style={{Stealth[length=1.8mm]}-{Stealth[length=1.8mm]}, thick, green!35!black},
+    vorgabe/.style={black!45, dashed, thick},
+    legenergie/.style={rectangle, fill=orange!70!black, minimum width=6mm, minimum height=1.4mm},
+    legdaten/.style={rectangle, fill=blue!55!black, minimum width=6mm, minimum height=1.4mm},
+    legbewegung/.style={rectangle, fill=green!35!black, minimum width=6mm, minimum height=1.4mm},
+    legvorgabe/.style={rectangle, draw=black!45, dashed, minimum width=6mm, minimum height=1.4mm}
+]
+
+% --- System boundary (dashed circle around the system) ---
+\draw[black!55, dashed, thick] (0,0) circle (1.9);
+\node[font=\tiny\itshape, black!55] at (1.93,0.80) {System boundary};
+
+% --- Central system ---
+\node[center] (robot) at (0,0) {\textbf{Autonomous}\\\textbf{Indoor Robot}};
+
+% --- Context elements (circular, 8 elements, compact radius) ---
+\node[ext] (menschen) at (0.0,4.3)   {People in the\\Building};
+\node[ext] (raeume)   at (3.04,3.04) {Doors, Elevators,\\Corridors, Rooms};
+\node[ext] (netz)     at (4.3,0.0)   {Wi-Fi /\\Network};
+\node[ext] (ui)       at (3.04,-3.04){User Interface\\(Tablet/PC)};
+\node[ext] (lade)     at (0.0,-4.3)  {Charging Station};
+\node[ext] (wartung)  at (-3.04,-3.04){Maintenance\\Tool};
+\node[ext] (gms)      at (-4.3,0.0)  {Building\\Management\\System};
+\node[ext] (vorgaben) at (-3.04,3.04){Legal/\\Organizational\\Rules};
+
+% --- Flows across the system boundary ---
+\draw[bewegung] (robot) -- (menschen);
+\draw[bewegung] (robot) -- (raeume);
+\draw[daten]    (robot) -- (netz);
+\draw[daten]    (robot) -- (ui);
+\draw[energie]  (lade) -- (robot);
+\draw[daten]    (robot) -- (wartung);
+\draw[daten]    (robot) -- (gms);
+\draw[vorgabe]  (robot) -- (vorgaben);
+
+% --- Legend ---
+\node[legenergie] (leg1) at (-6.5,-6.3) {};
+\node[right=1mm of leg1, font=\tiny, align=left] (lab1) {Energy flow};
+\node[legdaten, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] (lab2) {Data flow};
+\node[legbewegung, right=6mm of lab2] (leg3) {};
+\node[right=1mm of leg3, font=\tiny, align=left] (lab3) {Movement};
+\node[legvorgabe, right=6mm of lab3] (leg4) {};
+\node[right=1mm of leg4, font=\tiny, align=left] (lab4) {Constraint};
+
+\end{tikzpicture}

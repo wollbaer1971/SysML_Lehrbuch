@@ -1,0 +1,177 @@
+\chapter{The Hands-On Project: Autonomous Indoor Robot}
+
+\begin{lernziele}
+After this chapter, you know the running example system of this book. You can describe the goal, system context, main functions, assumptions, and constraints of the autonomous indoor robot. You also understand why this example is well suited for learning SysML v2, MBSE, ROS2, and machine learning together.
+\end{lernziele}
+
+\section{Introduction}
+This textbook uses one running example throughout: an autonomous indoor robot. Through this example, you learn how systems engineering, MBSE, SysML v2, and ROS2 fit together. The example is realistic by design, but limited for teaching purposes.
+
+The robot must move indoors, drive to target points, detect obstacles, recognize people, monitor its battery level, and return to its charging station automatically when the battery is low. The project therefore connects typical topics of modern robotics: sensors, actuators, navigation, software architecture, AI, interfaces, tests, and system modeling.
+
+\section{Goal of the System}
+You can describe the target system in one sentence:
+
+\begin{quote}
+The autonomous indoor robot transports small items within a defined building area, on its own, safely, and traceably, to selected target points.
+\end{quote}
+
+This sentence contains several key terms. \enquote{Autonomous} does not mean unlimited independence here. The robot works within a known or mapped indoor area. \enquote{Safely} means that it must not endanger people or objects. \enquote{Traceably} means that states, errors, and decisions stay observable in the model, and later in the system.
+
+\section{Why This Example?}
+This example suits a beginner well because it connects several disciplines without becoming too large right away.
+
+\begin{itemize}
+    \item It includes hardware: sensors, drive system, battery, housing.
+    \item It includes software: ROS2 nodes, topics, services, and actions (chapter 14 explains these terms in more detail).
+    \item It includes behavior: navigation, return to the charging station, error handling.
+    \item It includes interfaces: data flows, energy flow, operation.
+    \item It includes AI: person detection with an ML model.
+    \item It includes tests: requirements must be verified.
+\end{itemize}
+
+At the same time, the scope stays manageable. We do not model a complete industrial delivery robot with certification, product variants, and series production. We model a learning system that makes the key concepts visible.
+
+\section{System Context}
+The robot interacts with its environment. The context includes:
+
+\begin{itemize}
+    \item users who start transport orders
+    \item people in the building
+    \item rooms, hallways, doors, and obstacles
+    \item a charging station
+    \item maintenance staff
+    \item possibly a Wi-Fi or building network
+    \item an operator device or a user interface
+\end{itemize}
+
+Not all of these elements automatically belong to the system. You must decide the system boundary deliberately. For this textbook, we treat the robot as the main system. Depending on the chapter, the charging station counts as an external system or as part of the overall architecture, because this very decision is a good example of an interface. A deliberately drawn system boundary is also what later lets us cleanly model the robot's requirements (chapter 6) and structure (chapter 8).
+
+Figure~\ref{fig:kap05-kontextdiagramm} summarizes this system context graphically: the robot sits at the center, and all the elements listed above surround it as external context elements.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap05_kontextdiagramm}}
+  \caption{Context diagram of the indoor robot with the key external elements of its operating environment.}
+  \label{fig:kap05-kontextdiagramm}
+\end{figure}
+
+\section{Main Functions}
+The robot's key functions are:
+
+\begin{itemize}
+    \item accept a transport order
+    \item create or load a map
+    \item determine its own position
+    \item receive a navigation target
+    \item plan a path
+    \item execute movement
+    \item detect and avoid obstacles
+    \item detect and account for people
+    \item monitor the battery
+    \item drive to the charging station
+    \item report its operating state
+    \item detect errors and react safely
+\end{itemize}
+
+This list is not yet a technical architecture. It first describes what the system must deliver. Only later do we decide which system parts (\texttt{part def}, covered in detail in chapter 8), ROS2 nodes, and interfaces realize these functions.
+
+\section{Assumptions for This Textbook}
+To keep the example manageable, we make a few assumptions:
+
+\begin{itemize}
+    \item The robot drives only indoors.
+    \item The floor is essentially flat.
+    \item The robot moves at low speed.
+    \item The environment can be mapped.
+    \item The robot has a camera, lidar, an onboard computer, a motor controller, and a battery.
+    \item We use ROS2 as the software base.
+    \item An ML model will later handle person detection.
+    \item This book covers safety considerations for teaching purposes, not as a complete, standards-compliant safety case.
+\end{itemize}
+
+\begin{hinweisbox}
+This project is simplified for teaching. A real robot used in public or safety-critical areas needs far more extensive risk analyses, safety concepts, standards assessments, and approval processes.
+\end{hinweisbox}
+
+\section{First System Structure}
+A first, rough structure could consist of the following subsystems:
+
+\begin{itemize}
+    \item \texttt{PerceptionSystem}: camera, lidar, object detection, obstacle detection
+    \item \texttt{NavigationSystem}: localization, map, path planning
+    \item \texttt{MotionControl}: execution of movement commands
+    \item \texttt{BatterySystem}: battery cell, charge level, energy management
+    \item \texttt{UserInterface}: order entry and status display
+    \item \texttt{CommunicationSystem}: internal and external communication
+    \item \texttt{SafetyLogic}: safe response to critical situations
+\end{itemize}
+
+The following chapters refine this structure step by step. Figure~\ref{fig:kap05-systemstruktur-uebersicht} shows this first, still flat breakdown as a simple tree.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap05_systemstruktur_uebersicht}}
+  \caption{First, still rough system structure of the robot with seven peer subsystems.}
+  \label{fig:kap05-systemstruktur-uebersicht}
+\end{figure}
+
+\section{First Scenarios}
+\subsection{Scenario 1: Drive to a Target}
+A user selects a target. The robot checks whether a map is available, plans a path, and starts driving. During the drive, it processes sensor data, detects obstacles, and adjusts its movement. At the target, it reports successful completion.
+
+\subsection{Scenario 2: Obstacle in the Path}
+During navigation, the robot detects an obstacle. It evaluates whether it can avoid it. If so, it plans a new local movement. If not, it stops and reports a blockage.
+
+\subsection{Scenario 3: Low Battery}
+The battery monitor detects a low charge level. The robot aborts its current mission, informs the user, and plans its return to the charging station.
+
+\subsection{Scenario 4: Person Detection}
+The camera feeds images to an ML-based detection node. If the system detects a person in the driving area, the robot reduces its speed or chooses a different path.
+
+\section{What We Do With This in the Book}
+The hands-on project serves as a common thread:
+
+\begin{itemize}
+    \item Chapter 6 formulates requirements.
+    \item Chapter 7 looks at stakeholders and use cases.
+    \item Chapters 8 and 9 model structure and internal connections.
+    \item Chapter 10 describes interfaces.
+    \item Chapters 11 and 12 model behavior.
+    \item Chapters 14 through 18 carry the model over into ROS2 and ML.
+    \item Chapters 19 and 20 connect requirements, tests, and traceability (the ability to track requirements across the whole model).
+\end{itemize}
+
+\section{Summary}
+The autonomous indoor robot is small enough for a beginner and realistic enough to make systems engineering meaningful. It connects requirements, structure, behavior, interfaces, ROS2 architecture, AI, and tests. The assumptions and functions described in this chapter form the basis for every modeling step that follows.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What is the goal of the autonomous indoor robot?
+    \item Why does this example suit a SysML textbook well?
+    \item Which external elements belong to the system context?
+    \item Name five main functions of the robot.
+    \item Which assumptions does this textbook make?
+    \item Why is the charging station an interesting example for system boundaries?
+    \item What role does ROS2 play in the hands-on project?
+    \item What role does machine learning play in the hands-on project?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Context sketch}\\
+Draw a simple context sketch: the robot in the middle, with the user, obstacle, charging station, room, maintenance staff, and network around it.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Extend the function list}\\
+Add five more functions to the main function list that would be useful for a real indoor robot.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 3: Check assumptions}\\
+Pick three assumptions from this chapter. For each one, describe what would change in the system if that assumption no longer held.
+\end{uebungbox}
+
+\section{Further Reading}
+Besides the SysML fundamentals \cite{delligatti2014,friedenthal2014}, the ROS2 fundamentals \cite{ros2docs} are especially relevant for this hands-on project. For real robotics projects, you should also consider safety standards, data-protection requirements, and domain-specific robotics standards.

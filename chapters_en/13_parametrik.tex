@@ -1,0 +1,168 @@
+\chapter{Parametric Modeling}
+
+\begin{lernziele}
+After this chapter, you understand how to describe technical relationships in the model. You can use simple formulas for battery runtime, power draw, and braking distance, and you can explain how SysML v2 uses \texttt{calc def} and \texttt{constraint} for quantitative statements.
+\end{lernziele}
+
+\section{Introduction}
+So far, we have looked at requirements, structure, interfaces, and behavior. Many technical decisions also need numbers. How long does the robot run on one battery charge? How much power do the computer, the sensors, and the motors need? How large must the safety distance be at a given speed?
+
+Parametric modeling helps make such relationships visible.
+
+\section{Purpose of Parametric Models}
+Parametric models describe mathematical relationships. They help check technical decisions early. For the robot, important quantities include energy consumption, range, speed, payload, and braking distance.
+
+\section{Simple Example: Operating Time}
+\[
+t_{\text{operating}} = \frac{E_{\text{battery}}}{P_{\text{total}}}
+\]
+
+Here, \(E_{\text{battery}}\) is the usable energy of the battery, and \(P_{\text{total}}\) is the average power draw.
+
+If the battery holds 100 Wh of usable energy and the system draws 25 W on average, the result is:
+
+\[
+t_{\text{operating}} = \frac{100\,\text{Wh}}{25\,\text{W}} = 4\,\text{h}
+\]
+
+\section{Power Draw}
+You can estimate the total power roughly as:
+
+\[
+P_{\text{total}} = P_{\text{computer}} + P_{\text{sensors}} + P_{\text{motors}} + P_{\text{other}}
+\]
+
+This formula is simple, but useful for early architecture decisions. If a more powerful computer needs 15 W more, the operating time drops. That can affect requirements on battery size, weight, and charging time.
+
+\section{Braking Distance}
+You can also look at safety questions in a roughly parametric way. A simplified braking distance can be estimated with the following relationship:
+
+\[
+s = \frac{v^2}{2a}
+\]
+
+Here, \(v\) is the speed and \(a\) is the braking deceleration. The formula is simplified, but it shows an important relationship: as speed increases, braking distance grows quadratically. Similar to \texttt{OperatingTimeCalc}, you could write this as \texttt{calc def BrakingDistanceCalc \{ in v: Real; in a: Real; return s: Real = v*v/(2*a); \}}. Figure~\ref{fig:kap13-graph-bremsweg} shows this quadratic relationship for speeds between 0 and 1.5 m/s.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap13_graph_bremsweg}}
+  \caption{Braking distance $s = v^2/(2a)$ as a function of speed $v$ (here with $a=1\,\text{m/s}^2$). The braking distance grows quadratically; the values at $v=0.5$\,m/s and $v=1.0$\,m/s are marked.}
+  \label{fig:kap13-graph-bremsweg}
+\end{figure}
+
+You can also model the braking distance as a parametric diagram (see Figure~\ref{fig:kap13-parametrisch-bremsweg}): the robot's speed and the \texttt{BrakeSystem}'s braking deceleration feed into \texttt{BrakingDistanceCalc}, whose result the \texttt{SafeBrakingDistance} condition then checks against the maximum allowed braking distance.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap13_parametrisch_bremsweg}}
+  \caption{Parametric diagram for braking distance: speed and braking deceleration feed into \texttt{BrakingDistanceCalc}; the \texttt{SafeBrakingDistance} condition then checks the result against the maximum allowed braking distance.}
+  \label{fig:kap13-parametrisch-bremsweg}
+\end{figure}
+
+\begin{praxisbox}
+If the robot needs to drive faster, adjusting the motor controller alone is not enough. You also need to look at obstacle detection, reaction time, braking distance, safety distance, and tests.
+\end{praxisbox}
+
+\section{Parametric Diagram in SysML}
+In SysML v2, you model such relationships with \texttt{calc def} (calculations) and \texttt{constraint} (conditions). A \texttt{calc def} describes a formula. Parameters connect to attributes of system parts. Graphically, a parametric diagram consists of boxes for \texttt{calc def} and \texttt{constraint} usages, with their parameters at the edge, connected by dashed binding lines to the attributes of the participating system parts — just as the figures in this section show.
+
+Example:
+
+\begin{itemize}
+    \item \texttt{calc def}: \texttt{OperatingTimeCalc}
+    \item Formula: \(t = E / P\)
+    \item Parameters: \(t\), \(E\), \(P\)
+    \item Connection: \(E\) to battery capacity, \(P\) to power draw
+\end{itemize}
+
+As code, the same \texttt{calc def} looks like this:
+
+\begin{lstlisting}
+calc def OperatingTimeCalc {
+  in energy : Real;   // usable energy in Wh
+  in power  : Real;   // average power draw in W
+  return operatingTime : Real = energy / power;
+}
+\end{lstlisting}
+
+The \texttt{in} parameters \texttt{energy} and \texttt{power} — \texttt{in} marks the parameter direction as an input, and \texttt{return} marks the result in the same way — connect in the model to the attributes of the battery and the power consumers. The result \texttt{operatingTime} is then available as a calculated value on the system part. Figure~\ref{fig:kap13-parametrisch-betriebszeit} shows this parametric diagram graphically: the dashed binding lines connect the parameters of \texttt{OperatingTimeCalc} to the attributes of \texttt{Battery}, \texttt{PowerConsumers}, and \texttt{Mission}.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap13_parametrisch_betriebszeit}}
+  \caption{Parametric diagram for calculating operating time: \texttt{OperatingTimeCalc} connects the battery capacity and the power draw of the consumers to the estimated runtime of the mission.}
+  \label{fig:kap13-parametrisch-betriebszeit}
+\end{figure}
+
+Besides \texttt{calc def}, SysML v2 offers \texttt{constraint def} as a construct for conditions that check a calculated quantity against a limit. For the braking distance from Section~13.5, you could write this as:
+
+\begin{lstlisting}
+constraint def SafeBrakingDistance {
+  in s    : Real;   // calculated braking distance in m
+  in sMax : Real;   // maximum allowed braking distance in m
+  assert s <= sMax;
+}
+\end{lstlisting}
+
+The condition \texttt{assert s <= sMax} holds exactly when the calculated braking distance does not exceed the allowed limit; if it is violated, the model flags an unsafe combination of speed and braking deceleration.
+
+\section{Limits of Simple Models}
+Parametric models are only as good as their assumptions. A robot uses more energy while accelerating than at rest. Carpet, payload, and driving profile all affect runtime. A simple model is still useful, though, because it makes orders of magnitude visible early.
+
+\section{Parametrics as a Decision Tool}
+Parametric modeling is especially valuable when comparing several design options. Suppose a team is looking at two computers. Computer A needs 10 W and can do simple person detection. Computer B needs 25 W and detects people more reliably. The decision is not only about machine learning (ML) quality; it is also about battery runtime, heat, cost, and weight.
+
+A parametric model can make such effects visible. If the remaining power draw is 20 W, computer A gives a total power draw of 30 W. Computer B raises it to 45 W. With 100 Wh of usable energy, the theoretical operating time drops from about 3.3 h to about 2.2 h.
+
+The model does not make the decision automatically. But it does show which questions need discussion: Is better detection worth the shorter runtime? Can a larger battery be installed? Does the system get too heavy? Would an optimized model work on computer A?
+
+\subsection{Energy Balance for a Safeguarded Return}
+\label{sec:bm-energie}
+The battery management from Section~\ref{sec:bm-anforderungen} uses consumption measured so far to estimate future need. Distance traveled, payload, surface, and waiting time can all change consumption. The average for the outbound trip is therefore only an input value, not a guarantee for the return trip.
+
+Let \(E_{\mathrm{usable}}\) denote the conservatively estimated usable remaining energy, \(E_{\mathrm{order}}\) the need of the remaining order, \(E_{\mathrm{after}}\) the return need after it ends, and \(E_{\mathrm{reserve}}\) the reserve. All quantities use the same energy unit, for example Wh. To continue, the following must hold:
+\[
+E_{\mathrm{usable}} \geq E_{\mathrm{order}} + E_{\mathrm{after}} + E_{\mathrm{reserve}}.
+\]
+In addition, the immediate return from the current location must stay covered energetically. With its need \(E_{\mathrm{now}}\), the following must hold:
+\[
+E_{\mathrm{usable}} \geq E_{\mathrm{now}} + E_{\mathrm{reserve}}.
+\]
+
+The need estimates account for uncertainty, as well as driving, waiting, and docking. The reserve additionally covers defined deviations; how it differs from the uncertainty already included must be documented. The return limit also accounts for consumption up to the next check and up to a controlled interruption of the order. A decision must therefore not wait until the second inequality is already violated.
+
+Both inequalities can only be evaluated with valid, reliable estimates. If the remaining order or its following return trip is unknown, continuing is not permitted, even if plenty of energy remains. The immediate return may still be possible, based on a separately evaluated, recorded path. Without valid return-path data, even a positive energy balance on paper is not enough: the route must actually be traceable and drivable.
+
+This example remains a technical basis for calculation. It fixes neither a universal reserve value nor a specific estimation method. The edge-case tests in Section~\ref{sec:bm-tests} later check the decision with explicitly defined parameters.
+
+\section{Summary}
+Parametric modeling adds quantitative relationships to qualitative models. For the indoor robot, battery runtime, power draw, and braking distance are good starting topics. Parametrics help you understand trade-offs between performance, weight, safety, and cost.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What is parametric modeling used for?
+    \item Which quantities affect operating time?
+    \item Why does braking distance grow sharply with speed?
+    \item What is \texttt{calc def} in SysML v2?
+    \item Why do assumptions matter in parametric models?
+    \item Which trade-offs can parametrics make visible?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Calculate operating time}\\
+Assume a battery capacity of 100 Wh and a power draw of 25 W. Calculate the theoretical operating time.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Change in power draw}\\
+The computer now needs 20 W instead of 10 W. The remaining power draw is 20 W. Calculate the new operating time at 100 Wh.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 3: Compare braking distance}\\
+Compare the braking distance for 0.5 m/s and 1.0 m/s at the same braking deceleration. Describe what this means for safety requirements.
+\end{uebungbox}
+
+\section{Further Reading}
+SysML literature describes parametric diagrams as a tool for technical analysis \cite{friedenthal2014}. For real robotics projects, also consult specialist sources on battery technology, drive technology, and safety.

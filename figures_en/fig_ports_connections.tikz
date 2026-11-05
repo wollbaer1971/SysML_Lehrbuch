@@ -1,0 +1,48 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    part/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=30mm, minimum height=12mm,
+        align=center, fill=blue!8, drop shadow
+    },
+    port/.style={rectangle, draw=black, fill=black!75, minimum width=2.2mm,
+        minimum height=2.2mm, inner sep=0pt},
+    portlbl/.style={font=\small},
+    flow/.style={-{Stealth[length=2.2mm]}, thick, orange!70!black}
+]
+
+% --- System parts ---
+\node[part] (camera) at (0, 3)   {\texttt{camera :}\\\texttt{Camera}};
+\node[part] (lidar)  at (0, 0)   {\texttt{lidar :}\\\texttt{Lidar}};
+\node[part] (detect) at (7, 3)   {\texttt{objectDetector :}\\\texttt{ObjectDetector}};
+\node[part] (obst)   at (7, 0)   {\texttt{obstacleDetector :}\\\texttt{ObstacleDetector}};
+
+% --- Ports (small squares on the edge) ---
+\node[port] (p-cam-out)   at ($(camera.east)$)   {};
+\node[port] (p-lidar-out) at ($(lidar.east)$)    {};
+\node[port] (p-det-in)    at ($(detect.west)$)   {};
+\node[port] (p-det-out)   at ($(detect.east)$)   {};
+\node[port] (p-obst-in)   at ($(obst.west)$)     {};
+
+\node[portlbl, anchor=south west] at ([yshift=0.7mm]p-cam-out.north)   {\texttt{imageOut}};
+\node[portlbl, anchor=south west] at ([yshift=0.7mm]p-lidar-out.north) {\texttt{scanOut}};
+\node[portlbl, anchor=south east] at ([yshift=0.7mm]p-det-in.north)    {\texttt{imageIn} \textcolor{orange!70!black}{$\sim$}};
+\node[portlbl, anchor=south west] at ([yshift=0.7mm]p-det-out.north)   {\texttt{objectsOut}};
+\node[portlbl, anchor=south east] at ([yshift=0.7mm]p-obst-in.north)   {\texttt{scanIn} \textcolor{orange!70!black}{$\sim$}};
+
+% --- Connections (connection c1 / c2) ---
+\draw[flow] (p-cam-out)   -- node[above, midway, font=\small]{c1} (p-det-in);
+\draw[flow] (p-lidar-out) -- node[above, midway, font=\small]{c2} (p-obst-in);
+
+% --- Forwarding to navigation (objectsOut, not connected in the listing) ---
+\draw[flow, dashed] (p-det-out) -- ++(2.2,0)
+    node[right, font=\small, align=left] {to\\Navigation};
+
+% --- Legend ---
+\node[port, below=16mm of lidar, xshift=-4mm] (leg1) {};
+\node[portlbl, right=1mm of leg1] {Port};
+\node[portlbl, below=2mm of leg1, xshift=6mm] (legtilde) {\textcolor{orange!70!black}{$\sim$} = conjugated port (receives instead of sends)};
+\draw[flow] ([yshift=-8mm]leg1.south) -- ++(6mm,0)
+    node[right=1mm, font=\small] {Connection (\texttt{connection})};
+
+\end{tikzpicture}

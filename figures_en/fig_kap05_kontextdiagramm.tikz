@@ -1,0 +1,43 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    center/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=24mm, minimum height=10mm,
+        align=center, fill=green!15, drop shadow
+    },
+    ext/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, dashed,
+        minimum width=26mm, minimum height=9mm,
+        align=center, fill=white, drop shadow, font=\footnotesize
+    },
+    edg/.style={black!50, thick}
+]
+
+% --- Central system ---
+\node[center] (robot) at (0,0) {\textbf{Indoor Robot}};
+
+% --- Surrounding elements (arranged roughly in a circle, 7 elements, compact radius) ---
+\node[ext] (nutzer)   at (-4.35, 2.18)  {User};
+\node[ext] (personen) at ( 0.0, 2.99)   {People in the\\Building};
+\node[ext] (raeume)   at ( 4.35, 2.18)  {Rooms, Hallways,\\Doors,\\Obstacles};
+\node[ext] (lade)     at ( 4.90,-0.82)  {Charging Station};
+\node[ext] (wartung)  at ( 2.18,-2.86)  {Maintenance\\Staff};
+\node[ext] (netz)     at (-2.18,-2.86)  {Wi-Fi /\\Building Network};
+\node[ext] (ui)       at (-4.90,-0.82)  {Operator Device /\\User\\Interface};
+
+% --- Connecting lines (no arrow direction, plain association) ---
+\draw[edg] (robot) -- (nutzer);
+\draw[edg] (robot) -- (personen);
+\draw[edg] (robot) -- (raeume);
+\draw[edg] (robot) -- (lade);
+\draw[edg] (robot) -- (wartung);
+\draw[edg] (robot) -- (netz);
+\draw[edg] (robot) -- (ui);
+
+% --- Legend ---
+\node[center, minimum width=6mm, minimum height=4mm, below=14mm of wartung, xshift=-11mm, font=\tiny] (leg1) {};
+\node[right=1mm of leg1, font=\tiny, align=left] {System under consideration};
+\node[ext, minimum width=6mm, minimum height=4mm, below=6mm of leg1, font=\tiny] (leg2) {};
+\node[right=1mm of leg2, font=\tiny, align=left] {External context element};
+
+\end{tikzpicture}
