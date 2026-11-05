@@ -97,7 +97,7 @@ The goal of an MBSE model is a shared information base. Everyone involved should
 An MBSE model can grow very large. For a beginner, it is therefore important to focus on central content. For the autonomous indoor robot, we first look at eight areas.
 
 \subsection{Stakeholders and Needs}
-The model can hold stakeholders and their needs. Examples include users, maintenance staff, safety officers, data protection officers, and operators. These stakeholders have expectations, from which requirements are derived.
+The model can hold stakeholders and their needs. Examples include users, maintenance staff, safety officers, data protection officers, and operators. These stakeholders have expectations, and the team derives requirements from them.
 
 For the robot, this could look like:
 
@@ -109,7 +109,7 @@ For the robot, this could look like:
 \end{itemize}
 
 \subsection{Requirements}
-Requirements describe what the system must achieve. In the model, they are not just collected as text; they are linked to other elements. A requirement for obstacle detection can be connected to a function, a sensor component, a test case, and later to a software unit.
+Requirements describe what the system must achieve. In the model, the team does not just collect them as text; it links them to other elements. A requirement for obstacle detection can be connected to a function, a sensor component, a test case, and later to a software unit.
 
 \subsection{Functions}
 Functions describe what the system does. They sit between requirements and solution. Examples for the robot are:
@@ -152,10 +152,10 @@ Examples:
 \end{itemize}
 
 \subsection{Behavior}
-Behavior describes sequences, decisions, and states. A robot has typical operating states such as \enquote{ready,} \enquote{driving to target,} \enquote{waiting,} \enquote{returning to the charging station,} \enquote{charging,} or \enquote{fault.} Sequences can describe how a transport task gets carried out.
+Behavior describes sequences, decisions, and states. A robot has typical operating states such as \enquote{ready,} \enquote{driving to target,} \enquote{waiting,} \enquote{returning to the charging station,} \enquote{charging,} or \enquote{fault.} Sequences can describe how the robot carries out a transport task.
 
 \subsection{Tests and Evidence}
-A model should show how requirements get checked. A safety requirement needs matching tests. A navigation requirement needs test scenarios. A data protection requirement may need an inspection of the software architecture and a check of data storage.
+A model should show how the team checks requirements. A safety requirement needs matching tests. A navigation requirement needs test scenarios. A data protection requirement may need an inspection of the software architecture and a check of data storage.
 
 \subsection{Decisions and Assumptions}
 Not every important piece of information is a requirement. Many project facts are assumptions or decisions. Example: \enquote{The robot is used only indoors, on level floors.} Or: \enquote{Camera images are processed locally and not stored permanently.} Such information should stay visible, because later changes to it can have large effects.
@@ -175,7 +175,7 @@ This simple picture already shows the core of MBSE. The point is not to produce 
 \subsection{Traceability}
 Traceability lets you follow the links from a requirement to the design and the tests that verify it. You can jump from one piece of information to related ones. From a requirement, you reach functions, components, and tests. From a component, you can see which requirements it satisfies. From a test, you can see which requirement it checks.
 
-For the indoor robot, traceability is especially useful. If the safety requirement is tightened, the team wants to know:
+For the indoor robot, traceability is especially useful. If the team tightens the safety requirement, it wants to know:
 
 \begin{itemize}
     \item Which functions are affected?
@@ -204,7 +204,7 @@ A simple starting structure for the model could look like this:
     \item package \enquote{Tests and Verification}
 \end{itemize}
 
-At this point, a package is just an organizing area. It helps keep the model tidy. Later, we will see how such packages can be set up concretely as SysML v2 files and namespaces.
+At this point, a package is just an organizing area. It helps keep the model tidy. Later, we will see how to set up such packages concretely as SysML v2 files and namespaces.
 
 \subsection{Example Chain: Obstacle Detection}
 Consider a typical model chain:
@@ -254,7 +254,7 @@ MBSE is not an end in itself. The benefit only appears when the model answers re
 Traceability means that decisions and connections stay recognizable. If someone asks why the robot has a lidar sensor, the model should not just show \enquote{because we decided so} -- it should show the connection to requirements and functions.
 
 \subsection{Consistency}
-A model can help avoid contradictions. If a system element gets renamed, it appears with the same name in every view. If a requirement has no test case, that can be flagged. If a function is not assigned to any component, this becomes an open question.
+A model can help avoid contradictions. If you rename a system element, it appears with the same name in every view. If a requirement has no test case, the model can flag that. If no component is responsible for a function, this becomes an open question.
 
 \subsection{Communication}
 Diagrams and structured models help teams talk about the same system. This matters especially in a robot project, because different disciplines are involved. A shared model structure can reduce misunderstandings.
@@ -298,7 +298,7 @@ First, describe what the system is built for and in which environment it operate
 Next, collect the important requirements. They do not need to be perfect at the start. What matters is making them visible, then improving them later. Good requirements are understandable, unambiguous, and testable.
 
 \subsection{Step 3: Derive Functions}
-Functions get derived from requirements. If the robot must return to the charging station automatically, it needs functions such as \enquote{monitor battery level,} \enquote{locate charging station,} and \enquote{plan return.}
+The team derives functions from requirements. If the robot must return to the charging station automatically, it needs functions such as \enquote{monitor battery level,} \enquote{locate charging station,} and \enquote{plan return.}
 
 \subsection{Step 4: Design the Structure}
 Next, decide which system elements realize the functions. This is where the first system parts appear (\texttt{part def}, explained in more detail in chapter 3), along with subsystems or components. For the robot, these are, for example, sensors, navigation, power supply, and the user interface.
@@ -307,7 +307,7 @@ Next, decide which system elements realize the functions. This is where the firs
 Interfaces should be described early. Who provides which data? Who needs which information? What signals, messages, or energy flows exist?
 
 \subsection{Step 6: Assign Tests}
-Tests or other evidence get assigned to the important requirements. This keeps it clear how the team plans to check later whether the system works.
+The team assigns tests or other evidence to the important requirements. This keeps it clear how the team plans to check later whether the system works.
 
 \section{Quality Traits of a Good Model}
 An MBSE model is not automatically good just because it is big. Good models share a few practical traits.
@@ -325,7 +325,7 @@ The model should be neither too coarse nor too detailed. A good question to ask 
 A model must be maintainable. If every small change requires a lot of manual rework, the model quickly falls out of date. A simple, clear model structure is therefore important.
 
 \subsection{Verifiability}
-Important requirements should be connected to evidence. Not every requirement needs a fully worked-out test right away, but it should be clear how its fulfilment will be checked later.
+Important requirements should be connected to evidence. Not every requirement needs a fully worked-out test right away, but it should be clear how the team will check its fulfilment later.
 
 \section{Views and Roles in the Model}
 A system model holds a lot of information. Even so, not everyone needs to see all of it all the time. This is why MBSE works with views. A view shows a specific slice of the model for a specific question or role.
@@ -384,7 +384,7 @@ For the indoor robot, test views could show:
     \item fault situations and the expected safe responses
 \end{itemize}
 
-This view stops tests from being invented only at the end. Good tests grow alongside the team's understanding of the system.
+This view stops the team from inventing tests only at the end. Good tests grow alongside the team's understanding of the system.
 
 Figure~\ref{fig:kap02-sichten-auf-modell} summarizes the four views described above once more: all of them access the same model, but look at it from different angles.
 
@@ -398,15 +398,15 @@ Figure~\ref{fig:kap02-sichten-auf-modell} summarizes the four views described ab
 \section{From the MBSE Model to the ROS2 Architecture}
 One central goal of this textbook is to connect SysML v2, MBSE, and ROS2. It is therefore important to understand early on how a system model can lead to a later software structure.
 
-This transition does not happen automatically. A SysML system element does not turn into a ROS2 node by magic. But the model can systematically prepare which software units make sense and how they communicate with each other.
+This transition does not happen automatically. A SysML system element does not become a ROS2 node without extra work. But the model can systematically prepare which software units make sense and how they communicate with each other.
 
 \subsection{Functions as a Starting Point}
 Functions come first. Functions describe what the system must do. For the robot, these are, for example, \enquote{sense the environment,} \enquote{determine position,} \enquote{plan a route,} \enquote{avoid obstacles,} \enquote{detect people,} and \enquote{monitor battery level.}
 
-These functions can later map onto software building blocks. Not every function automatically becomes its own node. Sometimes several functions get grouped into one node. Sometimes one function gets split across several nodes. Modeling helps the team make this decision deliberately.
+These functions can later map onto software building blocks. Not every function automatically becomes its own node. Sometimes the team groups several functions into one node. Sometimes it splits one function across several nodes. Modeling helps the team make this decision deliberately.
 
 \subsection{Data Flows as Preparation for Topics}
-ROS2 systems often communicate over topics. A topic carries messages from one sender to one or more receivers. In the MBSE model, data flows can be prepared before concrete topic names get decided.
+ROS2 systems often communicate over topics. A topic carries messages from one sender to one or more receivers. In the MBSE model, the team can prepare data flows before it decides on concrete topic names.
 
 Examples:
 
@@ -421,12 +421,12 @@ Examples:
 Later, these can become ROS2 topics such as \texttt{/camera/image}, \texttt{/scan}, \texttt{/robot\_pose}, \texttt{/cmd\_vel}, or \texttt{/battery\_state}. The exact names are technical decisions. But the underlying communication structure can already become visible in the model.
 
 \subsection{States as a Basis for Control Logic}
-An autonomous robot has operating states. Examples are \enquote{ready,} \enquote{task active,} \enquote{navigating,} \enquote{obstacle detected,} \enquote{returning,} \enquote{charging,} and \enquote{fault.} These states can be modeled in SysML and help later during software development.
+An autonomous robot has operating states. Examples are \enquote{ready,} \enquote{task active,} \enquote{navigating,} \enquote{obstacle detected,} \enquote{returning,} \enquote{charging,} and \enquote{fault.} The team can model these states in SysML; doing so helps later during software development.
 
 Without a state model, control logic often ends up scattered through the code. After a while, no one knows exactly when the robot may drive, when it must stop, or how it recovers from a fault state. A state model creates a shared foundation.
 
 \subsection{Tests as the Link Between Model and Code}
-Tests form an important bridge between the model and the implementation. If a requirement in the model is linked to a test case, the later code can be checked specifically against this expectation.
+Tests form an important bridge between the model and the implementation. If the team links a requirement in the model to a test case, it can check the later code specifically against this expectation.
 
 Example:
 
@@ -441,22 +441,22 @@ Example:
 In this way, a functional expectation becomes a testable technical implementation.
 
 \section{Typical Mistakes When Starting with MBSE}
-MBSE, too, can be applied the wrong way. Especially at the start, a few warning signs help.
+Teams can apply MBSE the wrong way, too. Especially at the start, a few warning signs help.
 
-\subsection{Mistake 1: Diagrams Without Model Content}
-The team draws nice diagrams, but the elements are not named cleanly, not reused, and not linked. This produces only a prettier form of document-centric development.
+\subsection{Give Diagrams Real Model Content}
+Give diagram elements clean names, reuse them, and link them to other model elements. A team that just draws nice diagrams, without doing this, produces only a prettier form of document-centric development.
 
-\subsection{Mistake 2: Too Many Details Too Early}
-Beginners sometimes try to model every cable, every software class, and every parameter right away. This makes the model large before the basic structure is understood. It works better to start with requirements, main functions, main systems, and critical interfaces.
+\subsection{Model the Big Picture First}
+Start with requirements, main functions, main systems, and critical interfaces, before adding detail. Beginners sometimes try to model every cable, every software class, and every parameter right away. This makes the model large before anyone understands the basic structure.
 
-\subsection{Mistake 3: No Model Maintenance}
-A model is only useful if it is maintained. If architecture decisions change in the code but never flow back into the model, the model loses its value. The project must therefore make clear which parts of the model are maintained as a binding source of truth.
+\subsection{Maintain the Model}
+Keep the model up to date, or it quickly loses its value. If architecture decisions change in the code but the team never carries them back into the model, the model becomes useless. The project must therefore make clear which parts of the model the team maintains as the binding reference.
 
-\subsection{Mistake 4: Unclear Modeling Rules}
-If every team member models differently, disorder follows. Even simple rules help: consistent names, a clear package structure, defined relationship types, and limited diagram sizes.
+\subsection{Agree on Clear Modeling Rules}
+Agree on simple modeling rules: consistent names, a clear package structure, defined relationship types, and limited diagram sizes. If every team member models differently, disorder follows.
 
-\subsection{Mistake 5: Model and Implementation Become Separate Worlds}
-The model must not run alongside development like a box-ticking exercise. It must answer questions that really come up in the project. In this textbook, the connection to the ROS2 architecture therefore matters: the model should not just explain, it should prepare the implementation.
+\subsection{Connect the Model to the Implementation}
+Connect the model to real project questions and to the implementation, instead of running it alongside development as a box-ticking exercise. In this textbook, the connection to the ROS2 architecture therefore matters: the model should not just explain, it should prepare the implementation.
 
 \section{Summary}
 \gls{mbse} carries the ideas of systems engineering into a model-based way of working. Instead of spreading project knowledge across many loose documents, key information gets structured and linked within a system model. The model holds requirements, functions, structure, interfaces, behavior, tests, assumptions, and decisions.
