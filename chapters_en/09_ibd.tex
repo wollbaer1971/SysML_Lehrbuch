@@ -115,7 +115,7 @@ Here, \texttt{c1} delivers the current pose from localization to the path planne
   \label{fig:kap09-verbindungsmodell-navigation}
 \end{figure}
 
-Navigation emerges from several parts working together (see figure~\ref{fig:kap09-verbindungsmodell-navigation}). At the same time, this makes visible the interfaces that you can later implement in ROS2.
+Navigation emerges from several parts working together (see figure~\ref{fig:kap09-verbindungsmodell-navigation}). At the same time, this shows the interfaces that you can later implement in ROS2.
 
 \section{Documenting Assumptions}
 A good connection model should also document assumptions. Is the map loaded beforehand, or updated while driving? Does localization work relative to \texttt{map} or \texttt{odom} (two common ROS2 coordinate frames, explained in more detail in chapter 10)? Such questions belong in the model element as documentation (\texttt{doc /* ... */}).
@@ -135,8 +135,8 @@ Always route connections through named ports. A direct connection without ports 
 \subsection{Specify a Data Type for Each Port}
 A port only becomes useful once you know what data flows across it. Define \texttt{port def} with descriptive names.
 
-\subsection{Too Much Detail in One Model Section}
-A connection view should answer one clear question. For large systems, several focused sections work better than one overloaded model.
+\subsection{Keep Each Model Section Focused}
+Make each connection view answer one clear question. For large systems, several focused sections work better than one overloaded model.
 
 \section{Summary}
 Connection modeling with \texttt{port} and \texttt{connection} shows how system parts work together internally. It is especially useful for interfaces and data flows. In the robot project, it bridges the SysML v2 structure and ROS2 communication.

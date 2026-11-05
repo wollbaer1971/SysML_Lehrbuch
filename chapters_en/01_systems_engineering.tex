@@ -125,7 +125,7 @@ For the indoor robot, a desired effect could be: \enquote{The robot avoids colli
     \item inform the user about a disruption
 \end{itemize}
 
-A function describes a capability, for example \enquote{detect obstacles}, while a component is the concrete part that implements this capability, for example a lidar sensor; the same function can be fulfilled by different components. Only after this do we decide which components fulfil these functions. Maybe the robot needs a lidar sensor. Maybe a depth camera is not enough. Maybe a combination of several sensors makes sense. The solution follows from the problem, not the other way round. Figure~\ref{fig:kap01-wirkkette} shows this chain of effects from the sensors to the motors, together with, in parallel, the control loop for the power supply.
+A function describes a capability, for example \enquote{detect obstacles}, while a component is the concrete part that implements this capability, for example a lidar sensor; different components can fulfil the same function. Only after this do we decide which components fulfil these functions. Maybe the robot needs a lidar sensor. Maybe a depth camera is not enough. Maybe a combination of several sensors makes sense. The solution follows from the problem, not the other way round. Figure~\ref{fig:kap01-wirkkette} shows this chain of effects from the sensors to the motors, together with, in parallel, the control loop for the power supply.
 
 \begin{figure}[H]
   \centering
@@ -150,7 +150,7 @@ A trade-off is a conflict between goals. You improve one property and may worsen
     \item A very simple user interface can hide useful diagnostic information.
 \end{itemize}
 
-Good development does not mean maximizing every property. Good development means finding well-reasoned compromises. Systems engineering provides the structure for this: requirements, constraints, alternatives, evaluations, and decisions are made traceable.
+Good development does not mean maximizing every property. Good development means finding well-reasoned compromises. Systems engineering provides the structure for this: it makes requirements, constraints, alternatives, evaluations, and decisions traceable.
 
 \begin{hinweisbox}
 If a team says: \enquote{We want maximum range, maximum speed, the lowest cost, the highest safety, and the smallest size,} that is not yet a realistic goal. Systems engineering helps translate such wishes into prioritized, testable requirements.
@@ -165,13 +165,13 @@ A poor requirement would be:
 The robot must use a type X lidar sensor.
 \end{quote}
 
-In some cases, this can be justified -- for example, if a specific sensor is mandated for platform reasons. Often, though, it is already a solution decision in disguise. A better requirement could be:
+In some cases, the team can justify this -- for example, when the platform mandates a specific sensor. Often, though, it is already a solution decision in disguise. A better requirement could be:
 
 \begin{quote}
 The robot must detect obstacles at least 10 cm wide at a distance of at least 1.5 m.
 \end{quote}
 
-This wording describes the needed capability. Whether this capability is achieved with lidar, a camera, ultrasound, or sensor fusion stays open for now. That lets the team compare technical alternatives.
+This wording describes the needed capability. Whether the team achieves this capability with lidar, a camera, ultrasound, or sensor fusion stays open for now. That lets the team compare technical alternatives.
 
 \subsection{Why This Separation Matters}
 If requirements contain concrete solutions too early, the solution space shrinks unnecessarily. The team may then build in a component even though a better, cheaper, or more reliable solution would have been possible.
@@ -215,7 +215,7 @@ Stakeholders often express needs, not finished requirements. A user might say: \
     \item The robot should not have a complicated user interface.
 \end{itemize}
 
-The task in systems engineering is to take such statements seriously and translate them into testable requirements, without losing their original meaning.
+In systems engineering, the team takes such statements seriously and translates them into testable requirements, without losing their original meaning.
 
 \subsection{Conflicts Between Stakeholders}
 Stakeholders do not always share the same goals. Management wants low cost. The development team wants enough time for clean testing. Users want fast deliveries. Safety officers want cautious driving strategies. Data protection officers want to collect as little personal data as possible, while the AI team would like to use plenty of camera data for recognizing people.
@@ -246,7 +246,7 @@ If the charging station is part of the system, the project team also develops or
 \subsection{Option 2: The Charging Station Is an External System}
 If the charging station is treated as an external system, the robot only needs to be compatible with it. Then the interface becomes important: voltage, current, mechanical contacts, docking position, safety shutdown, and possibly a communication protocol. The advantage is less development work of your own. The disadvantage is dependence on an outside system.
 
-Either decision can be right. What matters is that the team makes it deliberately. An unclear system boundary almost always leads to misunderstandings later. Who is responsible if docking does not work reliably? The robotics team? The supplier of the charging station? The building's technical staff? Exactly these questions are what the system boundary settles.
+Either decision can be right. What matters is that the team makes it deliberately. An unclear system boundary almost always leads to misunderstandings later. Who is responsible if docking does not work reliably? The robotics team? The supplier of the charging station? The building's technical staff? The system boundary settles exactly these questions.
 
 \subsection{The System's Context}
 Outside the system boundary lies the system context. This includes all external actors and systems that the robot interacts with:
@@ -318,13 +318,13 @@ Besides functions, there are constraints. Constraints describe the limits within
     \item The robot must not permanently block emergency escape routes.
     \item The robot must not be disruptively loud during working hours.
     \item The robot must be usable without specialist knowledge.
-    \item Processing of camera data must respect data protection.
+    \item The robot must process camera data in a way that respects data protection.
 \end{itemize}
 
 Beginners sometimes find constraints less exciting than functions. Even so, they are critical. Many failed projects happen because constraints are discovered too late.
 
 \subsection{From Wish to Requirement}
-In the next step, wishes are translated into requirements. The table below shows simple examples.
+In the next step, the team translates wishes into requirements. The table below shows simple examples.
 
 \begin{center}
 \begin{tabular}{p{0.38\textwidth}p{0.50\textwidth}}
@@ -345,16 +345,16 @@ The numbers in this table are only example values. In a real project, you would 
 \section{Typical Project Mistakes}
 Systems engineering becomes much clearer once you look at typical mistakes. Many projects fail not from a lack of talent, but from unclear foundations.
 
-\subsection{Mistake 1: Thinking in Components Too Early}
-A team decides on day one: \enquote{We'll use this lidar, this camera, and this computer.} That feels concrete. Maybe first prototypes even appear quickly. The problem: it is still not clear which capabilities are actually needed. Later, it may turn out that the camera performs poorly in dark corridors, or that the computer is too weak for the AI model.
+\subsection{Describe Functions Before Choosing Components}
+It works better to first describe functions, requirements, and operating conditions, and only then choose components deliberately, to match.
 
-It works better to first describe functions, requirements, and operating conditions. Components are then chosen deliberately, to match.
+A team that decides on day one: \enquote{We'll use this lidar, this camera, and this computer,} feels concrete fast -- maybe first prototypes even appear quickly. The problem: it is still not clear which capabilities are actually needed. Later, it may turn out that the camera performs poorly in dark corridors, or that the computer is too weak for the AI model.
 
-\subsection{Mistake 2: Unclear Terms}
-One stakeholder says \enquote{autonomous}, a second understands it as \enquote{without remote control}, a third understands it as \enquote{without human supervision}. Such terms must be clarified. For our project, \enquote{autonomous} could mean: the robot drives to a target on its own within a mapped area, without a human continuously steering it.
+\subsection{Clarify Terms Early}
+The team must clarify ambiguous terms before relying on them. One stakeholder says \enquote{autonomous}, a second understands it as \enquote{without remote control}, a third understands it as \enquote{without human supervision}. For our project, \enquote{autonomous} could mean: the robot drives to a target on its own within a mapped area, without a human continuously steering it.
 
-\subsection{Mistake 3: Requirements Are Not Testable}
-Words such as \enquote{fast}, \enquote{reliable}, \enquote{intuitive}, or \enquote{robust} are fine as first wishes. As requirements, they are not enough. Testable requirements need observable criteria. Otherwise, no one can say clearly in the end whether they were met.
+\subsection{Make Requirements Testable}
+Give every requirement observable criteria. Words such as \enquote{fast}, \enquote{reliable}, \enquote{intuitive}, or \enquote{robust} are fine as first wishes, but as requirements, they are not enough. Without observable criteria, no one can say clearly in the end whether the team met the requirement.
 
 \subsection{Mistake 4: Interfaces Are Underestimated}
 Many problems arise at interfaces: between sensor and software, between navigation and motor control, between robot and charging station, between user interface and mission planning. If interfaces are not clearly described, teams integrate their parts late and then discover costly errors.
