@@ -131,7 +131,7 @@ E_{\mathrm{usable}} \geq E_{\mathrm{now}} + E_{\mathrm{reserve}}.
 
 The need estimates account for uncertainty, as well as driving, waiting, and docking. The reserve additionally covers defined deviations; how it differs from the uncertainty already included must be documented. The return limit also accounts for consumption up to the next check and up to a controlled interruption of the order. A decision must therefore not wait until the second inequality is already violated.
 
-Both inequalities can only be evaluated with valid, reliable estimates. If the remaining order or its following return trip is unknown, continuing is not permitted, even if plenty of energy remains. The immediate return may still be possible, based on a separately evaluated, recorded path. Without valid return-path data, even a positive energy balance on paper is not enough: the route must actually be traceable and drivable.
+Both inequalities can only be evaluated with valid, reliable estimates. If the remaining order or its following return trip is unknown, the robot may not continue, even if plenty of energy remains. The immediate return may still be possible, based on a separately evaluated, recorded path. Without valid return-path data, even a positive energy balance on paper is not enough: the route must actually be traceable and drivable.
 
 This example remains a technical basis for calculation. It fixes neither a universal reserve value nor a specific estimation method. The edge-case tests in Section~\ref{sec:bm-tests} later check the decision with explicitly defined parameters.
 

@@ -50,7 +50,7 @@ You can model this process as an activity diagram. Decisions arise, for example,
 Decision nodes model alternatives. Example: if the robot detects an obstacle, it either replans or stops. Decisions should have clear conditions, such as \texttt{[Obstacle detected]} and \texttt{[Path clear]}; Chapter~12.5 introduces these bracketed conditions as \emph{guards} and covers them in more depth.
 
 \section{Parallelism}
-A robot often runs several activities in parallel. While it drives, it also monitors sensors, battery, and communication. Activity diagrams can represent such parallel processes: a fork node splits the process, and a join node brings the parallel branches back together, for example when the actions \enquote{Monitor sensors} and \enquote{Monitor communication} run alongside driving. For beginners, though, it is important not to overload a diagram.
+A robot often runs several activities in parallel. While it drives, it also monitors sensors, battery, and communication. Activity diagrams can represent such parallel processes: a fork node splits the process, and a join node brings the parallel branches back together, for example when the actions \enquote{Monitor sensors} and \enquote{Monitor communication} run alongside driving. As a beginner, keep the diagram simple and avoid overloading it with too many parallel branches.
 
 \begin{praxisbox}
 The process \enquote{Drive to charging station} contains several decisions: Is the battery level low? Is the charging station reachable? Does docking succeed? If not, the robot must report an error or try again.
@@ -60,14 +60,14 @@ The process \enquote{Drive to charging station} contains several decisions: Is t
 Activity diagrams can refine requirements. A requirement such as \enquote{The robot must reach a target autonomously} becomes concrete through a process. This, in turn, produces further requirements, interfaces, and tests.
 
 \section{Common Mistakes}
-\subsection{Too much implementation detail}
-An activity diagram is not a substitute for program code. It should make the process understandable, not model every line of code.
+\subsection{Keep Implementation Detail Out of the Diagram}
+An activity diagram is not a substitute for program code. Use it to make the process understandable, not to model every line of code.
 
-\subsection{Unclear conditions}
-Decisions need conditions. A node without an understandable condition is not very useful.
+\subsection{Give Every Decision a Clear Condition}
+Give each decision node a condition the reader can understand. A node without a clear condition adds little value.
 
-\subsection{Forgetting error cases}
-Good activity diagrams do not only cover the normal case. For robots especially, aborts, blockages, and sensor failures matter.
+\subsection{Cover Error Cases, Not Just the Normal Case}
+Model error cases as well as the normal case. For robots especially, show aborts, blockages, and sensor failures.
 
 \section{Practical Example: Returning to the Charging Station}
 The process \enquote{Return to charging station} is a particularly good fit for an activity diagram. It does not start with driving to the charging station; it starts with a decision: Is the battery level below a threshold? If so, the system must check whether a critical order is currently running. Then it sets a \enquote{charging station} target, plans a path, and starts docking.

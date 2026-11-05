@@ -8,9 +8,9 @@ After this chapter, you can link requirements to test cases and describe simple 
 A system model is only truly useful if it leads to proof. Requirements must not just sound good. In the end, someone must check whether the system meets them. That is what this chapter covers.
 
 \section{Verification and Validation}
-Verification asks: Was the system built right? In other words: Does the system meet its specified requirements?
+Verification asks: Did the team build the system right? In other words: Does the system meet its specified requirements?
 
-Validation asks: Was the right system built? In other words: Does the system actually solve the stakeholders' problem?
+Validation asks: Did the team build the right system? In other words: Does the system actually solve the stakeholders' problem?
 
 Both questions matter. A robot can meet every specified requirement and still be impractical for its users. Conversely, a prototype can feel useful but fail to demonstrably meet important requirements.
 
@@ -42,7 +42,7 @@ TC-008 & Handle sensor failure safely & REQ-008\\
 \end{longtable}
 
 \section{Test Description}
-A test case should include:
+Each test case should include:
 
 \begin{itemize}
     \item ID
@@ -58,7 +58,7 @@ A test case should include:
 
 \section{Example TC-002}
 \textbf{Precondition:} The robot drives at a defined speed.\\
-\textbf{Procedure:} An obstacle is placed in its path.\\
+\textbf{Procedure:} Testers place an obstacle in its path.\\
 \textbf{Expectation:} The robot detects the obstacle and stops before a collision.\\
 \textbf{Criterion:} Minimum clearance of 20 cm.
 
@@ -104,40 +104,40 @@ If REQ-006 calls for a return to the charging station, a test case should check 
 \end{praxisbox}
 
 \section{Common Mistakes}
-\subsection{Planning Tests Too Late}
-When tests are designed only at the end, requirements are often untestable.
+\subsection{Plan Tests Early}
+Design tests while you write the requirements. If you wait until the end, many requirements turn out to be untestable.
 
-\subsection{Testing Only the Normal Case}
-Failure cases such as sensor failure, a blocked path, and low battery matter just as much.
+\subsection{Test the Failure Cases Too}
+Test failure cases too, such as a sensor failure, a blocked path, or a low battery. These matter just as much as the normal case.
 
-\subsection{No Clear Criteria}
+\subsection{Write a Measurable Criterion}
 Turn \enquote{The robot stops in time} into a measurable test criterion. For example, specify a maximum stopping distance and the conditions for the test.
 
 \section{Test Planning Over the Project}
-Tests should not appear only at the end of the project. When you write a requirement, ask right away: How will this requirement be checked later? This helps you spot an unclear requirement early.
+Plan tests throughout the project, not only at the end. When you write a requirement, ask right away: How will you check this requirement later? This helps you spot an unclear requirement early.
 
-For the robot project, test planning can grow step by step:
+For the robot project, you can grow test planning step by step:
 
 \begin{itemize}
-    \item Requirements get initial acceptance criteria.
-    \item Key functions get test ideas.
-    \item Interfaces get integration tests.
-    \item ROS2 nodes get unit or component tests.
-    \item Scenarios such as target navigation are described as system tests.
+    \item You give requirements initial acceptance criteria.
+    \item You turn key functions into test ideas.
+    \item You add integration tests for interfaces.
+    \item You write unit or component tests for ROS2 nodes.
+    \item You describe scenarios such as target navigation as system tests.
 \end{itemize}
 
-It also helps to re-run existing tests after every change (a regression test), so that newly introduced errors show up early -- this matters especially together with the change management process from Chapter 20.
+Re-run existing tests after every change (a regression test) so that new errors show up early -- this matters especially together with the change management process from Chapter 20.
 
-A good test model also makes gaps visible. If a requirement has no test case, that is not automatically wrong, but it is an open question. Maybe it will be shown by analysis, review, or inspection instead. Test, analysis, inspection, and demonstration count as the four classic verification methods. Document this choice as well.
+A good test model also makes gaps visible. If a requirement has no test case, that is not automatically wrong, but it is an open question. Maybe analysis, review, or inspection will cover it instead. Test, analysis, inspection, and demonstration count as the four classic verification methods. Document this choice as well.
 
 \section{In-Depth Example: Checking the Return Safeguard}
 \label{sec:bm-tests}
-Requirements BM-01 through BM-13 from Section~\ref{sec:bm-anforderungen} are made concrete by the following test drafts. They extend TC-005 and TC-006. These tests are planned, not yet carried out; mapping a test to a requirement is not a passed proof. The IDs T-01 through T-12 apply within this battery management example only.
+The following test drafts make Requirements BM-01 through BM-13 from Section~\ref{sec:bm-anforderungen} concrete. They extend TC-005 and TC-006. These tests are planned, not yet carried out; mapping a test to a requirement is not a passed proof. The IDs T-01 through T-12 apply within this battery management example only.
 
 \subsection{Shared Test Setup and Measurement Data}
-For the first decision tests, battery data, consumption history, remaining order, route data, and station status are supplied under controlled conditions, for example in a simulation. Each check records the reserves, uncertainty margins, and timing limits used. The data to record includes: input data with timestamp and validity, demand estimates, the reason for the decision, the approved route, order status, and docking and charging confirmation.
+For the first decision tests, you supply battery data, consumption history, remaining order, route data, and station status under controlled conditions, for example in a simulation. Each check records the reserves, uncertainty margins, and timing limits used. Record the following data: input data with timestamp and validity, demand estimates, the reason for the decision, the approved route, order status, and docking and charging confirmation.
 
-Checking the decision is kept separate from checking the quality of the estimate: a correct comparison of given energy values does not prove that the values match the real robot. Route tracking, energy consumption, and docking need additional integration and system tests. Until the open parameters from Section~\ref{sec:bm-anforderungen} are fixed, statements such as \enquote{in time} cannot yet be checked in a fully quantitative way.
+Keep the decision check separate from the check on estimate quality: a correct comparison of the given energy values does not prove that the values match the real robot. Route tracking, energy consumption, and docking need additional integration and system tests. Until the team fixes the open parameters from Section~\ref{sec:bm-anforderungen}, you cannot yet check statements such as \enquote{in time} in a fully quantitative way.
 
 \subsection{Scenarios and Expected Results}
 \begin{description}[style=nextline]
@@ -160,12 +160,12 @@ Checking the decision is kept separate from checking the quality of the estimate
     \item[Goal and preconditions] Check BM-05 through BM-07. The robot has a running order, valid battery data, and a return path that was recorded independently of the map and is approved. Its energy covers this path, including reserve.
     \item[Test setup and procedure] In a controlled environment, mark the map data and the remaining-order estimate as unavailable; keep the route recording and its return assessment valid. Then trigger the next order decision.
     \item[Expected result] The robot pauses the order, states the missing estimate as the reason, and approves the safeguarded return.
-    \item[Pass/fail criterion] After the invalid estimate is processed, no further order continuation is approved. The return starts within the previously defined response time. A controlled deceleration or a necessary pause action must be distinguished from further order execution.
+    \item[Pass/fail criterion] After the robot processes the invalid estimate, it approves no further order continuation. The return starts within the previously defined response time. Distinguish a controlled deceleration or a necessary pause action from further order execution.
     \item[Measurement data] Record validity flags and timestamps, energy demand and reserve, the chosen return-path ID, approvals, order status, and the reason for the decision.
 \end{description}
 
 \section{Summary}
-Testing and verification close the loop from requirements to implementation. A good model does not just show what should be built -- it also shows how you check that it was built correctly.
+Testing and verification close the loop from requirements to implementation. A good model does not just show what the team must build -- it also shows how you check that the team built it correctly.
 
 \section{Review Questions}
 \begin{enumerate}

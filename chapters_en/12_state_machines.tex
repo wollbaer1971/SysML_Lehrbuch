@@ -84,26 +84,26 @@ Guards are conditions on transitions. A transition only happens if its condition
 State diagrams prevent unclear logic. They show which transitions are allowed. May the robot accept a new target while it has an error? May it navigate while charging? What happens if the battery becomes low during navigation?
 
 \begin{praxisbox}
-Without a state model, this kind of logic often ends up scattered across the code. One node checks the battery, another checks targets, a third handles errors. A state machine creates one shared view of the allowed operating modes.
+Without a state model, developers often scatter this kind of logic across the code. One node checks the battery, another checks targets, a third handles errors. A state machine creates one shared view of the allowed operating modes.
 \end{praxisbox}
 
 \section{State Machines and Tests}
 You can derive tests from state diagrams. Every important transition can be tested: target received, obstacle detected, battery low, charging station reached, error detected, reset performed.
 
 \section{Common Mistakes}
-\subsection{Confusing states and actions}
+\subsection{Distinguish States from Actions}
 \texttt{Navigating} is a state. \texttt{Plan a path} is more of an action. States should last for some duration.
 
-\subsection{Too many states}
+\subsection{Start with the Most Important States}
 A diagram with too many states becomes hard to read. Start with the most important operating modes.
 
-\subsection{Forgetting the error state}
-Every real system needs a clear idea of what happens on errors.
+\subsection{Model a Clear Error State}
+Model what happens on errors explicitly. Every real system needs a clear idea of how it leaves the error state again.
 
 \section{Practical Example: The Robot's Operating Modes}
 For the indoor robot, a state machine at the system level is especially useful. It defines which operating modes are allowed at all. A simple model starts with \texttt{Idle}. From there, the robot moves to \texttt{Navigating} on a target order. If it detects a low battery level, it moves to \texttt{ReturnToDock}. On successful docking, it moves to \texttt{Charging}.
 
-The \texttt{Error} state should, in principle, be reachable from several states, even though the code example above shows only the transition from \texttt{navigating}, for the sake of clarity. An error can occur during navigation, during charging, or during initialization; a more complete model would therefore add further transitions, such as \texttt{transition accept ErrorDetected then error;}, in \texttt{charging} and in a possible initialization state as well. What matters is that the way back out of the error state is modeled deliberately. May a user simply press reset? Must maintenance staff intervene? Must the robot first deactivate its motors?
+In a complete model, several states should have a transition to \texttt{Error}, even though the code example above shows only the transition from \texttt{navigating}, for the sake of clarity. An error can occur during navigation, during charging, or during initialization; a more complete model would therefore add further transitions, such as \texttt{transition accept ErrorDetected then error;}, in \texttt{charging} and in a possible initialization state as well. Model the way back out of the error state deliberately. May a user simply press reset? Must maintenance staff intervene? Must the robot first deactivate its motors?
 
 State machines also help with the user interface. When the system is in the \texttt{Charging} state, the interface should not offer normal target navigation, or it should at least clearly show that the robot is currently unavailable.
 

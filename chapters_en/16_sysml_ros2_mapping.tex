@@ -5,16 +5,16 @@ After this chapter, you can map SysML v2 elements to ROS2 elements. You understa
 \end{lernziele}
 
 \section{Introduction}
-The SysML v2 model describes the architecture. ROS2 is the implementation. Without a connection between the two, a gap opens up. Mapping closes this gap. It shows how model decisions translate into software elements.
+The SysML v2 model describes the architecture. ROS2 is the implementation. Mapping connects the two: it shows how model decisions translate into software elements. Without this mapping, the model and the implementation can become inconsistent.
 
 \section{Basic Principle}
 A SysML v2 part definition can correspond to a ROS2 node when it describes a clear, software-related responsibility. A port or a connection can correspond to a topic, a service, or an action. An action in the model can be realized by a node, or by a group of nodes. A test case in the model can correspond to an automated test.
 
 This mapping is an architecture decision, not a fixed translation rule. In this chapter, we deliberately start with a simple orientation mapping, because it makes the start easier. In real systems, one SysML element can influence several ROS2 nodes, and one ROS2 node can bundle several modeled responsibilities.
 
-\emph{Note:} The term \enquote{action} is used here in two different senses -- as a SysML v2 behavior element (part of an activity in the model), and as a ROS2 action (an asynchronous communication pattern with feedback, see Chapter 14). In the mapping, a SysML action is often realized by a ROS2 action, but the two terms describe different concepts at different levels.
+\emph{Note:} This chapter uses the term \enquote{action} in two different senses -- as a SysML v2 behavior element (part of an activity in the model), and as a ROS2 action (an asynchronous communication pattern with feedback, see Chapter 14). In the mapping, a SysML action often maps to a ROS2 action, but the two terms describe different concepts at different levels.
 
-Not every model element gets a one-to-one implementation. A physical element such as \texttt{Camera} can be described through hardware, while a \texttt{camera\_node} handles its control. A larger system element such as \texttt{NavigationSystem} can consist of several nodes (for example \texttt{navigation\_node} for motion planning and \texttt{slam\_node} for mapping, see Chapter 15).
+Not every model element gets a one-to-one implementation. A physical element such as \texttt{Camera} exists as hardware, while a \texttt{camera\_node} controls it. A larger system element such as \texttt{NavigationSystem} can consist of several nodes (for example \texttt{navigation\_node} for motion planning and \texttt{slam\_node} for mapping, see Chapter 15).
 
 \section{Example Table}
 \begingroup
@@ -89,7 +89,7 @@ For a beginner model, the functional direction of the data flow is enough at fir
 Mapping is part of traceability (the traceable link from requirements to implementation). It shows which implementation realizes which architecture decision.
 
 \begin{praxisbox}
-REQ-004 \enquote{Detect people} is met by the part definition \texttt{ObjectDetector}. This model decision is implemented by the ROS2 node \texttt{object\_detector\_node}. The results are published over \texttt{/detected\_objects} and checked by a test case for person detection.
+The part definition \texttt{ObjectDetector} meets REQ-004 \enquote{Detect people}. The ROS2 node \texttt{object\_detector\_node} implements this model decision. It publishes the results over \texttt{/detected\_objects}, and a test case for person detection checks them.
 \end{praxisbox}
 
 \section{From Requirements to Code}
@@ -116,17 +116,17 @@ Figure~\ref{fig:kap16-traceability-batteriemanagement} shows this traceability c
 \end{figure}
 
 \section{Common Mistakes}
-\subsection{Forcing a One-to-One Match}
-Not every part definition must become exactly one node. Mapping is a deliberate architecture decision.
+\subsection{Map Deliberately, Not One-to-One}
+Treat mapping as a deliberate architecture decision: not every part definition must become exactly one node.
 
-\subsection{Not Maintaining the Mapping}
+\subsection{Keep the Mapping Up to Date}
 When the ROS2 architecture changes, you must update the mapping. Otherwise, traceability loses its value.
 
-\subsection{Mapping Interfaces Too Coarsely}
-A mapping without topic names, message types, or responsibilities is too vague.
+\subsection{Specify Topic Names, Message Types, and Responsibilities}
+Specify topic names, message types, and responsibilities for each interface mapping. Without them, the mapping stays too vague.
 
-\section{Mapping as a Living Artifact}
-The mapping is not a one-time final document. It grows with the project. At the start, a rough table is enough: part definition to node, connection to topic. Later, message types, parameters, launch files, and tests join it.
+\section{The Mapping Grows With the Project}
+The mapping is not a one-time final document. It grows with the project. At the start, a rough table is enough: part definition to node, connection to topic. Later, add message types, parameters, launch files, and tests.
 
 A good mapping table can include further columns:
 
@@ -141,10 +141,10 @@ A good mapping table can include further columns:
     \item Implementation status
 \end{itemize}
 
-This turns the mapping into a working tool. It helps with reviews, with planning code, and with spotting gaps. If an important model element has no node and no test, that is a signal to look closer.
+This turns the mapping into a working tool. It helps with reviews, with planning code, and with spotting gaps. If an important model element has no node and no test, investigate why.
 
 \section{Summary}
-The SysML v2-ROS2 mapping connects the model and the implementation. It helps you trace requirements through to the software, and analyze changes in a targeted way. For this textbook, it is the central bridge between MBSE and practical robotics software.
+The SysML v2-ROS2 mapping connects the model and the implementation. It helps you trace requirements through to the software, and analyze changes in a targeted way. For this textbook, it connects MBSE modeling directly to practical robotics software.
 
 \section{Review Questions}
 \begin{enumerate}

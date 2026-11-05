@@ -14,7 +14,7 @@ You typically create a Python package with the following command:
 ros2 pkg create robot_basic_nodes --build-type ament_python --dependencies rclpy std_msgs sensor_msgs geometry_msgs
 \end{lstlisting}
 
-The parameter \texttt{--build-type ament\_python} sets the build type: \texttt{ament\_python} suits pure Python packages, while \texttt{ament\_cmake} is used for C++ or mixed packages.
+The parameter \texttt{--build-type ament\_python} sets the build type: \texttt{ament\_python} suits pure Python packages, while \texttt{ament\_cmake} suits C++ or mixed packages.
 
 A package bundles code, configuration, and startup information. Larger systems benefit from several packages. Figure~\ref{fig:kap17-workspace-struktur} shows the resulting workspace and package structure.
 

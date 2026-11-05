@@ -9,7 +9,7 @@ In the first two chapters, we explained why Systems Engineering and MBSE are use
 
 \gls{sysml} stands for Systems Modeling Language. Engineers designed it to model technical systems. SysML v2 is a complete redesign of SysML v1, with a precise textual notation and clear, modern semantics. It focuses more strongly than UML on systems that combine hardware, software, people, processes, data, and physical relationships. That fits our autonomous indoor robot well: it consists not only of software, but also of sensors, a drive system, a battery, a housing, a charging station, a user interface, and a real physical environment.
 
-For beginners, one point matters most: SysML is not a drawing program. SysML is a modeling language. A diagram is only a visible representation of model elements. The real value lies in the model itself: requirements link to system parts, system parts have interfaces, behavior describes sequences of steps, and tests verify requirements.
+For beginners, one point matters most: SysML is not a drawing program. SysML is a modeling language. A diagram is only a visible representation of model elements. The model itself holds the real value: requirements link to system parts, system parts have interfaces, behavior describes sequences of steps, and tests verify requirements.
 
 \section{Why a Modeling Language?}
 Without a shared language, projects quickly run into misunderstandings. One team member draws boxes for functions, another for software modules, a third for hardware components. All the diagrams look similar, but they mean different things. SysML helps clarify such meanings.
@@ -29,11 +29,11 @@ SysML v2 provides predefined concepts:
 With these concepts, a team can talk about the same system without re-explaining every symbol.
 
 \begin{praxisbox}
-Suppose the model contains a \texttt{part def PerceptionSystem}. In a structure view, it can appear as part of the robot. In a connection view, it can link to the camera and the lidar. Through a \texttt{satisfy} relationship, it can fulfill requirements for obstacle detection. It is the same model content, just seen from different angles.
+Suppose the model contains a \texttt{part def PerceptionSystem}. In a structure view, it can appear as part of the robot. In a connection view, it can link to the camera and the lidar. Through a \texttt{satisfy} relationship, it can fulfill requirements for obstacle detection. It is the same model content, shown in different views.
 \end{praxisbox}
 
 \section{Key Concepts in SysML v2}
-SysML v2 no longer has fixed diagram types like SysML v1. Instead, it offers views (\emph{views}) and viewpoints (\emph{viewpoints}) onto one shared model. A viewpoint defines the kind of question a view should answer, for example structure or behavior; the view itself is the concrete representation generated from it. To get started, we focus on the concepts that bring the most value to the robot project. Figure~\ref{fig:kap03-sysml-kernkonzepte} gives an overview of the seven most important concepts before we introduce them one by one.
+SysML v2 no longer has fixed diagram types like SysML v1. Instead, it offers views (\emph{views}) and viewpoints (\emph{viewpoints}) onto one shared model. A viewpoint defines the kind of question a view should answer, for example structure or behavior. The view itself is the concrete representation that you generate from that viewpoint. To get started, we focus on the concepts that bring the most value to the robot project. Figure~\ref{fig:kap03-sysml-kernkonzepte} gives an overview of the seven most important concepts before we introduce them one by one.
 
 \begin{figure}[H]
   \centering
@@ -76,7 +76,7 @@ package RobotStructure {
 This view answers the question: what are the system's main building blocks?
 
 \subsection{Connection Modeling (\texttt{port}, \texttt{connection})}
-A \texttt{port} describes how a system part connects to the outside. A \texttt{connection} links ports of different parts to each other. This makes visible how the parts of a system work together internally.
+A \texttt{port} describes how a system part connects to the outside. A \texttt{connection} links ports of different parts to each other. This shows how the parts of a system work together internally.
 
 \begin{lstlisting}
 part def PerceptionSystem {
@@ -110,13 +110,13 @@ This has practical advantages:
 \begin{itemize}
     \item Names stay consistent.
     \item You can evaluate relationships.
-    \item Changes are easier to track.
+    \item You can track changes more easily.
     \item Different views show the same content.
-    \item Traceability becomes possible.
+    \item You gain traceability across the model.
 \end{itemize}
 
 \section{How the Concepts Work Together}
-SysML v2 model elements should not stand alone. They complement each other.
+SysML v2 model elements work best in combination. Each one complements the others instead of standing alone.
 
 For the indoor robot, a chain of models might look like this:
 
@@ -129,7 +129,7 @@ For the indoor robot, a chain of models might look like this:
     \item A test case connects to the requirement through \texttt{verify}.
 \end{enumerate}
 
-This builds a connected model instead of a loose collection of nice pictures. Figure~\ref{fig:kap03-struktur-verbindungssicht} shows, as an example, how the structure view and the connection view of \texttt{PerceptionSystem} work together: the overview shows the subsystems of \texttt{Robot}, and the detail view shows \texttt{PerceptionSystem} with its parts and the port \texttt{sensorData}.
+This builds a connected model instead of a loose collection of unconnected diagrams. Figure~\ref{fig:kap03-struktur-verbindungssicht} shows, as an example, how the structure view and the connection view of \texttt{PerceptionSystem} work together: the overview shows the subsystems of \texttt{Robot}, and the detail view shows \texttt{PerceptionSystem} with its parts and the port \texttt{sensorData}.
 
 \begin{figure}[H]
   \centering
@@ -139,7 +139,7 @@ This builds a connected model instead of a loose collection of nice pictures. Fi
 \end{figure}
 
 \section{SysML v1 and SysML v2 Compared}
-Beginners often still run into SysML v1 in the literature. The most important terminology changes are:
+Beginners often still find SysML v1 in the literature. The most important terminology changes are:
 
 \begin{center}
 \adjustbox{max width=\linewidth}{%
@@ -162,17 +162,17 @@ Parametric Diagram & \texttt{calc def}, \texttt{constraint} \\
 This book uses SysML v2 throughout. Where it mentions old terms for compatibility reasons, it marks them explicitly.
 
 \section{Typical Beginner Mistakes}
-\subsection{Too Many Elements Too Soon}
-Beginners often want to use every concept right away. That quickly leads to overload. Start with requirements, \texttt{part def}, and simple connections. Behavior and parametrics can follow later.
+\subsection{Start With a Few Core Concepts}
+Start with requirements, \texttt{part def}, and simple connections, and add behavior and parametrics later. Many beginners try to use every concept right away, and that quickly leads to overload.
 
-\subsection{Unclear Meaning of System Parts}
-Sometimes functions, software modules, hardware parts, and roles get mixed together freely. That is not forbidden in principle, but it must happen on purpose. A \texttt{part def Camera} is a physical element. A \texttt{part def ObjectDetector} is more of a software or function component.
+\subsection{Give Each System Part a Deliberate Meaning}
+Decide deliberately what each \texttt{part def} represents: a physical element, a software component, a function, or a role. A \texttt{part def Camera} is a physical element; a \texttt{part def ObjectDetector} is more of a software or function component. Mixing these categories is not forbidden, but it must be a deliberate choice, not an accident.
 
-\subsection{Diagrams Without Text}
-A diagram without a description is often hard to understand. Use documentation fields (\texttt{doc /* ... */}). Briefly state the purpose of each model element.
+\subsection{Document Every Model Element}
+Use documentation fields (\texttt{doc /* ... */}) to briefly state the purpose of each model element. A diagram without this text is often hard to understand on its own.
 
-\subsection{No Reuse}
-If you recreate the same element over and over, the model loses its value. Define types once with \texttt{part def}, and create instances with \texttt{part}.
+\subsection{Reuse Types Instead of Recreating Them}
+Define each type once with \texttt{part def}, and create instances with \texttt{part}. If you recreate the same element over and over instead, the model loses its value.
 
 \section{Summary}
 SysML v2 is a modeling language for technical systems. It helps you describe requirements, structure, behavior, interfaces, and verification in one consistent way. For this book, \texttt{requirement}, \texttt{part def}, \texttt{port}, \texttt{connection}, \texttt{action def}, \texttt{state def}, and \texttt{calc def} matter most. What counts is not drawing individual diagrams, but building one connected model.

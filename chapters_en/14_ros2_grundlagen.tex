@@ -8,7 +8,7 @@ After this chapter, you know the key basic terms of ROS2: nodes, topics, message
 Up to this point, we have looked at the robot mainly from a systems-engineering and SysML point of view. Now we move closer to implementation. ROS2 is the software platform we will later use to translate the robot's functions into executable components. This chapter introduces the basic terms without code first; you will find a complete, runnable example of a publisher and subscriber node in Python (\texttt{rclpy}, the ROS client library for Python) in Chapter 17.
 
 \section{What Is ROS2?}
-\gls{ros2} is a framework for robotics software. It provides communication mechanisms, tools, and conventions. ROS2 is not an operating system in the classic sense; it is a \gls{middleware} and a development environment. Its technical basis is DDS (Data Distribution Service), a standard for distributed communication that ROS2 uses in the background to distribute messages between nodes. Whether these messages are delivered reliably, on a best-effort basis, with the last stored values, or with a defined history depends in ROS2 on the chosen \gls{qos} settings.
+\gls{ros2} is a framework for robotics software. It provides communication mechanisms, tools, and conventions. ROS2 is not an operating system in the classic sense; it is a \gls{middleware} and a development environment. Its technical basis is DDS (Data Distribution Service), a standard for distributed communication that ROS2 uses in the background to distribute messages between nodes. In ROS2, the chosen \gls{qos} settings decide whether messages are delivered reliably, on a best-effort basis, with the last stored values, or with a defined history.
 
 ROS2 helps you build a robotics system out of several programs that exchange messages with each other. This fits well with our SysML model: system parts (\texttt{part def}), interfaces, and data flows can later map onto nodes, topics, services, and actions.
 
@@ -70,14 +70,14 @@ Launch files start several nodes together, with matching parameters. For the rob
 SysML describes the architecture at the model level. ROS2 implements it technically. A SysML system element (\texttt{part def}) can become a node. A data flow in the connection model can become a topic. A use case such as \enquote{Drive to a target} can later use an action.
 
 \section{Common Mistakes}
-\subsection{Splitting nodes arbitrarily}
-Nodes should have clear responsibilities. A single node for everything is hard to maintain; a node for every tiny thing is excessive.
+\subsection{Give Each Node a Clear Responsibility}
+Give each node one clear responsibility. A single node for everything is hard to maintain; a node for every tiny thing is excessive.
 
-\subsection{Naming topics poorly}
-Topic names should be understandable and consistent.
+\subsection{Name Topics Clearly and Consistently}
+Choose topic names that are understandable and consistent.
 
-\subsection{Using services for long-running tasks}
-Long-running tasks with feedback fit actions better.
+\subsection{Use Actions for Long-Running Tasks}
+Use actions, not services, for long-running tasks that need feedback.
 
 \section{ROS2 Tools for Beginners}
 ROS2 ships with command-line tools that help you understand and test a running system. They are especially valuable for beginners, because they make visible what is actually happening while the system runs.

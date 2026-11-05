@@ -43,7 +43,7 @@ Figure~\ref{fig:kap15-node-graph} shows the complete node graph with all nine no
 \end{figure}
 
 \section{Granularity}
-Granularity is an important decision. Too many nodes raise communication overhead. Too few nodes make the system hard to follow. As a starting rule: a clearly bounded function may become its own node. A node that handles the camera, the lidar, and navigation all at once is cut too coarse; a separate node for every single sensor-reading function is usually cut too fine.
+Granularity is an important decision. Too many nodes raise communication overhead. Too few nodes make the system hard to follow. As a starting rule: give each clearly bounded function its own node. A node that handles the camera, the lidar, and navigation all at once groups too much together; a separate node for every single sensor-reading function usually splits too much apart.
 
 \section{Architecture Decisions}
 Key decisions include:
@@ -58,17 +58,17 @@ Key decisions include:
 \end{itemize}
 
 \section{Failure Cases}
-An architecture should not show only the normal case. What happens if the camera fails? What happens when the battery is empty? What happens if no map is available?
+Describe how the architecture handles failure cases, not only normal operation. What happens if the camera fails? What happens when the battery is empty? What happens if no map is available?
 
 \begin{praxisbox}
-If \texttt{camera\_node} delivers no images, person detection must not simply keep reusing old results. \texttt{object\_detector\_node} should detect the missing data and report a matching status.
+If \texttt{camera\_node} delivers no images, \texttt{object\_detector\_node} must detect the missing data and report a matching status, instead of simply reusing old results for person detection.
 \end{praxisbox}
 
 \section{Parameters}
 Typical parameters include maximum speed, battery threshold, topic names, detection limits, or timeout values. Parameters should match the assumptions and requirements in the model.
 
 \section{Lifecycle Nodes}
-ROS2 supports lifecycle nodes: nodes with a defined state machine for controlled activation and deactivation. They have defined states such as unconfigured, inactive, active, and finalized. This is optional for beginners, but useful for robust systems: the state machine enables, for example, a deterministic startup in which a sensor node first loads its parameters (state \emph{configure}) before it actively delivers data (state \emph{active}) -- so navigation does not start with invalid or incomplete data. Figure~\ref{fig:kap15-lifecycle} shows the matching state machine.
+ROS2 supports lifecycle nodes: nodes with a defined state machine for controlled activation and deactivation. They have defined states such as unconfigured, inactive, active, and finalized. Lifecycle nodes are optional for beginners, but useful for robust systems. For example, a lifecycle node can start deterministically: a sensor node first loads its parameters (state \emph{configure}), then delivers data only once it reaches the active state (state \emph{active}). This way, navigation never starts with invalid or incomplete data. Figure~\ref{fig:kap15-lifecycle} shows the matching state machine.
 
 \begin{figure}[H]
   \centering
@@ -89,9 +89,9 @@ Before you write any code, briefly review the ROS2 architecture. A review can fo
     \item Is there a link to requirements and tests?
 \end{itemize}
 
-The tool \texttt{rqt\_graph} can help you check the designed node structure visually later, in the running system.
+Later, in the running system, you can use \texttt{rqt\_graph} to check the designed node structure visually.
 
-For the indoor robot, it is especially important that navigation, obstacle detection, and motion control are not coupled without control. A wrong motion command can have an immediate physical effect. The data flow to \texttt{/cmd\_vel} should therefore stay clearly traceable.
+For the indoor robot, control how navigation, obstacle detection, and motion control connect to each other. A wrong motion command can have an immediate physical effect, so the data flow to \texttt{/cmd\_vel} must stay clearly traceable.
 
 \section{Summary}
 A good ROS2 architecture has clear responsibilities, understandable communication, and defined error responses. You should be able to derive it from the SysML model, and later check it through tests.
