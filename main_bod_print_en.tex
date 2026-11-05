@@ -1,0 +1,45 @@
+% main_bod_print_en.tex
+% English print edition for BoD, softcover, trim 17.0 x 22.0 cm. English
+% counterpart of main_bod_print.tex.
+%
+% TODO before upload:
+%   - Fill in \editionimpressum below with the final ISBN.
+%   - Check margins against BoD's downloadable layout template for this
+%     format (bod.de/hilfe/downloads) - BoD does not publish a public
+%     margin table by page count like KDP, only templates per format.
+%     Currently set: 20 mm inside (gutter), 16 mm outside, 18 mm top,
+%     22 mm bottom - typographically standard for a paperback, but not
+%     checked against BoD's own template.
+%   - BoD requires a total page count divisible by 2 - check this after
+%     the first full compile run and add a blank page if needed.
+
+% Set before \input{preamble_common_en}: loads hyperref there in draft
+% mode, see the comment in preamble_common_en.tex and main_kdp_print_en.tex.
+% Black link color alone did not remove KDP's error messages - set here
+% for the BoD edition as a precaution as well.
+\newif\ifdruckausgabe
+\druckausgabetrue
+
+\documentclass[11pt,oneside]{scrbook}
+\input{preamble_common_en}
+
+\geometry{
+    paperwidth=17.0cm,
+    paperheight=22.0cm,
+    inner=20mm,
+    outer=16mm,
+    top=18mm,
+    bottom=22mm
+}
+
+\newcommand{\editionimpressum}{%
+    \textbf{BoD softcover edition}\\[0.5em]
+    \textbf{TODO: add ISBN}\\[1em]
+    \textcopyright\ Wolfgang Becker\\
+    All rights reserved.\\[1em]
+    Printing and publishing: BoD -- Books on Demand, Norderstedt.
+}
+
+\begin{document}
+\input{content_body_en}
+\end{document}

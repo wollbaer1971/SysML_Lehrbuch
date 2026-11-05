@@ -1,0 +1,22 @@
+% main_en.tex
+% English working/review edition (A4, Overleaf build). Not a distribution
+% edition. For Amazon KDP see main_kdp_print_en.tex, for BoD see
+% main_bod_print_en.tex. Chapter content/preface/backmatter live centrally
+% in content_body_en.tex, the shared preamble in preamble_common_en.tex.
+%
+% German original: main.tex / content_body.tex / chapters/ / figures/.
+
+\documentclass[11pt,a4paper,oneside]{scrbook}
+\input{preamble_common_en}
+
+\geometry{left=25mm,right=25mm,top=25mm,bottom=30mm}
+
+\newcommand{\editionimpressum}{%
+    \textbf{Working edition (A4) -- not for distribution}\\[1em]
+    \textcopyright\ Wolfgang Becker\\
+    All rights reserved.
+}
+
+\begin{document}
+\input{content_body_en}
+\end{document}

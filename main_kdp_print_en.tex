@@ -1,0 +1,52 @@
+% main_kdp_print_en.tex
+% English print edition for Amazon KDP, softcover, trim 6" x 9" (15.24 x 22.86 cm).
+% English counterpart of main_kdp_print.tex. Keep page count, margins, and
+% TODOs in sync with the German edition whenever the layout changes there;
+% the English text may run to a different page count, so re-check the KDP
+% gutter bracket (kdp.amazon.com/help/topic/GVBQ3CMEQW3W2VL6) once this
+% edition has a stable page count.
+%
+% TODO before upload:
+%   - Fill in \editionimpressum below with the final ISBN for this edition.
+%   - Re-check the inside margin (gutter) against the KDP margin table once
+%     the final page count of the English edition is known.
+
+% Set before \input{preamble_common_en}: loads hyperref there in draft mode,
+% see the comment in preamble_common_en.tex. Black link color alone did NOT
+% remove KDP's error messages - draft mode suppresses the annotations
+% entirely, \gls/\ref/\href still set normal text.
+\newif\ifdruckausgabe
+\druckausgabetrue
+
+\documentclass[11pt,oneside]{scrbook}
+\input{preamble_common_en}
+
+\geometry{
+    paperwidth=15.24cm,
+    paperheight=22.86cm,
+    inner=14.7mm,
+    outer=18mm,
+    top=20mm,
+    bottom=22mm,
+    % KDP also flags footer text outside the margins. With KOMA-Script's
+    % default \footskip of 47.6pt, the page number sat only about 4.5-5 mm
+    % above the trim edge. 11 mm lifts the footer into the safe area.
+    footskip=11mm
+}
+
+\newcommand{\editionimpressum}{%
+    \textbf{KDP softcover edition}\\[0.5em]
+    \textbf{TODO: add ISBN}\\[1em]
+    \textcopyright\ Wolfgang Becker\\
+    All rights reserved.\\[1em]
+    This edition is distributed through Amazon KDP (print on demand).
+}
+
+% Title page without a compile date: \date{\today} from preamble_common_en.tex
+% would show a different date on the title page at every recompile, which
+% would not match the actual publication date.
+\date{}
+
+\begin{document}
+\input{content_body_en}
+\end{document}

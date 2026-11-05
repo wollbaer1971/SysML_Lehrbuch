@@ -1,0 +1,74 @@
+% content_body_en.tex
+% English counterpart of content_body.tex. Shared document content for all
+% editions of the English book (main_en.tex, main_kdp_print_en.tex,
+% main_bod_print_en.tex). Make changes to chapter order, preface, or
+% backmatter HERE only, not in the wrapper files.
+%
+% Expects the wrapper to optionally define \editionimpressum before
+% \input{content_body_en} (the imprint/ISBN text for that edition). If
+% \editionimpressum is not defined, a TODO placeholder is printed.
+
+\providecommand{\editionimpressum}{%
+    \textbf{TODO: add imprint/ISBN for this edition.}\\[1em]
+    \textcopyright\ Wolfgang Becker\\
+    All rights reserved.
+}
+
+\frontmatter
+\maketitle
+
+\cleardoublepage
+\thispagestyle{empty}
+\vspace*{\fill}
+\noindent
+\editionimpressum
+\vspace*{\fill}
+\clearpage
+
+\tableofcontents
+
+\chapter*{Preface}
+This textbook is for beginners with no prior knowledge of SysML v2, MBSE, or ROS2.
+The goal is not to cover every special case of modeling theory. The goal is to build a working understanding:
+What is a system model? How do you describe requirements? How does an architecture grow from them? And how do you map that architecture onto a ROS2 robotics system?
+
+The book uses one example throughout: an autonomous indoor robot. The robot must detect obstacles, map rooms, drive to target positions, recognize people, and monitor its battery level.
+The example is small enough for a beginner, but realistic enough to show the key ideas of Model-Based Systems Engineering.
+
+The Syside Editor checked all SysML v2 code examples in this book (version 0.10.2, checked on 2026-07-07). SysML v2 and its tools are still under active development. Different tool versions may therefore show small syntax differences, for example in how you write \texttt{verify ... by}. If you are unsure, check code examples against your installed tool version.
+
+\mainmatter
+
+\input{chapters_en/01_systems_engineering}
+\input{chapters_en/02_mbse}
+\input{chapters_en/03_sysml_grundlagen}
+\input{chapters_en/04_sysml_v2_werkzeuge}
+\input{chapters_en/05_praxisprojekt}
+\input{chapters_en/06_anforderungen}
+\input{chapters_en/07_stakeholder_use_cases}
+\input{chapters_en/08_bdd}
+\input{chapters_en/09_ibd}
+\input{chapters_en/10_schnittstellen}
+\input{chapters_en/11_activity_diagrams}
+\input{chapters_en/12_state_machines}
+\input{chapters_en/13_parametrik}
+\input{chapters_en/14_ros2_grundlagen}
+\input{chapters_en/15_ros2_architektur}
+\input{chapters_en/16_sysml_ros2_mapping}
+\input{chapters_en/17_ros2_python}
+\input{chapters_en/18_ml_integration}
+\input{chapters_en/19_tests_verifikation}
+\input{chapters_en/20_traceability}
+\input{chapters_en/21_abschlussprojekt}
+\input{chapters_en/22_ausblick}
+
+\backmatter
+\glsaddall
+\printglossary[type=\acronymtype,title=List of Abbreviations]
+\printglossary[title=Glossary]
+\bibliographystyle{plain}
+\bibliography{references_en}
+
+\listoffigures
+
+\printindex

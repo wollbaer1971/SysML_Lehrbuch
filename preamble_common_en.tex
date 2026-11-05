@@ -1,0 +1,171 @@
+% preamble_common_en.tex
+% English counterpart of preamble_common.tex. Shared preamble for all print
+% editions of the English book (main_en.tex, main_kdp_print_en.tex,
+% main_bod_print_en.tex). Holds everything that does NOT depend on the trim
+% size. \documentclass and \geometry stay in each wrapper file, since they
+% differ per edition.
+
+\usepackage{iftex}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\ifPDFTeX
+    \usepackage[utf8]{inputenc}
+\fi
+\usepackage{lmodern}
+
+% protrusion=false: by default, microtype lets single characters (quotation
+% marks, periods, hyphens, often also italic glyphs such as \emph) protrude
+% a tiny amount (a fraction of a point) PAST the actual text block margin
+% ("hanging punctuation", an intentional, common typographic feature). KDP's
+% automatic check, however, appears to flag any detected content beyond the
+% text box as "outside the margins", regardless of how much safety margin
+% actually remains to the trim edge. KDP itself documents exactly this
+% failure case for italic text (source: kdpcommunity.com, thread "Continued
+% formatting error/text outside margins", as of 2026-07). protrusion only
+% affects fractions of a point and barely changes line breaking - expansion
+% (letter-spacing adjustment) stays active and still delivers most of
+% microtype's benefit for justified text.
+\usepackage[protrusion=false]{microtype}
+\usepackage{geometry}
+
+% Extra justification slack: catches cases that microtype alone can no
+% longer balance (long English compound terms, narrow columns on smaller
+% trims). Without these values, LaTeX produces a visibly overfull hbox
+% that sticks out past the text block in such cases, instead of breaking
+% the line cleanly with slightly more word spacing.
+\tolerance=1000
+\emergencystretch=3em
+
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+
+% Print editions (KDP, BoD) set \druckausgabetrue BEFORE \input{preamble_common_en}.
+% KDP's check appears to flag pages with clickable hyperlink annotations
+% (cross-references, glossary terms, the whole linked table of contents) as
+% suspicious regardless of their color - black link color alone did not
+% remove the warnings. For print editions, hyperref is therefore loaded in
+% draft mode: all \href/\ref/\gls commands remain usable and still set their
+% text normally, but no longer create a PDF link annotation. The working
+% edition (main_en.tex) keeps full, clickable links for on-screen use.
+\makeatletter
+\@ifundefined{ifdruckausgabe}{\newif\ifdruckausgabe\druckausgabefalse}{}
+\makeatother
+\ifdruckausgabe
+    \usepackage[draft]{hyperref}
+\else
+    \usepackage{hyperref}
+\fi
+
+\usepackage{listings}
+\usepackage{etoolbox}
+\usepackage{needspace}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shadows,calc,quotes,backgrounds}
+\usepackage{tcolorbox}
+\usepackage{amsmath}
+\usepackage{makeidx}
+\usepackage[acronym,toc]{glossaries}
+
+\makeindex
+\makeglossaries
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!50!black,
+    urlcolor=blue!50!black,
+    citecolor=blue!50!black,
+    pdftitle={SysML v2, MBSE, and ROS2 for Beginners},
+    pdfauthor={Wolfgang Becker}
+}
+
+\RedeclareSectionCommand[tocnumwidth=3.8em]{section}
+\RedeclareSectionCommand[tocnumwidth=4.8em]{subsection}
+\RedeclareSectionCommand[tocnumwidth=5.8em]{subsubsection}
+
+% Section headings must not stay alone at the bottom of a page. The
+% reserved space must fit the heading plus a bit of following text, or the
+% start of a short code block.
+\pretocmd{\section}{\Needspace{12\baselineskip}}{}{}
+\pretocmd{\subsection}{\Needspace{8\baselineskip}}{}{}
+\pretocmd{\subsubsection}{\Needspace{7\baselineskip}}{}{}
+
+% Table of contents only down to section level. Subsection entries alone
+% (3-digit numbers such as 1.10.1 plus a deeply indented title, not yet
+% subsubsection - counting depth: chapter=0, section=1, subsection=2) already
+% exceed the TOC line width on the narrower 6x9in trim and run past the
+% right margin. tocdepth=2 (the previous setting) still allowed subsections,
+% which was not enough - hence tocdepth=1 now. Numbering in the body text is
+% unchanged (only \tocdepth, not \secnumdepth); subsections are still
+% numbered, they just no longer appear in the table of contents.
+\setcounter{tocdepth}{1}
+
+\lstdefinestyle{code}{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    xleftmargin=0.5cm,
+    columns=fullflexible,
+    showstringspaces=false,
+    tabsize=2,
+    extendedchars=true,
+    inputencoding=utf8,
+    upquote=true,
+    literate=
+        {ä}{{\"a}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+        {Ä}{{\"A}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+        {ß}{{\ss{}}}1
+}
+\lstset{style=code}
+
+% Code blocks must not start with only a few lines at the bottom of a page.
+% With less than about eight code lines of space left, the whole block
+% moves to the next page; longer listings may still break.
+\BeforeBeginEnvironment{lstlisting}{\Needspace{10\baselineskip}}
+
+% Style for plain text/tree displays (directory trees, flow sketches) that
+% should look like \verbatim but - unlike \verbatim - must wrap long lines
+% so they do not run past the text block on narrow trims (e.g. 6x9in).
+\lstdefinestyle{plaintext}{
+    style=code,
+    numbers=none,
+    frame=single,
+}
+
+\newtcolorbox{lernziele}{
+    colback=blue!3!white,
+    colframe=blue!50!black,
+    title=Learning Objectives
+}
+\newtcolorbox{praxisbox}{
+    colback=green!3!white,
+    colframe=green!40!black,
+    title=Practical Example
+}
+\newtcolorbox{hinweisbox}{
+    colback=yellow!8!white,
+    colframe=yellow!50!black,
+    title=Note
+}
+\newtcolorbox{uebungbox}{
+    colback=gray!5!white,
+    colframe=gray!60!black,
+    title=Exercise
+}
+
+\input{glossary_en}
+
+\title{SysML v2, MBSE, and ROS2 for Beginners\\
+\large A Hands-On Textbook Based on an Autonomous Indoor Robot}
+\author{Wolfgang Becker}
+\date{\today}
