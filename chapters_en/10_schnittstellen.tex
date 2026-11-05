@@ -84,7 +84,7 @@ One of the most common sources of error for beginners is a missing or outdated b
 Sensor data does not all arrive at the same rate. A camera might deliver 30 frames per second, a lidar 10 scans per second, and the battery status only once per second. The model should make such assumptions visible whenever they matter for the architecture or for tests.
 
 \section{Error Cases}
-An interface description should not only cover the normal case. What happens if no camera images arrive? What happens if the laser scan is stale? What happens if the battery status is invalid?
+Describe how each interface works during normal operation and how it handles errors. What happens if no camera images arrive? What happens if the laser scan is stale? What happens if the battery status is invalid?
 
 \begin{praxisbox}
 If \texttt{battery\_monitor\_node} stops delivering valid data, navigation must not simply keep driving as if nothing were wrong. One possible requirement: if the battery status is missing for more than five seconds, the robot must enter a safe state or raise a warning.

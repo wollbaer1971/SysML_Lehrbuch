@@ -162,7 +162,7 @@ As a design assumption, each trip starts at a known charging station. The robot 
 A \emph{safeguarded return path} has a known course, can be tracked reliably enough, and has been assessed for drivability and energy demand, including docking. A \emph{robust estimate} uses valid input data and accounts for its own uncertainty. What quality level is sufficient here remains an open project parameter.
 
 \begin{hinweisbox}
-If the remaining order or the planned return path cannot be estimated, for example due to missing map data, the order must not continue. The return must then be guaranteed by an independently safeguarded option, for example a suitable path recording. A missing estimate is not the same as low energy demand.
+If the robot cannot estimate the energy needed to finish the order or return to the charging station, it must interrupt the order. Missing map data can cause this situation. The return must then be guaranteed by an independently safeguarded option, for example a suitable path recording. A missing estimate is not the same as low energy demand.
 \end{hinweisbox}
 
 \subsection{Requirements of the Deep-Dive Example}
