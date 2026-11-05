@@ -1,0 +1,43 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    node distance=6mm,
+    req/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=70mm, minimum height=10mm,
+        align=center, fill=blue!12, drop shadow
+    },
+    sysml/.style={req, fill=green!15, draw=green!40!black},
+    ros/.style={req, fill=orange!15, draw=orange!60!black},
+    test/.style={req, fill=black!6, draw=black!50},
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60}
+]
+
+% --- Chain from top to bottom ---
+\node[req]   (r1) at (0, 0)   {Requirement: REQ-006\\Return to the charging station};
+\node[sysml] (r2) at (0, -1.9) {Action: Monitor battery level};
+\node[sysml] (r3) at (0, -3.8) {Part Definition: BatterySystem};
+\node[ros]   (r4) at (0, -5.7) {Node: \texttt{battery\_monitor\_node}};
+\node[ros]   (r5) at (0, -7.6) {Topic: \texttt{/battery\_state}};
+\node[ros]   (r6) at (0, -9.5) {Node: \texttt{navigation\_node}};
+\node[sysml] (r7) at (0, -11.4) {Action: \texttt{NavigateToDock}};
+\node[test]  (r8) at (0, -13.3) {Test: TC-006\\Return at low battery level};
+
+\draw[flow] (r1) -- (r2);
+\draw[flow] (r2) -- (r3);
+\draw[flow] (r3) -- (r4);
+\draw[flow] (r4) -- (r5);
+\draw[flow] (r5) -- (r6);
+\draw[flow] (r6) -- (r7);
+\draw[flow] (r7) -- (r8);
+
+% --- Legend ---
+\node[req,   minimum width=6mm, minimum height=4mm, font=\small] (leg1) at (-24mm,-15.6) {};
+\node[right=1mm of leg1, font=\small, align=left] (lab1){Requirement};
+\node[sysml, minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab1] (leg2) {};
+\node[right=1mm of leg2, font=\small, align=left] (lab2){SysML element};
+\node[ros,   minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab2] (leg3) {};
+\node[right=1mm of leg3, font=\small, align=left] (lab3){ROS2 element};
+\node[test,  minimum width=6mm, minimum height=4mm, font=\small, right=6mm of lab3] (leg4) {};
+\node[right=1mm of leg4, font=\small, align=left] (lab4){Test};
+
+\end{tikzpicture}

@@ -1,0 +1,138 @@
+\chapter{Stakeholders and Use Cases}
+
+\begin{lernziele}
+After this chapter, you can identify stakeholders, describe their needs, and derive use cases and first requirements from them. You understand why use cases are not algorithms, but usage scenarios that help make system boundaries, actors, and expectations visible.
+\end{lernziele}
+
+\section{Introduction}
+Technical projects do not start with components -- they start with people and their interests. A robot is not built because a camera, a lidar, and ROS2 exist; it is built because certain people want to solve a problem. Stakeholder analysis and use cases help describe that problem clearly.
+
+\section{Identifying Stakeholders}
+Stakeholders are not only end users. Operators, maintenance staff, developers, management, data protection officers, and safety officers also have interests. A robot that works technically but is hard to maintain, or that creates data-protection problems, can still fail in operation.
+
+\section{Stakeholders of the Robot}
+\begin{longtable}{p{0.22\textwidth}p{0.28\textwidth}p{0.35\textwidth}}
+\toprule
+Stakeholder & Interest & Possible requirement\\
+\midrule
+User & Set a target easily & Start an order with at most three inputs\\
+Operator & Reliable operation & Show operating state at all times\\
+Maintenance & Find errors quickly & Provide diagnostic information\\
+Safety\\officer & Protect people & Stop safely on an obstacle\\
+Data protection & Protect image data & Process camera data locally\\
+Development & Clear architecture & Document interfaces\\
+Management & Control cost & Choose components with a clear rationale\\
+\bottomrule
+\end{longtable}
+
+\section{Use Cases}
+A use case describes how an actor -- a person or an external system that interacts with the system under consideration -- uses that system. Use cases are not detailed algorithms. They describe goals, preconditions, a typical flow, alternatives, and outcomes.
+
+A good use case answers:
+
+\begin{itemize}
+    \item Who uses the system?
+    \item What goal does the actor pursue?
+    \item Which preconditions apply?
+    \item What happens in the normal case?
+    \item Which exceptions can occur?
+    \item What outcome is expected?
+\end{itemize}
+
+\section{Example: Drive to a Target}
+We deliberately chose \enquote{drive to a target} here, and not \enquote{plan a path}: you always write a use case from an actor's point of view, while \enquote{plan a path} describes more of an internal function (more on this in the \enquote{Common Mistakes} section below).
+
+\textbf{Actor:} User\\
+\textbf{Goal:} The robot drives to a selected target point.\\
+\textbf{Precondition:} The robot is powered on, localized, and has enough battery charge.\\
+\textbf{Flow:}
+\begin{enumerate}
+    \item The user selects a target.
+    \item The robot checks whether a map is available.
+    \item The robot checks its battery level.
+    \item The robot plans a path.
+    \item The robot starts driving.
+    \item The robot avoids obstacles or stops safely.
+    \item The robot reaches the target.
+    \item The robot reports completion.
+\end{enumerate}
+\textbf{Alternatives:} Target unreachable, battery too low, an obstacle blocks the path.\\
+\textbf{Outcome:} The order is completed, or traceably aborted.
+
+\section{Use Cases and Requirements}
+You can derive requirements from a use case. The use case \enquote{drive to a target}, for example, leads to requirements on target selection, map use, localization, path planning, obstacle detection, status reporting, and error handling.
+
+\begin{praxisbox}
+If the use case states that the robot checks its battery level before driving, that creates a requirement on battery management. At the same time, it creates a test case: is an order rejected when the battery is too low, or converted into a return to the charging station?
+\end{praxisbox}
+
+\section{Use Cases in SysML}
+SysML can use use case diagrams to sketch actors and system functions at a glance. For beginners, the text is often more important than the diagram. The diagram gives the overview; the use case description gives the details. This book deliberately focuses, for use cases, on the textual description (actor, goal, flow) and the graphical use case diagram; it does not go deeper into the formal SysML v2 text syntax for use cases, since the content-level description matters more for beginners.
+
+\section{Common Mistakes}
+\subsection{Confusing Use Cases with Functions}
+\enquote{Plan a path} is more of a function. \enquote{Drive to a target} is a use case, because an actor is pursuing a goal.
+
+\subsection{Describing Only the Normal Case}
+Alternatives are especially valuable. What happens with an empty battery, a missing map, or a blocked hallway?
+
+\subsection{Forgetting Stakeholders}
+If you consider only the end user, you miss maintenance, operations, safety, and data protection.
+
+\section{Practical Guide for the Robot Project}
+For the robot project, a simple workflow works well. Do not start with the use case diagram -- start with a list of real usage situations. Ask: who stands in front of the robot? Who only sees the operating data? Who is affected without ever consciously operating the robot?
+
+Then group the situations. Typical groups are operation, running state, maintenance, safety, and data protection. Describe at least one use case per group. A good beginner model could include these use cases:
+
+\begin{itemize}
+    \item Start a transport order
+    \item Drive to a target autonomously
+    \item Handle an obstacle
+    \item Return to the charging station
+    \item Diagnose an error
+    \item Take the robot out of service
+\end{itemize}
+
+Each use case produces requirements. The use case \enquote{diagnose an error}, for example, leads to requirements on status messages, log data, and maintenance access. The use case \enquote{take the robot out of service} leads to requirements on safe shutdown and clear operating feedback.
+
+Figure~\ref{fig:kap07-usecase-diagramm} shows these six use cases together with the actors user, safety officer, and maintenance staff.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap07_usecase_diagramm}}
+  \caption{Use case diagram of the indoor robot with the actors user, safety officer, and maintenance staff.}
+  \label{fig:kap07-usecase-diagramm}
+\end{figure}
+
+\section{Summary}
+Stakeholders and use cases help you understand the system from a usage point of view. They bridge needs and requirements. For the robot, use cases such as \enquote{drive to a target}, \enquote{return to the charging station}, \enquote{handle an obstacle}, and \enquote{perform maintenance} matter especially.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What is a stakeholder?
+    \item Why are maintenance and data protection stakeholders?
+    \item What does a use case describe?
+    \item Why is a use case not an algorithm?
+    \item Which preconditions does the use case \enquote{drive to a target} have?
+    \item How can requirements arise from use cases?
+    \item Why should you describe alternative flows?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Write a use case}\\
+Write a use case \enquote{return to the charging station}. Derive at least three requirements from it.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Extend the stakeholders}\\
+Add three more stakeholders to the stakeholder table and describe their interests.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 3: Exception cases}\\
+Add three exception cases to the use case \enquote{drive to a target}, each with an expected system response.
+\end{uebungbox}
+
+\section{Further Reading}
+Use cases and stakeholder analysis are fundamentals of requirements engineering, and MBSE connects them to requirements, structure, and tests through SysML relationships. Practical SysML introductions \cite{delligatti2014,friedenthal2014} are helpful for going deeper.

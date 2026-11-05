@@ -1,0 +1,226 @@
+\newacronym{mbse}{MBSE}{Model-Based Systems Engineering}
+\newacronym{sysml}{SysML}{Systems Modeling Language}
+\newacronym{ros2}{ROS2}{Robot Operating System 2}
+\newacronym{bdd}{BDD}{Block Definition Diagram (SysML v1)}
+\newacronym{ibd}{IBD}{Internal Block Diagram (SysML v1)}
+\newacronym{dds}{DDS}{Data Distribution Service}
+\newacronym{slam}{SLAM}{Simultaneous Localization and Mapping}
+\newacronym{ml}{ML}{Machine Learning}
+\newacronym{ki}{AI}{Artificial Intelligence}
+\newacronym{onnx}{ONNX}{Open Neural Network Exchange}
+\newacronym{api}{API}{Application Programming Interface}
+\newacronym{qos}{QoS}{Quality of Service}
+\newacronym{req}{REQ}{Requirement}
+\newacronym{tc}{TC}{Test Case}
+\newacronym{fmea}{FMEA}{Failure Mode and Effects Analysis}
+\newacronym{gpu}{GPU}{Graphics Processing Unit}
+
+\newglossaryentry{requirement}{
+    name=requirement,
+    description={Description of a capability, property, or constraint that a system must meet}
+}
+\newglossaryentry{stakeholder}{
+    name=stakeholder,
+    description={Person, group, or organization that has an interest in the system, places requirements on it, or is affected by its effects}
+}
+\newglossaryentry{system}{
+    name=system,
+    description={A set of elements that work together for a shared purpose, within a system boundary, and with relationships to their environment}
+}
+\newglossaryentry{systemgrenze}{
+    name=system boundary,
+    description={Definition of which elements belong to the system under consideration, and which elements belong to the environment or to external systems}
+}
+\newglossaryentry{systemkontext}{
+    name=system context,
+    description={Environment of a system, including external actors, neighboring systems, constraints, and key interactions}
+}
+\newglossaryentry{funktion}{
+    name=function,
+    description={Capability or task that a system must provide, independent of which concrete component later realizes it}
+}
+\newglossaryentry{komponente}{
+    name=component,
+    description={Distinguishable part of a system, for example a sensor, a software module, a subsystem, or a mechanical part}
+}
+\newglossaryentry{architektur}{
+    name=architecture,
+    description={Underlying structure of a system: its key elements, responsibilities, interfaces, and relationships}
+}
+\newglossaryentry{schnittstelle}{
+    name=interface,
+    description={Defined transition point between parts of a system, or between the system and its environment, across which data, energy, material, or commands pass}
+}
+\newglossaryentry{datenfluss}{
+    name=data flow,
+    description={Directed exchange of information between parts of a system, for example sensor data from a camera to a processing node}
+}
+\newglossaryentry{usecase}{
+    name=use case,
+    description={Description of a goal or sequence of steps from the viewpoint of a user or external actor, for example \enquote{reach the target position}}
+}
+\newglossaryentry{block}{
+    name=block,
+    description={Structural element in SysML v1. In SysML v2, replaced by \texttt{part def} (type definition) and \texttt{part} (instance)}
+}
+\newglossaryentry{partdef}{
+    name=part def,
+    description={Type definition in SysML v2. Corresponds to the block in SysML v1. Defines which properties and parts a system element can have}
+}
+\newglossaryentry{part}{
+    name=part,
+    description={Named instance of a type defined with \texttt{part def}, inside a parent system element}
+}
+\newglossaryentry{port}{
+    name=port,
+    description={Interface point of a SysML element, used to model flows or communication relationships}
+}
+\newglossaryentry{connection}{
+    name=connection,
+    description={Link between ports or system elements that shows an exchange or a coupling between them}
+}
+\newglossaryentry{action}{
+    name=action,
+    description={In SysML v2, a behavior element within a sequence of steps; not to be confused with a ROS2 action, which is a communication pattern}
+}
+\newglossaryentry{state}{
+    name=state,
+    description={Condition of a system or part of a system in which specific rules, events, or transitions apply}
+}
+\newglossaryentry{transition}{
+    name=transition,
+    description={Change from one state to another, usually triggered by an event or a condition}
+}
+\newglossaryentry{guard}{
+    name=guard,
+    description={Condition on a branch or transition that must be true for a given path to be taken}
+}
+\newglossaryentry{constraint}{
+    name=constraint,
+    description={Restriction or rule that must hold in the model, for example a maximum braking distance or an allowed latency}
+}
+\newglossaryentry{calcdef}{
+    name=calc def,
+    description={SysML v2 definition for a calculation that structures input values, calculation logic, and result values}
+}
+\newglossaryentry{node}{
+    name=ROS2 node,
+    description={Independent process in ROS2 that handles one well-defined task, processes data, and communicates with other nodes through topics, services, or actions}
+}
+\newglossaryentry{topic}{
+    name=topic,
+    description={Message channel in ROS2 used for publish-subscribe communication}
+}
+\newglossaryentry{message}{
+    name=message,
+    description={Structure of a message in ROS2 that defines which data a topic, service, or action transmits}
+}
+\newglossaryentry{publisher}{
+    name=publisher,
+    description={ROS2 role of a node that publishes messages on a topic}
+}
+\newglossaryentry{subscriber}{
+    name=subscriber,
+    description={ROS2 role of a node that receives messages from a topic}
+}
+\newglossaryentry{service}{
+    name=service,
+    description={ROS2 communication pattern for short request-response exchanges}
+}
+\newglossaryentry{rosaction}{
+    name=ROS2 action,
+    description={ROS2 communication pattern for longer-running tasks, with a goal, feedback, a result, and an option to cancel}
+}
+\newglossaryentry{parameter}{
+    name=parameter,
+    description={Configuration value of a node or model, for example a battery threshold, a maximum speed, or a topic name}
+}
+\newglossaryentry{launchdatei}{
+    name=launch file,
+    description={File that starts several ROS2 nodes together, with their parameters and startup options}
+}
+\newglossaryentry{workspace}{
+    name=workspace,
+    description={Working directory for a ROS2 project, where source code, packages, build results, and install artifacts are organized}
+}
+\newglossaryentry{package}{
+    name=package,
+    description={Organized unit in ROS2 that groups code, configuration, interface definitions, and metadata}
+}
+\newglossaryentry{lifecycle-node}{
+    name=lifecycle node,
+    description={ROS2 node with defined states such as \texttt{unconfigured}, \texttt{inactive}, \texttt{active}, and \texttt{finalized}}
+}
+\newglossaryentry{traceability}{
+    name=traceability,
+    description={Traceable connection between requirements, architecture, implementation, and tests in the system model}
+}
+\newglossaryentry{verifikation}{
+    name=verification,
+    description={Check of whether a system or part of a system correctly meets its specified requirements}
+}
+\newglossaryentry{validierung}{
+    name=validation,
+    description={Check of whether the system that was built solves the stakeholders' actual problem and fits its intended use}
+}
+\newglossaryentry{testfall}{
+    name=test case,
+    description={Described check with a goal, a procedure, and an expected result, used to demonstrate that a requirement or function is met}
+}
+\newglossaryentry{impactanalysis}{
+    name=impact analysis,
+    description={Analysis of which requirements, components, interfaces, tests, or documents a change affects}
+}
+\newglossaryentry{mapping}{
+    name=mapping,
+    description={Assignment between elements at different levels, for example from SysML elements to ROS2 nodes, topics, and tests}
+}
+\newglossaryentry{middleware}{
+    name=middleware,
+    description={Software layer that handles communication between distributed processes (e.g., ROS2 nodes) so that they do not need to know the transport details of the other side}
+}
+\newglossaryentry{cyberphysical}{
+    name=cyber-physical system,
+    plural=cyber-physical systems,
+    description={System in which physical components are controlled by software and are tightly connected to that software through sensors, actuators, or networks}
+}
+\newglossaryentry{conjport}{
+    name=conjugated port,
+    description={Port whose flow direction is reversed relative to the original port definition (marked with a tilde \textasciitilde); a sending port becomes a receiving port}
+}
+\newglossaryentry{sensor}{
+    name=sensor,
+    description={Technical element that measures a physical quantity or environment property and provides it as a signal or data value}
+}
+\newglossaryentry{aktor}{
+    name=actuator,
+    description={Technical element that turns commands into a physical effect, for example a motor, a brake mechanism, or a gripper}
+}
+\newglossaryentry{lidar}{
+    name=lidar,
+    description={Sensor principle that measures distance with laser light; commonly used in robotics for obstacle detection and mapping}
+}
+\newglossaryentry{sensorfusion}{
+    name=sensor fusion,
+    description={Combination of data from several sensors to produce a more robust or more complete picture of the environment}
+}
+\newglossaryentry{inferenz}{
+    name=inference,
+    description={Use of an already-trained machine learning model on new data, for example on a current camera image}
+}
+\newglossaryentry{latenz}{
+    name=latency,
+    description={Time delay between an event, a measurement, or an input, and the resulting system response}
+}
+\newglossaryentry{simulation}{
+    name=simulation,
+    description={Reproduction of a system or its environment, used to study behavior, algorithms, or tests without complete real hardware}
+}
+\newglossaryentry{modell}{
+    name=model,
+    description={Simplified, purpose-built description of a system that makes relevant information, relationships, and decisions visible}
+}
+\newglossaryentry{sicht}{
+    name=view,
+    description={Part of a model that shows specific information for one role or one question}
+}

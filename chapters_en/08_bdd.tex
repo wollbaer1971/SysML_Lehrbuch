@@ -1,0 +1,181 @@
+\chapter{Structural Modeling with \texttt{part def}}
+
+\begin{lernziele}
+After this chapter, you can describe the robot's main structure as a SysML v2 structural model. You understand \texttt{part def}, \texttt{part}, part-whole relationships, and decomposition. You also know the difference between logical, physical, and software-related system parts.
+\end{lernziele}
+
+\section{Introduction}
+Structural modeling is one of the most important entry points into an MBSE project. It shows which building blocks make up a system, and how they are structurally connected. For the autonomous indoor robot, structural modeling helps bring order to sensing, navigation, drive, power supply, operation, and software.
+
+In SysML v2, you model structure textually with \texttt{part def} and \texttt{part}. \texttt{part def} defines the type of a system element. \texttt{part} creates a named instance of that type as part of a parent element. If you have programmed before, you can think of \texttt{part def} as a class definition and \texttt{part} as a concrete object of that class.
+
+\begin{hinweisbox}
+SysML v1 used the term \enquote{block} and the Block Definition Diagram (BDD) -- a graphical diagram with box-shaped blocks showing building blocks and their relationships. In SysML v2, both are replaced by \texttt{part def} (type definition) and \texttt{part} (instance). The concept stays similar; the syntax is more precise and textual.
+\end{hinweisbox}
+
+\section{Purpose of Structural Modeling}
+A structural view answers questions such as:
+
+\begin{itemize}
+    \item Which main parts make up the system?
+    \item Which subsystems belong to the robot?
+    \item Which system parts are specialized or composed of others?
+    \item Which structure is logical, and which is physical?
+\end{itemize}
+
+\section{Main Structure of the Robot}
+A first structural description for the autonomous indoor robot can look like this:
+
+\begin{lstlisting}
+package RobotStructure {
+
+  part def Robot {
+    part perceptionSystem  : PerceptionSystem;
+    part navigationSystem  : NavigationSystem;
+    part motionControl     : MotionControl;
+    part batterySystem     : BatterySystem;
+    part userInterface     : UserInterface;
+    part communicationSystem : CommunicationSystem;
+    part safetyLogic       : SafetyLogic;
+  }
+
+  part def PerceptionSystem;
+  part def NavigationSystem;
+  part def MotionControl;
+  part def BatterySystem;
+  part def UserInterface;
+  part def CommunicationSystem;
+  part def SafetyLogic;
+}
+\end{lstlisting}
+
+This representation is still rough. But it works well for understanding the system's scope. Every \texttt{part} inside \texttt{Robot} is an instance of the given type. \texttt{part def} defines that type.
+
+\section{Composition}
+When you define a \texttt{part} inside a \texttt{part def}, that describes a strong part-whole relationship. \texttt{perceptionSystem} belongs to \texttt{Robot}. This means: in this system view, the perception system is a fixed part of the robot.
+
+Composition is especially useful for making the system boundary visible. Does the charging station belong to the system, or is it external? You can model either option, but the decision must be deliberate.
+
+\section{Decomposition}
+Decomposition means breaking a system element down into smaller parts. The previously empty \texttt{part def PerceptionSystem} now gets filled with content -- this is the same definition, not a second one with the same name. You can break down \texttt{PerceptionSystem} further, for example:
+
+\begin{lstlisting}
+part def PerceptionSystem {
+  part camera          : Camera;
+  part lidar           : Lidar;
+  part objectDetector  : ObjectDetector;
+  part obstacleDetector : ObstacleDetector;
+}
+\end{lstlisting}
+
+\texttt{NavigationSystem} could contain the following parts:
+
+\begin{lstlisting}
+part def NavigationSystem {
+  part localization : Localization;
+  part mapping      : Mapping;
+  part pathPlanner  : PathPlanner;
+  part pathFollower : PathFollower;
+}
+\end{lstlisting}
+
+Figure~\ref{fig:kap08-part-def-baum} shows the complete decomposition of the overall \texttt{Robot} system across two levels: the seven main subsystems and their most important parts.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap08_part_def_baum}}
+  \caption{Complete decomposition of \texttt{Robot} into seven main subsystems and their most important second-level parts.}
+  \label{fig:kap08-part-def-baum}
+\end{figure}
+
+\section{Logical and Physical System Parts}
+A common beginner mistake is mixing up logical functions and physical parts without being clear about it. \texttt{Camera} is more physical. \texttt{ObjectDetector} is more software-related. \enquote{Detect obstacle} is more of a function.
+
+All three views can appear in the model. But you should separate them deliberately, or name them clearly. A simple rule:
+
+\begin{itemize}
+    \item Physical system parts describe tangible components.
+    \item Logical system parts describe responsibilities or subsystems.
+    \item Software parts describe later implementation units.
+\end{itemize}
+
+\section{The Structural Model and Requirements}
+System parts do not sit isolated in the model. They satisfy requirements through \texttt{satisfy} relationships. \texttt{BatterySystem} can satisfy requirements on battery-level monitoring. \texttt{PerceptionSystem} satisfies requirements on obstacle and person detection.
+
+\begin{praxisbox}
+REQ-006, \enquote{The robot must drive to the charging station when the battery is low}, is not satisfied by a single system element. \texttt{BatterySystem}, \texttt{NavigationSystem}, \texttt{MotionControl}, and possibly \texttt{UserInterface} are all involved. Structural modeling helps make these involved system parts visible.
+\end{praxisbox}
+
+\section{Reusing Types}
+One key advantage of \texttt{part def} is reusability. If a robot has two cameras, you define \texttt{Camera} only once and instantiate it twice:
+
+\begin{lstlisting}
+part def PerceptionSystem {
+  part frontCamera : Camera;
+  part rearCamera  : Camera;
+  part lidar       : Lidar;
+}
+\end{lstlisting}
+
+If the definition of \texttt{Camera} changes, that change automatically applies to both instances.
+
+\section{Common Mistakes}
+\subsection{Decomposing Too Deeply}
+A structural model does not need to include every cable and every screw. Model as deeply as you need for understanding, interfaces, and decisions. A simple rule of thumb: keep decomposing until you can name every relevant interface -- a beginner model usually does not need to go deeper than that.
+
+\subsection{Unclear Names}
+\texttt{System1} or \texttt{ModuleA} are poor names. Names should express the system part's responsibility.
+
+\subsection{Modeling Functions as Hardware}
+\texttt{ObstacleDetector} can be a software component, but \enquote{detect obstacle} is, at first, a function. Clear naming prevents confusion.
+
+\section{A Modeling Strategy for Beginners}
+A good structural model grows step by step. Start with a single \texttt{part def Robot}. Under it, model five to seven main systems. The first level should not contain more than that.
+
+Then pick one subsystem and decompose it further. \texttt{PerceptionSystem} is a good choice to start with, because it connects hardware, software, and data processing. Model the camera and lidar as physical parts, \texttt{ObjectDetector} and \texttt{ObstacleDetector} as software-related parts, and briefly document why this separation makes sense.
+
+For \texttt{BatterySystem}, a simpler decomposition is enough for now:
+
+\begin{lstlisting}
+part def BatterySystem {
+  part battery          : Battery;
+  part batteryMonitor   : BatteryMonitor;
+  part chargingInterface : ChargingInterface;
+}
+\end{lstlisting}
+
+This makes visible that the battery cell, its monitoring, and the charging interface have different responsibilities. This distinction helps later, both for mapping onto ROS2 and for testing.
+
+\section{Summary}
+Structural modeling with \texttt{part def} and \texttt{part} describes the structural view of the system. It shows the main system parts, part-whole relationships, and decomposition. For the indoor robot, it is the entry point into the architecture: perception, navigation, drive, power supply, operation, and safety become visible as system parts.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What is structural modeling for?
+    \item What is the difference between \texttt{part def} and \texttt{part}?
+    \item What does a composition describe?
+    \item What does decomposition mean?
+    \item Why should you distinguish logical and physical system parts?
+    \item Which main parts does the indoor robot have?
+    \item How does structural modeling connect to requirements?
+    \item What advantage does reusing \texttt{part def} offer?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Build a structural model}\\
+Create a \texttt{part def Robot} with at least five subsystems. Decompose \texttt{PerceptionSystem} further into camera, lidar, and object detection.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Classify system parts}\\
+Classify the following terms as physical, logical, or software-related: camera, NavigationSystem, object\_detector\_node, detect obstacle, battery, PathPlanner.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 3: Reuse}\\
+Model a \texttt{PerceptionSystem} with two cameras (\texttt{frontCamera} and \texttt{rearCamera}). Explain why \texttt{Camera} only needs to be defined once as a \texttt{part def}.
+\end{uebungbox}
+
+\section{Further Reading}
+Structural modeling in SysML v2 is documented in the SysML v2 pilot project \cite{sysmlv2pilot}. The Syside Editor offers practical examples directly in the development environment \cite{syside}. For comparison with SysML v1 and its block concept, Delligatti \cite{delligatti2014} and Friedenthal et al. \cite{friedenthal2014} are helpful, but you must consciously translate them to v2.

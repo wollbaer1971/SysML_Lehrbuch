@@ -1,0 +1,57 @@
+\begin{tikzpicture}[
+    scale=0.67, transform shape,
+    every node/.style={font=\small},
+    node distance=6mm and 6mm,
+    ext/.style={
+        rectangle, rounded corners=1.5pt, draw=black!50, thick, dashed,
+        minimum width=28mm, minimum height=10mm,
+        align=center, fill=white, drop shadow
+    },
+    ros/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=30mm, minimum height=10mm,
+        align=center, fill=orange!15, drop shadow
+    },
+    code/.style={
+        rectangle, rounded corners=1.5pt, draw=orange!60!black, thick,
+        minimum width=32mm, minimum height=10mm,
+        align=center, fill=orange!8, drop shadow, font=\small\ttfamily
+    },
+    flow/.style={-{Stealth[length=2mm]}, thick, orange!70!black},
+    note/.style={font=\footnotesize, align=center, text width=26mm}
+]
+
+% --- Row 1 ---
+\node[ext] (camera)  at (0, 0)    {Camera\\(hardware)};
+\node[ros] (topic1)  at (4.4, 0)  {Topic\\\texttt{/camera/image\_raw}};
+\node[code] (conv1)   at (9.2, 0)  {convert\_ros\_\\image\_to\_tensor()};
+\node[ros] (tensor)  at (13.8, 0) {Tensor};
+
+% --- Row 2 (below, offset for the pipeline to continue) ---
+\node[code] (infer)   at (13.8, -4) {Model inference:\\self.model(image)};
+\node[ros] (det)     at (9.2, -4)  {Detections\\(raw)};
+\node[code] (conv2)   at (4.4, -4)  {convert\_to\_\\ros\_msg()};
+\node[ros] (topic2)  at (0, -4)   {Topic\\\texttt{/detected\_objects}};
+
+% --- Row 3: branching ---
+\node[ros] (nav) at (-2.6, -7) {navigation\_node};
+\node[ros] (ui)  at (2.6, -7)  {user\_interface\_node};
+
+% --- Arrows row 1 ---
+\draw[flow] (camera.east) -- node[note, above, text width=20mm, xshift=-3mm]{Image format,\\resolution,\\calibration} (topic1.west);
+\draw[flow] (topic1.east) -- (conv1.west);
+\draw[flow] (conv1.east)  -- (tensor.west);
+
+% --- Transition row 1 -> row 2 ---
+\draw[flow] (tensor.south) -- node[note, right]{Latency,\\GPU usage} (infer.north);
+
+% --- Arrows row 2 (right to left) ---
+\draw[flow] (infer.west) -- (det.east);
+\draw[flow] (det.west)   -- node[note, above]{Synchronization,\\result format} (conv2.east);
+\draw[flow] (conv2.west) -- (topic2.east);
+
+% --- Branching ---
+\draw[flow] (topic2.south) -- (nav.north);
+\draw[flow] (topic2.south) -- (ui.north);
+
+\end{tikzpicture}

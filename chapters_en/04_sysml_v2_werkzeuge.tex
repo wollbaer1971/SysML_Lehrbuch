@@ -1,0 +1,461 @@
+\chapter{Setting Up Tools for SysML v2}
+
+\begin{lernziele}
+After this chapter, you can explain why this textbook uses a textual SysML v2 workflow. You can set up a simple project in VS Code with the Syside Editor and structure SysML v2 files. You can also write goal, scope and system boundary, requirements, part definitions, test cases, and ROS2 topic mappings in the SysML v2 text notation.
+\end{lernziele}
+
+\section{Introduction}
+You can use SysML v2 graphically or textually. This textbook focuses on the textual notation. That fits modern development workflows well: models live in files, so you can version, compare, review, and maintain them together with code.
+
+The Syside Editor for VS Code is a good free starting point. It supports SysML v2 files with syntax highlighting, autocomplete, formatting, outlining, and validation. For graphical views, you can also use Eclipse SysON. SysON is a web-based, open-source tool for SysML v2 models.
+
+\begin{hinweisbox}
+A tool does not solve a modeling task for you automatically. It helps you write, check, and display the model. The subject-matter decisions remain your job: Which elements exist? Which relationships matter? Which requirements must stay traceable?
+\end{hinweisbox}
+
+\section{Why Textual Modeling?}
+Many beginners expect diagrams first when they hear "SysML". Diagrams remain important, but SysML v2 makes the model content accessible as precise text as well. That lets you treat a model more like source code.
+
+Textual modeling has several advantages:
+
+\begin{itemize}
+    \item You can version models in Git.
+    \item Changes show up as a text diff.
+    \item You can show examples directly in the textbook.
+    \item You can reuse model parts more easily.
+    \item Validation and automation become simpler.
+    \item ROS2 code and the SysML v2 model can live in the same project.
+\end{itemize}
+
+This does not make diagrams unimportant. Diagrams remain valuable views. The difference is: the model does not come only from drawing, but from precisely defined model elements.
+
+\section{Recommended Toolchain}
+For this textbook, we use a simple toolchain:
+
+\begin{itemize}
+    \item VS Code as the editor
+    \item Syside Editor as the SysML v2 extension
+    \item Git for version control
+    \item optionally, Eclipse SysON for graphical views
+    \item optionally, the SysML v2 pilot project as a reference for advanced experiments
+\end{itemize}
+
+This choice is deliberately pragmatic. It is free to use, fits textual modeling, and overwhelms beginners less than large industrial modeling environments. Figure~\ref{fig:kap04-werkzeugkette} shows this toolchain in context, including the parallel path to the ROS2 code.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap04_werkzeugkette}}
+  \caption{Recommended toolchain: VS Code with the Syside Editor and Git at its core, optionally extended with Eclipse SysON and the SysML v2 pilot project; the ROS2 code runs alongside it.}
+  \label{fig:kap04-werkzeugkette}
+\end{figure}
+
+\section{Setting Up the Project}
+For the textbook, we use a project named \texttt{AutonomousIndoorRobot}. The name is deliberately English, because later ROS2 packages, nodes, and topics also use English technical names. The explanatory text in the model can still be in your own language.
+
+A simple project structure can look like this:
+
+\begin{lstlisting}[style=plaintext]
+AutonomousIndoorRobot/
+  model/
+    00_overview.sysml
+    01_context.sysml
+    02_requirements.sysml
+    03_structure.sysml
+    04_behavior.sysml
+    05_interfaces.sysml
+    06_tests.sysml
+    07_ros2_mapping.sysml
+  code/
+    status_node.py
+    battery_monitor_node.py
+  docs/
+    decisions.md
+\end{lstlisting}
+
+The files in the \texttt{model} folder hold the SysML v2 model. The \texttt{code} folder holds the later ROS2 examples. The \texttt{docs} folder can hold short architecture decisions. Figure~\ref{fig:kap04-projektstruktur} shows this project structure graphically and assigns a short keyword to each model file.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap04_projektstruktur}}
+  \caption{Project structure \texttt{AutonomousIndoorRobot} with the folders \texttt{model/}, \texttt{code/}, and \texttt{docs/}, and its most important files.}
+  \label{fig:kap04-projektstruktur}
+\end{figure}
+
+\section{Describing Goal, Scope, and System Boundary}
+
+The first file, \texttt{00\_overview.sysml}, frames the project. It answers three basic questions:
+
+\begin{itemize}
+    \item \textbf{Goal:} What is the system for?
+    \item \textbf{Scope:} What belongs to it, and what does not?
+    \item \textbf{System boundary:} Where does the system end, and where does the environment begin?
+\end{itemize}
+
+In SysML v2, every file starts with a \texttt{package}. The package is the named model space. Inside it, we describe the goal and scope as documentation with \texttt{doc~/*~...~*/}. The system boundary shows up in what we define as \texttt{part def} and what we treat as an external actor.
+
+Note: in \texttt{doc} comments, we write plain ASCII text without special characters, to avoid encoding problems between different tools and operating systems.
+
+\begin{lstlisting}
+package AutonomousIndoorRobot {
+  doc
+  /* Goal: An autonomous indoor robot transports small items
+     to selected destinations inside a building. It drives on
+     its own, detects obstacles, and returns to the charging
+     station when its battery is low.
+
+     Scope: This model describes the robot's navigation,
+     perception, power supply, user interface, and safety.
+
+     System boundary: The charging station and the building
+     are physical infrastructure that the robot uses but does
+     not control itself. People are external actors. */
+
+  part def Robot;
+  part def ChargingStation;  // external, but relevant to the model
+}
+\end{lstlisting}
+
+The \texttt{part def Robot} shows: the system is the robot. \texttt{ChargingStation} appears as an external component, because the robot must drive to it, but it is not part of the robot. You must make this decision deliberately and document it.
+
+\begin{praxisbox}
+A common beginner mistake: leaving the system boundary unclear. If you do not decide whether the charging station is \enquote{inside the system} or \enquote{outside it}, contradictions in requirements and tests will show up later. A short \texttt{doc} note at the start prevents this.
+\end{praxisbox}
+
+This view is simplified for beginners: here, \texttt{ChargingStation} sits as a \texttt{part def} at the same level as \texttt{Robot}. A cleaner approach would model external systems in their own context package, so that the system boundary is visible in the structure as well.
+
+\section{Writing Requirements}
+
+Requirements describe what the system must do, not how. In SysML v2, you define them in the file \texttt{02\_requirements.sysml} with the keyword \texttt{requirement}.
+
+Each requirement gets a unique name and a description as a \texttt{doc} block. You can nest requirements to express hierarchies.
+
+\begin{lstlisting}
+package Requirements {
+
+  requirement REQ_Navigate {
+    doc /* The robot must be able to autonomously reach a
+           selected target inside a known indoor area. */
+  }
+
+  requirement REQ_Safety {
+    doc /* Safety requirements for operation near people. */
+
+    requirement REQ_DetectObstacles {
+      doc /* The robot must detect obstacles in its path. */
+    }
+
+    requirement REQ_StopSafely {
+      doc /* The robot must brake when an obstacle is 0.5 m
+             away, and stop when it is 0.2 m away. */
+    }
+  }
+
+  requirement REQ_Battery {
+    doc /* Battery management and power supply. */
+
+    requirement REQ_MonitorBattery {
+      doc /* The robot must continuously monitor its
+             battery level. */
+    }
+
+    requirement REQ_ReturnToDock {
+      doc /* The robot must drive to the charging station on
+             its own when its battery level drops below
+             20 percent. */
+    }
+  }
+}
+\end{lstlisting}
+
+At first, this nesting is just a namespace grouping: it groups related requirements thematically under a parent requirement, but it does not create an automatic \texttt{derive} relationship between the parent and the child requirement; you would have to model such a derivation relationship explicitly with \texttt{derive} if you need one.
+
+Read each requirement out loud and ask: can I test this? If not, it is too vague. \enquote{The robot must navigate} is not testable. \enquote{The robot must drive to the charging station at 20 percent battery level} is testable.
+
+\section{Writing Part Definitions}
+
+Part definitions describe the building blocks of the system. In SysML v2, \texttt{part def} defines a type. \texttt{part} creates an instance of it. The file \texttt{03\_structure.sysml} holds the structure model.
+
+Start with the main element \texttt{Robot} and list its main parts. Name each part roughly at first. The details follow step by step.
+
+\begin{lstlisting}
+package Structure {
+
+  part def Robot {
+    doc /* The overall system. Contains all functional subsystems. */
+
+    part perception  : PerceptionSystem;
+    part navigation  : NavigationSystem;
+    part motion      : MotionControl;
+    part battery     : BatterySystem;
+    part ui          : UserInterface;
+    part safety      : SafetyLogic;
+  }
+
+  part def PerceptionSystem {
+    doc /* Takes in sensor data and turns it into object lists
+           and obstacle signals. */
+
+    part frontCamera : Camera;
+    part lidar       : Lidar;
+    part detector    : ObjectDetector;
+  }
+
+  part def BatterySystem {
+    doc /* Monitors the battery level and reports critical values. */
+
+    part cell    : Battery;
+    part monitor : BatteryMonitor;
+    part charger : ChargingInterface;
+  }
+
+  part def NavigationSystem;
+  part def MotionControl;
+  part def UserInterface;
+  part def SafetyLogic;
+  part def Camera;
+  part def Lidar;
+  part def ObjectDetector;
+  part def Battery;
+  part def BatteryMonitor;
+  part def ChargingInterface;
+}
+\end{lstlisting}
+
+Figure~\ref{fig:struktur-robot} shows this structure tree graphically.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_struktur_robot}}
+  \caption{Structure tree of the robot with \texttt{part def Robot} and its
+    subsystems. Boxes shaded green are already broken down further in the
+    model; boxes shaded gray are still empty \texttt{part def}s at this point.}
+  \label{fig:struktur-robot}
+\end{figure}
+
+The \texttt{doc} block for each \texttt{part def} is optional, but recommended. It records what responsibility that building block carries. If you cannot describe that in one sentence, the responsibility is still unclear.
+
+\section{Creating Test Cases}
+
+Test cases check whether the system meets a requirement. The keyword \texttt{verification def} defines the test case itself; the keyword \texttt{verify} then expresses the link between this test case and a requirement. The file \texttt{06\_tests.sysml} holds the test model.
+
+A test case describes: What does it test? Which preconditions apply? What is the expected reaction? Which requirement does it check?
+
+\begin{lstlisting}
+package Tests {
+
+  verification def TC_BatteryLowReturn {
+    doc /* Test: robot returns when its battery level is low.
+         Precondition: robot is navigating, battery level is 25 percent.
+         Action: battery level drops to 18 percent.
+         Expectation: robot aborts navigation and drives to the charging station.
+         Acceptance criterion: reaches the charging station within 120 seconds. */
+  }
+
+  verification def TC_ObstacleStop {
+    doc /* Test: robot stops in front of an obstacle.
+         Precondition: robot is driving at 0.3 m/s.
+         Action: an obstacle appears 0.4 m away.
+         Expectation: robot brakes and stops within a 0.2 m safety margin.
+         Acceptance criterion: no collision, stop in less than 2 seconds. */
+  }
+
+  part robot : Robot {
+    verify REQ_ReturnToDock    by tc1 : TC_BatteryLowReturn;
+    verify REQ_StopSafely      by tc2 : TC_ObstacleStop;
+  }
+}
+\end{lstlisting}
+
+The \texttt{verify} relationship links the test case to the requirement. That is the core of traceability: every requirement should have at least one test case that checks it. Requirements without a test stay unchecked in the project.
+
+The exact syntax of \texttt{verify ... by} can differ slightly between SysML v2 tool versions, since the language is still under development. If you are unsure, check it against your installed tool version.
+
+\section{Mapping ROS2 Topics}
+
+The file \texttt{07\_ros2\_mapping.sysml} connects the SysML model to the later ROS2 implementation. For each system part, it documents which ROS2 node implements it and which topics it uses.
+
+In SysML v2, you can model such mappings as attributes or as documentation. The keyword \texttt{attribute} defines a named, typed property of a model element; here, each one has the type \texttt{String}. For getting started, a clear text notation is enough:
+
+\begin{lstlisting}
+package ROS2Mapping {
+
+  part def BatterySystem_ROS2 {
+    doc /* ROS2 implementation of BatterySystem.
+
+         Node: battery_monitor_node
+         Package: autonomous_indoor_robot/battery_monitor
+
+         Published topics:
+           /battery_state   (sensor_msgs/BatteryState)  -- battery level, 1 Hz
+
+         Subscribed topics:
+           none
+
+         Link to the model:
+           BatterySystem.monitor -> battery_monitor_node
+           REQ_MonitorBattery is satisfied by this node. */
+
+    attribute rosNode  : String = "battery_monitor_node";
+    attribute topicOut : String = "/battery_state";
+  }
+
+  part def NavigationSystem_ROS2 {
+    doc /* ROS2 implementation of NavigationSystem.
+
+         Nodes: nav2_stack (external), path_planner_node
+         Subscribed topics:
+           /battery_state   -- triggers return when battery is low
+           /scan            (sensor_msgs/LaserScan)  -- lidar data
+           /map             (nav_msgs/OccupancyGrid) -- map
+
+         Published topics:
+           /cmd_vel         (geometry_msgs/Twist) -- drive commands
+           /robot_status    (std_msgs/String)     -- operating state
+
+         Link to the model:
+           REQ_Navigate and REQ_ReturnToDock are satisfied by these nodes. */
+
+    attribute rosNode  : String = "nav2_stack";
+    attribute topicIn  : String = "/battery_state, /scan, /map";
+    attribute topicOut : String = "/cmd_vel, /robot_status";
+  }
+}
+\end{lstlisting}
+
+Simplified for beginners: combining several topics into one string is convenient, but not clean. A separate attribute per topic (e.g., \texttt{topicScan}, \texttt{topicMap}) would be cleaner, so that you can type and trace each topic on its own.
+
+This file grows as the project progresses. Start with the nodes you implement first. The link between a SysML system element and a ROS2 node should always be documented explicitly.
+
+\section{Putting It All Together: A Minimal Model}
+
+After these first steps, a minimal model for the indoor robot looks like this:
+
+\begin{center}
+\adjustbox{max width=\linewidth}{%
+\begin{tabular}{lll}
+\toprule
+\textbf{File} & \textbf{Content} & \textbf{Keywords} \\
+\midrule
+\texttt{00\_overview.sysml} & Goal, scope, system boundary & \texttt{package}, \texttt{doc}, \texttt{part def} \\
+\texttt{02\_requirements.sysml} & Requirements & \texttt{requirement}, \texttt{doc} \\
+\texttt{03\_structure.sysml} & System building blocks & \texttt{part def}, \texttt{part} \\
+\texttt{06\_tests.sysml} & Test cases & \texttt{verification def}, \texttt{verify} \\
+\texttt{07\_ros2\_mapping.sysml} & ROS2 mapping & \texttt{attribute}, \texttt{doc} \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+
+This minimal model is not a perfect system model. It is a starting point. You can begin each file with a few lines and extend it step by step.
+
+\section{Recommended Model Structure}
+The model structure follows the key questions of the project:
+
+\begin{itemize}
+    \item \texttt{00\_overview.sysml}: goal, scope, and system boundary
+    \item \texttt{01\_context.sysml}: stakeholders, external systems, and environment
+    \item \texttt{02\_requirements.sysml}: requirements and relationships
+    \item \texttt{03\_structure.sysml}: system parts, subsystems, and components
+    \item \texttt{04\_behavior.sysml}: actions, sequences of steps, and states
+    \item \texttt{05\_interfaces.sysml}: ports, connections, and data flows
+    \item \texttt{06\_tests.sysml}: test cases and verification
+    \item \texttt{07\_ros2\_mapping.sysml}: mapping to ROS2 nodes, topics, services, and actions
+\end{itemize}
+
+This structure is deliberately simple. It separates the key model areas without introducing a complicated metamodel right from the start.
+
+\section{Naming Conventions}
+Clear names make models readable. For this textbook, we use simple rules:
+
+\begin{itemize}
+    \item Packages: \texttt{AutonomousIndoorRobot}
+    \item Part definitions: \texttt{Robot}, \texttt{BatterySystem}, \texttt{NavigationSystem}
+    \item Parts (instances): \texttt{battery}, \texttt{navigation}, \texttt{motion}
+    \item Requirements: \texttt{REQ\_DetectObstacles}, \texttt{REQ\_ReturnToDock}
+    \item Test cases: \texttt{TC\_BatteryLowReturn}, \texttt{TC\_ObstacleStop}
+    \item ROS2 nodes: \texttt{battery\_monitor\_node}, \texttt{path\_planner\_node}
+    \item ROS2 topics: \texttt{/battery\_state}, \texttt{/cmd\_vel}, \texttt{/robot\_status}
+\end{itemize}
+
+Avoid changing the name of the same element. If an element is called \texttt{BatterySystem} once, do not call it \texttt{PowerModule} somewhere else, unless you are deliberately modeling a different thing.
+
+\section{Graphical Views}
+Graphical views help most when a team wants to discuss structure or interfaces quickly. In SysML v2, you should treat them as a representation of the model, not as a replacement for it.
+
+Eclipse SysON can be useful for such views. It helps especially when you want to visualize structure, connection, or requirements views from the textual model. For getting started with this book, though, it is enough to first understand the textual notation well.
+
+The direction matters here: the text stays the source of truth, and the graphic is a view generated from it automatically. If you add a new \texttt{part} to \texttt{Robot} in the Syside Editor and save it, SysON can regenerate the matching structure view from it, without you drawing a single box yourself. Figure~\ref{fig:kap04-syside-syson-sync} illustrates this using the \texttt{part def Robot} example from the previous section.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap04_syside_syson_sync}}
+  \caption{The SysML v2 text in the Syside Editor (left) is the source of truth; Eclipse SysON generates the graphical structure view from it automatically (right), with no need to draw it by hand.}
+  \label{fig:kap04-syside-syson-sync}
+\end{figure}
+
+\begin{hinweisbox}
+That is why, when text and graphics conflict, it always pays to check the text first. A diagram that someone \enquote{fixed} by hand will otherwise drift away from the actual model without anyone noticing.
+\end{hinweisbox}
+
+\section{Typical Beginner Mistakes}
+\subsection{Not Clarifying the System Boundary}
+Many models start without a clear answer to the question: what belongs to the system? This decision shapes every later requirement and test. Document the system boundary explicitly in the overview file.
+
+\subsection{Writing Requirements That Are Not Testable}
+Requirements such as \enquote{The robot should navigate well} are not checkable. Always state concrete conditions and measurable expectations.
+
+\subsection{Part Definitions Without Responsibility}
+A \texttt{part def} without a \texttt{doc} block leaves open what that building block is for. Write at least one sentence about each building block's job.
+
+\subsection{Test Cases Without a Link to Requirements}
+A test case that checks no requirement is useless for traceability. Every \texttt{verification def} should have at least one \texttt{verify} relationship.
+
+\subsection{Not Documenting ROS2 Topics}
+The name of a topic alone is not enough. Which node sends it? Which node receives it? What message format does it use? This information belongs in the mapping file.
+
+\subsection{Writing Text Like Program Code, Without Meaning}
+SysML v2 text sometimes looks like code. Even so, you are modeling a system, not a program. For every element, ask: what subject-matter statement is behind it?
+
+\section{Summary}
+This chapter showed how to structure a SysML v2 project from the start. You record goal, scope, and system boundary as \texttt{doc} blocks in the overview package. You write requirements as \texttt{requirement} with testable text. Part definitions describe the system's building blocks with \texttt{part def}. Test cases link to requirements through \texttt{verify}. You map ROS2 topics in a mapping file as \texttt{attribute}s and documentation. VS Code with the Syside Editor is the recommended free working environment. What matters in the end is not the tool, but an understandable, consistent, and traceable model.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item Why does textual modeling suit SysML v2 well?
+    \item Which three questions does the file \texttt{00\_overview.sysml} answer?
+    \item What is the difference between \texttt{part def} and \texttt{part}?
+    \item What makes a requirement testable?
+    \item How does SysML v2 link a test case to a requirement?
+    \item What information belongs in the ROS2 mapping file?
+    \item Why should every \texttt{part def} have a \texttt{doc} note?
+    \item Why does tool validation not replace a subject-matter review of the model?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Describe the System Boundary}\\
+Create the file \texttt{00\_overview.sysml}. Describe the goal, scope, and system boundary of the autonomous indoor robot in the \texttt{doc} block of the main package. Decide deliberately: does the charging station belong to the system, or is it external? Justify your decision in one sentence.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Write Requirements}\\
+Create the file \texttt{02\_requirements.sysml} with at least five requirements. Use the names \texttt{REQ\_Navigate}, \texttt{REQ\_DetectObstacles}, \texttt{REQ\_StopSafely}, \texttt{REQ\_MonitorBattery}, and \texttt{REQ\_ReturnToDock}. Write each \texttt{doc} block so that the requirement is measurable and testable.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 3: Create Part Definitions}\\
+Create the file \texttt{03\_structure.sysml} with a \texttt{part def Robot} that has at least four subsystems as \texttt{part}s. Break \texttt{PerceptionSystem} down further into a camera, a lidar, and a detector. Write a short \texttt{doc} note for each building block.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 4: Create Test Cases}\\
+Create the file \texttt{06\_tests.sysml} with at least two test cases. For each test case, describe the precondition, the action, and the expected result in the \texttt{doc} block. Link each test case to its requirement through \texttt{verify}.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 5: Map ROS2 Topics}\\
+Create the file \texttt{07\_ros2\_mapping.sysml}. Map the node \texttt{battery\_monitor\_node} and the topic \texttt{/battery\_state} to \texttt{BatterySystem}. Map at least two topics to \texttt{NavigationSystem}. Document the sender, the receiver, and the message format.
+\end{uebungbox}
+
+\section{Further Reading}
+For hands-on work with SysML v2, the Syside Editor documentation, the Eclipse SysON project, and the SysML v2 pilot project are all helpful \cite{syside,syson,sysmlv2pilot}. For subject-matter background, classic SysML and MBSE fundamentals remain useful, but you must consciously carry them over to SysML v2.

@@ -1,0 +1,91 @@
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    root/.style={
+        rectangle, rounded corners=1.5pt, draw=black!70, thick,
+        minimum width=36mm, minimum height=11mm,
+        align=center, fill=blue!12, drop shadow
+    },
+    l1/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=44mm, minimum height=11mm,
+        align=center, fill=green!18, drop shadow, font=\small
+    },
+    l2/.style={
+        rectangle, rounded corners=1.5pt, draw=green!40!black, thick,
+        minimum width=32mm, minimum height=9mm,
+        align=center, fill=green!7, drop shadow, font=\footnotesize
+    },
+    trunkline/.style={thick, black!55},
+    edg/.style={-{Stealth[length=1.8mm]}, thick, black!60}
+  ]
+
+  % --- Root ---
+  \node[root] (robot) at (0, 0) {\texttt{part def Robot}};
+
+  % --- Level 1: seven subsystems, stacked top to bottom ---
+  \node[l1] (perception) at (0, -2.0)   {\texttt{perceptionSystem :}\\\texttt{PerceptionSystem}};
+  \node[l1] (navigation) at (0, -4.5)   {\texttt{navigationSystem :}\\\texttt{NavigationSystem}};
+  \node[l1] (motion)     at (0, -6.5)   {\texttt{motionControl :}\\\texttt{MotionControl}};
+  \node[l1] (battery)    at (0, -8.5)   {\texttt{batterySystem :}\\\texttt{BatterySystem}};
+  \node[l1] (ui)         at (0, -10.5)  {\texttt{userInterface :}\\\texttt{UserInterface}};
+  \node[l1] (comm)       at (0, -12.0)  {\texttt{communicationSystem :}\\\texttt{CommunicationSystem}};
+  \node[l1] (safety)     at (0, -13.5)  {\texttt{safetyLogic :}\\\texttt{SafetyLogic}};
+
+  % Tree connection root -> level 1 via a side trunk, so no line runs
+  % through one of the boxes in between.
+  \draw[trunkline] (robot.south) -- (-3.0,0 |- robot.south);
+  \draw[trunkline] (-3.0,0 |- robot.south) -- (-3.0,0 |- safety.west);
+  \foreach \n in {perception,navigation,motion,battery,ui,comm,safety}
+    \draw[edg] (-3.0,0 |- \n.west) -- (\n.west);
+
+  % --- Level 2: decomposition of PerceptionSystem (2 columns right of perception) ---
+  \node[l2] (camera)  at (4.25,-1.4) {\texttt{camera :}\\\texttt{Camera}};
+  \node[l2] (objdet)  at (4.25,-2.6) {\texttt{objectDetector :}\\\texttt{ObjectDetector}};
+  \node[l2] (lidar)   at (8.0,-1.4) {\texttt{lidar :}\\\texttt{Lidar}};
+  \node[l2] (obstdet) at (8.0,-2.6) {\texttt{obstacleDetector :}\\\texttt{ObstacleDetector}};
+
+  \draw[trunkline] (perception.east) -- (2.5,0 |- perception.east);
+  \draw[trunkline] (2.5,0 |- camera.west) -- (2.5,0 |- objdet.west);
+  \draw[edg] (2.5,0 |- camera.west) -- (camera.west);
+  \draw[edg] (2.5,0 |- objdet.west) -- (objdet.west);
+  \draw[trunkline] (2.5,0 |- perception.east) -- (6.25,0 |- perception.east);
+  \draw[trunkline] (6.25,0 |- lidar.west) -- (6.25,0 |- obstdet.west);
+  \draw[edg] (6.25,0 |- lidar.west) -- (lidar.west);
+  \draw[edg] (6.25,0 |- obstdet.west) -- (obstdet.west);
+
+  % --- Level 2: decomposition of NavigationSystem (2 columns right of navigation) ---
+  \node[l2] (loc)      at (4.25,-3.9) {\texttt{localization :}\\\texttt{Localization}};
+  \node[l2] (planner)  at (4.25,-5.1) {\texttt{pathPlanner :}\\\texttt{PathPlanner}};
+  \node[l2] (map)      at (8.0,-3.9) {\texttt{mapProvider :}\\\texttt{Mapping}};
+  \node[l2] (follower) at (8.0,-5.1) {\texttt{pathFollower :}\\\texttt{PathFollower}};
+
+  \draw[trunkline] (navigation.east) -- (2.5,0 |- navigation.east);
+  \draw[trunkline] (2.5,0 |- loc.west) -- (2.5,0 |- planner.west);
+  \draw[edg] (2.5,0 |- loc.west) -- (loc.west);
+  \draw[edg] (2.5,0 |- planner.west) -- (planner.west);
+  \draw[trunkline] (2.5,0 |- navigation.east) -- (6.25,0 |- navigation.east);
+  \draw[trunkline] (6.25,0 |- map.west) -- (6.25,0 |- follower.west);
+  \draw[edg] (6.25,0 |- map.west) -- (map.west);
+  \draw[edg] (6.25,0 |- follower.west) -- (follower.west);
+
+  % --- Level 2: decomposition of BatterySystem (2 on top, 1 centered below) ---
+  \node[l2] (cell)    at (4.25,-7.9) {\texttt{battery :}\\\texttt{Battery}};
+  \node[l2] (monitor) at (8.0,-7.9) {\texttt{batteryMonitor :}\\\texttt{BatteryMonitor}};
+  \node[l2] (charger) at (6.125,-9.1) {\texttt{chargingInterface :}\\\texttt{ChargingInterface}};
+
+  \draw[trunkline] (battery.east) -- (2.5,0 |- battery.east);
+  \draw[edg] (2.5,0 |- cell.west) -- (cell.west);
+  \draw[trunkline] (2.5,0 |- battery.east) -- (6.25,0 |- battery.east);
+  \draw[edg] (6.25,0 |- monitor.west) -- (monitor.west);
+  \draw[trunkline] (2.5,0 |- battery.east) -- (2.5,0 |- charger.west);
+  \draw[edg] (2.5,0 |- charger.west) -- (charger.west);
+
+  % --- Legend ---
+  \node[root, minimum width=7mm, minimum height=5mm, font=\scriptsize] (leg1) at (-3.0,-14.85) {};
+  \node[right=2mm of leg1, font=\scriptsize, align=left] {Root (\texttt{part def Robot})};
+  \node[l1, minimum width=7mm, minimum height=5mm, font=\scriptsize, below=6mm of leg1, xshift=-0mm] (leg2) {};
+  \node[right=2mm of leg2, font=\scriptsize, align=left] {Level 1: main subsystems};
+  \node[l2, minimum width=7mm, minimum height=5mm, font=\scriptsize, below=6mm of leg2, xshift=-0mm] (leg3) {};
+  \node[right=2mm of leg3, font=\scriptsize, align=left] {Level 2: further decomposition (selection)};
+
+\end{tikzpicture}

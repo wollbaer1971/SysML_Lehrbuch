@@ -1,0 +1,176 @@
+\chapter{Traceability and Change Management}
+
+\begin{lernziele}
+After this chapter, you can build end-to-end traceability from requirements to tests. You understand traceability chains, impact analysis, and the value of systematic change assessment in the robot project.
+\end{lernziele}
+
+\section{Introduction}
+\gls{traceability} means being able to trace how artifacts connect. In MBSE, this is one of the biggest practical benefits: requirements, functions, system parts, interfaces, ROS2 nodes, and tests stay connected.
+
+\section{What Is Traceability?}
+Traceability answers questions such as:
+
+\begin{itemize}
+    \item Which component satisfies this requirement?
+    \item Which test verifies this requirement?
+    \item Which ROS2 node implements this system element?
+    \item Which interfaces are affected if a sensor changes?
+    \item Which requirements still have no test?
+\end{itemize}
+
+\Needspace{12\baselineskip}
+\section{A Chain in the Robot Project}
+\begin{lstlisting}[style=plaintext]
+REQ-002 Detect obstacles
+-> PerceptionSystem
+-> ObstacleDetector
+-> obstacle_detector_node
+-> /scan
+-> TC-002 Obstacle detection
+\end{lstlisting}
+
+This chain shows how you can trace a requirement all the way to its implementation and test. In SysML v2, you can anchor such links directly in the model using the \texttt{satisfy}, \texttt{derive}, and \texttt{trace} relationships, for example:
+
+\begin{lstlisting}
+satisfy requirement REQ_002 by PerceptionSystem;
+derive requirement REQ_002 from REQ_SAFE_002;
+trace PerceptionSystem to obstacle_detector_node;
+\end{lstlisting}
+
+Figure~\ref{fig:kap20-traceability-kette-req002} shows the same chain graphically, including the type of relationship between each pair of elements.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap20_traceability_kette_req002}}
+  \caption{Traceability chain from REQ-002, through SysML system elements and a ROS2 node/topic, to test case TC-002.}
+  \label{fig:kap20-traceability-kette-req002}
+\end{figure}
+
+\section{Benefit}
+If REQ-002 changes, you can analyze which components are affected. Maybe the lidar needs to be replaced. Maybe the test needs to be adjusted. Maybe a software change is enough.
+
+\section{Impact Analysis}
+Impact analysis answers the question: What changes if a requirement, component, or interface changes?
+
+You can answer this question methodically by starting at the changed requirement and following the traceability matrix backward: which system elements, interfaces, ROS2 nodes, and tests are linked to it through a relationship?
+
+Example: the maximum speed is increased. This can affect:
+
+\begin{itemize}
+    \item safety requirements
+    \item the braking-distance model
+    \item obstacle detection
+    \item motor control
+    \item battery runtime
+    \item tests for stopping distance
+    \item the ROS2 parameter for speed
+\end{itemize}
+
+\section{Traceability Matrix}
+A simple matrix can have these columns:
+
+\begin{itemize}
+    \item requirement
+    \item function
+    \item SysML system element (\texttt{part def})
+    \item ROS2 node
+    \item interface
+    \item test case
+\end{itemize}
+
+This matrix does not replace the model, but it is a useful view. Figure~\ref{fig:kap20-traceability-matrix} shows an excerpt for two requirements of the indoor robot. Modern SysML v2 tools can often generate such a matrix automatically from the model's relationships, which greatly reduces the effort of maintaining it by hand.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap20_traceability_matrix}}
+  \caption{Excerpt from a traceability matrix: each row connects a requirement, through a function, system element, and ROS2 node, to a test case.}
+  \label{fig:kap20-traceability-matrix}
+\end{figure}
+
+\section{Change Management}
+Changes should be assessed deliberately. A simple process:
+
+\begin{enumerate}
+    \item Describe the change request.
+    \item Identify the affected requirements.
+    \item Determine the affected architecture parts and interfaces.
+    \item Check the affected tests.
+    \item Assess effort and risk.
+    \item Document the decision.
+\end{enumerate}
+
+You can walk through this process concretely using the speed increase from the previous section: the change request (a higher maximum speed) reveals the affected safety requirements and the braking-distance model, the stopping-distance tests must be adjusted, and only after assessing effort and risk is the decision documented. In larger projects, a dedicated approval body, the Change Control Board (CCB), often makes this decision; for a beginner project, a simple, documented decision is usually enough.
+
+Figure~\ref{fig:kap20-aenderungsmanagement-ablauf} shows this process, including the decision to approve or reject the change.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap20_aenderungsmanagement_ablauf}}
+  \caption{The change management process, from describing the change request to the documented decision.}
+  \label{fig:kap20-aenderungsmanagement-ablauf}
+\end{figure}
+
+\section{Common Mistakes}
+Traceability is often built too late. Then it becomes tedious. It is better to maintain relationships step by step as you model. Another mistake is building too much traceability with no real benefit. Link above all the elements that matter for decisions, changes, and tests.
+
+\section{A Pragmatic Scope}
+Traceability can grow very large very quickly. For a beginner project, keep it deliberately limited. At first, focus on the main requirements, main blocks, central interfaces, ROS2 nodes, and test cases.
+
+A good starting rule: every main requirement should have at least one relationship to a satisfying model element and one proof. Every safety-relevant requirement should also be linked to its affected interfaces and failure cases.
+
+For the indoor robot, the following are especially worth tracing:
+
+\begin{itemize}
+    \item obstacle detection
+    \item person detection
+    \item returning to the charging station
+    \item a safe stop
+    \item battery-level monitoring
+    \item status and error messages
+\end{itemize}
+
+These chains deliver a lot of value without immediately overloading the model.
+
+\subsection{Example: Changing the Return Strategy}
+The in-depth battery example shows a concrete change compared to the simple battery threshold: REQ-005 and REQ-006 are made more precise by BM-01 through BM-13 (Section~\ref{sec:bm-anforderungen}). The procedure in Section~\ref{sec:bm-ablauf}, the energy balance in Section~\ref{sec:bm-energie}, and the tests in Section~\ref{sec:bm-tests} together form the detailed design.
+
+One example chain:
+\begin{quote}
+REQ-006: Return to the charging station\\
+BM-05: Pause the order if the estimate is not reliable\\
+Functions: assess estimate validity and safeguard the return\\
+Intended responsibility: battery management and navigation\\
+Information needed: energy demand, route data, and their validity\\
+T-03/T-04: map missing, or return path unknown
+\end{quote}
+
+Here, the responsibility is an architecture assignment in the design. It does not yet correspond to a concrete SysML relationship or ROS2 implementation that has been created or checked. In particular, the existing battery monitor alone does not implement the new return safeguard.
+
+If the recorded route is later replaced by a different return strategy, this affects at least BM-01, BM-06, BM-07, and BM-11, the interfaces for route data, the return decision, and T-03, T-06, and T-11. Before such a change, you must also check the energy assumptions and any other affected tests. The status of every relationship must show clearly whether it is only planned, implemented, or backed by a passed proof.
+
+\section{Summary}
+Traceability connects requirements, architecture, implementation, and tests. It makes change manageable and helps you find gaps in the model. For the indoor robot, it is especially valuable because sensing, software, energy, and safety are closely linked.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What does traceability mean?
+    \item Why does traceability matter in MBSE?
+    \item What is impact analysis?
+    \item What elements does a traceability chain contain?
+    \item Why should traceability be built early?
+    \item Which elements would a higher robot speed affect?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Traceability chain}\\
+Choose a requirement and build a complete traceability chain down to a test case.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Impact analysis}\\
+Analyze this change: the camera is replaced with a depth camera. Which requirements, system parts, interfaces, ROS2 nodes, and tests are affected?
+\end{uebungbox}
+
+\section{Further Reading}
+Traceability is a core topic in MBSE and requirements engineering. SysML v2 offers relationships such as \texttt{satisfy}, \texttt{verify}, \texttt{derive}, and \texttt{trace} for this purpose \cite{sysmlv2pilot}.

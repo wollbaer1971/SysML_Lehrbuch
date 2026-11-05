@@ -1,0 +1,136 @@
+\chapter{State Modeling with State Machines}
+
+\begin{lernziele}
+After this chapter, you can model a robot's operating states and state changes. You understand states, events, transitions, start and end states, and simple guard conditions, and you can design a state machine for the autonomous indoor robot.
+\end{lernziele}
+
+\section{Introduction}
+A robot does not behave the same way in every situation. While it is charging, it should not drive off. While it has an error, it should not accept new orders. While the battery is low, it should return to the charging station. State machines model these kinds of questions very well.
+
+\section{States}
+A state describes a situation the system stays in for some period of time. Examples for the robot:
+
+\begin{itemize}
+    \item \texttt{Idle}
+    \item \texttt{Navigating}
+    \item \texttt{AvoidingObstacle}
+    \item \texttt{ReturnToDock}
+    \item \texttt{Charging}
+    \item \texttt{Error}
+\end{itemize}
+
+In the running text, we write states in PascalCase for readability (\texttt{Idle}, \texttt{Navigating}); in the SysML v2 code below and in the state diagram, the same states appear in camelCase (\texttt{idle}, \texttt{navigating}) — both forms refer to the same state.
+
+\section{Events}
+Events trigger transitions. Examples:
+
+\begin{itemize}
+    \item \texttt{GoalReceived}
+    \item \texttt{BatteryLow}
+    \item \texttt{ObstacleDetected}
+    \item \texttt{PathFree}
+    \item \texttt{DockReached}
+    \item \texttt{ChargingComplete}
+    \item \texttt{ErrorDetected}
+    \item \texttt{Reset}
+\end{itemize}
+
+\section{Example}
+In SysML v2, you model a state machine with \texttt{state def}. Each state
+can contain transitions with \texttt{transition}; the line \texttt{entry; then idle;} marks the start state (also called a \emph{pseudostate}), from which the state machine automatically moves to the \texttt{idle} state when the system starts:
+
+\begin{lstlisting}
+state def RobotOperation {
+  entry; then idle;
+
+  state idle {
+    transition accept GoalReceived then navigating;
+  }
+  state navigating {
+    transition accept ObstacleDetected then avoidingObstacle;
+    transition accept BatteryLow      then returnToDock;
+    transition accept ErrorDetected   then error;
+  }
+  state avoidingObstacle {
+    transition accept PathFree then navigating;
+  }
+  state returnToDock {
+    transition accept DockReached then charging;
+  }
+  state charging {
+    transition accept ChargingComplete then idle;
+  }
+  state error {
+    transition accept Reset then idle;
+  }
+}
+\end{lstlisting}
+
+Figure~\ref{fig:state-machine} shows this state machine graphically.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_state_machine}}
+  \caption{State diagram for \texttt{state def RobotOperation}. Each
+    arrow corresponds to one \texttt{transition accept ... then ...} line
+    from the listing above. The error state is highlighted in red.}
+  \label{fig:state-machine}
+\end{figure}
+
+\section{Guard Conditions}
+Guards are conditions on transitions. A transition only happens if its condition is true. Example: \texttt{GoalReceived [batteryOk]} leads to \texttt{Navigating}. If the battery is not sufficient, the event might instead lead to \texttt{ReturnToDock}, or the order might be rejected. In the code example above, this guard is left out for clarity; written out, the line in the \texttt{idle} state would read: \texttt{transition accept GoalReceived[batteryOk] then navigating;}.
+
+\section{Why State Machines Are Useful}
+State diagrams prevent unclear logic. They show which transitions are allowed. May the robot accept a new target while it has an error? May it navigate while charging? What happens if the battery becomes low during navigation?
+
+\begin{praxisbox}
+Without a state model, this kind of logic often ends up scattered across the code. One node checks the battery, another checks targets, a third handles errors. A state machine creates one shared view of the allowed operating modes.
+\end{praxisbox}
+
+\section{State Machines and Tests}
+You can derive tests from state diagrams. Every important transition can be tested: target received, obstacle detected, battery low, charging station reached, error detected, reset performed.
+
+\section{Common Mistakes}
+\subsection{Confusing states and actions}
+\texttt{Navigating} is a state. \texttt{Plan a path} is more of an action. States should last for some duration.
+
+\subsection{Too many states}
+A diagram with too many states becomes hard to read. Start with the most important operating modes.
+
+\subsection{Forgetting the error state}
+Every real system needs a clear idea of what happens on errors.
+
+\section{Practical Example: The Robot's Operating Modes}
+For the indoor robot, a state machine at the system level is especially useful. It defines which operating modes are allowed at all. A simple model starts with \texttt{Idle}. From there, the robot moves to \texttt{Navigating} on a target order. If it detects a low battery level, it moves to \texttt{ReturnToDock}. On successful docking, it moves to \texttt{Charging}.
+
+The \texttt{Error} state should, in principle, be reachable from several states, even though the code example above shows only the transition from \texttt{navigating}, for the sake of clarity. An error can occur during navigation, during charging, or during initialization; a more complete model would therefore add further transitions, such as \texttt{transition accept ErrorDetected then error;}, in \texttt{charging} and in a possible initialization state as well. What matters is that the way back out of the error state is modeled deliberately. May a user simply press reset? Must maintenance staff intervene? Must the robot first deactivate its motors?
+
+State machines also help with the user interface. When the system is in the \texttt{Charging} state, the interface should not offer normal target navigation, or it should at least clearly show that the robot is currently unavailable.
+
+\section{Summary}
+State machines describe operating states and the transitions allowed between them. For the indoor robot, they are especially important for modeling navigation, charging, error handling, and safety responses cleanly.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What is a state?
+    \item What is an event?
+    \item What is a transition?
+    \item What is a guard condition?
+    \item Why does an error state matter?
+    \item Which states should the indoor robot have at a minimum?
+    \item How can state machines support tests?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Build a state machine}\\
+Build a state machine for the robot with at least six states and eight transitions.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Add guards}\\
+Add conditions for the transitions \texttt{GoalReceived}, \texttt{BatteryLow}, and \texttt{ErrorDetected}.
+\end{uebungbox}
+
+\section{Further Reading}
+State machines are an established tool for behavior modeling. SysML literature \cite{delligatti2014,friedenthal2014} shows how to connect them to requirements and tests.

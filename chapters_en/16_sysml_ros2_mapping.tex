@@ -1,0 +1,171 @@
+\chapter{From SysML v2 to ROS2}
+
+\begin{lernziele}
+After this chapter, you can map SysML v2 elements to ROS2 elements. You understand why mapping matters for traceability, and how requirements, part definitions, parts, ports, connections, actions, and tests can connect to nodes, topics, services, actions, and test code.
+\end{lernziele}
+
+\section{Introduction}
+The SysML v2 model describes the architecture. ROS2 is the implementation. Without a connection between the two, a gap opens up. Mapping closes this gap. It shows how model decisions translate into software elements.
+
+\section{Basic Principle}
+A SysML v2 part definition can correspond to a ROS2 node when it describes a clear, software-related responsibility. A port or a connection can correspond to a topic, a service, or an action. An action in the model can be realized by a node, or by a group of nodes. A test case in the model can correspond to an automated test.
+
+This mapping is an architecture decision, not a fixed translation rule. In this chapter, we deliberately start with a simple orientation mapping, because it makes the start easier. In real systems, one SysML element can influence several ROS2 nodes, and one ROS2 node can bundle several modeled responsibilities.
+
+\emph{Note:} The term \enquote{action} is used here in two different senses -- as a SysML v2 behavior element (part of an activity in the model), and as a ROS2 action (an asynchronous communication pattern with feedback, see Chapter 14). In the mapping, a SysML action is often realized by a ROS2 action, but the two terms describe different concepts at different levels.
+
+Not every model element gets a one-to-one implementation. A physical element such as \texttt{Camera} can be described through hardware, while a \texttt{camera\_node} handles its control. A larger system element such as \texttt{NavigationSystem} can consist of several nodes (for example \texttt{navigation\_node} for motion planning and \texttt{slam\_node} for mapping, see Chapter 15).
+
+\section{Example Table}
+\begingroup
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{@{}p{0.42\textwidth}p{0.50\textwidth}@{}}
+\toprule
+Mapping & Note\\
+\midrule
+\textbf{SysML:} Part Definition \texttt{ObjectDetector}\newline
+\textbf{ROS2:} \texttt{object\_detector\_node} & Runs ML inference\\
+\textbf{SysML:} Part Definition \texttt{Camera}\newline
+\textbf{ROS2:} \texttt{camera\_node} & Delivers image data\\
+\textbf{SysML:} Part Definition \texttt{NavigationSystem}\newline
+\textbf{ROS2:} \texttt{navigation\_node} & Plans and monitors motion\\
+\textbf{SysML:} Part Definition \texttt{BatterySystem}\newline
+\textbf{ROS2:} \texttt{battery\_monitor\_node} & Monitors battery status\\
+\textbf{SysML:} Part Definition \texttt{MotionControl}\newline
+\textbf{ROS2:} \texttt{motion\_control\_node} & Converts velocity commands into motion\\
+\textbf{SysML:} Part Definition \texttt{UserInterface}\newline
+\textbf{ROS2:} \texttt{user\_interface\_node} & Accepts user requests\\
+\bottomrule
+\end{longtable}
+\endgroup
+
+Figure~\ref{fig:kap16-mapping-sysml-ros2} shows this simple orientation mapping graphically.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap16_mapping_sysml_ros2}}
+  \caption{Graphical view of a simple orientation mapping between SysML v2 part definitions and their matching ROS2 nodes. In real systems, this mapping must be checked and refined per project.}
+  \label{fig:kap16-mapping-sysml-ros2}
+\end{figure}
+
+\section{Textual Mapping Example}
+In SysML v2, a small part of the model can be written directly as text:
+
+\begin{lstlisting}
+package AutonomousIndoorRobot {
+  part def BatterySystem;
+  part def NavigationSystem;
+
+  part def Robot {
+    part batterySystem: BatterySystem;
+    part navigationSystem: NavigationSystem;
+  }
+
+  requirement REQ_ReturnToDock {
+    doc /* The robot must return to the charging station
+           on its own when the battery level is low. */
+  }
+}
+\end{lstlisting}
+
+The ROS2 mapping adds the technical decision: \texttt{battery\_monitor\_node} implements \texttt{BatterySystem}, and publishes the battery status over \texttt{/battery\_state}. \texttt{NavigationSystem} reacts to this, and starts navigation to the charging station when needed.
+
+\section{Mapping Interfaces}
+Ports, connections, and modeled data flows map to topics, services, or actions:
+
+\begin{itemize}
+    \item Image data: \texttt{/camera/image\_raw}
+    \item Laser scan: \texttt{/scan}
+    \item Motion command: \texttt{/cmd\_vel}
+    \item Battery status: \texttt{/battery\_state}
+    \item Target navigation: action \texttt{NavigateToPose}
+\end{itemize}
+
+For a beginner model, the functional direction of the data flow is enough at first. Later, add the message type, frequency, units, \gls{qos} settings (e.g.\ whether messages are delivered reliably or only on a best-effort basis), and failure cases.
+
+\section{Traceability}
+Mapping is part of traceability (the traceable link from requirements to implementation). It shows which implementation realizes which architecture decision.
+
+\begin{praxisbox}
+REQ-004 \enquote{Detect people} is met by the part definition \texttt{ObjectDetector}. This model decision is implemented by the ROS2 node \texttt{object\_detector\_node}. The results are published over \texttt{/detected\_objects} and checked by a test case for person detection.
+\end{praxisbox}
+
+\section{From Requirements to Code}
+A complete chain can look like this:
+
+\begin{lstlisting}[style=plaintext]
+REQ-006 Return to the charging station
+-> Action: Monitor battery level
+-> Part Definition: BatterySystem
+-> Node: battery_monitor_node
+-> Topic: /battery_state
+-> Node: navigation_node
+-> Action: NavigateToDock
+-> Test: TC-006 Return at low battery level
+\end{lstlisting}
+
+Figure~\ref{fig:kap16-traceability-batteriemanagement} shows this traceability chain graphically, from the requirement through the SysML and ROS2 elements to the test case.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap16_traceability_batteriemanagement}}
+  \caption{Traceability chain from requirement REQ-006, through SysML and ROS2 elements, to test case TC-006.}
+  \label{fig:kap16-traceability-batteriemanagement}
+\end{figure}
+
+\section{Common Mistakes}
+\subsection{Forcing a One-to-One Match}
+Not every part definition must become exactly one node. Mapping is a deliberate architecture decision.
+
+\subsection{Not Maintaining the Mapping}
+When the ROS2 architecture changes, you must update the mapping. Otherwise, traceability loses its value.
+
+\subsection{Mapping Interfaces Too Coarsely}
+A mapping without topic names, message types, or responsibilities is too vague.
+
+\section{Mapping as a Living Artifact}
+The mapping is not a one-time final document. It grows with the project. At the start, a rough table is enough: part definition to node, connection to topic. Later, message types, parameters, launch files, and tests join it.
+
+A good mapping table can include further columns:
+
+\begin{itemize}
+    \item SysML v2 element
+    \item Action or responsibility
+    \item ROS2 node
+    \item Topic, service, or action
+    \item Message type
+    \item Linked requirement
+    \item Test case
+    \item Implementation status
+\end{itemize}
+
+This turns the mapping into a working tool. It helps with reviews, with planning code, and with spotting gaps. If an important model element has no node and no test, that is a signal to look closer.
+
+\section{Summary}
+The SysML v2-ROS2 mapping connects the model and the implementation. It helps you trace requirements through to the software, and analyze changes in a targeted way. For this textbook, it is the central bridge between MBSE and practical robotics software.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item Why does mapping between SysML v2 and ROS2 matter?
+    \item Which SysML v2 elements can map to ROS2 nodes?
+    \item Which SysML v2 elements fit topics?
+    \item Why must you maintain the mapping?
+    \item Why is a one-to-one mapping not always the right choice?
+    \item Explain a traceability chain for battery management.
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Mapping Table}\\
+Create a mapping table for the key part definitions in your robot model.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Complete Chain}\\
+Create a chain from a requirement, through a part definition, a node, a topic, and a test case, for obstacle detection.
+\end{uebungbox}
+
+\section{Further Reading}
+The mapping connects SysML v2 modeling \cite{sysmlv2spec,sysmlv2pilot} with ROS2 communication \cite{ros2docs}. In real projects, this connection is often defined on a project-specific basis.

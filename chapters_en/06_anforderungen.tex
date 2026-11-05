@@ -1,0 +1,224 @@
+\chapter{Modeling Requirements}
+
+\begin{lernziele}
+After this chapter, you can write requirements that are clear, unambiguous, and testable. You can number and structure requirements, tell functional and non-functional requirements apart, and connect them with SysML relationships. You also understand how requirements in the robot project are traced from stakeholder needs all the way to test cases.
+\end{lernziele}
+
+\section{Introduction}
+Requirements are one of the most important foundations of a system model. They describe what the system must deliver, and under which conditions it must deliver it. Without good requirements, it stays unclear which architecture makes sense, and what measures project success.
+
+For the autonomous indoor robot, many wishes sound simple at first: the robot should drive safely, detect obstacles, recognize people, run long enough, and be easy to operate. For development, that is not enough. You must translate such wishes into requirements that are unambiguous and later testable.
+
+\section{What Makes a Good Requirement?}
+A good requirement is:
+
+\begin{itemize}
+    \item understandable
+    \item unambiguous
+    \item necessary
+    \item realistic
+    \item testable
+    \item solution-neutral wherever possible
+\end{itemize}
+
+\enquote{The robot should navigate well} is not a good requirement. What does \enquote{well} mean? Fast? Accurate? Safe? Without collisions? In unknown rooms? A better version reads:
+
+\begin{quote}
+The robot must drive autonomously to a selected target in a known indoor area and avoid static obstacles in its path.
+\end{quote}
+
+Even this requirement can become more precise later, but it is already far clearer.
+
+\section{From Need to Requirement}
+Stakeholders often voice needs. These needs matter, but they are not yet technical requirements.
+
+\begin{center}
+\begin{tabular}{p{0.38\textwidth}p{0.50\textwidth}}
+\toprule
+\textbf{Need} & \textbf{Possible requirement} \\
+\midrule
+The robot must not endanger anyone. & The robot must reduce its speed when an obstacle is within 0.5 m, and stop at 0.2 m. \\
+The robot must be easy to operate. & A transport order must be startable with at most three inputs. \\
+The robot must not get stuck. & The robot must return to the charging station automatically when the battery is low. \\
+Maintenance must be simple. & The robot must display sensor status, battery status, and error messages. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Example Requirements}
+\begin{longtable}{p{0.16\textwidth}p{0.69\textwidth}}
+\toprule
+ID & Requirement\\
+\midrule
+REQ-001 & The robot must be able to navigate autonomously within a known indoor area.\\
+REQ-002 & The robot must detect obstacles in its driving area.\\
+REQ-003 & The robot must drive around detected obstacles or stop in time.\\
+REQ-004 & The robot must be able to detect people in the camera image.\\
+REQ-005 & The robot must monitor its battery level.\\
+REQ-006 & The robot must drive to the charging station on its own when the battery is low.\\
+REQ-007 & The robot must report its operating state.\\
+REQ-008 & The robot must enter a safe state if a critical sensor fails.\\
+REQ-009 & The robot must accept transport orders through a simple user interface.\\
+REQ-010 & The robot must log relevant errors in a way maintenance staff can follow.\\
+\bottomrule
+\end{longtable}
+
+\section{Functional and Non-Functional Requirements}
+Functional requirements describe what the system must do. Examples are navigation, obstacle detection, battery monitoring, or status reporting.
+
+Non-functional requirements describe properties of the system. Examples are speed, accuracy, availability, safety, maintainability, data protection, or energy consumption.
+
+Both kinds matter. A robot that has every function but is too slow, unsafe, or unmaintainable does not meet the project goal.
+
+\section{Structuring Requirements}
+In larger projects, requirements are structured hierarchically. You can break a top-level requirement down into several concrete requirements.
+
+Example:
+
+\begin{itemize}
+    \item REQ-SAFE-001: The robot must operate safely near people.
+    \item REQ-SAFE-002: The robot must detect obstacles in its path.
+    \item REQ-SAFE-003: The robot must stop when in danger.
+    \item REQ-SAFE-004: The robot must enter a safe state on sensor failure.
+\end{itemize}
+
+This breakdown makes the general safety requirement easier to manage.
+
+\section{SysML Relationships}
+Key relationships in SysML are:
+
+\begin{itemize}
+    \item \texttt{derive}: one requirement is derived from another.
+    \item \texttt{satisfy}: a model element satisfies a requirement.
+    \item \texttt{verify}: a test case verifies a requirement.
+    \item \texttt{trace}: a general traceability relationship.
+    \item \texttt{refine}: an element describes a requirement in more detail.
+\end{itemize}
+
+\begin{praxisbox}
+The \texttt{PerceptionSystem} satisfies REQ-002, \enquote{detect obstacles}. The test case \texttt{TC-002 obstacle detection} verifies this requirement. A \texttt{trace} relationship can additionally show that the ROS2 node \texttt{obstacle\_detector\_node} belongs to the implementation.
+\end{praxisbox}
+
+Figure~\ref{fig:kap06-traceability-req002} shows this traceability chain graphically: \texttt{satisfy} and \texttt{verify} appear as two separate incoming relationships into \texttt{PerceptionSystem}, and from there \texttt{trace} continues on to the ROS2 node.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap06_traceability_req002}}
+  \caption{Traceability chain from REQ-002 through \texttt{satisfy} and \texttt{verify} to \texttt{PerceptionSystem}, and on via \texttt{trace} to the ROS2 node.}
+  \label{fig:kap06-traceability-req002}
+\end{figure}
+
+\section{Requirements in SysML v2}
+In SysML v2, you define requirements textually with the keyword \texttt{requirement}, embedded in a \texttt{package} as already shown in chapter 3:
+
+\begin{lstlisting}
+package Requirements {
+
+  requirement REQ_001 {
+    doc /* The robot must be able to navigate autonomously
+           within a known indoor area. */
+  }
+
+  requirement REQ_SAFE {
+    doc /* Safety requirements. */
+    requirement REQ_SAFE_001 {
+      doc /* The robot must detect obstacles in its path. */
+      derive REQ_001;
+    }
+  }
+}
+\end{lstlisting}
+
+Unlike \texttt{part def} and \texttt{part} in chapter 8, SysML v2's \texttt{requirement} keyword does not, in the basic case, distinguish between type and usage: in this example, the keyword \texttt{requirement} defines the requirement directly.
+
+Create your first requirement elements in the file \texttt{02\_requirements.sysml}. Use clear names, a stable ID, and testable text. Make sure requirements are not just a list, but later get connected to system parts, behavior, and tests.
+
+Use description fields (\texttt{doc /* ... */}) to document assumptions, rationale, or open questions. If a requirement is still unclear, mark it deliberately instead of treating it as finished by default -- for example, with a short \texttt{doc /* TBD: ... */} note on the affected requirement element.
+
+\section{Common Mistakes}
+\subsection{Overly General Requirements}
+\enquote{The robot should be reliable} is not testable. Concrete criteria work better.
+
+\subsection{Solutions Disguised as Requirements}
+\enquote{The robot must use sensor X} is often already a design decision. A solution-neutral capability is usually better, unless a specific sensor really is mandated.
+
+\subsection{No Acceptance Criteria}
+A requirement should show how you will test it later. An acceptance criterion states exactly what proves the requirement is met, for example: \enquote{Test case: with a simulated obstacle at a distance of 0.5 m, speed must drop within 1 s.} Without such criteria, you end up arguing about this at the end of the project.
+
+\subsection{No Maintenance}
+Requirements change. It matters that you keep changes traceable and check the affected model elements.
+
+\section{Deep-Dive Example: Battery Management with a Safeguarded Return}
+\label{sec:bm-anforderungen}
+Requirements REQ-005 and REQ-006 first describe battery monitoring and return on low battery. We now refine this starting point: based on energy used so far, the robot should estimate whether it can still finish the current transport order and then return to the charging station. A fixed battery threshold alone does not answer this question.
+
+This example is a domain-level design sketch. The following BM requirements extend the textbook's earlier examples; their implementation in SysML and ROS2, and their verification on the robot, are still open. The decision procedure follows in section~\ref{sec:bm-ablauf}, the energy balance in section~\ref{sec:bm-energie}, and the test mapping in section~\ref{sec:bm-tests}.
+
+\subsection{System Boundary and Assumptions}
+In scope are battery state, consumption tracking, energy-demand estimation, return-path safeguarding, order decisions, navigation, and status reporting. The charging station is an external system. The return trip ends only once docking and charging start are confirmed.
+
+As a design assumption, each trip starts at a known charging station. The robot records the path it drives and the energy it uses along the way, and can follow that path back. These proposed capabilities still need technical verification. A path already driven is neither automatically drivable in reverse, nor permanently clear. Nor may you equate return-trip consumption with outbound consumption without checking it.
+
+A \emph{safeguarded return path} has a known course, can be tracked reliably enough, and has been assessed for drivability and energy demand, including docking. A \emph{robust estimate} uses valid input data and accounts for its own uncertainty. What quality level is sufficient here remains an open project parameter.
+
+\begin{hinweisbox}
+If the remaining order or the planned return path cannot be estimated, for example due to missing map data, the order must not continue. The return must then be guaranteed by an independently safeguarded option, for example a suitable path recording. A missing estimate is not the same as low energy demand.
+\end{hinweisbox}
+
+\subsection{Requirements of the Deep-Dive Example}
+IDs BM-01 through BM-13 stay stable across requirements, procedure, and tests. BM-06 deliberately fixes one design decision for this example; a different technical return strategy would need separate evaluation.
+
+\begin{description}[style=nextline]
+    \item[BM-01: Start clearance] Before starting a trip, the robot must check for valid battery data, consumption tracking, and an available return strategy. If any prerequisite is missing, no transport order may start.
+    \item[BM-02: Consumption-based estimate] The robot must track energy used so far and use it to update its estimated demand. Changes in load, driving profile, or environment must feed into this assessment.
+    \item[BM-03: Decision basis] For every order decision, the robot must assess usable remaining energy, demand for the remaining order, subsequent return demand, and reserve, together with their validity and uncertainty. Unknown values must not count as zero.
+    \item[BM-04: Continue the order] The robot may continue the order only if a robust energy estimate covers the remaining order, the following return trip, and the reserve. In addition, a return from the current location must stay safeguarded.
+    \item[BM-05: Estimate unavailable] If the remaining order or the following return path cannot be estimated, the robot must suspend the order in a controlled way and start a safeguarded return. A high battery level does not override this rule.
+    \item[BM-06: Path recording] The robot must record the path driven and the related consumption data for return-trip assessment. Gaps and invalid segments must be detected and accounted for.
+    \item[BM-07: Return-path clearance] A recorded path may serve as a safeguarded return path only once its trackability, drivability, and sufficient energy, including reserve, have been assessed. Recording it alone is not enough.
+    \item[BM-08: Ongoing safeguarding] The robot must reassess return safeguarding regularly and after relevant changes. If safeguarding is at risk of being lost, the robot must start the return before falling below the defined return threshold. It must account for reaction time and interruption time.
+    \item[BM-09: Blocked return path] On a blockage, the robot must assess an alternative return path. It may use it only if drivability is safeguarded and energy is sufficient. It must also account for waiting and planning energy.
+    \item[BM-10: No safeguarded return] If no safeguarded return path is available, the robot must stop in a controlled way and request support. The order stays suspended; the robot must report that autonomous return was not achieved.
+    \item[BM-11: Data loss] On loss of battery data or path recording, the robot must reassess the remaining return safeguarding. Only a return that is still robustly safeguarded may continue; otherwise BM-10 applies.
+    \item[BM-12: Traceable status] The robot must report its decision, the reason for it, order status, and return status in a traceable way. Continuation, suspension, return, and the need for support must be distinguishable from each other.
+    \item[BM-13: Return successful] The robot may report the return as successful only after confirmed docking and the start of charging. Reaching the station position alone is not enough.
+\end{description}
+
+\subsection{Open Parameters and Limits of This Proof}
+Before implementation, you must fix the method for estimating remaining energy, the energy reserve, the allowed estimation uncertainty, the return threshold, the check intervals, and the criteria for valid path data. You must also clarify what a controlled stop looks like for the intended charging setup and environment. We deliberately do not invent concrete values here.
+
+This does not yet amount to a technical return guarantee. In particular, return without a map, the consumption estimate, and unexpected path blockages still need verification. A controlled stop with a support request limits the consequences of a failure, but it does not satisfy the required autonomous return.
+
+\section{Summary}
+Requirements connect stakeholder needs with architecture and tests. Good requirements are understandable, unambiguous, and testable. In SysML v2, requirements are not just collected -- relationships connect them to system parts, actions, interfaces, and test cases.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What makes a good requirement?
+    \item Why is \enquote{The robot should navigate well} problematic?
+    \item What is the difference between functional and non-functional requirements?
+    \item What is \texttt{derive} used for?
+    \item What is \texttt{satisfy} used for?
+    \item What is \texttt{verify} used for?
+    \item Why should requirements stay as solution-neutral as possible?
+    \item Which requirement could arise from the need \enquote{Maintenance must be simple}?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Write requirements}\\
+Write five additional requirements: two on safety, one on operation, one on maintenance, and one on performance.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Improve requirements}\\
+Improve the statements \enquote{The robot should be fast}, \enquote{The robot should be reliable}, and \enquote{Operation should be intuitive} so that they become testable requirements.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 3: Create relationships}\\
+Pick three requirements from the table. Assign each requirement a system element (\texttt{part def}) and a test case.
+\end{uebungbox}
+
+\section{Further Reading}
+Requirements modeling is a core part of SysML and MBSE. Delligatti \cite{delligatti2014} and Friedenthal, Moore, and Steiner \cite{friedenthal2014} are good starting points. For real projects, you should also draw on requirements-engineering literature.

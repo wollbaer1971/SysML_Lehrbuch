@@ -1,0 +1,122 @@
+\chapter{Architecture of ROS2 Systems}
+
+\begin{lernziele}
+After this chapter, you can design a simple ROS2 architecture for the autonomous robot. You understand node granularity, communication structure, failure cases, parameters, and lifecycle considerations.
+\end{lernziele}
+
+\section{Introduction}
+A ROS2 architecture describes which nodes a system consists of and how these nodes communicate with each other. It is the technical counterpart to many SysML structure and interface decisions.
+
+\section{Typical Node Structure}
+A reasonable first architecture consists of the following nodes:
+
+\begin{itemize}
+    \item \texttt{camera\_node}
+    \item \texttt{lidar\_node}
+    \item \texttt{slam\_node}
+    \item \texttt{navigation\_node}
+    \item \texttt{object\_detector\_node}
+    \item \texttt{battery\_monitor\_node}
+    \item \texttt{motion\_control\_node}
+    \item \texttt{user\_interface\_node}
+    \item \texttt{robot\_state\_node}
+\end{itemize}
+
+\section{Communication Structure}
+\begin{lstlisting}[style=plaintext]
+camera_node -> /camera/image_raw -> object_detector_node
+lidar_node  -> /scan             -> slam_node
+slam_node   -> /map              -> navigation_node
+navigation_node -> /cmd_vel      -> motion_control_node
+battery_monitor_node -> /battery_state -> navigation_node
+object_detector_node -> /detected_objects -> navigation_node
+robot_state_node -> /robot/status -> user_interface_node
+\end{lstlisting}
+
+Figure~\ref{fig:kap15-node-graph} shows the complete node graph with all nine nodes and their topic connections.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap15_node_graph}}
+  \caption{Node graph of the autonomous indoor robot, with the key topics between the sensor, processing, navigation, and actuator nodes.}
+  \label{fig:kap15-node-graph}
+\end{figure}
+
+\section{Granularity}
+Granularity is an important decision. Too many nodes raise communication overhead. Too few nodes make the system hard to follow. As a starting rule: a clearly bounded function may become its own node. A node that handles the camera, the lidar, and navigation all at once is cut too coarse; a separate node for every single sensor-reading function is usually cut too fine.
+
+\section{Architecture Decisions}
+Key decisions include:
+
+\begin{itemize}
+    \item Which functions become their own nodes?
+    \item Which data gets published as topics?
+    \item Which processes are modeled as actions?
+    \item Which parameters must be configurable?
+    \item Which nodes are safety-relevant?
+    \item Which errors must be reported centrally?
+\end{itemize}
+
+\section{Failure Cases}
+An architecture should not show only the normal case. What happens if the camera fails? What happens when the battery is empty? What happens if no map is available?
+
+\begin{praxisbox}
+If \texttt{camera\_node} delivers no images, person detection must not simply keep reusing old results. \texttt{object\_detector\_node} should detect the missing data and report a matching status.
+\end{praxisbox}
+
+\section{Parameters}
+Typical parameters include maximum speed, battery threshold, topic names, detection limits, or timeout values. Parameters should match the assumptions and requirements in the model.
+
+\section{Lifecycle Nodes}
+ROS2 supports lifecycle nodes: nodes with a defined state machine for controlled activation and deactivation. They have defined states such as unconfigured, inactive, active, and finalized. This is optional for beginners, but useful for robust systems: the state machine enables, for example, a deterministic startup in which a sensor node first loads its parameters (state \emph{configure}) before it actively delivers data (state \emph{active}) -- so navigation does not start with invalid or incomplete data. Figure~\ref{fig:kap15-lifecycle} shows the matching state machine.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap15_lifecycle_zustandsautomat}}
+  \caption{State machine of a ROS2 lifecycle node, from \texttt{Unconfigured} through \texttt{Inactive} and \texttt{Active} to the final state \texttt{Finalized}.}
+  \label{fig:kap15-lifecycle}
+\end{figure}
+
+\section{Architecture Review}
+Before you write any code, briefly review the ROS2 architecture. A review can follow simple questions:
+
+\begin{itemize}
+    \item Does every node have a clear responsibility?
+    \item Do topics have a clear sender and receiver?
+    \item Are safety-relevant data flows identifiable?
+    \item Are failure cases described?
+    \item Are parameters provided for values that can change?
+    \item Is there a link to requirements and tests?
+\end{itemize}
+
+The tool \texttt{rqt\_graph} can help you check the designed node structure visually later, in the running system.
+
+For the indoor robot, it is especially important that navigation, obstacle detection, and motion control are not coupled without control. A wrong motion command can have an immediate physical effect. The data flow to \texttt{/cmd\_vel} should therefore stay clearly traceable.
+
+\section{Summary}
+A good ROS2 architecture has clear responsibilities, understandable communication, and defined error responses. You should be able to derive it from the SysML model, and later check it through tests.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What does a ROS2 architecture describe?
+    \item Why does node granularity matter?
+    \item Which nodes does the indoor robot need at minimum?
+    \item Which topics matter for navigation?
+    \item Why must an architecture consider failure cases?
+    \item What are parameters?
+    \item What are lifecycle nodes?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Sketch an Architecture}\\
+Create a ROS2 architecture sketch with at least six nodes and eight topics.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Analyze a Failure Case}\\
+Describe which nodes are affected if the lidar fails. Which status message should the system generate?
+\end{uebungbox}
+
+\section{Further Reading}
+The ROS2 documentation \cite{ros2docs} describes communication mechanisms, lifecycle nodes, launch files, and tools. For architecture decisions, the SysML model from the previous chapters is also helpful.

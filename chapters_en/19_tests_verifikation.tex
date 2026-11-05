@@ -1,0 +1,192 @@
+\chapter{Testing and Verification}
+
+\begin{lernziele}
+After this chapter, you can link requirements to test cases and describe simple verification scenarios. You understand the difference between verification and validation, and you can write test cases for navigation, obstacle detection, person detection, battery management, and the charging station.
+\end{lernziele}
+
+\section{Introduction}
+A system model is only truly useful if it leads to proof. Requirements must not just sound good. In the end, someone must check whether the system meets them. That is what this chapter covers.
+
+\section{Verification and Validation}
+Verification asks: Was the system built right? In other words: Does the system meet its specified requirements?
+
+Validation asks: Was the right system built? In other words: Does the system actually solve the stakeholders' problem?
+
+Both questions matter. A robot can meet every specified requirement and still be impractical for its users. Conversely, a prototype can feel useful but fail to demonstrably meet important requirements.
+
+The classic V-model illustrates this relationship: each specification level on the descending branch has a matching verification or validation level on the ascending branch (see Figure~\ref{fig:kap19-v-modell}).
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap19_v_modell}}
+  \caption{The V-model links the descending specification branch to the ascending verification branch.}
+  \label{fig:kap19-v-modell}
+\end{figure}
+
+\section{Test Cases}
+The table below lists the test cases for the robot project. The abbreviation \enquote{TC} stands for \emph{Test Case}, and \enquote{REQ} for \emph{Requirement} (see Chapter 6).
+
+\begin{longtable}{p{0.16\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+ID & Test Case & Verified Requirement\\
+\midrule
+TC-001 & Autonomous navigation to target point & REQ-001\\
+TC-002 & Detect obstacle in time & REQ-002\\
+TC-003 & Handle obstacle safely & REQ-003\\
+TC-004 & Detect person in camera image & REQ-004\\
+TC-005 & Report low battery level & REQ-005\\
+TC-006 & Drive to charging station & REQ-006\\
+TC-007 & Report operating state & REQ-007\\
+TC-008 & Handle sensor failure safely & REQ-008\\
+\bottomrule
+\end{longtable}
+
+\section{Test Description}
+A test case should include:
+
+\begin{itemize}
+    \item ID
+    \item goal
+    \item verified requirement
+    \item preconditions
+    \item test setup
+    \item procedure
+    \item expected result
+    \item pass/fail criterion
+    \item required measurement data
+\end{itemize}
+
+\section{Example TC-002}
+\textbf{Precondition:} The robot drives at a defined speed.\\
+\textbf{Procedure:} An obstacle is placed in its path.\\
+\textbf{Expectation:} The robot detects the obstacle and stops before a collision.\\
+\textbf{Criterion:} Minimum clearance of 20 cm.
+
+\section{Types of Tests}
+\subsection{Unit Tests}
+Unit tests check small software units. For example, you can test a battery monitor by feeding it simulated voltage values and checking the resulting battery level.
+
+\subsection{Integration Tests}
+Integration tests check how several components work together. Example: \texttt{battery\_monitor\_node} reports a low battery level, and \texttt{navigation\_node} plans a return to the charging station.
+
+\subsection{System Tests}
+System tests check the behavior of the whole robot in defined scenarios.
+
+\subsection{Simulation Tests}
+Simulation tests allow many tests without real hardware. They do not fully replace real tests, but they are very valuable early in development. Chapter 22 introduces Gazebo as a concrete simulation tool for this kind of testing.
+
+\section{Tests in the Model}
+In SysML, you can attach test cases to requirements with \texttt{verify} relationships. This makes it easy to see which requirements still have no test. Figure~\ref{fig:kap19-verify-beziehung} shows this for TC-006 and REQ-006.
+
+In SysML v2, you can write such a \texttt{verify} relationship in text form like this:
+
+\begin{lstlisting}
+package Tests {
+  import Requirements::*;
+
+  test def TC_006 {
+    doc /* Checks whether the robot drives to the charging
+           station on its own when the battery level is low. */
+    verify requirement REQ_006;
+  }
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap19_verify_beziehung}}
+  \caption{Test case TC-006 verifies requirement REQ-006 through a \texttt{verify} relationship.}
+  \label{fig:kap19-verify-beziehung}
+\end{figure}
+
+\begin{praxisbox}
+If REQ-006 calls for a return to the charging station, a test case should check whether the robot, once below the battery threshold, actually sets a return goal and does not start a new normal transport order.
+\end{praxisbox}
+
+\section{Common Mistakes}
+\subsection{Planning Tests Too Late}
+When tests are designed only at the end, requirements are often untestable.
+
+\subsection{Testing Only the Normal Case}
+Failure cases such as sensor failure, a blocked path, and low battery matter just as much.
+
+\subsection{No Clear Criteria}
+\enquote{Robot stops in time} must be translated into a measurable criterion.
+
+\section{Test Planning Over the Project}
+Tests should not appear only at the end of the project. When you write a requirement, ask right away: How will this requirement be checked later? This helps you spot an unclear requirement early.
+
+For the robot project, test planning can grow step by step:
+
+\begin{itemize}
+    \item Requirements get initial acceptance criteria.
+    \item Key functions get test ideas.
+    \item Interfaces get integration tests.
+    \item ROS2 nodes get unit or component tests.
+    \item Scenarios such as target navigation are described as system tests.
+\end{itemize}
+
+It also helps to re-run existing tests after every change (a regression test), so that newly introduced errors show up early -- this matters especially together with the change management process from Chapter 20.
+
+A good test model also makes gaps visible. If a requirement has no test case, that is not automatically wrong, but it is an open question. Maybe it will be shown by analysis, review, or inspection instead. Test, analysis, inspection, and demonstration count as the four classic verification methods. Document this choice as well.
+
+\section{In-Depth Example: Checking the Return Safeguard}
+\label{sec:bm-tests}
+Requirements BM-01 through BM-13 from Section~\ref{sec:bm-anforderungen} are made concrete by the following test drafts. They extend TC-005 and TC-006. These tests are planned, not yet carried out; mapping a test to a requirement is not a passed proof. The IDs T-01 through T-12 apply within this battery management example only.
+
+\subsection{Shared Test Setup and Measurement Data}
+For the first decision tests, battery data, consumption history, remaining order, route data, and station status are supplied under controlled conditions, for example in a simulation. Each check records the reserves, uncertainty margins, and timing limits used. The data to record includes: input data with timestamp and validity, demand estimates, the reason for the decision, the approved route, order status, and docking and charging confirmation.
+
+Checking the decision is kept separate from checking the quality of the estimate: a correct comparison of given energy values does not prove that the values match the real robot. Route tracking, energy consumption, and docking need additional integration and system tests. Until the open parameters from Section~\ref{sec:bm-anforderungen} are fixed, statements such as \enquote{in time} cannot yet be checked in a fully quantitative way.
+
+\subsection{Scenarios and Expected Results}
+\begin{description}[style=nextline]
+    \item[T-01: Order fully covered by energy] All start conditions are met; the remaining order, the following return, and the reserve are all covered. The current return is also safeguarded. Expectation: start and continuation are approved; the estimated values and the reason are traceable. Checks BM-01 through BM-04 and BM-12.
+    \item[T-02: Energy covers only the return] The current return, including reserve, is covered, but the remaining order is not. Expectation: pause the order in a controlled way and start the return; no further continuation of the order. Checks BM-03, BM-04, and BM-08.
+    \item[T-03: Map missing, recorded return path available] The map and the remaining-order estimate are missing. The recorded return path is trackable, drivable, and covered by energy. Expectation: no order continuation even at a high battery level; return via the recorded path. Checks BM-05 through BM-07.
+    \item[T-04: Return path after order end unknown] The remaining order is known, but its following return path is not. A return from the current position is safeguarded. Expectation: pause the order and return immediately; do not treat unknown demand as zero. Checks BM-03 through BM-05.
+    \item[T-05: Consumption or return-path demand rises] During the order, consumption or return-path demand increases. Expectation: update the estimate on a relevant change and within the defined check interval; start the return before the safeguard is lost. Afterward, supply a more favorable estimate: the order stays paused during the return. Checks BM-02 through BM-04, BM-08, and the procedure from Section~\ref{sec:bm-ablauf}.
+    \item[T-06: Route recording fails] Variant A: an independently safeguarded route stays available. Variant B: no such route stays available. Expectation: A leads to a return over the valid route; B leads to a controlled stop and a request for support. Gaps must never be treated as a valid return path. Checks BM-06, BM-07, and BM-10 through BM-12.
+    \item[T-07: Battery data invalid] A reliable estimate of remaining energy is no longer possible. Expectation: approve no further autonomous driving; stop in a controlled way and request support. Checks BM-03, BM-04, and BM-10 through BM-12.
+    \item[T-08: Blockage with a viable alternative] The return path is blocked. A trackable, drivable alternative is covered, including waiting, planning, and docking energy. Expectation: approve only this checked alternative and continue the return over it. Checks BM-07 through BM-09.
+    \item[T-09: Blockage without a viable alternative] There is no safeguarded alternative return path, or the charging station is unreachable. Expectation: stop in a controlled way, leave the order paused, request support, and report the autonomous return as not met. Checks BM-09 through BM-12.
+    \item[T-10: Charging never starts] The robot reaches the station position, but docking or the start of charging fails. Expectation: no success report. If no safeguarded continuation is possible, report an error status and request support. In a successful comparison run, both docking and charging confirmation must be present. Checks BM-10, BM-12, and BM-13.
+    \item[T-11: Start condition missing] Before the robot starts driving, battery data, consumption tracking, or a return strategy is missing; test each missing condition on its own. Expectation: no transport order starts; the missing condition is reported. Checks BM-01 and BM-12.
+    \item[T-12: Decision boundary] Supply valid test values just above, at, and just below the defined continuation limit. Expectation: above and at the limit, the order may continue only if the other conditions are also met; below the limit, the robot returns. Check the current return limit separately: a timely return takes priority over continuing the order. Checks BM-03, BM-04, and BM-08.
+\end{description}
+
+\subsection{One Test Case in Detail: T-03}
+\begin{description}[style=nextline]
+    \item[Goal and preconditions] Check BM-05 through BM-07. The robot has a running order, valid battery data, and a return path that was recorded independently of the map and is approved. Its energy covers this path, including reserve.
+    \item[Test setup and procedure] In a controlled environment, mark the map data and the remaining-order estimate as unavailable; keep the route recording and its return assessment valid. Then trigger the next order decision.
+    \item[Expected result] The robot pauses the order, states the missing estimate as the reason, and approves the safeguarded return.
+    \item[Pass/fail criterion] After the invalid estimate is processed, no further order continuation is approved. The return starts within the previously defined response time. A controlled deceleration or a necessary pause action must be distinguished from further order execution.
+    \item[Measurement data] Record validity flags and timestamps, energy demand and reserve, the chosen return-path ID, approvals, order status, and the reason for the decision.
+\end{description}
+
+\section{Summary}
+Testing and verification close the loop from requirements to implementation. A good model does not just show what should be built -- it also shows how you check that it was built correctly.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What is verification?
+    \item What is validation?
+    \item What information does a good test case contain?
+    \item What is the SysML \texttt{verify} relationship used for?
+    \item What is the difference between a unit test and a system test?
+    \item Why do failure cases matter?
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Create test cases}\\
+Create test cases for all requirements from Chapter 6. Mark any requirements that have no test.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Detail a test case}\\
+Describe TC-006, \enquote{Drive to charging station}, with its preconditions, procedure, expectation, and pass/fail criterion.
+\end{uebungbox}
+
+\section{Further Reading}
+Verification and validation are central topics in systems engineering. The SysML literature \cite{friedenthal2014} shows how test cases can be linked to requirements.

@@ -1,0 +1,70 @@
+\begin{tikzpicture}[
+    scale=0.71, transform shape,
+    every node/.style={font=\small},
+    proc/.style={
+        rectangle, rounded corners=2pt, draw=black!60, thick,
+        minimum width=34mm, minimum height=12mm,
+        align=center, fill=black!4, drop shadow
+    },
+    decide/.style={
+        rectangle, minimum width=32mm, minimum height=22mm,
+        align=center, inner sep=1pt
+    },
+    okbox/.style={
+        rectangle, rounded corners=2pt, draw=green!40!black, thick,
+        minimum width=34mm, minimum height=12mm,
+        align=center, fill=green!15, drop shadow
+    },
+    endbox/.style={
+        rectangle, rounded corners=2pt, draw=black!50, thick,
+        minimum width=34mm, minimum height=12mm,
+        align=center, fill=black!6, drop shadow
+    },
+    flow/.style={-{Stealth[length=2.2mm]}, thick, black!60},
+    lbl/.style={font=\small, fill=white, inner sep=1pt}
+]
+
+% --- row 1 (left to right) ---
+\node[proc] (s1) at (0, 9)   {(1) Describe\\change request};
+\node[proc] (s2) at (4.6, 9) {(2) Identify\\affected\\requirements};
+\node[proc] (s3) at (9.2, 9) {(3) Determine affected\\architecture parts/\\interfaces};
+
+% --- row 2 (right to left, S-shaped flow) ---
+\node[proc] (s4) at (9.2, 5.2) {(4) Check affected\\tests};
+\node[proc] (s5) at (4.6, 5.2) {(5) Assess effort/\\risk};
+\node[proc] (s6) at (0, 5.2)   {(6) Document\\decision};
+
+% --- decision: diamond drawn manually (no shapes.geometric library needed) ---
+% Corner points of the diamond match the anchor points (.north/.east/.south/.west)
+% of the invisible "dec" node with the same width/height.
+\filldraw[fill=black!4, draw=black!70, thick] (0, 2.1) -- (1.6, 1.0) -- (0, -0.1) -- (-1.6, 1.0) -- cycle;
+\node[decide] (dec) at (0, 1.0) {Approved?};
+
+% --- outcome boxes ---
+\node[okbox]  (ok)  at (5.0, 1.0)  {Implement/\\change model};
+\node[endbox] (end) at (0, -3.2)   {Document\\\& end};
+
+% --- flow row 1 ---
+\draw[flow] (s1) -- (s2);
+\draw[flow] (s2) -- (s3);
+
+% --- transition row1 -> row2 ---
+\draw[flow] (s3.south) -- (s4.north);
+
+% --- flow row 2 ---
+\draw[flow] (s4) -- (s5);
+\draw[flow] (s5) -- (s6);
+
+% --- to the decision ---
+\draw[flow] (s6.south) -- (dec.north);
+
+% --- yes / no ---
+\draw[flow] (dec.east) -- node[lbl, midway]{Yes} (ok.west);
+\draw[flow] (dec.south) -- node[lbl, midway]{No} (end.north);
+
+% --- optional loop back (dashed) ---
+\draw[dashed, thick, black!50, -{Stealth[length=2mm]}]
+    (end.west) -- ++(-2.2,0) -- ++(0, 12.2) -- (s1.west)
+    node[lbl, pos=0.55, left]{possible new change request};
+
+\end{tikzpicture}

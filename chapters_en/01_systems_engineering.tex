@@ -1,0 +1,463 @@
+\chapter{Understanding Systems Engineering}
+
+\begin{lernziele}
+This chapter explains what a system is and why systems engineering is necessary for complex technical products. You will understand the difference between a single component and the behavior of a system. You will learn to name stakeholders (people, groups, or organizations with an interest in the system), draw a system boundary, and recognize typical beginner mistakes. Using an autonomous indoor robot as an example, you will practice thinking in terms of requirements, functions, interfaces, and verification.
+\end{lernziele}
+
+\section{Introduction}
+Many technical projects start with a simple idea. Someone says: \enquote{We will build a robot that drives through a building on its own.} At first, that sounds manageable. The robot needs wheels, motors, sensors, a computer, some software, and a battery. Once the parts are available, the project should mainly consist of construction, programming, and testing.
+
+In practice, this view turns out to be too simple. An autonomous indoor robot must not just drive. It must drive safely. It must detect obstacles, avoid endangering people, handle doors and narrow corridors, monitor its battery level, return to its charging station when needed, and stay easy for users to operate. At the same time, it must stay affordable, remain maintainable, and fit into a real environment. Even this small example already combines mechanics, electronics, software, artificial intelligence, power supply, safety considerations, operating concepts, and organizational questions.
+
+This is exactly where systems engineering begins. Systems engineering is a way of working for developing complex systems. It helps a team think from the problem outward, instead of jumping to individual solutions too early. It asks:
+
+\begin{itemize}
+    \item Which problem needs to be solved?
+    \item Who has expectations of the system?
+    \item What belongs to the system, and what belongs to its environment?
+    \item Which functions must the system provide?
+    \item Which requirements must be met in a way that can be checked?
+    \item Which components, interfaces, and sequences does this require?
+    \item How do we prove that the finished system really works?
+\end{itemize}
+
+For beginners, one point matters most: systems engineering is not extra bureaucracy that makes a project artificially harder. Used well, it creates clarity. It stops a team from jumping into details too early and discovering later that important expectations were overlooked. In this textbook, we use systems engineering as a way of thinking. We do not want to memorize every standard. We want to understand how to describe a technical system clearly, structure it, and turn it step by step into a workable architecture.
+
+\section{What Is a System?}
+A system is a set of elements that work together to serve a purpose. This definition sounds simple, but it makes three important points.
+
+First, a system consists of several elements. For the indoor robot, these are, for example, sensors, a computer, software components, a battery, motors, wheels, a housing, charging contacts, and user interfaces. People, too, can belong to a system in a broader sense -- for example, operators, maintenance staff, or people in the robot's driving area.
+
+Second, these elements work together. A single lidar sensor (a sensor that measures distance with a laser) does not by itself make an autonomous robot. The desired behavior only appears once the sensor delivers measurement data, that data is processed, a map is built from it, navigation plans a path, and the motor controller executes matching drive commands.
+
+Third, a system has a purpose. The purpose of our robot could be: \enquote{The robot transports small items on its own inside an office building.} A different purpose would be: \enquote{The robot monitors corridors at night and reports unusual events.} Both systems might look similar on the outside, but they would have different requirements, different stakeholders, and different technical priorities.
+
+\begin{praxisbox}
+Picture two robots with similar hardware. The first robot transports medication in a hospital. The second robot delivers tools in a workshop. Both need navigation and obstacle detection. Even so, their requirements differ sharply. In the hospital, hygiene, quiet operation, patient safety, and reliable documentation matter most. In the workshop, ruggedness, dust protection, and safe movement between machines matter most. A system is therefore defined not just by its parts, but by its purpose and its operating environment.
+\end{praxisbox}
+
+\subsection{Elements, Relationships, and Behavior}
+A common beginner mistake is to treat a system as nothing more than a list of parts:
+
+\begin{itemize}
+    \item camera
+    \item lidar
+    \item battery
+    \item motor controller
+    \item computer
+    \item ROS2 software (a robotics software platform, see chapter 14)
+\end{itemize}
+
+This list is useful, but it is not enough. What matters is the relationships between the parts. The camera sends images to recognition software. The recognition software reports detected people to navigation. Navigation takes obstacles into account and produces target speeds. The motor controller turns these target speeds into electrical signals for the motors. The battery monitor reports a low charge level, which triggers mission planning to start a return to the charging station.
+
+System behavior, then, grows out of this interplay. This is often called emergent behavior: the behavior of the whole system is more than the sum of its parts. A motor can turn, a sensor can measure, and a computer can run programs. Autonomous navigation, however, only appears once these abilities are connected in a meaningful way.
+
+\subsection{Open and Closed Systems}
+Many technical systems are open systems. They constantly exchange something with their environment. The indoor robot senses its environment through sensors, puts movement into that environment, draws energy from the charging station, and may communicate with users or a building management system.
+
+This matters because open systems cannot be fully understood in a lab. A robot that works well in a test hall can run into trouble in a real office building: reflective glass surfaces, narrow passages, changing light, people with rolling suitcases, open doors, carpet edges, or Wi-Fi dropouts. Systems engineering therefore forces us to think about the environment early on.
+
+\section{Why Systems Engineering?}
+In small projects, a team can often just start building. Someone writing a simple Python script can keep requirements, design, implementation, and testing in their head at once. This stops working reliably once a product grows more complex. Too many decisions depend on each other.
+
+Suppose a team decides to use a stronger camera so it can recognize people better. This change sounds local. In reality, it can have many consequences:
+
+\begin{itemize}
+    \item The camera produces more data.
+    \item The computer needs more processing power.
+    \item The software must process larger images faster.
+    \item Power consumption rises.
+    \item The battery lasts less time.
+    \item The housing may need a different mount.
+    \item Heat buildup may increase.
+    \item The price of the robot rises.
+\end{itemize}
+
+Systems engineering helps make such dependencies visible. It looks not just at one component, but at the whole system and its life cycle: idea, requirements, design, implementation, integration, test, operation, maintenance, and later evolution.
+
+\subsection{Making Complexity Manageable}
+Complexity does not just mean that a system has many parts. A system becomes complex mainly through many interactions, unclear expectations, and changes during development. A robot project becomes complex because hardware, software, and environment all play a role at the same time.
+
+Here is an example. Navigation should choose the shortest path. The safety requirement, however, says that the robot must slow down near people. The battery requirement says that the robot must return to the charging station in time. The user requirement says that deliveries must not take too long. These requirements can conflict with each other. Systems engineering makes such conflicts visible before they only show up when the finished robot is tested.
+
+\subsection{Improving Communication}
+Technical projects are teamwork. Mechanical engineering, electronics, software, testing, project management, purchasing, operations, and the customer side often use different terms. What a software developer calls a \enquote{node} may, to a systems engineer, be a functional unit. What a user calls \enquote{fast} must be translated into measurable requirements for development.
+
+Systems engineering creates shared descriptions. These descriptions can be texts, tables, diagrams, and models. Later in this book, we use SysML for this. At first, though, the point is the way of thinking: we want to clarify terms, make connections visible, and document decisions so that others can follow them.
+
+\subsection{Finding Errors Earlier}
+The later an error is found, the more expensive it becomes to fix. If a team only realizes shortly before delivery that the battery is too small for the planned drive time, it may need to change the housing, re-evaluate the center of gravity, and adjust the charging electronics. If this question is examined early, through requirements and simple calculations, the fix is far easier.
+
+Systems engineering moves thinking and checking earlier in the project. This does not mean a team must know everything perfectly in advance. It means making assumptions explicit and checking them deliberately.
+
+\section{A Short History of Systems Engineering}
+Systems engineering did not come from a single invention. It grew out of practical problems in large technical undertakings. Whenever many disciplines had to work together, an overarching view became necessary.
+
+\subsection{Early Large Technical Systems}
+Even building railways, telephone networks, power plants, and aircraft required systems thinking. A railway network consists of more than tracks and locomotives. It needs stations, signals, timetables, maintenance, a power supply, staff, safety rules, and operating procedures. Changing one part affects many other parts.
+
+The term systems engineering became especially important in the 20th century. Large telecommunications, aviation, and space projects made it clear that classic individual disciplines alone were not enough. Engineers needed methods to bring together requirements, architecture, interfaces, tests, and project decisions.
+
+\subsection{Aerospace as a Driving Force}
+In aerospace, the consequences of errors are especially severe. A satellite, a rocket, or an aircraft consists of many subsystems: structure, propulsion, power, communication, control, sensors, software, and ground infrastructure. These subsystems must work together under extreme conditions.
+
+Such projects shaped many of the core ideas of systems engineering: clear requirements, controlled interfaces, configuration management (the orderly handling of changes and versions), verification (explained in more detail later in this chapter), validation (checking whether the system actually solves the right problem), and traceability. The central idea is this: a team does not just develop parts, it develops a complete system with a demonstrable ability to fulfil its tasks.
+
+\subsection{Software and Networked Systems}
+Later, software became increasingly important. Modern systems are often \glspl{cyberphysical}: physical components are controlled by software and connected through networks. An autonomous robot is a typical example. It moves physically through the world, but it makes decisions with the help of software, sensor fusion, and algorithms.
+
+This shifts the challenge. Mechanical parts usually change more slowly than software. Software can be updated often, but this also introduces new risks: version conflicts, unexpected runtime errors, incomplete tests, or decisions made by machine learning components that are hard to trace. Systems engineering must therefore now consider hardware, software, data, \gls{ki} models, and operating processes together.
+
+\section{Systems Thinking}
+Systems thinking means treating relationships as more important than isolated parts. It is a way of thinking that asks: \enquote{What happens to the whole system if I change something in one place?}
+
+\subsection{From Component to Effect}
+Beginners often think in components first. That makes sense -- you can buy, touch, and install a component. Systems engineering, however, starts earlier. It first asks about effects and functions.
+
+For the indoor robot, a desired effect could be: \enquote{The robot avoids collisions with people and objects.} From this, functions follow:
+
+\begin{itemize}
+    \item sense the environment
+    \item detect obstacles
+    \item assess distance
+    \item adjust speed
+    \item stop in case of danger
+    \item inform the user about a disruption
+\end{itemize}
+
+A function describes a capability, for example \enquote{detect obstacles}, while a component is the concrete part that implements this capability, for example a lidar sensor; the same function can be fulfilled by different components. Only after this do we decide which components fulfil these functions. Maybe the robot needs a lidar sensor. Maybe a depth camera is not enough. Maybe a combination of several sensors makes sense. The solution follows from the problem, not the other way round. Figure~\ref{fig:kap01-wirkkette} shows this chain of effects from the sensors to the motors, together with, in parallel, the control loop for the power supply.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap01_wirkkette}}
+  \caption{Chain of effects for obstacle detection, from the sensors to the motors, with the power supply control loop below it.}
+  \label{fig:kap01-wirkkette}
+\end{figure}
+
+\subsection{Feedback Loops}
+Many systems contain feedback loops. The robot measures its environment, decides on a movement, moves, measures again, and corrects its decision. Navigation is barely possible without feedback.
+
+Organizationally, too, there are feedback loops. Test results lead to new requirements or changed designs. User feedback changes operating concepts. Supply problems affect the choice of components. Systems engineering accepts these loops. It does not try to treat development as a rigid straight line.
+
+\subsection{Trade-offs}
+A trade-off is a conflict between goals. You improve one property and may worsen another. The robot has many typical trade-offs:
+
+\begin{itemize}
+    \item Higher speed shortens delivery times but may require larger safety margins.
+    \item More sensors improve perception but raise cost and energy use.
+    \item A larger battery extends runtime but adds weight and charging time.
+    \item A more complex AI model recognizes people better but needs more processing power.
+    \item A very simple user interface can hide useful diagnostic information.
+\end{itemize}
+
+Good development does not mean maximizing every property. Good development means finding well-reasoned compromises. Systems engineering provides the structure for this: requirements, constraints, alternatives, evaluations, and decisions are made traceable.
+
+\begin{hinweisbox}
+If a team says: \enquote{We want maximum range, maximum speed, the lowest cost, the highest safety, and the smallest size,} that is not yet a realistic goal. Systems engineering helps translate such wishes into prioritized, testable requirements.
+\end{hinweisbox}
+
+\section{Distinguishing Requirements from Solutions}
+A very important principle is this: requirements describe what must be achieved. Solutions describe how it will be achieved. This distinction sounds simple, but projects mix it up constantly.
+
+A poor requirement would be:
+
+\begin{quote}
+The robot must use a type X lidar sensor.
+\end{quote}
+
+In some cases, this can be justified -- for example, if a specific sensor is mandated for platform reasons. Often, though, it is already a solution decision in disguise. A better requirement could be:
+
+\begin{quote}
+The robot must detect obstacles at least 10 cm wide at a distance of at least 1.5 m.
+\end{quote}
+
+This wording describes the needed capability. Whether this capability is achieved with lidar, a camera, ultrasound, or sensor fusion stays open for now. That lets the team compare technical alternatives.
+
+\subsection{Why This Separation Matters}
+If requirements contain concrete solutions too early, the solution space shrinks unnecessarily. The team may then build in a component even though a better, cheaper, or more reliable solution would have been possible.
+
+At the same time, requirements must not stay so general that no one can test them. \enquote{The robot should be reliable} is a wish, not yet a testable requirement. A better version would be:
+
+\begin{quote}
+The robot must complete 95 out of 100 target approaches in an office corridor with normal lighting, without manual intervention.
+\end{quote}
+
+This requirement is still not perfect, but it is far easier to check. You can define test conditions, count runs, and evaluate results.
+
+\section{Stakeholder Analysis}
+Stakeholders are people, groups, or organizations that have an interest in the system or are affected by it. A stakeholder analysis answers the question: \enquote{Who are we really building this system for, and whose expectations must we take into account?}
+
+The autonomous indoor robot has more stakeholders than you might expect at first:
+
+\begin{itemize}
+    \item users who assign tasks to the robot
+    \item people who move through the building
+    \item operators of the building
+    \item maintenance staff
+    \item developers
+    \item safety officers
+    \item data protection officers
+    \item purchasing or management
+    \item cleaning staff
+    \item IT administration
+\end{itemize}
+
+Each of these groups sees the system differently. Users ask: \enquote{Is the robot easy to operate?} Maintenance staff ask: \enquote{How do I recognize a fault?} IT administrators ask: \enquote{How is the robot connected to the network?} Data protection officers ask: \enquote{What happens to camera images?} Safety officers ask: \enquote{How do we prevent someone from getting hurt?}
+
+\subsection{Capturing Stakeholder Needs}
+Stakeholders often express needs, not finished requirements. A user might say: \enquote{The robot should not be annoying.} That is understandable in everyday language, but technically unclear. It can hide several requirements:
+
+\begin{itemize}
+    \item The robot should drive quietly.
+    \item The robot should not stop in the middle of a corridor.
+    \item The robot should signal its intent.
+    \item The robot should not drive too close to people.
+    \item The robot should not have a complicated user interface.
+\end{itemize}
+
+The task in systems engineering is to take such statements seriously and translate them into testable requirements, without losing their original meaning.
+
+\subsection{Conflicts Between Stakeholders}
+Stakeholders do not always share the same goals. Management wants low cost. The development team wants enough time for clean testing. Users want fast deliveries. Safety officers want cautious driving strategies. Data protection officers want to collect as little personal data as possible, while the AI team would like to use plenty of camera data for recognizing people.
+
+Such conflicts are normal. They only become dangerous when they stay unspoken. Systems engineering makes conflicts visible and documents decisions. Not every group gets everything it wants. But good decisions are well reasoned and traceable.
+
+\begin{praxisbox}
+For our indoor robot, a stakeholder analysis might show that the camera is useful for recognizing people but raises data protection concerns. One possible system decision would be to process images only locally on the robot and not store them permanently. This creates new requirements for the software architecture, memory management, and testing.
+\end{praxisbox}
+
+Figure~\ref{fig:kap01-stakeholder} summarizes the ten most important stakeholders of the indoor robot once more and shows a typical interest for each one.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap01_stakeholder}}
+  \caption{Stakeholders of the autonomous indoor robot, each with a typical interest in the system.}
+  \label{fig:kap01-stakeholder}
+\end{figure}
+
+\section{System Boundaries}
+The system boundary defines what belongs to the system under consideration and what counts as its environment. This decision is more than a drawing. It shapes requirements, responsibilities, interfaces, and tests.
+
+For the indoor robot, one question is: does the charging station belong to the system? There are two possible answers.
+
+\subsection{Option 1: The Charging Station Belongs to the System}
+If the charging station is part of the system, the project team also develops or specifies the charging station. Then the charging electronics, the mechanical docking aid, the status display, and the communication between robot and station all belong to the system architecture. The advantage is control: the team can tune robot and charging station to each other precisely. The disadvantage is more development effort.
+
+\subsection{Option 2: The Charging Station Is an External System}
+If the charging station is treated as an external system, the robot only needs to be compatible with it. Then the interface becomes important: voltage, current, mechanical contacts, docking position, safety shutdown, and possibly a communication protocol. The advantage is less development work of your own. The disadvantage is dependence on an outside system.
+
+Either decision can be right. What matters is that the team makes it deliberately. An unclear system boundary almost always leads to misunderstandings later. Who is responsible if docking does not work reliably? The robotics team? The supplier of the charging station? The building's technical staff? Exactly these questions are what the system boundary settles.
+
+\subsection{The System's Context}
+Outside the system boundary lies the system context. This includes all external actors and systems that the robot interacts with:
+
+\begin{itemize}
+    \item people in the building
+    \item doors, elevators, corridors, and rooms
+    \item Wi-Fi or another network
+    \item the charging station, if treated as external
+    \item a user interface on a tablet or PC
+    \item maintenance tools
+    \item the building management system
+    \item legal and organizational rules
+\end{itemize}
+
+The context matters because many requirements arise at the boundaries. Interfaces are a common source of errors. A robot can work cleanly on the inside and still fail in operation if communication with its environment is unclear. Figure~\ref{fig:kap01-systemgrenze} illustrates the system boundary and context, together with the main energy, data, and movement flows.
+
+\begin{figure}[H]
+  \centering
+  \adjustbox{max width=\linewidth,max totalheight=0.6\textheight}{\input{figures_en/fig_kap01_systemgrenze}}
+  \caption{System boundary and context of the autonomous indoor robot, with energy, data, and movement flows across the boundary.}
+  \label{fig:kap01-systemgrenze}
+\end{figure}
+
+\section{Case Study: Autonomous Indoor Robot}
+Throughout this book, we use an autonomous indoor robot as our running example. In this chapter, we still look at it without SysML details. We describe it the way a systems engineering team might talk about it at the start of a project.
+
+\subsection{Starting Situation}
+A medium-sized office building wants to automate internal courier trips. Small items such as document folders, tools, lab samples, or spare parts need to move between rooms. Today, staff carry out these trips by hand. That costs time and interrupts other work.
+
+The robot must move through the building on its own. It must drive to target locations, detect obstacles, avoid people, monitor its battery level, and automatically return to the charging station when the battery is low. Operators must be able to start a transport task easily.
+
+\subsection{First System Description}
+A first system description could read:
+
+\begin{quote}
+The \enquote{autonomous indoor robot} system transports small items within a defined area of a building. It navigates on its own using a map, detects obstacles and people, avoids collisions, monitors its energy state, and returns to the charging station on its own when needed.
+\end{quote}
+
+This description is still rough, but it already contains important points: purpose, area of use, main functions, and a safety aspect.
+
+\subsection{Main Functions}
+From this description, we can derive first main functions:
+
+\begin{itemize}
+    \item accept a task
+    \item determine the current position
+    \item sense the environment
+    \item use or update the map
+    \item plan a route
+    \item carry out movement
+    \item detect and avoid obstacles
+    \item detect people and keep a safe distance
+    \item monitor the battery level
+    \item drive to the charging station
+    \item report status to the user
+    \item detect faults and react safely
+\end{itemize}
+
+This list of functions is not yet an architecture. It does not yet say which ROS2 nodes will exist, or which sensors will be used. But it is a good intermediate step between the problem and the solution.
+
+\subsection{First Constraints}
+Besides functions, there are constraints. Constraints describe the limits within which the system must work. Examples:
+
+\begin{itemize}
+    \item The robot operates indoors only.
+    \item The robot drives on level floors.
+    \item The robot must fit through normal office doors.
+    \item The robot must not permanently block emergency escape routes.
+    \item The robot must not be disruptively loud during working hours.
+    \item The robot must be usable without specialist knowledge.
+    \item Processing of camera data must respect data protection.
+\end{itemize}
+
+Beginners sometimes find constraints less exciting than functions. Even so, they are critical. Many failed projects happen because constraints are discovered too late.
+
+\subsection{From Wish to Requirement}
+In the next step, wishes are translated into requirements. The table below shows simple examples.
+
+\begin{center}
+\begin{tabular}{p{0.38\textwidth}p{0.50\textwidth}}
+\toprule
+\textbf{Wish or statement} & \textbf{Possible requirement} \\
+\midrule
+The robot should be safe. & The robot must reduce speed when an obstacle is within 0.5 m and stop at 0.2 m. \\
+The battery should last a long time. & The robot must run typical office transport tasks for at least 4 hours without recharging. \\
+Operation should be simple. & A standard task must be startable with at most three user inputs. \\
+The robot should recognize people. & The robot must detect people in its driving area under normal lighting and adjust its route accordingly. \\
+The robot should not get lost. & The robot must determine its position within the mapped area with enough accuracy for navigation. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The numbers in this table are only example values. In a real project, you would need to justify, agree on, and test them. For a beginner, though, they show the difference between a wish and a testable requirement.
+
+\section{Typical Project Mistakes}
+Systems engineering becomes much clearer once you look at typical mistakes. Many projects fail not from a lack of talent, but from unclear foundations.
+
+\subsection{Mistake 1: Thinking in Components Too Early}
+A team decides on day one: \enquote{We'll use this lidar, this camera, and this computer.} That feels concrete. Maybe first prototypes even appear quickly. The problem: it is still not clear which capabilities are actually needed. Later, it may turn out that the camera performs poorly in dark corridors, or that the computer is too weak for the AI model.
+
+It works better to first describe functions, requirements, and operating conditions. Components are then chosen deliberately, to match.
+
+\subsection{Mistake 2: Unclear Terms}
+One stakeholder says \enquote{autonomous}, a second understands it as \enquote{without remote control}, a third understands it as \enquote{without human supervision}. Such terms must be clarified. For our project, \enquote{autonomous} could mean: the robot drives to a target on its own within a mapped area, without a human continuously steering it.
+
+\subsection{Mistake 3: Requirements Are Not Testable}
+Words such as \enquote{fast}, \enquote{reliable}, \enquote{intuitive}, or \enquote{robust} are fine as first wishes. As requirements, they are not enough. Testable requirements need observable criteria. Otherwise, no one can say clearly in the end whether they were met.
+
+\subsection{Mistake 4: Interfaces Are Underestimated}
+Many problems arise at interfaces: between sensor and software, between navigation and motor control, between robot and charging station, between user interface and mission planning. If interfaces are not clearly described, teams integrate their parts late and then discover costly errors.
+
+\subsection{Mistake 5: The Environment Is Idealized}
+A robot drives perfectly in simulation. In the real building, it slips on a smooth floor, struggles to see glass walls, loses Wi-Fi, or gets blocked by people. Systems engineering reminds us that the system must work in its real context. Operating scenarios, assumptions, and environmental conditions therefore belong in the picture early.
+
+\subsection{Mistake 6: Verification Is Planned Too Late}
+Verification means: we check whether the system meets its specified requirements. If tests are only considered at the end, some requirements may turn out not to be sensibly testable at all. It works better to ask early, for every important requirement: \enquote{How would we demonstrate this later?}
+
+\begin{hinweisbox}
+A simple check for any project is: \enquote{How will we know at the end that we are done?} If this question cannot be answered, the purpose, requirements, or evidence are still too unclear.
+\end{hinweisbox}
+
+\section{Systems Engineering Across the Project}
+Systems engineering is not a single step. It runs alongside the whole project. For a beginner, the process can be broken into simple steps.
+
+\subsection{Understand the Problem}
+At the start, the solution does not come first -- the problem does. Who needs the robot? Which task should it take on? What is unsatisfactory today? What environment is it operating in? What risks exist?
+
+For our example: courier trips cost time, but they must not be replaced by an unsafe or disruptive system. So the problem is not \enquote{We need ROS2}, but \enquote{We want to automate internal transport reliably}.
+
+\subsection{Clarify Stakeholders and Context}
+Next, the team describes stakeholders and the system context. Who uses the system? Who operates it? Who maintains it? Which external systems are involved? Which rules apply?
+
+\subsection{Derive Requirements}
+Requirements grow out of needs and context. Good requirements are understandable, unambiguous, and testable. We cover requirements in more detail in later chapters.
+
+\subsection{Develop the Architecture}
+The architecture describes which main parts make up the system and how they work together. For the robot, the main parts could be: perception, localization, navigation, propulsion, power supply, user interface, and safety logic.
+
+\subsection{Plan Integration and Verification}
+Even while working on the architecture, it must become clear how the system will be integrated and tested. A robot cannot be tried out as a whole system for the first time only at the very end. You need step-by-step integration: test each sensor on its own, test navigation in simulation, test motor control under safe conditions, and test the whole system in defined scenarios.
+
+\section{Summary}
+Systems engineering is the discipline of understanding, structuring, and developing complex systems as a whole, with demonstrable results. A system consists not just of parts, but of the interplay of these parts in a given context. For the autonomous indoor robot, the important questions arise at the transitions: between sensors and software, between robot and human, between battery and mission, between AI recognition and data protection, between navigation and safety.
+
+For beginners, four basic ideas matter most:
+
+\begin{itemize}
+    \item Understand the problem first, then choose solutions.
+    \item Deliberately distinguish requirements from technical solutions.
+    \item Clarify stakeholders, system boundary, and context early.
+    \item Plan verification and tests from the start, not only at the end.
+\end{itemize}
+
+This chapter forms the foundation for the rest of the book. The next chapter covers model-based systems engineering. There, we carry the ideas from this chapter into a model: requirements, functions, structures, behavior, interfaces, and tests are no longer just described in text, but systematically connected to each other.
+
+\section{Review Questions}
+\begin{enumerate}
+    \item What is a system? Explain the definition in your own words.
+    \item Why is an autonomous indoor robot more than a collection of parts?
+    \item What is the difference between a function and a component?
+    \item Why should requirements and solutions be kept separate?
+    \item Name five stakeholders of an autonomous indoor robot.
+    \item What interests might users, maintenance staff, and data protection officers each have?
+    \item What is a system boundary?
+    \item Why does it matter whether the charging station is part of the system?
+    \item What is a trade-off? Give an example from the robot project.
+    \item Why should tests and verification be planned early?
+    \item What is the problem with the requirement \enquote{The robot should be reliable}?
+    \item Name three typical mistakes made at the start of a technical project.
+\end{enumerate}
+
+\section{Exercises}
+\begin{uebungbox}
+\textbf{Exercise 1: Write a System Description}\\
+Describe the autonomous indoor robot in five to eight sentences. Avoid naming specific products or component types. Then mark, with color or symbols, which words describe functions, stakeholders, constraints, and possible components.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 2: Build a Stakeholder List}\\
+Create a table with three columns: stakeholder, interest, possible requirement. Enter at least eight stakeholders. Example: maintenance staff, wants to detect faults quickly, needs diagnostic information on sensor status and battery condition.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 3: Discuss the System Boundary}\\
+Decide whether the charging station should be part of your system or an external system. Justify your decision in five sentences. Then note three interfaces that this decision makes important.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 4: Translate Wishes into Requirements}\\
+Translate the following wishes into testable requirements: \enquote{The robot should be safe,} \enquote{The robot should be easy to operate,} \enquote{The robot should run for a long time,} \enquote{The robot should recognize people.} Make sure each requirement can, in principle, be tested later.
+\end{uebungbox}
+
+\begin{uebungbox}
+\textbf{Exercise 5: Identify Trade-offs}\\
+Describe two conflicting goals in the robot project. Choose, for example, speed versus safety, or battery life versus weight. For each one, explain which decision you would make and what information you would still need to decide better.
+\end{uebungbox}
+
+\section{Further Reading}
+
+For an introduction to systems engineering, a practice-oriented approach pays off. Do not just read definitions -- pay attention to how requirements, architecture, interfaces, and tests connect. Introductions published by the International Council on Systems Engineering (INCOSE), foundational works on systems engineering, and practical treatments of SysML and MBSE are all especially helpful.
+
+For this textbook, the following topics also make useful further reading:
+
+\begin{itemize}
+    \item foundations of systems engineering and systems thinking
+    \item requirements analysis and stakeholder management
+    \item verification and validation of technical systems
+    \item model-based systems engineering
+    \item SysML as a modeling language for technical systems
+    \item safety and data protection questions in autonomous robotic systems
+\end{itemize}
+
+The SysML literature used in later chapters, in particular practical introductions to SysML, is also useful for this chapter, because it bridges general systems engineering and concrete modeling.
