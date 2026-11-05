@@ -356,14 +356,14 @@ The team must clarify ambiguous terms before relying on them. One stakeholder sa
 \subsection{Make Requirements Testable}
 Give every requirement observable criteria. Words such as \enquote{fast}, \enquote{reliable}, \enquote{intuitive}, or \enquote{robust} are fine as first wishes, but as requirements, they are not enough. Without observable criteria, no one can say clearly in the end whether the team met the requirement.
 
-\subsection{Mistake 4: Interfaces Are Underestimated}
-Many problems arise at interfaces: between sensor and software, between navigation and motor control, between robot and charging station, between user interface and mission planning. If interfaces are not clearly described, teams integrate their parts late and then discover costly errors.
+\subsection{Describe Interfaces Clearly From the Start}
+Many problems arise at interfaces: between sensor and software, between navigation and motor control, between robot and charging station, between user interface and mission planning. If the team does not describe interfaces clearly, it integrates its parts late and then discovers costly errors.
 
-\subsection{Mistake 5: The Environment Is Idealized}
-A robot drives perfectly in simulation. In the real building, it slips on a smooth floor, struggles to see glass walls, loses Wi-Fi, or gets blocked by people. Systems engineering reminds us that the system must work in its real context. Operating scenarios, assumptions, and environmental conditions therefore belong in the picture early.
+\subsection{Plan for the Real Operating Environment}
+Include operating scenarios, assumptions, and environmental conditions in the picture early, not just the simulation. A robot can drive perfectly in simulation, yet in the real building it slips on a smooth floor, struggles to see glass walls, loses Wi-Fi, or gets blocked by people. Systems engineering reminds the team that the system must work in its real context.
 
-\subsection{Mistake 6: Verification Is Planned Too Late}
-Verification means: we check whether the system meets its specified requirements. If tests are only considered at the end, some requirements may turn out not to be sensibly testable at all. It works better to ask early, for every important requirement: \enquote{How would we demonstrate this later?}
+\subsection{Plan Verification Early}
+Ask early, for every important requirement: \enquote{How would we demonstrate this later?} Verification means that the team checks whether the system meets its specified requirements. If the team only considers tests at the end, some requirements may turn out not to be sensibly testable at all.
 
 \begin{hinweisbox}
 A simple check for any project is: \enquote{How will we know at the end that we are done?} If this question cannot be answered, the purpose, requirements, or evidence are still too unclear.

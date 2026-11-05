@@ -14,7 +14,7 @@ As long as the project stays small, this can work. Once several people get invol
 This is exactly where \gls{mbse} starts. Model-Based Systems Engineering means that a model becomes the central carrier of the system's key information. The model does not replace everything. It does not replace the code, every calculation, or every conversation. But it connects the decisive pieces of information so that relationships stay traceable.
 
 \begin{praxisbox}
-For the indoor robot, one requirement could be: \enquote{The robot must detect obstacles in time and stop safely.} In the MBSE model, this requirement can be linked to a function \enquote{detect obstacle}, to a lidar sensor, to safety logic, to a ROS2 node, and to a test case. This lets the team see later which parts are affected when the requirement changes.
+For the indoor robot, one requirement could be: \enquote{The robot must detect obstacles in time and stop safely.} In the MBSE model, the team can link this requirement to a function \enquote{detect obstacle}, to a lidar sensor, to safety logic, to a ROS2 node, and to a test case. This lets the team see later which parts are affected when the requirement changes.
 \end{praxisbox}
 
 \section{Document-Centric Development}
@@ -48,7 +48,7 @@ Suppose the indoor robot gets a depth camera instead of a simple camera. In a do
     \item the test cases for people detection
 \end{itemize}
 
-If even one of these documents gets forgotten, a contradiction appears. Maybe the architecture still shows the old camera while the interface specification already describes the new one. Maybe the test team still tests with old image formats. Maybe no one notices that the new camera draws more power and shortens battery life.
+If the team forgets even one of these documents, a contradiction appears. Maybe the architecture still shows the old camera while the interface specification already describes the new one. Maybe the test team still tests with old image formats. Maybe no one notices that the new camera draws more power and shortens battery life.
 
 \subsection{The Silent Cost of Synchronization}
 In document-centric projects, a large share of the work is synchronization. People must compare documents, pass on changes, update tables, and ask which information is current. This effort is often invisible, but it costs time and creates errors.
@@ -72,12 +72,12 @@ A model element can be, for example:
     \item a ROS2 node as a later implementation unit
 \end{itemize}
 
-The relationships matter at least as much as the elements themselves. A requirement can be satisfied by a function. A function can be realized by a component. A component can have an interface. A test case can verify a requirement. A ROS2 node can be part of a software architecture and exchange data over a topic.
+The relationships matter at least as much as the elements themselves. A function can satisfy a requirement. A component can realize a function. A component can have an interface. A test case can verify a requirement. A ROS2 node can be part of a software architecture and exchange data over a topic.
 
-\subsection{Model Instead of Picture}
+\subsection{How Models Differ From Diagrams}
 This point matters especially for beginners: a diagram is not automatically a model. A diagram can just be a picture. Drawing boxes and arrows in PowerPoint may look like an architecture model. But the boxes know nothing about each other. If the same block appears in three diagrams, in PowerPoint these are three separate graphical objects.
 
-In a real modeling tool, by contrast, a diagram is a view onto model elements. The system element \texttt{NavigationSystem} exists in the model. It can appear in several diagrams. If its name changes, the change should become visible everywhere. If a requirement is linked to this block, the tool can show that relationship.
+In a real modeling tool, by contrast, a diagram is a view onto model elements. The system element \texttt{NavigationSystem} exists in the model. It can appear in several diagrams. If its name changes, the change should become visible everywhere. If you link a requirement to this block, the tool can show that relationship.
 
 \begin{hinweisbox}
 An MBSE model is not good because it contains pretty diagrams. It is good when it answers important questions: What must the system do? Which parts satisfy which requirements? What interfaces exist? What happens on a change? How is fulfilment demonstrated?
